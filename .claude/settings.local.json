@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(mkdir:*)",
+      "Bash(tar:*)",
+      "WebFetch(domain:github.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
