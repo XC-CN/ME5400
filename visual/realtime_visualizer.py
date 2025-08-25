@@ -288,6 +288,71 @@ class RealTimeVisualizer:
             self.video_writer.write(canvas)
         
         return canvas
+
+    def update_kitti_frame(self, frame_data, scene_name, frame_id):
+        """更新KITTI格式的帧数据"""
+        start_time = time.time()
+        
+        # 创建黑色画布
+        canvas = np.zeros((self.canvas_size[1], self.canvas_size[0], 3), dtype=np.uint8)
+        
+        # 绘制坐标系和网格
+        self.draw_coordinate_system(canvas)
+        
+        # 更新当前帧信息
+        self.current_frame = frame_id
+        self.current_scene = scene_name
+        
+        detection_count = len(frame_data)
+        
+        # 绘制车辆轨迹
+        for track_data in frame_data:
+            track_id = track_data['track_id']
+            bbox_3d = track_data['bbox_3d']
+            
+            # KITTI坐标系转换：从camera坐标系转换为鸟瞰图坐标系
+            # camera坐标系: x右, y下, z前
+            # 鸟瞰图坐标系: x前, y左  
+            x, y, z = bbox_3d['location']
+            center = [z, -x]  # z->x (前), -x->y (左)
+            
+            l, w, h = bbox_3d['dimensions']
+            lwh = [l, w, h]
+            yaw = bbox_3d['rotation_y'] + np.pi/2  # 调整朝向角度
+            
+            # 更新轨迹历史
+            self.track_histories[track_id].append(center)
+            
+            # 计算速度
+            velocity = None
+            if len(self.track_histories[track_id]) > 1:
+                prev_pos = self.track_histories[track_id][-2]
+                curr_pos = self.track_histories[track_id][-1]
+                velocity = [curr_pos[0] - prev_pos[0], curr_pos[1] - prev_pos[1], 0]
+                self.track_speeds[track_id].append(np.linalg.norm(velocity[:2]))
+            
+            # 绘制轨迹
+            self.draw_trajectory(canvas, track_id)
+            
+            # 绘制车辆
+            self.draw_vehicle(canvas, center, lwh, yaw, track_id, velocity)
+        
+        # 绘制性能面板
+        self.draw_performance_panel(canvas)
+        
+        # 更新性能统计
+        frame_time = time.time() - start_time
+        self.frame_times.append(frame_time)
+        self.detection_counts.append(detection_count)
+        
+        # 显示结果
+        cv2.imshow(self.window_name, canvas)
+        
+        # 保存视频
+        if self.video_writer:
+            self.video_writer.write(canvas)
+        
+        return canvas
     
     def cleanup(self):
         """清理资源"""

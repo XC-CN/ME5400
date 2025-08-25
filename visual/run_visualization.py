@@ -55,8 +55,51 @@ def find_result_files():
     if not result_dir.exists():
         return []
     
+    # 查找KITTI格式的跟踪结果文件
+    txt_files = list(result_dir.rglob("data/*.txt"))
+    if txt_files:
+        return txt_files
+    
+    # 备用：查找JSON文件
     json_files = list(result_dir.rglob("*.json"))
     return json_files
+
+def load_kitti_tracking_data(file_path):
+    """加载KITTI格式的跟踪数据"""
+    tracking_data = {}
+    
+    with open(file_path, 'r') as f:
+        for line in f:
+            parts = line.strip().split()
+            if len(parts) >= 18:  # KITTI跟踪格式至少18个字段
+                frame_id = int(parts[0])
+                track_id = int(parts[1])
+                obj_type = parts[2]
+                
+                # 3D bounding box信息 (camera坐标系)
+                h, w, l = float(parts[10]), float(parts[11]), float(parts[12])
+                x, y, z = float(parts[13]), float(parts[14]), float(parts[15])
+                ry = float(parts[16])  # rotation_y
+                
+                # 2D bounding box
+                bbox_2d = [float(parts[6]), float(parts[7]), float(parts[8]), float(parts[9])]
+                
+                if frame_id not in tracking_data:
+                    tracking_data[frame_id] = []
+                
+                tracking_data[frame_id].append({
+                    'track_id': track_id,
+                    'obj_type': obj_type,
+                    'bbox_3d': {
+                        'location': [x, y, z],  # camera坐标系
+                        'dimensions': [l, w, h],  # length, width, height
+                        'rotation_y': ry
+                    },
+                    'bbox_2d': bbox_2d,
+                    'score': float(parts[17]) if len(parts) > 17 else 1.0
+                })
+    
+    return tracking_data
 
 def main():
     parser = argparse.ArgumentParser(description="MCTrack Visualization Launcher")
@@ -87,7 +130,7 @@ def main():
                 return
             result_files = find_result_files()
         else:
-            print("❌ No tracking results found!")
+            print("No tracking results found!")
             print("Options:")
             print("1. Run with --auto-run to generate results automatically")
             print("2. Run MCTrack manually: python main.py --dataset kitti -e -p 1")
@@ -100,63 +143,98 @@ def main():
     elif result_files:
         result_path = str(result_files[0])  # 使用第一个找到的文件
     else:
-        print("❌ No valid result file found")
+        print("No valid result file found")
         return
     
-    print(f"📊 Using result file: {result_path}")
+    print(f"Using result file: {result_path}")
     
     # 启动对应的可视化工具
     try:
         if args.mode == 'realtime':
-            print("🎬 Starting Real-time Visualizer...")
+            print("Starting Real-time Visualizer...")
             from realtime_visualizer import RealTimeVisualizer
             
             # 创建演示
             visualizer = RealTimeVisualizer(save_video=args.save_video)
             
-            import json
-            with open(result_path, 'r') as f:
-                data = json.load(f)
-            
-            # 简单播放演示
-            scene_name = list(data.keys())[0]
-            scene_data = data[scene_name]
-            frames = sorted(scene_data.keys(), key=lambda x: int(x.split('_')[1]))
-            
-            print(f"Scene: {scene_name}, Frames: {len(frames)}")
-            print("Controls: 'q' to quit, 'space' to pause")
-            
-            import time
-            import cv2
-            
-            for i, frame_name in enumerate(frames):
-                frame_data = scene_data[frame_name]
-                visualizer.update_frame(frame_data, scene_name, i)
+            # 处理KITTI格式数据
+            if result_path.endswith('.txt'):
+                print(f"Loading KITTI tracking data from: {result_path}")
+                scene_name = Path(result_path).stem  # 文件名作为场景名
                 
-                key = cv2.waitKey(50) & 0xFF
-                if key == ord('q'):
-                    break
-                elif key == ord(' '):
-                    cv2.waitKey(0)
+                # 读取KITTI跟踪数据
+                tracking_data = load_kitti_tracking_data(result_path)
+                frames = sorted(tracking_data.keys())
+                
+                print(f"Scene: {scene_name}, Frames: {len(frames)}")
+                print("Controls: 'q' to quit, 'space' to pause")
+                
+                import time
+                import cv2
+                
+                print("Starting visualization loop...")
+                
+                for i, frame_id in enumerate(frames):
+                    frame_data = tracking_data[frame_id]
+                    
+                    print(f"Processing frame {frame_id} ({i+1}/{len(frames)}), {len(frame_data)} objects")
+                    
+                    visualizer.update_kitti_frame(frame_data, scene_name, frame_id)
+                    
+                    key = cv2.waitKey(200) & 0xFF  # 更慢一点以便观察
+                    if key == ord('q'):
+                        print("Quit requested by user")
+                        break
+                    elif key == ord(' '):
+                        print("Paused - press any key to continue")
+                        cv2.waitKey(0)
+                
+                print("Visualization loop completed. Press any key to close...")
+                
+            else:
+                # JSON格式处理
+                import json
+                with open(result_path, 'r') as f:
+                    data = json.load(f)
+                
+                scene_name = list(data.keys())[0]
+                scene_data = data[scene_name]
+                frames = sorted(scene_data.keys(), key=lambda x: int(x.split('_')[1]))
+                
+                print(f"Scene: {scene_name}, Frames: {len(frames)}")
+                print("Controls: 'q' to quit, 'space' to pause")
+                
+                import time
+                import cv2
+                
+                for i, frame_name in enumerate(frames):
+                    frame_data = scene_data[frame_name]
+                    visualizer.update_frame(frame_data, scene_name, i)
+                    
+                    key = cv2.waitKey(50) & 0xFF
+                    if key == ord('q'):
+                        break
+                    elif key == ord(' '):
+                        cv2.waitKey(0)
             
             visualizer.cleanup()
             
         elif args.mode == '3d':
-            print("🎮 Starting 3D Visualizer...")
+            print("Starting 3D Visualizer...")
             cmd = [sys.executable, "visual/visualize_3d.py", 
                    "--result_path", result_path]
             subprocess.run(cmd)
             
         elif args.mode == 'integrated':
-            print("🔗 Integrated mode requires manual integration")
+            print("Integrated mode requires manual integration")
             print("See visual/README.md for integration instructions")
     
     except KeyboardInterrupt:
-        print("\n⏹️  Visualization stopped by user")
+        print("\nVisualization stopped by user")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
     
-    print("✅ Visualization completed")
+    print("Visualization completed")
 
 if __name__ == "__main__":
     main()
