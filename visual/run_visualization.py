@@ -31,7 +31,7 @@ def check_dependencies():
 
 def run_tracking_first():
     """运行MCTrack生成结果"""
-    print("🚀 Running MCTrack to generate tracking results...")
+    print("Running MCTrack to generate tracking results...")
     
     cmd = [
         sys.executable, "main.py", 
@@ -41,10 +41,10 @@ def run_tracking_first():
     
     try:
         result = subprocess.run(cmd, check=True, capture_output=True, text=True)
-        print("✅ MCTrack completed successfully")
+        print("MCTrack completed successfully")
         return True
     except subprocess.CalledProcessError as e:
-        print(f"❌ MCTrack failed: {e}")
+        print(f"MCTrack failed: {e}")
         print("Output:", e.stdout)
         print("Error:", e.stderr)
         return False
@@ -71,7 +71,7 @@ def main():
     
     args = parser.parse_args()
     
-    print("🎯 MCTrack Visualization Launcher")
+    print("MCTrack Visualization Launcher")
     print("=" * 50)
     
     # 检查依赖
