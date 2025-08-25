@@ -27,23 +27,6 @@
 
 ## <p align=center>MCTrack：一个面向自动驾驶的统一 3D 多目标跟踪框架</p> 
 
-<p align="center">
-  <a href="https://paperswithcode.com/sota/3d-multi-object-tracking-on-nuscenes?p=mctrack-a-unified-3d-multi-object-tracking">
-    <img src="https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/mctrack-a-unified-3d-multi-object-tracking/3d-multi-object-tracking-on-nuscenes" alt="PWC">
-  </a>
-</div>
-
-<p align="center">
-  <a href="https://paperswithcode.com/sota/3d-multi-object-tracking-on-kitti-1?p=mctrack-a-unified-3d-multi-object-tracking">
-    <img src="https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/mctrack-a-unified-3d-multi-object-tracking/3d-multi-object-tracking-on-kitti-1" alt="PWC">
-  </a>
-</div>
-
-<p align="center">
-  <a href="https://paperswithcode.com/sota/3d-multi-object-tracking-on-waymo-open?p=mctrack-a-unified-3d-multi-object-tracking">
-    <img src="https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/mctrack-a-unified-3d-multi-object-tracking/3d-multi-object-tracking-on-waymo-open" alt="PWC">
-  </a>
-</div>
 
   <br>
   <div align="center">
