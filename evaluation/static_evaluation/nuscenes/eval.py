@@ -13,7 +13,7 @@ def eval_nusc(args):
         eval_set="val",
         output_dir=eval_path,
         verbose=True,
-        nusc_version="v1.0-trainval",
+        nusc_version="v1.0-mini",
         nusc_dataroot=nusc_path,
     )
     print("result in " + result_path)
