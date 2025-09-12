@@ -28,31 +28,17 @@ echo ""
 # 禁用ROS 1生命周期警告
 export DISABLE_ROS1_EOL_WARNINGS=1
 
-# 启动Rviz（使用配置文件，自动填满左半边屏幕）
+# 启动Rviz（使用配置文件，全屏显示）
 echo "启动Rviz（使用预配置的显示设置）..."
-echo "Rviz窗口将自动填满左半边屏幕..."
+echo "Rviz窗口将全屏显示，左侧面板已优化..."
 
-# 获取屏幕尺寸并计算左半边窗口位置
-SCREEN_WIDTH=$(xrandr --current | grep '*' | head -1 | awk '{print $1}' | cut -d'x' -f1)
-SCREEN_HEIGHT=$(xrandr --current | grep '*' | head -1 | awk '{print $1}' | cut -d'x' -f2)
-HALF_WIDTH=$((SCREEN_WIDTH / 2))
-
-# 启动Rviz并设置窗口位置
+# 启动Rviz
 rviz -d visualize/nuscenes_lidar.rviz &
 RVIZ_PID=$!
 
-# 等待Rviz启动后调整窗口位置
+# 等待Rviz启动
 sleep 2
-echo "调整Rviz窗口位置到左半边屏幕..."
-
-# 查找并调整Rviz窗口位置
-RVIZ_WINDOW_ID=$(wmctrl -l | grep -i "rviz" | awk '{print $1}' | head -1)
-if [ ! -z "$RVIZ_WINDOW_ID" ]; then
-    wmctrl -i -r $RVIZ_WINDOW_ID -e 0,0,0,$HALF_WIDTH,$SCREEN_HEIGHT
-    echo "Rviz窗口已调整到左半边屏幕"
-else
-    echo "未找到Rviz窗口，跳过位置调整"
-fi
+echo "Rviz已启动，界面布局已优化"
 
 # 自动处理ROS警告弹窗
 echo "处理ROS警告弹窗..."

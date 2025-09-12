@@ -1,43 +1,38 @@
+# Rviz配置文件 - nuScenes LiDAR可视化
+# 此文件配置Rviz用于显示nuScenes LiDAR点云数据
+
 Panels:
+  # 显示面板 - 配置各种可视化显示
   - Class: rviz/Displays
     Help Height: 78
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Global Options1
-        - /PointCloud21
-      Splitter Ratio: 0.5
+        - /Global Options1  # 全局选项
+        - /PointCloud21     # 点云显示
+      # 使用Rviz默认的面板比例
     Tree Height: 0
-  - Class: rviz/Selection
-    Name: Selection
-  - Class: rviz/Tool Properties
-    Expanded:
-      - /2D Pose Estimate1
-      - /2D Nav Goal1
-      - /Publish Point1
-    Name: Tool Properties
-    Splitter Ratio: 0.5886790156364441
+  # 视图面板 - 配置3D视图
   - Class: rviz/Views
     Expanded:
       - /Current View1
     Name: Views
-    Splitter Ratio: 0.5
-  - Class: rviz/Time
-    Experimental: false
-    Name: Time
-    SyncMode: 0
-    SyncSource: ""
+    # 使用默认面板比例
+# 用户偏好设置
 Preferences:
-  PromptSaveOnExit: true
+  PromptSaveOnExit: true  # 退出时提示保存
 Toolbars:
-  toolButtonStyle: 2
+  toolButtonStyle: 2      # 工具栏按钮样式
+
+# 可视化管理器 - 核心配置
 Visualization Manager:
   Class: ""
   Displays:
+    # 网格显示 - 提供空间参考
     - Alpha: 0.5
       Cell Size: 1
       Class: rviz/Grid
-      Color: 160; 160; 164
+      Color: 160; 160; 164  # 网格颜色 (灰色)
       Enabled: true
       Line Style:
         Line Width: 0.029999999329447746
@@ -48,100 +43,87 @@ Visualization Manager:
         X: 0
         Y: 0
         Z: 0
-      Plane: XY
-      Plane Cell Count: 10
+      Plane: XY            # 网格平面
+      Plane Cell Count: 10 # 网格数量
       Reference Frame: <Fixed Frame>
       Value: true
+    # LiDAR点云显示 - 核心可视化组件
     - Alpha: 1
-      Autocompute Intensity Bounds: true
+      Autocompute Intensity Bounds: true  # 自动计算强度边界
       Autocompute Value Bounds:
         Max Value: 10
         Min Value: -10
         Value: true
-      Axis: Z
-      Channel Name: intensity
+      Axis: Z                              # 高度轴
+      Channel Name: intensity              # 强度通道名称
       Class: rviz/PointCloud2
-      Color: 255; 255; 255
-      Color Transformer: Intensity
-      Decay Time: 0
+      Color: 255; 255; 255                # 默认颜色 (白色)
+      Color Transformer: Intensity        # 基于强度值着色
+      Decay Time: 0                       # 点云衰减时间 (0=不衰减)
       Enabled: true
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Min Color: 0; 0; 0
+      Invert Rainbow: false               # 不反转彩虹色
+      Max Color: 255; 255; 255           # 最大强度颜色 (白色)
+      Min Color: 0; 0; 0                 # 最小强度颜色 (黑色)
       Name: PointCloud2
-      Position Transformer: XYZ
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.009999999776482582
-      Style: Flat Squares
-      Topic: /nuscenes/lidar
-      Use Fixed Frame: true
-      Use rainbow: true
+      Position Transformer: XYZ           # 位置变换器
+      Selectable: true                    # 可选择
+      Size (Pixels): 3                    # 点云大小 (像素)
+      Size (m): 0.009999999776482582      # 点云大小 (米)
+      Style: Flat Squares                 # 显示样式 (扁平方块)
+      Topic: /nuscenes/lidar              # ROS话题名称
+      Use Fixed Frame: true               # 使用固定坐标系
+      Use rainbow: true                   # 使用彩虹色
       Value: true
   Enabled: true
+  # 全局选项
   Global Options:
-    Background Color: 48; 48; 48
-    Default Light: true
-    Fixed Frame: map
-    Frame Rate: 30
+    Background Color: 48; 48; 48  # 背景颜色 (深灰色)
+    Default Light: true           # 默认光照
+    Fixed Frame: map              # 固定坐标系 (map)
+    Frame Rate: 30                # 帧率
   Name: root
+  # 可用工具
   Tools:
-    - Class: rviz/Interact
+    - Class: rviz/Interact        # 交互工具
       Hide Inactive Objects: true
-    - Class: rviz/MoveCamera
-    - Class: rviz/Select
-    - Class: rviz/FocusCamera
-    - Class: rviz/Measure
-      Line color: 128; 128; 0
-    - Class: rviz/SetInitialPose
+    - Class: rviz/MoveCamera      # 移动相机
+    - Class: rviz/Select          # 选择工具
+    - Class: rviz/FocusCamera     # 聚焦相机
+    - Class: rviz/Measure         # 测量工具
+      Line color: 128; 128; 0     # 测量线颜色 (黄色)
+    - Class: rviz/SetInitialPose  # 设置初始位姿
       Theta std deviation: 0.2617993877991494
       Topic: /initialpose
       X std deviation: 0.5
       Y std deviation: 0.5
-    - Class: rviz/SetGoal
+    - Class: rviz/SetGoal         # 设置目标
       Topic: /move_base_simple/goal
-    - Class: rviz/PublishPoint
+    - Class: rviz/PublishPoint    # 发布点
       Single click: true
       Topic: /clicked_point
   Value: true
+  # 视图配置
   Views:
     Current:
-      Class: rviz/Orbit
-      Distance: 10
-      Enable Stereo Rendering:
+      Class: rviz/Orbit              # 轨道相机模式
+      Distance: 10                    # 相机距离
+      Enable Stereo Rendering:        # 立体渲染
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
-      Focal Point:
+      Focal Point:                   # 焦点位置
         X: 0
         Y: 0
         Z: 0
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
-      Invert Z Axis: false
+      Invert Z Axis: false           # 不反转Z轴
       Name: Current View
-      Near Clip Distance: 0.009999999776482582
-      Pitch: 0.785398006439209
-      Target Frame: <Fixed Frame>
+      Near Clip Distance: 0.009999999776482582  # 近裁剪距离
+      Pitch: 0.785398006439209       # 俯仰角 (45度)
+      Target Frame: <Fixed Frame>    # 目标坐标系
       Value: Orbit (rviz)
-      Yaw: 0.785398006439209
+      Yaw: 0.785398006439209         # 偏航角 (45度)
     Saved: ~
-Window Geometry:
-  Displays:
-    collapsed: false
-  Height: 846
-  Hide Left Dock: false
-  Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd000000040000000000000156000002b0fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d000001e9000000c9000000c9fb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500670065007400730100000041000000d70000000000000000fb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000002b0fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003d000002b0000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004b00000003efc0100000002fb0000000800540069006d00650100000000000004b0000002eb00fffffffb0000000800540069006d006501000000000000045000000000000000000000023f000002b000000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
-  Selection:
-    collapsed: false
-  Time:
-    collapsed: false
-  Tool Properties:
-    collapsed: false
-  Views:
-    collapsed: false
-  Width: 1200
-  X: 67
-  Y: 24
+# 使用Rviz默认窗口布局（不在配置文件中固定窗口几何）
