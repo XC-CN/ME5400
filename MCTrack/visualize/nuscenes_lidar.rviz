@@ -1,0 +1,136 @@
+# Rviz配置文件 - nuScenes LiDAR可视化
+# 此文件配置Rviz用于显示nuScenes LiDAR点云数据
+
+Panels:
+  # 显示面板 - 配置各种可视化显示
+  - Class: rviz/Displays
+    Help Height: 78
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1  # 全局选项
+        - /PointCloud21     # 点云显示
+      # 使用Rviz默认的面板比例
+    Tree Height: 0
+  # 视图面板 - 配置3D视图
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    # 使用默认面板比例
+# 用户偏好设置
+Preferences:
+  PromptSaveOnExit: true  # 退出时提示保存
+Toolbars:
+  toolButtonStyle: 2      # 工具栏按钮样式
+
+# 可视化管理器 - 核心配置
+Visualization Manager:
+  Class: ""
+  Displays:
+    # 网格显示 - 提供空间参考
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz/Grid
+      Color: 160; 160; 164  # 网格颜色 (灰色)
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY            # 网格平面
+      Plane Cell Count: 10 # 网格数量
+      Reference Frame: <Fixed Frame>
+      Value: true
+    # LiDAR点云显示 - 核心可视化组件
+    - Alpha: 1
+      Autocompute Intensity Bounds: true  # 自动计算强度边界
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z                              # 高度轴
+      Channel Name: intensity              # 强度通道名称
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255                # 默认颜色 (白色)
+      Color Transformer: Intensity        # 基于强度值着色
+      Decay Time: 0                       # 点云衰减时间 (0=不衰减)
+      Enabled: true
+      Invert Rainbow: false               # 不反转彩虹色
+      Max Color: 255; 255; 255           # 最大强度颜色 (白色)
+      Min Color: 0; 0; 0                 # 最小强度颜色 (黑色)
+      Name: PointCloud2
+      Position Transformer: XYZ           # 位置变换器
+      Selectable: true                    # 可选择
+      Size (Pixels): 6                    # 点云大小 (像素)
+      Size (m): 0.019999999552965164      # 点云大小 (米)
+      Style: Flat Squares                 # 显示样式 (扁平方块)
+      Topic: /nuscenes/lidar              # ROS话题名称
+      Use Fixed Frame: true               # 使用固定坐标系
+      Use rainbow: true                   # 使用彩虹色
+      Value: true
+    # 检测框显示 - MarkerArray
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Name: Detections
+      Marker Topic: /nuscenes/detections
+      Queue Size: 100
+      Value: true
+  Enabled: true
+  # 全局选项
+  Global Options:
+    Background Color: 48; 48; 48  # 背景颜色 (深灰色)
+    Default Light: true           # 默认光照
+    Fixed Frame: map              # 固定坐标系 (map)
+    Frame Rate: 30                # 帧率
+  Name: root
+  # 可用工具
+  Tools:
+    - Class: rviz/Interact        # 交互工具
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera      # 移动相机
+    - Class: rviz/Select          # 选择工具
+    - Class: rviz/FocusCamera     # 聚焦相机
+    - Class: rviz/Measure         # 测量工具
+      Line color: 128; 128; 0     # 测量线颜色 (黄色)
+    - Class: rviz/SetInitialPose  # 设置初始位姿
+      Theta std deviation: 0.2617993877991494
+      Topic: /initialpose
+      X std deviation: 0.5
+      Y std deviation: 0.5
+    - Class: rviz/SetGoal         # 设置目标
+      Topic: /move_base_simple/goal
+    - Class: rviz/PublishPoint    # 发布点
+      Single click: true
+      Topic: /clicked_point
+  Value: true
+  # 视图配置
+  Views:
+    Current:
+      Class: rviz/Orbit              # 轨道相机模式
+      Distance: 10                    # 相机距离
+      Enable Stereo Rendering:        # 立体渲染
+        Stereo Eye Separation: 0.05999999865889549
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Focal Point:                   # 焦点位置
+        X: 0
+        Y: 0
+        Z: 0
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05000000074505806
+      Invert Z Axis: false           # 不反转Z轴
+      Name: Current View
+      Near Clip Distance: 0.009999999776482582  # 近裁剪距离
+      Pitch: 0.785398006439209       # 俯仰角 (45度)
+      Target Frame: <Fixed Frame>    # 目标坐标系
+      Value: Orbit (rviz)
+      Yaw: 0.785398006439209         # 偏航角 (45度)
+    Saved: ~
+# 使用Rviz默认窗口布局（不在配置文件中固定窗口几何）

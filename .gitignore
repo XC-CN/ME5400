@@ -1,0 +1,29 @@
+# 大数据文件
+*.zip
+*.bag
+*.pcd
+
+# KITTI原始数据
+2011_09_26/
+
+# ROS编译文件
+catkin_ws/build/
+catkin_ws/devel/
+
+# PCD点云文件
+catkin_ws/src/fast_lio/PCD/
+
+# 临时文件
+*~
+*.swp
+*.tmp
+.DS_Store
+
+# Python缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE文件
+.vscode/
+.idea/
