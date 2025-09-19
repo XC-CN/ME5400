@@ -1,15 +1,15 @@
 common:
     lid_topic:  "/kitti/velo/pointcloud"
     imu_topic:  "/kitti/oxts/imu"
-    time_sync_en: false         # ONLY turn on when external time synchronization is really not possible
-    time_offset_lidar_to_imu: 0.0 # Time offset between lidar and IMU calibrated by other algorithms, e.g. LI-Init (can be found in README).
-                                  # This param will take effect no matter what time_sync_en is. So if the time offset is not known exactly, please set as 0.0
+    time_sync_en: false         # 仅当外部时间同步确实无法实现时才开启
+    time_offset_lidar_to_imu: 0.0 # 激光雷达与IMU之间的时间偏移量，可通过其他算法（如LI-Init，详见README）标定。
+                                  # 无论time_sync_en为何值，此参数始终生效。如果时间偏移量不确定，请设为0.0
 
 preprocess:
-    lidar_type: 2                # 1 for Livox serials LiDAR, 2 for Velodyne LiDAR, 3 for ouster LiDAR, 
+    lidar_type: 2                # 1表示Livox系列激光雷达，2表示Velodyne激光雷达，3表示Ouster激光雷达
     scan_line: 64
-    scan_rate: 10                # only need to be set for velodyne, unit: Hz,
-    timestamp_unit: 2            # the unit of time/t field in the PointCloud2 rostopic: 0-second, 1-milisecond, 2-microsecond, 3-nanosecond.
+    scan_rate: 10                # 仅Velodyne需要设置，单位：Hz
+    timestamp_unit: 2            # PointCloud2话题中time/t字段的单位：0-秒，1-毫秒，2-微秒，3-纳秒
     blind: 2
 
 mapping:
@@ -19,19 +19,19 @@ mapping:
     b_gyr_cov: 0.0001
     fov_degree:    180
     det_range:     100.0
-    extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic,
+    extrinsic_est_en:  false      # true：启用IMU-LiDAR外参在线估计
     extrinsic_T: [ 0, 0, 0.28]
     extrinsic_R: [ 1, 0, 0, 
                    0, 1, 0, 
                    0, 0, 1]
 
 publish:
-    path_en:  false
-    scan_publish_en:  true       # false: close all the point cloud output
-    dense_publish_en: true       # false: low down the points number in a global-frame point clouds scan.
-    scan_bodyframe_pub_en: true  # true: output the point cloud scans in IMU-body-frame
+    path_en:  true
+    scan_publish_en:  true       # false：关闭所有点云输出
+    dense_publish_en: true       # false：降低全局点云帧中的点数
+    scan_bodyframe_pub_en: true  # true：输出IMU机体系下的点云帧
 
 pcd_save:
     pcd_save_en: true
-    interval: -1                 # how many LiDAR frames saved in each pcd file; 
-                                 # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.
+    interval: -1                 # 每个pcd文件保存多少帧激光雷达数据；
+                                 # -1：所有帧保存到一个pcd文件，帧数过多可能导致内存溢出
