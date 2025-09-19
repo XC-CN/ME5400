@@ -3,8 +3,13 @@
 *.bag
 *.pcd
 
-# KITTI原始数据
-2011_09_26/
+# KITTI数据文件夹
+KITTI_Data/
+
+# MCTrack大文件和数据目录
+MCTrack/tmp_gdrive/
+MCTrack/data/
+MCTrack/results/
 
 # ROS编译文件
 catkin_ws/build/
