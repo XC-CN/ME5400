@@ -1,21 +1,38 @@
 <launch>
-  <!-- Launch file for velodyne16 VLP-16 LiDAR -->
+  <!-- 启动文件：用于启动 VLP-16 (Velodyne) 的 mapping 节点和可视化 -->
+  
+  <!-- 是否启动 RViz（可以在运行时通过传入参数覆盖） -->
+  <arg name="rviz" default="true" />
 
-    <arg name="rviz" default="true" />
+  <!-- 使用仿真时间（若播放 rosbag，应设置为 true） -->
+  <param name="/use_sim_time" value="true" />
 
-    <rosparam command="load" file="$(find fast_lio)/config/velodyne.yaml" />
+  <!-- 加载点云/传感器等相关配置（位于 fast_lio 包下的 velodyne.yaml） -->
+  <rosparam command="load" file="$(find fast_lio)/config/velodyne.yaml" />
 
-    <param name="feature_extract_enable" type="bool" value="0"/>
-    <param name="point_filter_num" type="int" value="4"/>
-    <param name="max_iteration" type="int" value="3" />
-    <param name="filter_size_surf" type="double" value="0.5" />
-    <param name="filter_size_map" type="double" value="0.5" />
-    <param name="cube_side_length" type="double" value="1000" />
-    <param name="runtime_pos_log_enable" type="bool" value="0" />
-    <node pkg="fast_lio" type="fastlio_mapping" name="laserMapping" output="screen" /> 
+  <!-- 算法参数 -->
+  <!-- 是否启用特征提取（0/1） -->
+  <param name="feature_extract_enable" type="bool" value="0"/>
+  <!-- 点云滤波时每次保留的点数（或滤波等级） -->
+  <param name="point_filter_num" type="int" value="4"/>
+  <!-- 最大迭代次数（用于优化/配准时的最大迭代） -->
+  <param name="max_iteration" type="int" value="3" />
+  <!-- 平面特征滤波器尺寸（米） -->
+  <param name="filter_size_surf" type="double" value="0.5" />
+  <!-- 地图点云滤波器尺寸（米） -->
+  <param name="filter_size_map" type="double" value="0.5" />
+  <!-- 地图分块/体素的边长（米），用于地图管理 -->
+  <param name="cube_side_length" type="double" value="1000" />
+  <!-- 是否记录运行时位置日志（用于调试/回放） -->
+  <param name="runtime_pos_log_enable" type="bool" value="0" />
 
-    <group if="$(arg rviz)">
+  <!-- 启动 fast_lio 的 mapping 节点 -->
+  <node pkg="fast_lio" type="fastlio_mapping" name="laserMapping" output="screen" /> 
+
+  <!-- 如果需要可视化则启动 RViz（基于 rviz_cfg 中的配置文件） -->
+  <group if="$(arg rviz)">
+    <!-- 使用 nice 前缀降低进程优先级（可选） -->
     <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find fast_lio)/rviz_cfg/loam_livox.rviz" />
-    </group>
+  </group>
 
 </launch>

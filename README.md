@@ -106,6 +106,15 @@ python3 kitti_to_rosbag.py
 
 #### 2. 运行FAST-LIO2
 
+使用提供的脚本快速启动：
+
+```bash
+# 运行FAST-LIO2和KITTI数据
+./run_fastlio2_kitti.sh
+```
+
+或者手动执行：
+
 ```bash
 # 启动FAST-LIO2
 cd catkin_ws
@@ -113,7 +122,7 @@ source devel/setup.bash
 roslaunch fast_lio mapping_velodyne.launch
 
 # 播放数据（新终端）
-rosbag play KITTI_Data/kitti_2011_09_26_drive_0019_sync.bag
+rosbag play KITTI_Data/kitti_2011_09_26_drive_0019_sync.bag --clock
 ```
 
 #### 3. 结果查看
