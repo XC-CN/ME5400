@@ -68,11 +68,11 @@ if $PRINT_ONLY; then
     exit 0
 fi
 
-echo "启动ROS核心..."
-$TERMINAL_CMD bash -c "$CMD_ROSCORE; exec bash" &
+# echo "启动ROS核心..."
+# $TERMINAL_CMD bash -c "$CMD_ROSCORE; exec bash" &
 
-echo "等待2秒让ROS核心启动..."
-sleep 2
+# echo "等待2秒让ROS核心启动..."
+# sleep 2
 
 echo "后台启动KITTI bag数据播放... (参数: $PLAY_OPT)"
 $TERMINAL_CMD bash -c "$CMD_BAG; exec bash" &
