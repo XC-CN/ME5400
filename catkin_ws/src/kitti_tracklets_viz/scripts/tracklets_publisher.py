@@ -72,6 +72,8 @@ class TrackletsPublisher:
         self.velo_from_cam_R = self._parse_float_list(rospy.get_param('~velo_from_cam_R', ''), 9, default_identity=True)
         self.velo_from_cam_t = self._parse_float_list(rospy.get_param('~velo_from_cam_t', ''), 3, default_zero=True)
         self.debug = bool(int(rospy.get_param('~debug', 0)))
+        # 新增: 是否每帧输出日志 (默认 1=每帧)。若置 0 保持旧的 1Hz 节流行为。
+        self.log_every_frame = bool(int(rospy.get_param('~log_every_frame', 1)))
 
         if self.include_types:
             self.include_types = {t.strip() for t in self.include_types.split(',') if t.strip()}
@@ -190,11 +192,15 @@ class TrackletsPublisher:
 
         self.publisher.publish(markers)
 
-        # 周期性调试输出（每 ~1 秒）
-        if stamp.to_sec() - self.last_debug_print > 1.0:
-            self.last_debug_print = stamp.to_sec()
+        if self.log_every_frame:
             rospy.loginfo('[frame %d] boxes=%d traj=%d published markers=%d',
                           self.current_frame, box_count, traj_count, len(markers.markers))
+        else:
+            # 旧逻辑: 每 ~1 秒节流一次
+            if stamp.to_sec() - self.last_debug_print > 1.0:
+                self.last_debug_print = stamp.to_sec()
+                rospy.loginfo('[frame %d] boxes=%d traj=%d published markers=%d',
+                              self.current_frame, box_count, traj_count, len(markers.markers))
 
     def _make_box_marker(self, marker_id, obj, pose, stamp):
         m = Marker()
