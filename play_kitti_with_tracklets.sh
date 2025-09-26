@@ -22,7 +22,7 @@
 #
 
 set -e
-LOOP=false
+LOOP=true
 RVIZ_CFG="catkin_ws/src/fast_lio/rviz_cfg/kitti_simple.rviz"
 START_RVIZ=true
 PRINT_ONLY=false

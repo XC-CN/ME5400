@@ -54,6 +54,8 @@ class TrackletsPublisher:
             raise SystemExit(1)
         self.frame_rate = float(rospy.get_param('~frame_rate', 10.0))  # KITTI velodyne ~10Hz
         self.base_frame = rospy.get_param('~frame_id', 'velo_link')
+        self.odom_frame = rospy.get_param('~odom_frame', '')  # 预留
+        self.publish_tf = bool(int(rospy.get_param('~publish_tf', 0)))  # 预留
         self.topic = rospy.get_param('~topic', '/kitti/tracklets_markers')
         self.start_frame = int(rospy.get_param('~start_frame', 0))
         self.max_frame = int(rospy.get_param('~max_frame', -1))
@@ -64,6 +66,12 @@ class TrackletsPublisher:
         self.enable_traj = bool(int(rospy.get_param('~enable_traj', 1)))
         self.traj_history_len = int(rospy.get_param('~traj_history_len', 300))  # 每目标最多保存点数
         self.traj_line_width = float(rospy.get_param('~traj_line_width', 0.08))
+        # tracklet 坐标系: camera 或 lidar
+        self.tracklet_coord = rospy.get_param('~tracklet_coord', 'camera')  # 'camera' or 'lidar'
+        # camera->velodyne 旋转(行优先9个数) 与 平移 (3个数)
+        self.velo_from_cam_R = self._parse_float_list(rospy.get_param('~velo_from_cam_R', ''), 9, default_identity=True)
+        self.velo_from_cam_t = self._parse_float_list(rospy.get_param('~velo_from_cam_t', ''), 3, default_zero=True)
+        self.debug = bool(int(rospy.get_param('~debug', 0)))
 
         if self.include_types:
             self.include_types = {t.strip() for t in self.include_types.split(',') if t.strip()}
@@ -92,6 +100,21 @@ class TrackletsPublisher:
 
         # 定时器
         self.timer = rospy.Timer(rospy.Duration(1.0/self.frame_rate), self._on_timer)
+
+    def _parse_float_list(self, val, expected_len, default_identity=False, default_zero=False):
+        if not val:
+            if default_identity and expected_len == 9:
+                return [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]
+            if default_zero:
+                return [0.0]*expected_len
+            return [0.0]*expected_len
+        parts = [p for p in val.replace(';',',').split(',') if p.strip()]
+        if len(parts) != expected_len:
+            rospy.logwarn('参数长度不匹配，期望%d 得到%d: %s', expected_len, len(parts), val)
+            if default_identity and expected_len == 9:
+                return [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]
+            return [0.0]*expected_len
+        return [float(p) for p in parts]
 
     def _load_tracklets(self, path):
         tree = ET.parse(path)
@@ -185,10 +208,26 @@ class TrackletsPublisher:
         m.scale.y = obj.w
         m.scale.z = obj.h
         # KITTI coordinate to ROS (assuming LiDAR frame):
-        # KITTI: x-forward, y-left, z-up. ROS typical: x-forward, y-left, z-up (Velodyne). So direct.
-        m.pose.position.x = pose['tx']
-        m.pose.position.y = pose['ty']
-        m.pose.position.z = pose['tz']
+        # 当 tracklet_coord='camera' 时，原始 tracklet 是 camera0 坐标: x 右, y 下, z 前。
+        # 需要先转换到 Velodyne: p_velo = R * p_cam + t  (这里 R,t 由参数提供，表示 camera->velo)
+        tx, ty, tz = pose['tx'], pose['ty'], pose['tz']
+        if self.tracklet_coord == 'camera':
+            # camera 坐标轴: x:right, y:down, z:forward
+            p_cam = [tx, ty, tz]
+            R = self.velo_from_cam_R
+            t = self.velo_from_cam_t
+            # R 3x3
+            vx = R[0]*p_cam[0] + R[1]*p_cam[1] + R[2]*p_cam[2] + t[0]
+            vy = R[3]*p_cam[0] + R[4]*p_cam[1] + R[5]*p_cam[2] + t[1]
+            vz = R[6]*p_cam[0] + R[7]*p_cam[1] + R[8]*p_cam[2] + t[2]
+            m.pose.position.x = vx
+            m.pose.position.y = vy
+            m.pose.position.z = vz
+        else:
+            # 假设已经在 Velodyne 坐标 (x前 y左 z上)
+            m.pose.position.x = tx
+            m.pose.position.y = ty
+            m.pose.position.z = tz
         # Orientation: only rz (yaw) is meaningful normally; rx, ry small. We'll build quaternion.
         q = euler_to_quaternion(pose['rx'], pose['ry'], pose['rz'])
         m.pose.orientation.x = q[0]
