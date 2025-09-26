@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>kitti_tracklets_viz</name>
+  <version>0.0.1</version>
+  <description>Publish KITTI tracklet 3D bounding boxes while playing LiDAR bag.</description>
+  <maintainer email="user@example.com">User</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin_tools</buildtool_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>visualization_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+</package>
