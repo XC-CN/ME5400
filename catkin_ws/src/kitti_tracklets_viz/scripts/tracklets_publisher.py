@@ -180,8 +180,10 @@ class TrackletsPublisher:
                 mid += 1
             # TRAJECTORY
             if self.enable_traj:
+                # 使用与 BOX 相同的转换坐标，避免轨迹与包围盒方向错位
+                tx_t, ty_t, tz_t = self._transform_xyz(pose['tx'], pose['ty'], pose['tz'])
                 hlist = self.traj_history.setdefault(obj_idx, [])
-                hlist.append((pose['tx'], pose['ty'], pose['tz']))
+                hlist.append((tx_t, ty_t, tz_t))
                 # 限制长度
                 if len(hlist) > self.traj_history_len:
                     del hlist[0:len(hlist)-self.traj_history_len]
@@ -213,27 +215,10 @@ class TrackletsPublisher:
         m.scale.x = obj.l
         m.scale.y = obj.w
         m.scale.z = obj.h
-        # KITTI coordinate to ROS (assuming LiDAR frame):
-        # 当 tracklet_coord='camera' 时，原始 tracklet 是 camera0 坐标: x 右, y 下, z 前。
-        # 需要先转换到 Velodyne: p_velo = R * p_cam + t  (这里 R,t 由参数提供，表示 camera->velo)
-        tx, ty, tz = pose['tx'], pose['ty'], pose['tz']
-        if self.tracklet_coord == 'camera':
-            # camera 坐标轴: x:right, y:down, z:forward
-            p_cam = [tx, ty, tz]
-            R = self.velo_from_cam_R
-            t = self.velo_from_cam_t
-            # R 3x3
-            vx = R[0]*p_cam[0] + R[1]*p_cam[1] + R[2]*p_cam[2] + t[0]
-            vy = R[3]*p_cam[0] + R[4]*p_cam[1] + R[5]*p_cam[2] + t[1]
-            vz = R[6]*p_cam[0] + R[7]*p_cam[1] + R[8]*p_cam[2] + t[2]
-            m.pose.position.x = vx
-            m.pose.position.y = vy
-            m.pose.position.z = vz
-        else:
-            # 假设已经在 Velodyne 坐标 (x前 y左 z上)
-            m.pose.position.x = tx
-            m.pose.position.y = ty
-            m.pose.position.z = tz
+        tx_t, ty_t, tz_t = self._transform_xyz(pose['tx'], pose['ty'], pose['tz'])
+        m.pose.position.x = tx_t
+        m.pose.position.y = ty_t
+        m.pose.position.z = tz_t
         # Orientation: only rz (yaw) is meaningful normally; rx, ry small. We'll build quaternion.
         q = euler_to_quaternion(pose['rx'], pose['ry'], pose['rz'])
         m.pose.orientation.x = q[0]
@@ -245,6 +230,21 @@ class TrackletsPublisher:
         m.color.a = 0.35
         m.lifetime = rospy.Duration(1.0/self.frame_rate * 1.5)
         return m
+
+    def _transform_xyz(self, tx, ty, tz):
+        """将 tracklet 原始坐标 (可能是 camera 坐标) 转换到 base_frame (Velodyne) 下。
+        返回 (x,y,z)。轨迹与盒子统一调用此函数，避免方向不一致。
+        """
+        if self.tracklet_coord == 'camera':
+            p_cam = [tx, ty, tz]
+            R = self.velo_from_cam_R
+            t = self.velo_from_cam_t
+            vx = R[0]*p_cam[0] + R[1]*p_cam[1] + R[2]*p_cam[2] + t[0]
+            vy = R[3]*p_cam[0] + R[4]*p_cam[1] + R[5]*p_cam[2] + t[1]
+            vz = R[6]*p_cam[0] + R[7]*p_cam[1] + R[8]*p_cam[2] + t[2]
+            return vx, vy, vz
+        else:
+            return tx, ty, tz
 
     def _make_text_marker(self, marker_id, obj, pose, stamp, ref_marker):
         m = Marker()
