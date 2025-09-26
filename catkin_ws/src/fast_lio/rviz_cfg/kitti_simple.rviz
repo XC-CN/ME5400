@@ -8,36 +8,36 @@
 #   4. 如果使用其它数据集，可修改 Topic 字段。
 #   5. Window Geometry 里是窗口大小位置，删除或调整不会影响功能。
 # ------------------------------------------------------------
-Panels:  # RViz 面板配置列表
-  - Class: rviz/Displays  # 显示面板类
-    Help Height: 78  # 帮助区域高度
-    Name: Displays  # 面板名称
-    Property Tree Widget:  # 属性树控件
-      Expanded:  # 展开的项目
-        - /Global Options1  # 全局选项
-        - /Status1  # 状态
-        - /KITTI PointCloud1  # KITTI 点云
-      Splitter Ratio: 0.5  # 分割比例
-    Tree Height: 565  # 树高度
-  - Class: rviz/Selection  # 选择面板类
-    Name: Selection  # 面板名称
-  - Class: rviz/Tool Properties  # 工具属性面板类
-    Expanded:  # 展开的项目
-      - /2D Pose Estimate1  # 2D 姿态估计
-      - /2D Nav Goal1  # 2D 导航目标
-      - /Publish Point1  # 发布点
-    Name: Tool Properties  # 面板名称
-    Splitter Ratio: 0.5886790156364441  # 分割比例
-  - Class: rviz/Views  # 视图面板类
-    Expanded:  # 展开的项目
-      - /Current View1  # 当前视图
-    Name: Views  # 面板名称
-    Splitter Ratio: 0.5  # 分割比例
-  - Class: rviz/Time  # 时间面板类
-    Experimental: false  # 是否实验性
-    Name: Time  # 面板名称
-    SyncMode: 0  # 同步模式
-    SyncSource: "KITTI PointCloud"  # 同步源
+# Panels:  # RViz 面板配置列表
+#   - Class: rviz/Displays  # 显示面板类
+#     Help Height: 78  # 帮助区域高度
+#     Name: Displays  # 面板名称
+#     Property Tree Widget:  # 属性树控件
+#       Expanded:  # 展开的项目
+#         - /Global Options1  # 全局选项
+#         - /Status1  # 状态
+#         - /KITTI PointCloud1  # KITTI 点云
+#       Splitter Ratio: 0.5  # 分割比例
+#     Tree Height: 565  # 树高度
+#   - Class: rviz/Selection  # 选择面板类
+#     Name: Selection  # 面板名称
+#   - Class: rviz/Tool Properties  # 工具属性面板类
+#     Expanded:  # 展开的项目
+#       - /2D Pose Estimate1  # 2D 姿态估计
+#       - /2D Nav Goal1  # 2D 导航目标
+#       - /Publish Point1  # 发布点
+#     Name: Tool Properties  # 面板名称
+#     Splitter Ratio: 0.5886790156364441  # 分割比例
+#   - Class: rviz/Views  # 视图面板类
+#     Expanded:  # 展开的项目
+#       - /Current View1  # 当前视图
+#     Name: Views  # 面板名称
+#     Splitter Ratio: 0.5  # 分割比例
+#   - Class: rviz/Time  # 时间面板类
+#     Experimental: false  # 是否实验性
+#     Name: Time  # 面板名称
+#     SyncMode: 0  # 同步模式
+#     SyncSource: "KITTI PointCloud"  # 同步源
 
 # 首选项（注：已注释以保持默认行为）
 Preferences:  # 首选项配置
