@@ -3,11 +3,11 @@ set -e
 
 ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
 CATKIN_WS="$ROOT_DIR/catkin_ws"
-DEFAULT_BAG="$ROOT_DIR/KITTI_Data/kitti_2011_09_26_drive_0019_sync.bag"
+DEFAULT_BAG="$ROOT_DIR/tracking/rosbags/seq_0000.bag"
 DEFAULT_CONFIG="$ROOT_DIR/MCTrack/config/kitti_fastlio.yaml"
 DEFAULT_SEQ=0
 DEFAULT_DATASET="$ROOT_DIR/tracking"
-DEFAULT_DET_ROOT="$ROOT_DIR/tracking/det_tracking_lsvm"
+DEFAULT_DET_ROOT="$ROOT_DIR/tracking/det_tracking_lsvm/training/det_02"
 RVIZ_CFG="$ROOT_DIR/catkin_ws/src/fast_lio/rviz_cfg/kitti_simple.rviz"
 FRAME_ID="velo_link"
 

@@ -34,9 +34,13 @@ class Detection:
 class KITTITrackingLoader:
     def __init__(self, root: Path, det_root: Optional[Path] = None) -> None:
         self.root = Path(root)
-        self.seq_root = self.root / "sequences"
+        seq_candidate = self.root / "sequences"
+        self.seq_root = seq_candidate if seq_candidate.is_dir() else self.root
         self.oxts_root = self.root / "oxts"
-        self.det_root = Path(det_root) if det_root is not None else self.root / "det_tracking_lsvm"
+        det_root_path = Path(det_root) if det_root is not None else self.root / "det_tracking_lsvm"
+        if det_root_path.is_dir() and (det_root_path / "det_02").is_dir():
+            det_root_path = det_root_path / "det_02"
+        self.det_root = det_root_path
         self._oxts_cache: Dict[str, np.ndarray] = {}
         self._det_cache: Dict[str, List[Detection]] = {}
         self._time_cache: Dict[str, np.ndarray] = {}

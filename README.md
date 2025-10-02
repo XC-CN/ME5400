@@ -33,11 +33,6 @@ ME5400/
 │   └── results/             # 实验结果
 ├── catkin_ws/               # ROS工作空间
 │   └── src/fast_lio/        # FAST-LIO2源码
-├── KITTI_Data/              # KITTI数据集文件夹（gitignore排除）
-│   ├── kitti_to_rosbag.py   # 数据转换工具
-│   ├── *.bag                # ROS bag文件
-│   ├── *.zip                # 原始数据包
-│   └── 2011_09_26/          # 解压后数据
 └── README.md                # 项目说明
 ```
 
@@ -86,69 +81,41 @@ pip install -r requirements.txt
 
 ## 🎯 使用指南
 
-### FAST-LIO2 建图
-
-#### 1. 数据准备
-
-将KITTI数据转换为ROS bag格式：
-
-```bash
-cd KITTI_Data
-python3 kitti_to_rosbag.py
-```
-
-#### 2. 运行FAST-LIO2
-
-使用提供的脚本快速启动：
-
-```bash
-# 运行FAST-LIO2和KITTI数据
-./run_fastlio2_kitti.sh
-```
-
-或者手动执行：
-
-```bash
-# 启动FAST-LIO2
-cd catkin_ws
-source devel/setup.bash
-roslaunch fast_lio mapping_velodyne.launch
-
-# 播放数据（新终端）
-rosbag play KITTI_Data/kitti_2011_09_26_drive_0019_sync.bag --clock
-```
-
-#### 3. 结果查看
-
-生成的点云地图保存在：
-
-```
-catkin_ws/src/fast_lio/PCD/scans.pcd
-```
-
-可使用PCL工具查看：
-
-```bash
-pcl_viewer catkin_ws/src/fast_lio/PCD/scans.pcd
-```
-
 ### FAST-LIO + MCTrack 联合处理
 
 #### 数据目录说明
 
-- `MCTrack/data/`：正式使用的数据目录，包含按照 BaseVersion 规范整理好的 `datasets/`（原始标注、pose、calib 等）与 `base_version/`（JSON 格式的检测结果）。
-- `MCTrack/data_download_temp/`：官方脚本下载压缩包时的临时缓存，若使用项目自带脚本直接整理数据可忽略；若存在，可安全删除以节省磁盘空间。
+- `tracking/`（未纳入版本控制，需自行下载）：包含 KITTI Tracking 的 `training/`、`testing/` 子目录（`calib/`、`velodyne/`、`oxts/`、`det_02/` 等）。当前管线只使用 `training/`。
+- `MCTrack/data/`：若需要离线评估，可在这里存放 BaseVersion JSON（默认使用 `gt` 检测结果）。
 
-#### 1. 准备 KITTI Tracking 数据（当前检测来自数据集）
+#### 1. 准备 KITTI Tracking 数据
+
+1. `data_tracking_calib.zip` → `tracking/training/calib/`
+2. `data_tracking_velodyne.zip` → `tracking/training/velodyne/`
+3. `data_tracking_oxts.zip` → `tracking/training/oxts/`
+4. `data_tracking_det_2_lsvm.zip` 或其他检测 → 解压后将 `det_02/*.txt` 移至 `tracking/det_tracking_lsvm/training/det_02/`（若需要测试集，可放在 `tracking/det_tracking_lsvm/testing/det_02/`）
+
+解压后确认 `tracking/training/velodyne/0000/000000.bin` 等文件可访问。
+
+如需 rosbag，可执行：
+
+```bash
+python Scripts/kitti_tracking_to_rosbag.py \
+  --dataset_root tracking/training \
+  --seq 0 \
+  --output tracking/rosbags/seq_0000.bag
+```
+
+#### 2. （可选）生成 BaseVersion JSON 用于离线评估
 
 ```bash
 # 进入项目根目录
 cd /home/xc/Projects/ME5400
 
-# 1) 生成 pose 文本（依赖 pykitti，已写入 conda 环境）
+# 1) 生成 fastlio pose（若使用官方 pose，可跳过）
 conda run -n MCTrack python Scripts/generate_kitti_pose.py
 
-# 2) 将 label_02 转换为检测输入（仅保留 Car 类）
+# 2) 将 label_02 转换为检测输入（当前保留 Car 类）
 conda run -n MCTrack python Scripts/convert_gt_to_detector.py
 
 # 3) 生成 BaseVersion JSON（输出至 MCTrack/data/base_version/kitti/gt/val.json）
@@ -160,89 +127,35 @@ conda run -n MCTrack python preprocess/convert_kitti.py \
   --detector gt --split val
 ```
 
-完成后，确保 `config/kitti.yaml` 中的 `DETECTOR` 设为 `gt`（本仓库已配置）。
+完成后，确保 `config/kitti.yaml` 中的 `DETECTOR` 设为 `gt`（默认已配置）。
 
-#### 2. 在 FAST-LIO 位姿下运行 MCTrack 跟踪 + 评估
+#### 3. 在 FAST-LIO 位姿下运行 MCTrack（离线批处理）
 
 ```bash
 cd /home/xc/Projects/ME5400/MCTrack
 conda run -n MCTrack python main.py --dataset kitti -e -p 1
 ```
 
-执行成功后，结果会写入 `MCTrack/results/kitti/<时间戳>/gt/val/`，其中包含逐序列的 `data/*.txt` 跟踪输出、`car_summary.txt` 指标及图表。
+执行成功后，结果会写入 `MCTrack/results/kitti/<时间戳>/gt/val/`，包含 `data/*.txt` 跟踪输出与评估指标。
 
-#### 3. RViz 可视化（推荐一键脚本）
+#### 4. RViz 可视化
 
-```bash
-# 默认播放 kitti_2011_09_26_drive_0019_sync.bag，并展示 0000 序列的跟踪结果
-./Scripts/run_mctrack_viz.sh
+- **离线结果回放**：
+  1. 另启终端播放点云（可使用你根据 Tracking 数据生成的 rosbag 或自写发布器）。
+  2. 运行 `python Scripts/mctrack_marker_publisher.py --result MCTrack/results/.../data/0000.txt --calib MCTrack/data/kitti/datasets/training/calib/0000.txt --frame velodyne`，RViz 订阅 `/mctrack/markers` 即可看到包围盒、朝向箭头和轨迹。
 
-# 如需指定参数（示例：使用其它结果文件 / bag）
-./Scripts/run_mctrack_viz.sh \
-  --bag KITTI_Data/your_sequence.bag \
-  --result MCTrack/results/kitti/20251002_174627/gt/val/data/0001.txt \
-  --calib MCTrack/data/kitti/datasets/training/calib/0001.txt \
-  --frame velo_link --rate 10
+- **在线融合脚本**：
+  使用 `Scripts/run_mctrack_online.sh` 启动完整链路（rosbag 点云+IMU → FAST-LIO → MCTrack → RViz）。示例：
+  ```bash
+  ./Scripts/run_mctrack_online.sh \
+    --bag tracking/rosbags/seq_0000.bag \
+    --dataset tracking/training \
+    --detector_root tracking/det_tracking_lsvm/training/det_02 \
+    --seq 0
+  ```
+  运行前请确保有包含点云/IMU 的 rosbag（可由 `tracking/training/velodyne` 转换而来）以及相应检测文件。
 
-# 仅查看将要执行的命令
-./Scripts/run_mctrack_viz.sh --print
-```
-
-脚本会自动检测 `gnome-terminal`/`xterm`，依次启动 `roscore`、`rosbag play`、`mctrack_marker_publisher.py`、`rviz`。如环境不支持自动开新终端，脚本会提示需手动执行的命令。
-
-#### 4. 使用 FAST-LIO 里程计驱动 MCTrack（离线 JSON）
-
-1. **重新编译 ROS 包（添加了新的记录脚本）**
-   ```bash
-   cd /home/xc/Projects/ME5400/catkin_ws
-   catkin_make
-   source devel/setup.bash
-   ```
-
-2. **启动 FAST-LIO 并播放 bag（和之前步骤一致）**
-   ```bash
-   # 终端1：FAST-LIO
-   roslaunch fast_lio mapping_velodyne.launch
-
-   # 终端2：播放含 Velodyne+IMU 的 KITTI bag
-   rosbag play ../KITTI_Data/kitti_2011_09_26_drive_0019_sync.bag --clock --pause
-   ```
-   （建议先暂停 `rosbag`，等下启动录制后再继续）
-
-3. **在新的终端录制 FAST-LIO 位姿，同步点云帧**
-   ```bash
-   rosrun kitti_tracklets_viz fastlio_pose_recorder.py \
-     --output /home/xc/Projects/ME5400/MCTrack/data/kitti/datasets/training/pose_fastlio \
-     --seq 0000 \
-     _odom_topic:=/aft_mapped_to_init \
-     _point_topic:=/kitti/velo/pointcloud
-   ```
-   之后在播放 rosbag 的终端按空格继续，让 bag 跑完整个序列；录制脚本会在 `pose_fastlio/0000.txt` 中写入每帧 3×4 位姿矩阵。
-
-4. **基于 FAST-LIO 位姿生成 BaseVersion JSON**（仅处理序列 0000，避免覆盖原结果）
-   ```bash
-   cd /home/xc/Projects/ME5400/MCTrack
-   conda run -n MCTrack python preprocess/convert_kitti.py \
-     --raw_data_path data/kitti/datasets/ \
-     --dets_path data/kitti/detectors/ \
-     --save_path data/base_version_fastlio/kitti/ \
-     --detector gt \
-     --split val \
-     --pose_root pose_fastlio \
-     --seqs 0000
-   ```
-   生成的 JSON 位于 `data/base_version_fastlio/kitti/gt/val.json`，其中 `global2lidar` 采用 FAST-LIO 里程计。
-
-5. **使用专门配置运行 MCTrack**（只追踪序列 0000）
-   ```bash
-   cd /home/xc/Projects/ME5400/MCTrack
-   conda run -n MCTrack python main.py --dataset kitti --eval -p 1 \
-     --config config/kitti_fastlio.yaml
-   ```
-
-6. **可视化**：运行 `./Scripts/run_mctrack_viz.sh --result MCTrack/results/kitti/<时间戳>/gt/val/data/0000.txt`，即可在 RViz 中查看使用 FAST-LIO 里程计的跟踪结果。
-
-### 在线 ROS 联动：rosbag → FAST-LIO → MCTrack → RViz
+### 在线 ROS 联动：KITTI Tracking 点云 → FAST-LIO → MCTrack → RViz
 
 > 当前检测由 KITTI Tracking 提供的离线检测文件生成并发布；后续可替换为任意目标检测算法的 ROS 输出。
 

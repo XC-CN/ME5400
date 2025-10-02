@@ -3,9 +3,6 @@
 *.bag
 *.pcd
 
-# KITTI数据文件夹
-KITTI_Data/
-
 # MCTrack大文件和数据目录
 MCTrack/tmp_gdrive/
 MCTrack/data/
@@ -32,3 +29,5 @@ __pycache__/
 # IDE文件
 .vscode/
 .idea/
+
+tracking/

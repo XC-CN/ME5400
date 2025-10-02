@@ -11,7 +11,7 @@ import rospy
 from std_msgs.msg import Header
 
 PACKAGE_DIR = Path(__file__).resolve()
-REPO_ROOT = PACKAGE_DIR.parents[3]
+REPO_ROOT = PACKAGE_DIR.parents[4]
 SCRIPTS_DIR = REPO_ROOT / "Scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.append(str(SCRIPTS_DIR))
@@ -22,17 +22,24 @@ from kitti_tracklets_viz.msg import Detection3D, Detection3DArray  # noqa: E402
 
 class DetectionPublisher:
     def __init__(self) -> None:
-        self.dataset_root = Path(rospy.get_param("~dataset_root", "tracking"))
-        self.detector_root = rospy.get_param("~detector_root", "")
+        dataset_param = rospy.get_param("~dataset_root", "tracking")
+        det_param = rospy.get_param("~detector_root", "")
+
+        dataset_root = Path(dataset_param)
+        if not dataset_root.is_absolute():
+            dataset_root = (REPO_ROOT / dataset_root).resolve()
+        self.dataset_root = dataset_root
+
+        det_root_path: Optional[Path]
+        if det_param:
+            det_root_path = Path(det_param)
+            if not det_root_path.is_absolute():
+                det_root_path = (REPO_ROOT / det_root_path).resolve()
+        else:
+            det_root_path = None
         self.seq = f"{int(rospy.get_param('~seq', 0)):04d}"
         self.rate_hz = float(rospy.get_param("~rate", 10.0))
         self.loop = bool(rospy.get_param("~loop", False))
-
-        det_root_path: Optional[Path]
-        if self.detector_root:
-            det_root_path = Path(self.detector_root)
-        else:
-            det_root_path = None
 
         self.loader = KITTITrackingLoader(self.dataset_root, det_root_path)
         self.publisher = rospy.Publisher("/kitti/detections", Detection3DArray, queue_size=2)
