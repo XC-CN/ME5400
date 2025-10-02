@@ -37,6 +37,9 @@ class DetectionPublisher:
                 det_root_path = (REPO_ROOT / det_root_path).resolve()
         else:
             det_root_path = None
+
+        rospy.loginfo("dataset_root=%s", self.dataset_root)
+        rospy.loginfo("det_root_path=%s", det_root_path)
         self.seq = f"{int(rospy.get_param('~seq', 0)):04d}"
         self.rate_hz = float(rospy.get_param("~rate", 10.0))
         self.loop = bool(rospy.get_param("~loop", False))

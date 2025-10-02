@@ -13,14 +13,14 @@
 1. **FAST-LIO2**：提供点云+IMU 的实时里程计估计
 2. **MCTrack**：在 FAST-LIO 位姿下对检测目标进行 3D 多目标跟踪，并生成包围盒、轨迹与朝向信息
 
-当前检测输入直接来自 KITTI Tracking 数据集提供的离线检测结果；后续可替换为任意 3D/多模态目标检测器的实时输出。
+当前检测输入直接来自 KITTI Tracking 数据集提供的检测结果；后续可替换为任意 3D/多模态目标检测器的实时输出。
 
 ## 🚀 主要功能
 
 - 🔗 **FAST-LIO × MCTrack 融合管线**：将点云/IMU 里程计与检测目标对齐，实时输出包围盒、轨迹与朝向箭头。
 - 🎯 **多数据集兼容的跟踪模块**：MCTrack 支持 KITTI / nuScenes / Waymo；当前默认使用 KITTI Tracking 的检测结果。
-- ⚡ **FAST-LIO 实时里程计**：针对 Velodyne 激光雷达的高效激光雷达-惯性里程计，可直接用于在线和离线 rosbag。
-- 🎨 **统一可视化脚本**：提供离线结果回放与在线融合两个脚本，默认的检测输入来自数据集（未来可改接任意目标检测算法）。
+- ⚡ **FAST-LIO 实时里程计**：针对 Velodyne 激光雷达的高效激光雷达-惯性里程计，可直接处理实时点云。
+- 🎨 **统一可视化脚本**：提供在线融合脚本，默认的检测输入来自数据集（未来可改接任意目标检测算法）。
 
 ## 📁 项目结构
 
@@ -81,83 +81,15 @@ pip install -r requirements.txt
 
 ## 🎯 使用指南
 
-### FAST-LIO + MCTrack 联合处理
-
-#### 数据目录说明
-
-- `tracking/`（未纳入版本控制，需自行下载）：包含 KITTI Tracking 的 `training/`、`testing/` 子目录（`calib/`、`velodyne/`、`oxts/`、`det_02/` 等）。当前管线只使用 `training/`。
-- `MCTrack/data/`：若需要离线评估，可在这里存放 BaseVersion JSON（默认使用 `gt` 检测结果）。
-
-#### 1. 准备 KITTI Tracking 数据
-
-1. `data_tracking_calib.zip` → `tracking/training/calib/`
-2. `data_tracking_velodyne.zip` → `tracking/training/velodyne/`
-3. `data_tracking_oxts.zip` → `tracking/training/oxts/`
-4. `data_tracking_det_2_lsvm.zip` 或其他检测 → 解压后将 `det_02/*.txt` 移至 `tracking/det_tracking_lsvm/training/det_02/`（若需要测试集，可放在 `tracking/det_tracking_lsvm/testing/det_02/`）
-
-解压后确认 `tracking/training/velodyne/0000/000000.bin` 等文件可访问。
-
-如需 rosbag，可执行：
-
-```bash
-python Scripts/kitti_tracking_to_rosbag.py \
-  --dataset_root tracking/training \
-  --seq 0 \
-  --output tracking/rosbags/seq_0000.bag
-```
-
-#### 2. （可选）生成 BaseVersion JSON 用于离线评估
-
-```bash
-# 进入项目根目录
-cd /home/xc/Projects/ME5400
-
-# 1) 生成 fastlio pose（若使用官方 pose，可跳过）
-conda run -n MCTrack python Scripts/generate_kitti_pose.py
-
-# 2) 将 label_02 转换为检测输入（当前保留 Car 类）
-conda run -n MCTrack python Scripts/convert_gt_to_detector.py
-
-# 3) 生成 BaseVersion JSON（输出至 MCTrack/data/base_version/kitti/gt/val.json）
-cd MCTrack
-conda run -n MCTrack python preprocess/convert_kitti.py \
-  --raw_data_path data/kitti/datasets/ \
-  --dets_path data/kitti/detectors/ \
-  --save_path data/base_version/kitti/ \
-  --detector gt --split val
-```
-
-完成后，确保 `config/kitti.yaml` 中的 `DETECTOR` 设为 `gt`（默认已配置）。
-
-#### 3. 在 FAST-LIO 位姿下运行 MCTrack（离线批处理）
-
-```bash
-cd /home/xc/Projects/ME5400/MCTrack
-conda run -n MCTrack python main.py --dataset kitti -e -p 1
-```
-
-执行成功后，结果会写入 `MCTrack/results/kitti/<时间戳>/gt/val/`，包含 `data/*.txt` 跟踪输出与评估指标。
-
-#### 4. RViz 可视化
-
-- **离线结果回放**：
-  1. 另启终端播放点云（可使用你根据 Tracking 数据生成的 rosbag 或自写发布器）。
-  2. 运行 `python Scripts/mctrack_marker_publisher.py --result MCTrack/results/.../data/0000.txt --calib MCTrack/data/kitti/datasets/training/calib/0000.txt --frame velodyne`，RViz 订阅 `/mctrack/markers` 即可看到包围盒、朝向箭头和轨迹。
-
-- **在线融合脚本**：
-  使用 `Scripts/run_mctrack_online.sh` 启动完整链路（rosbag 点云+IMU → FAST-LIO → MCTrack → RViz）。示例：
-  ```bash
-  ./Scripts/run_mctrack_online.sh \
-    --bag tracking/rosbags/seq_0000.bag \
-    --dataset tracking/training \
-    --detector_root tracking/det_tracking_lsvm/training/det_02 \
-    --seq 0
-  ```
-  运行前请确保有包含点云/IMU 的 rosbag（可由 `tracking/training/velodyne` 转换而来）以及相应检测文件。
-
 ### 在线 ROS 联动：KITTI Tracking 点云 → FAST-LIO → MCTrack → RViz
 
-> 当前检测由 KITTI Tracking 提供的离线检测文件生成并发布；后续可替换为任意目标检测算法的 ROS 输出。
+> 当前检测由 KITTI Tracking 数据集提供的检测文件生成并发布；后续可替换为任意目标检测算法的 ROS 输出。
+
+运行前请准备好 KITTI Tracking 数据目录：
+
+- `tracking/training/`：需包含 `calib/`、`oxts/`、`velodyne/` 等子目录。
+- `tracking/det_tracking_lsvm/`：保持检测结果组织为 `training/det_02/<seq>.txt` 结构，或替换成你自己的检测输出。
+- 如使用 rosbag 进行联调，请将点云+IMU 数据转换为 bag 并放在 `tracking/rosbags/`（脚本 `Scripts/kitti_tracking_to_rosbag.py` 支持生成）。
 
 1. **重新编译消息与节点**
    ```bash

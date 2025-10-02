@@ -1,6 +1,6 @@
 # ------------------------------------------------------------
 # KITTI 可视化 RViz 配置文件
-# 作用：仅用于离线回放 /kitti/velo/pointcloud 点云并快速查看
+# 作用：用于可视化 /kitti/velo/pointcloud 点云并快速查看
 # 使用说明：
 #   1. 若点云不显示，首先确认 Fixed Frame 与消息中的 frame_id 一致。
 #   2. 可在 Displays 面板中勾选/取消 “KITTI PointCloud” 来调节开关。

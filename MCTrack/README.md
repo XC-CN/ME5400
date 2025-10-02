@@ -59,13 +59,6 @@
 | **MCTrack** | VirConv | test | 81.07 | 89.81 | 32367 | 2025 | 46  |
 | **MCTrack** | VirConv | train | 82.65 | 85.19 | 22186 | 1659 | 22  |
 
-#### 离线
-
-| **方法** | **检测器** | **数据集** | **HOTA** | **MOTA** | **TP** | **FP** | **IDSW** |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| **MCTrack** | VirConv | test | 82.75 | 91.79 | 32095 | 2297 | 11  |
-| **MCTrack** | VirConv | train | 83.89 | 86.56 | 22150 | 1311 | 3  |
-
 ### [nuScenes](https://www.nuscenes.org/tracking?externalData=all&mapData=all&modalities=Any)
 
 | 方法 | 检测器 | 数据集 | AMOTA | MOTA | TP  | FP  | IDS |
