@@ -37,7 +37,13 @@ def read_calib(calib_path: Path) -> Dict[str, np.ndarray]:
             line = line.strip()
             if not line:
                 continue
-            key, values = line.split(":", 1)
+            if ":" in line:
+                key, values = line.split(":", 1)
+            else:
+                parts = line.split()
+                if not parts:
+                    continue
+                key, values = parts[0], " ".join(parts[1:])
             arr = np.fromstring(values, sep=" ", dtype=np.float64)
             data[key] = arr
     return data
@@ -118,9 +124,18 @@ def get_global_yaw(rot_y: float, lidar2global: np.ndarray) -> float:
 
 class MCTrackOnlineNode:
     def __init__(self) -> None:
-        self.seq = f"{int(rospy.get_param('~seq', 0)):04d}"
-        dataset_root = Path(rospy.get_param("~dataset_root", "tracking"))
-        calib_path = dataset_root / "sequences" / self.seq / "calib.txt"
+        self.seq = f"{int(rospy.get_param('~seq', 19)):04d}"
+        dataset_param = rospy.get_param("~dataset_root", "tracking/training")
+        dataset_root = Path(dataset_param)
+        if not dataset_root.is_absolute():
+            dataset_root = (REPO_ROOT / dataset_root).resolve()
+
+        seq_root = dataset_root / "sequences" if (dataset_root / "sequences").is_dir() else dataset_root
+        calib_dir = seq_root / "calib" if (seq_root / "calib").is_dir() else None
+        if calib_dir and calib_dir.is_dir():
+            calib_path = calib_dir / f"{self.seq}.txt"
+        else:
+            calib_path = seq_root / self.seq / "calib.txt"
         config_path = Path(rospy.get_param("~config", MCTrack_DIR / "config" / "kitti_fastlio.yaml"))
         self.pose_topic = rospy.get_param("~pose_topic", "/mctrack/lidar_pose")
         self.det_topic = rospy.get_param("~det_topic", "/kitti/detections")

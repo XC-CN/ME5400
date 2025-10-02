@@ -1,16 +1,26 @@
 #!/usr/bin/env python3
-"""Convert KITTI Tracking velodyne + OXTS to ROS bag."""
+"""Convert KITTI Tracking velodyne + OXTS (+ detections) to ROS bag."""
 import argparse
 import math
+import sys
+from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
 import rosbag
 import rospy
 from geometry_msgs.msg import Quaternion
-from sensor_msgs.msg import PointCloud2, PointField, Imu
+from sensor_msgs.msg import Imu, PointCloud2, PointField
 import sensor_msgs.point_cloud2 as pc2
 from std_msgs.msg import Header
+
+THIS_DIR = Path(__file__).resolve().parent
+REPO_ROOT = THIS_DIR.parent
+if str(THIS_DIR) not in sys.path:
+    sys.path.append(str(THIS_DIR))
+
+from kitti_tracking_loader import KITTITrackingLoader  # noqa: E402
+from kitti_tracklets_viz.msg import Detection3D, Detection3DArray  # noqa: E402
 
 
 def load_velodyne_file(path: Path) -> np.ndarray:
@@ -74,18 +84,78 @@ def create_imu(oxts: dict, timestamp: float, frame_id: str) -> Imu:
     return imu
 
 
+def default_detector_root(dataset_root: Path) -> Path:
+    """Infer detector root based on dataset split."""
+    base = dataset_root.parent / "det_tracking_lsvm"
+    split = dataset_root.name
+    candidate = base / split
+    if (candidate / "det_02").is_dir():
+        return candidate / "det_02"
+    return candidate
+
+
+def load_times(dataset_root: Path, seq: str):
+    seq_root = dataset_root / "sequences" if (dataset_root / "sequences").is_dir() else dataset_root
+    time_file = seq_root / seq / "times.txt"
+    if not time_file.exists():
+        return None
+    values = []
+    for line in time_file.read_text().strip().splitlines():
+        try:
+            values.append(float(line))
+        except ValueError:
+            continue
+    return values if values else None
+
+
+def detection_array_message(dets, stamp: rospy.Time, seq: str) -> Detection3DArray:
+    msg = Detection3DArray()
+    frame_id = f"seq_{seq}"
+    msg.header = Header(stamp=stamp, frame_id=frame_id)
+    for det in dets:
+        det_msg = Detection3D()
+        det_msg.header = Header(stamp=stamp, frame_id=frame_id)
+        det_msg.frame = det.frame
+        det_msg.track_id = det.track_id
+        det_msg.cls = det.cls
+        det_msg.score = float(det.score)
+        det_msg.bbox2d = np.asarray(det.bbox, dtype=np.float32).tolist()
+        det_msg.dimensions = np.asarray(det.dimensions, dtype=np.float32).tolist()
+        det_msg.location = np.asarray(det.location, dtype=np.float32).tolist()
+        det_msg.rotation_y = float(det.rotation_y)
+        msg.detections.append(det_msg)
+    return msg
+
+
 def main():
     parser = argparse.ArgumentParser(description="KITTI Tracking to rosbag")
     parser.add_argument("--dataset_root", type=Path, default=Path("tracking/training"))
-    parser.add_argument("--seq", type=str, required=True, help="sequence id, e.g., 0000")
-    parser.add_argument("--output", type=Path, required=True, help="output bag path")
+    parser.add_argument("--seq", type=str, default="0019", help="sequence id, e.g., 0000")
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=Path("tracking/rosbags/seq_0019_with_det.bag"),
+        help="output bag path",
+    )
     parser.add_argument("--frame_id", type=str, default="velodyne")
     parser.add_argument("--imu_frame", type=str, default="imu")
     parser.add_argument("--rate", type=float, default=10.0)
+    parser.add_argument(
+        "--detector_root",
+        type=Path,
+        default=None,
+        help="Detection root containing <seq>.txt (defaults to det_tracking_lsvm/<split>/det_02)",
+    )
     args = parser.parse_args()
 
     seq = f"{int(args.seq):04d}" if args.seq.isdigit() else args.seq
     dataset_root = args.dataset_root
+    if not dataset_root.is_absolute():
+        dataset_root = (REPO_ROOT / dataset_root).resolve()
+    output_path = args.output
+    if not output_path.is_absolute():
+        output_path = (REPO_ROOT / output_path).resolve()
+
     velodyne_dir = dataset_root / "velodyne" / seq
     oxts_file = dataset_root / "oxts" / f"{seq}.txt"
 
@@ -101,10 +171,28 @@ def main():
     with oxts_file.open("r") as f:
         oxts_lines = [list(map(float, line.strip().split())) for line in f if line.strip()]
 
-    timestamps = [i / args.rate for i in range(max(len(frame_files), len(oxts_lines)))]
+    times = load_times(dataset_root, seq)
+    timestamps = [
+        (times[i] if times and i < len(times) else i / args.rate)
+        for i in range(max(len(frame_files), len(oxts_lines)))
+    ]
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    with rosbag.Bag(str(args.output), "w") as bag:
+    if timestamps:
+        min_time = min(timestamps)
+        if min_time <= 0.0:
+            shift = abs(min_time) + 1e-3
+            timestamps = [t + shift for t in timestamps]
+
+    det_root = args.detector_root or default_detector_root(dataset_root)
+    if det_root and not det_root.is_absolute():
+        det_root = (REPO_ROOT / det_root).resolve()
+    loader = KITTITrackingLoader(dataset_root, det_root)
+    detections_by_frame = defaultdict(list)
+    for det in loader._load_detections(seq):
+        detections_by_frame[det.frame].append(det)
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with rosbag.Bag(str(output_path), "w") as bag:
         for idx, frame_path in enumerate(frame_files):
             timestamp = timestamps[idx]
             points = load_velodyne_file(frame_path)
@@ -115,6 +203,11 @@ def main():
                 oxts_dict = oxts_line_to_dict(oxts_lines[idx])
                 imu_msg = create_imu(oxts_dict, timestamp, args.imu_frame)
                 bag.write("/kitti/oxts/imu", imu_msg, imu_msg.header.stamp)
+
+            if detections_by_frame.get(idx):
+                det_stamp = pc_msg.header.stamp
+                det_msg = detection_array_message(detections_by_frame[idx], det_stamp, seq)
+                bag.write("/kitti/detections", det_msg, det_msg.header.stamp)
 
             if idx % 100 == 0:
                 print(f"Processed frame {idx}/{len(frame_files)}")

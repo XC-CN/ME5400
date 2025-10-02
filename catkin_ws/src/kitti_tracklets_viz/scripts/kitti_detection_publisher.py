@@ -22,7 +22,7 @@ from kitti_tracklets_viz.msg import Detection3D, Detection3DArray  # noqa: E402
 
 class DetectionPublisher:
     def __init__(self) -> None:
-        dataset_param = rospy.get_param("~dataset_root", "tracking")
+        dataset_param = rospy.get_param("~dataset_root", "tracking/training")
         det_param = rospy.get_param("~detector_root", "")
 
         dataset_root = Path(dataset_param)
@@ -36,11 +36,12 @@ class DetectionPublisher:
             if not det_root_path.is_absolute():
                 det_root_path = (REPO_ROOT / det_root_path).resolve()
         else:
-            det_root_path = None
+            default_det = REPO_ROOT / "tracking" / "det_tracking_lsvm" / "training" / "det_02"
+            det_root_path = default_det if default_det.exists() else None
 
         rospy.loginfo("dataset_root=%s", self.dataset_root)
         rospy.loginfo("det_root_path=%s", det_root_path)
-        self.seq = f"{int(rospy.get_param('~seq', 0)):04d}"
+        self.seq = f"{int(rospy.get_param('~seq', 19)):04d}"
         self.rate_hz = float(rospy.get_param("~rate", 10.0))
         self.loop = bool(rospy.get_param("~loop", False))
 

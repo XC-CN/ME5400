@@ -89,51 +89,72 @@ pip install -r requirements.txt
 
 - `tracking/training/`：需包含 `calib/`、`oxts/`、`velodyne/` 等子目录。
 - `tracking/det_tracking_lsvm/`：保持检测结果组织为 `training/det_02/<seq>.txt` 结构，或替换成你自己的检测输出。
-- 如使用 rosbag 进行联调，请将点云+IMU 数据转换为 bag 并放在 `tracking/rosbags/`（脚本 `Scripts/kitti_tracking_to_rosbag.py` 支持生成）。
+- 将点云+IMU 数据转换为 rosbag 并放在 `tracking/rosbags/`，示例脚本见下。
 
-1. **重新编译消息与节点**
+> 当前版本仅通过播放 KITTI Tracking 序列的 rosbag 来驱动联动流程，暂未直接接入实时传感器。
+
+可使用提供的工具脚本从 KITTI Tracking 原始数据生成所需 rosbag（默认同时写入检测结果）：
+
+```bash
+./Scripts/kitti_tracking_to_rosbag.py
+```
+
+该 bag 由 KITTI Tracking `training/` 序列（Velodyne 点云 + OXTS IMU）转换而来，包含 `/kitti/velo/pointcloud`、`/kitti/oxts/imu` 与 `/kitti/detections` 等话题。默认使用序列 **0019**（1059 帧，约 106 s）。如需仅含点云/IMU，可去掉 `--include_detections` 并使用不同输出文件名（例如 `seq_0019.bag`）。
+
+1. **启动 roscore（终端 A）**
    ```bash
-   cd /home/xc/Projects/ME5400/catkin_ws
-   catkin_make
-   source devel/setup.bash
+   roscore
    ```
 
-2. **准备检测发布器**（若使用 KITTI LSVm 检测）
+2. **加载 ROS 环境（终端 B 及后续每个终端）**
    ```bash
-   rosrun kitti_tracklets_viz kitti_detection_publisher.py \
-     --dataset_root /home/xc/Projects/ME5400/tracking \
-     --detector_root /home/xc/Projects/ME5400/tracking/det_tracking_lsvm \
-     --seq 0 --rate 10
+   cd ~/Projects/ME5400
+   source Scripts/setup_ros_env.sh
    ```
-   该节点读取 `det_tracking_lsvm/<seq>.txt`，输出话题 `/kitti/detections`。
 
-3. **FAST-LIO 与里程计桥接**
-   - 启动 FAST-LIO （`roslaunch fast_lio mapping_velodyne.launch`），确保其输出 `/aft_mapped_to_init`。
-   - 运行桥接节点：
-     ```bash
-     rosrun kitti_tracklets_viz fastlio_pose_bridge.py \
-       _odom_topic:=/aft_mapped_to_init \
-       _pose_topic:=/mctrack/lidar_pose
-     ```
-
-4. **MCTrack 在线跟踪节点**
+3. **【首次或代码更新后】编译工作空间**
    ```bash
-   rosrun kitti_tracklets_viz mctrack_online_node.py \
-     --dataset_root /home/xc/Projects/ME5400/tracking \
-     --seq 0 \
-     --config /home/xc/Projects/ME5400/MCTrack/config/kitti_fastlio.yaml
+   ./Scripts/build_catkin_ws.sh
    ```
-   节点订阅 `/mctrack/lidar_pose` 与 `/kitti/detections`，实时输出 `/mctrack/markers`（轨迹、OBB、朝向箭头）。
 
-5. **批量启动脚本**
+4. **【可选】生成或更新默认 rosbag**
    ```bash
-   ./Scripts/run_mctrack_online.sh \
-     --bag KITTI_Data/kitti_2011_09_26_drive_0019_sync.bag \
-     --dataset /home/xc/Projects/ME5400/tracking \
-     --detector_root /home/xc/Projects/ME5400/tracking/det_tracking_lsvm \
-     --seq 0
+   ./Scripts/kitti_tracking_to_rosbag.py
    ```
-   该脚本自动启动 roscore、rosbag（点云+IMU）、检测发布器、FAST-LIO 里程计桥、MCTrack 在线节点以及 RViz（可加 `--norviz` 关闭）。
+   输出保存到 `tracking/rosbags/seq_0019_with_det.bag`，包含点云、IMU 与检测话题。
+
+5. **播放默认 rosbag（终端 C，保持运行）**
+   ```bash
+   ./Scripts/play_kitti_rosbag.sh
+   ```
+
+6. **打开 RViz（终端 D，与 rosbag 同时运行）**
+   ```bash
+   ./Scripts/run_rviz.sh
+   ```
+   使用 `kitti_simple.rviz` 配置实时查看点云、检测和 MCTrack 目标。
+
+7. **启动 FAST-LIO 映射（终端 E）**
+   ```bash
+   ./Scripts/run_fastlio_mapping.sh
+   ```
+
+8. **启动 FAST-LIO → Pose 桥接（终端 F）**
+   ```bash
+   ./Scripts/run_fastlio_pose_bridge.sh
+   ```
+
+9. **启动 MCTrack 在线节点（终端 G）**
+   ```bash
+   ./Scripts/run_mctrack_online_node.sh
+   ```
+   节点订阅 `/mctrack/lidar_pose` 与 `/kitti/detections`，实时发布 `/mctrack/markers`。
+
+**【可选】一键启动全部节点**
+    ```bash
+    ./Scripts/run_mctrack_online.sh
+    ```
+    脚本会自动处理 roscore、rosbag 播放、检测发布、FAST-LIO、姿态桥、MCTrack 及 RViz，使用脚本默认路径。
 
 ### 无窗口环境下验证 RViz（自动截图）
 
