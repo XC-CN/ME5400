@@ -128,7 +128,7 @@ pip install -r requirements.txt
    ./Scripts/play_kitti_rosbag.sh
    ```
 
-6. **打开 RViz（终端 D，与 rosbag 同时运行）**
+6. **【可选】打开 RViz（终端 D，与 rosbag 同时运行）**
    ```bash
    ./Scripts/run_rviz.sh
    ```
