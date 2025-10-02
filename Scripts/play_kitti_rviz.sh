@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# KITTI数据集RViz播放脚本 (单版本)
+# KITTI数据集RViz播放脚本 
 # 功能：
 #  1. 仅可视化KITTI点云与IMU（不启动FAST-LIO算法）
 #  2. 支持可选的RViz配置文件（默认使用 fast_lio 提供的简易配置）

@@ -2,6 +2,7 @@
 
 # FAST-LIO2与KITTI数据运行脚本
 # 此脚本同时启动FAST-LIO2 SLAM系统和KITTI数据播放
+# 在kitti原始点云中运行FAST-LIO2，生成点云地图
 
 echo "设置ROS环境..."
 source catkin_ws/devel/setup.bash

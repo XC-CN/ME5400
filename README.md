@@ -141,34 +141,188 @@ pcl_viewer catkin_ws/src/fast_lio/PCD/scans.pcd
 
 ### MCTrack 多目标跟踪
 
-#### 1. 配置数据集
+#### 数据目录说明
 
-编辑对应的配置文件：
+- `MCTrack/data/`：正式使用的数据目录，包含按照 BaseVersion 规范整理好的 `datasets/`（原始标注、pose、calib 等）与 `base_version/`（JSON 格式的检测结果）。
+- `MCTrack/data_download_temp/`：官方脚本下载压缩包时的临时缓存，若使用项目自带脚本直接整理数据可忽略；若存在，可安全删除以节省磁盘空间。
 
-```bash
-# KITTI数据集
-vim ME5400_MCTrack/config/kitti.yaml
-
-# nuScenes数据集  
-vim ME5400_MCTrack/config/nuscenes.yaml
-```
-
-#### 2. 运行跟踪
+#### 1. 准备 KITTI Tracking 数据
 
 ```bash
+# 进入项目根目录
+cd /home/xc/Projects/ME5400
+
+# 1) 生成 pose 文本（依赖 pykitti，已写入 conda 环境）
+conda run -n MCTrack python Scripts/generate_kitti_pose.py
+
+# 2) 将 label_02 转换为检测输入（仅保留 Car 类）
+conda run -n MCTrack python Scripts/convert_gt_to_detector.py
+
+# 3) 生成 BaseVersion JSON（输出至 MCTrack/data/base_version/kitti/gt/val.json）
 cd MCTrack
-python main.py --config config/kitti.yaml
+conda run -n MCTrack python preprocess/convert_kitti.py \
+  --raw_data_path data/kitti/datasets/ \
+  --dets_path data/kitti/detectors/ \
+  --save_path data/base_version/kitti/ \
+  --detector gt --split val
 ```
 
-#### 3. 评估结果
+完成后，确保 `config/kitti.yaml` 中的 `DETECTOR` 设为 `gt`（本仓库已配置）。
+
+#### 2. 运行 MCTrack 跟踪 + 评估
 
 ```bash
-# 运行评估
-python evaluation/eval_motion.py
-
-# 查看结果
-ls results/
+cd /home/xc/Projects/ME5400/MCTrack
+conda run -n MCTrack python main.py --dataset kitti -e -p 1
 ```
+
+执行成功后，结果会写入 `MCTrack/results/kitti/<时间戳>/gt/val/`，其中包含逐序列的 `data/*.txt` 跟踪输出、`car_summary.txt` 指标及图表。
+
+#### 3. RViz 可视化（推荐一键脚本）
+
+```bash
+# 默认播放 kitti_2011_09_26_drive_0019_sync.bag，并展示 0000 序列的跟踪结果
+./Scripts/run_mctrack_viz.sh
+
+# 如需指定参数（示例：使用其它结果文件 / bag）
+./Scripts/run_mctrack_viz.sh \
+  --bag KITTI_Data/your_sequence.bag \
+  --result MCTrack/results/kitti/20251002_174627/gt/val/data/0001.txt \
+  --calib MCTrack/data/kitti/datasets/training/calib/0001.txt \
+  --frame velo_link --rate 10
+
+# 仅查看将要执行的命令
+./Scripts/run_mctrack_viz.sh --print
+```
+
+脚本会自动检测 `gnome-terminal`/`xterm`，依次启动 `roscore`、`rosbag play`、`mctrack_marker_publisher.py`、`rviz`。如环境不支持自动开新终端，脚本会提示需手动执行的命令。
+
+#### 4. 使用 FAST-LIO 里程计驱动 MCTrack（离线 JSON）
+
+1. **重新编译 ROS 包（添加了新的记录脚本）**
+   ```bash
+   cd /home/xc/Projects/ME5400/catkin_ws
+   catkin_make
+   source devel/setup.bash
+   ```
+
+2. **启动 FAST-LIO 并播放 bag（和之前步骤一致）**
+   ```bash
+   # 终端1：FAST-LIO
+   roslaunch fast_lio mapping_velodyne.launch
+
+   # 终端2：播放含 Velodyne+IMU 的 KITTI bag
+   rosbag play ../KITTI_Data/kitti_2011_09_26_drive_0019_sync.bag --clock --pause
+   ```
+   （建议先暂停 `rosbag`，等下启动录制后再继续）
+
+3. **在新的终端录制 FAST-LIO 位姿，同步点云帧**
+   ```bash
+   rosrun kitti_tracklets_viz fastlio_pose_recorder.py \
+     --output /home/xc/Projects/ME5400/MCTrack/data/kitti/datasets/training/pose_fastlio \
+     --seq 0000 \
+     _odom_topic:=/aft_mapped_to_init \
+     _point_topic:=/kitti/velo/pointcloud
+   ```
+   之后在播放 rosbag 的终端按空格继续，让 bag 跑完整个序列；录制脚本会在 `pose_fastlio/0000.txt` 中写入每帧 3×4 位姿矩阵。
+
+4. **基于 FAST-LIO 位姿生成 BaseVersion JSON**（仅处理序列 0000，避免覆盖原结果）
+   ```bash
+   cd /home/xc/Projects/ME5400/MCTrack
+   conda run -n MCTrack python preprocess/convert_kitti.py \
+     --raw_data_path data/kitti/datasets/ \
+     --dets_path data/kitti/detectors/ \
+     --save_path data/base_version_fastlio/kitti/ \
+     --detector gt \
+     --split val \
+     --pose_root pose_fastlio \
+     --seqs 0000
+   ```
+   生成的 JSON 位于 `data/base_version_fastlio/kitti/gt/val.json`，其中 `global2lidar` 采用 FAST-LIO 里程计。
+
+5. **使用专门配置运行 MCTrack**（只追踪序列 0000）
+   ```bash
+   cd /home/xc/Projects/ME5400/MCTrack
+   conda run -n MCTrack python main.py --dataset kitti --eval -p 1 \
+     --config config/kitti_fastlio.yaml
+   ```
+
+6. **可视化**：运行 `./Scripts/run_mctrack_viz.sh --result MCTrack/results/kitti/<时间戳>/gt/val/data/0000.txt`，即可在 RViz 中查看使用 FAST-LIO 里程计的跟踪结果。
+
+### 在线 ROS 联动：rosbag → FAST-LIO → MCTrack → RViz
+
+> 适合把 rosbag（或实时激光雷达）流式传入 FAST-LIO，同时发布检测结果，并让 MCTrack 在线输出轨迹/包围盒。
+
+1. **重新编译消息与节点**
+   ```bash
+   cd /home/xc/Projects/ME5400/catkin_ws
+   catkin_make
+   source devel/setup.bash
+   ```
+
+2. **准备检测发布器**（若使用 KITTI LSVm 检测）
+   ```bash
+   rosrun kitti_tracklets_viz kitti_detection_publisher.py \
+     --dataset_root /home/xc/Projects/ME5400/tracking \
+     --detector_root /home/xc/Projects/ME5400/tracking/det_tracking_lsvm \
+     --seq 0 --rate 10
+   ```
+   该节点读取 `det_tracking_lsvm/<seq>.txt`，输出话题 `/kitti/detections`。
+
+3. **FAST-LIO 与里程计桥接**
+   - 启动 FAST-LIO （`roslaunch fast_lio mapping_velodyne.launch`），确保其输出 `/aft_mapped_to_init`。
+   - 运行桥接节点：
+     ```bash
+     rosrun kitti_tracklets_viz fastlio_pose_bridge.py \
+       _odom_topic:=/aft_mapped_to_init \
+       _pose_topic:=/mctrack/lidar_pose
+     ```
+
+4. **MCTrack 在线跟踪节点**
+   ```bash
+   rosrun kitti_tracklets_viz mctrack_online_node.py \
+     --dataset_root /home/xc/Projects/ME5400/tracking \
+     --seq 0 \
+     --config /home/xc/Projects/ME5400/MCTrack/config/kitti_fastlio.yaml
+   ```
+   节点订阅 `/mctrack/lidar_pose` 与 `/kitti/detections`，实时输出 `/mctrack/markers`（轨迹、OBB、朝向箭头）。
+
+5. **批量启动脚本**
+   ```bash
+   ./Scripts/run_mctrack_online.sh \
+     --bag KITTI_Data/kitti_2011_09_26_drive_0019_sync.bag \
+     --dataset /home/xc/Projects/ME5400/tracking \
+     --detector_root /home/xc/Projects/ME5400/tracking/det_tracking_lsvm \
+     --seq 0
+   ```
+   该脚本自动启动 roscore、rosbag（点云+IMU）、检测发布器、FAST-LIO 里程计桥、MCTrack 在线节点以及 RViz（可加 `--norviz` 关闭）。
+
+### 无窗口环境下验证 RViz（自动截图）
+
+1. 确保 ROS 节点已运行并有数据流。
+2. 执行：
+   ```bash
+   python Scripts/rviz_headless_check.py \
+     catkin_ws/src/fast_lio/rviz_cfg/kitti_simple.rviz \
+     --screenshot rviz_headless.png
+   ```
+3. 脚本会：
+   - 使用 `xvfb-run` 启动 RViz；
+   - 检查日志是否有 `[ERROR]`、段错误；
+   - 自动解析 RViz 配置里的订阅主题并与 `rostopic list` 对比；
+   - 调用 `rviz_screenshot` 生成截图；
+   - 输出 JSON 报告，如：
+     ```json
+     {
+       "rviz_process": "running",
+       "log_status": "ok",
+       "topics_verified": ["/kitti/velo/pointcloud", "/tf"],
+       "topics_missing": [],
+       "screenshot": {"path": "rviz_headless.png", "exists": true, "size_kb": 123.4, "success": true},
+       "conclusion": "rviz可视化正常"
+     }
+     ```
+4. 如出现错误，会给出失败原因并清理临时文件。
 
 ## 📊 实验结果
 

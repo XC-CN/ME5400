@@ -296,18 +296,34 @@ def convert_baseversion_bboxes(det_path, lidar2global, lidar2camera):
     return new_bboxes
 
 
-def kitti_main(dataset_root, detections_root, detector, save_path, split):
+def kitti_main(
+    dataset_root,
+    detections_root,
+    detector,
+    save_path,
+    split,
+    pose_root="pose",
+    seq_list=None,
+):
     datset_split = "training" if split == "val" else "testing"
-    all_seqs = 21 if datset_split == "training" else 29
+    default_count = 21 if datset_split == "training" else 29
+    seq_iter = range(default_count) if seq_list is None else seq_list
 
     all_datas = {}
     dataset_path = os.path.join(dataset_root, datset_split)
     detections_path = os.path.join(detections_root, detector, datset_split)
-    for seq_id in tqdm(range(all_seqs)):
+    pose_dir = os.path.join(dataset_path, pose_root)
+    for seq_id in tqdm(seq_iter):
         scene_name = str(seq_id).zfill(4)
         dets_path = os.path.join(detections_path, scene_name)
         calib_path = os.path.join(dataset_path, "calib", scene_name + ".txt")
-        pose_path = os.path.join(dataset_path, "pose", scene_name + ".txt")
+        pose_path = os.path.join(pose_dir, scene_name + ".txt")
+        if not os.path.exists(dets_path):
+            print(f"[WARN] Skip seq {scene_name}: detections not found in {dets_path}")
+            continue
+        if not os.path.exists(pose_path):
+            print(f"[WARN] Skip seq {scene_name}: pose not found in {pose_path}")
+            continue
         dets_list = sorted(os.listdir(dets_path))
         dets_list = [int(re.findall(r"\d+", det)[0]) for det in dets_list]
 
@@ -356,8 +372,27 @@ if __name__ == "__main__":
     parser.add_argument("--detector", type=str, default="virconv")
 
     parser.add_argument("--split", type=str, default="val")
+    parser.add_argument(
+        "--pose_root", type=str, default="pose", help="relative pose directory"
+    )
+    parser.add_argument(
+        "--seqs",
+        type=str,
+        default="",
+        help="comma separated sequence ids, e.g., 0000,0001",
+    )
     args = parser.parse_args()
 
+    seq_list = None
+    if args.seqs:
+        seq_list = [int(s) for s in args.seqs.split(",") if s]
+
     all_datas = kitti_main(
-        args.raw_data_path, args.dets_path, args.detector, args.save_path, args.split
+        args.raw_data_path,
+        args.dets_path,
+        args.detector,
+        args.save_path,
+        args.split,
+        pose_root=args.pose_root,
+        seq_list=seq_list,
     )

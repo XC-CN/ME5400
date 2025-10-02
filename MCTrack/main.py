@@ -95,6 +95,12 @@ if __name__ == "__main__":
         default="kitti",
         help="Which Dataset: kitti/nuscenes/waymo",
     )
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="",
+        help="Override default config file path",
+    )
     parser.add_argument("--eval", "-e", action="store_true", help="evaluation")
     parser.add_argument("--load_image", "-lm", action="store_true", help="load_image")
     parser.add_argument("--load_point", "-lp", action="store_true", help="load_point")
@@ -103,7 +109,9 @@ if __name__ == "__main__":
     parser.add_argument("--process", "-p", type=int, default=1, help="multi-process!")
     args = parser.parse_args()
 
-    if args.dataset == "kitti":
+    if args.config:
+        cfg_path = args.config
+    elif args.dataset == "kitti":
         cfg_path = "./config/kitti.yaml"
     elif args.dataset == "nuscenes":
         cfg_path = "./config/nuscenes.yaml"

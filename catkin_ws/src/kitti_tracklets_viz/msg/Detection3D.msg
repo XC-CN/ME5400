@@ -1,0 +1,9 @@
+std_msgs/Header header
+int32 frame
+int32 track_id
+string cls
+float32 score
+float32[4] bbox2d
+float32[3] dimensions
+float32[3] location
+float32 rotation_y
