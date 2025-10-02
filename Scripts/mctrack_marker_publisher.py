@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """在 ROS 中发布 MCTrack 的 3D 目标框到 MarkerArray。"""
 import argparse
+import math
 from pathlib import Path
 from typing import Dict, List
 
 import numpy as np
 import rospy
+from geometry_msgs.msg import Point
 from visualization_msgs.msg import Marker, MarkerArray
 from tf.transformations import quaternion_from_matrix
 
@@ -19,6 +21,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--frame", default="velo_link", help="发布的坐标系")
     parser.add_argument("--rate", type=float, default=10.0, help="播放频率")
     parser.add_argument("--loop", action="store_true", help="循环播放")
+    parser.add_argument("--history", type=int, default=200, help="轨迹点缓存长度")
     return parser.parse_args()
 
 
@@ -105,6 +108,27 @@ def main():
     rate = rospy.Rate(args.rate)
 
     ordered_frames = sorted(frames.items())
+    histories: Dict[int, List[np.ndarray]] = {}
+
+    def hsv_to_rgb(h: float, s: float, v: float):
+        i = int(h * 6)
+        f = h * 6 - i
+        p = v * (1 - s)
+        q = v * (1 - f * s)
+        t = v * (1 - (1 - f) * s)
+        i %= 6
+        if i == 0:
+            return v, t, p
+        if i == 1:
+            return q, v, p
+        if i == 2:
+            return p, v, t
+        if i == 3:
+            return p, q, v
+        if i == 4:
+            return t, p, v
+        return v, p, q
+
     while not rospy.is_shutdown():
         for frame_id, objs in ordered_frames:
             stamp = rospy.Time.now()
@@ -129,10 +153,18 @@ def main():
                 T_velo[:3, 3] = center_velo[:3]
                 quat = quaternion_from_matrix(T_velo)
 
+                # 保存轨迹
+                histories.setdefault(track_id, []).append(center_velo[:3])
+                if len(histories[track_id]) > args.history:
+                    histories[track_id].pop(0)
+
+                hue = (track_id * 53 % 360) / 360.0
+                r, g, b = hsv_to_rgb(hue, 0.85, 0.9)
+
                 marker = make_marker_template(args.frame)
                 marker.header.stamp = stamp
-                marker.ns = obj_type
-                marker.id = track_id
+                marker.ns = "bbox"
+                marker.id = track_id * 10
                 marker.pose.position.x = center_velo[0]
                 marker.pose.position.y = center_velo[1]
                 marker.pose.position.z = center_velo[2]
@@ -143,8 +175,55 @@ def main():
                 marker.scale.x = l
                 marker.scale.y = w
                 marker.scale.z = h
-                marker.color.a = min(max(score, 0.3), 1.0)
+                marker.color.r = r
+                marker.color.g = g
+                marker.color.b = b
+                marker.color.a = min(max(score, 0.3), 0.6)
                 markers.append(marker)
+
+                arrow = Marker()
+                arrow.header = marker.header
+                arrow.ns = "heading"
+                arrow.id = track_id * 10 + 1
+                arrow.type = Marker.ARROW
+                arrow.action = Marker.ADD
+                arrow.points = [
+                    Point(
+                        x=marker.pose.position.x,
+                        y=marker.pose.position.y,
+                        z=marker.pose.position.z,
+                    ),
+                    Point(
+                        x=marker.pose.position.x + math.cos(yaw) * 3.0,
+                        y=marker.pose.position.y + math.sin(yaw) * 3.0,
+                        z=marker.pose.position.z,
+                    ),
+                ]
+                arrow.scale.x = 0.2
+                arrow.scale.y = 0.4
+                arrow.scale.z = 0.6
+                arrow.color.r = r
+                arrow.color.g = g
+                arrow.color.b = b
+                arrow.color.a = 0.9
+                markers.append(arrow)
+
+                traj = Marker()
+                traj.header = arrow.header
+                traj.ns = "traj"
+                traj.id = track_id * 10 + 2
+                traj.type = Marker.LINE_STRIP
+                traj.action = Marker.ADD
+                traj.scale.x = 0.15
+                traj.color.r = r
+                traj.color.g = g
+                traj.color.b = b
+                traj.color.a = 0.9
+                traj.points = [
+                    Point(x=float(p[0]), y=float(p[1]), z=float(p[2]))
+                    for p in histories[track_id]
+                ]
+                markers.append(traj)
 
             pub.publish(MarkerArray(markers=markers))
             rate.sleep()

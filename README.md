@@ -4,30 +4,23 @@
 [![ROS Version](https://img.shields.io/badge/ROS-Noetic-blue.svg)](http://wiki.ros.org/noetic)
 [![Python Version](https://img.shields.io/badge/Python-3.8+-green.svg)](https://www.python.org/)
 
-这是ME5400高级机器人与自主系统课程项目，集成了**多目标跟踪**和**激光雷达SLAM**技术，用于自动驾驶场景下的感知和建图。
+这是ME5400高级机器人与自主系统课程项目，聚焦于**FAST-LIO 里程计与 MCTrack 多目标跟踪的融合管线**，用于自动驾驶场景下将实时点云/IMU 位姿与三维目标检测数据统一处理并可视化。
 
 ## 📋 项目概述
 
 本项目包含两个主要组件：
 
-1. **MCTrack**: 基于卡尔曼滤波的多目标跟踪系统，支持KITTI、nuScenes、Waymo等数据集
-2. **FAST-LIO2**: 修改版的快速激光雷达-惯性里程计，适配Velodyne激光雷达和KITTI数据集
+1. **FAST-LIO2**：提供点云+IMU 的实时里程计估计
+2. **MCTrack**：在 FAST-LIO 位姿下对检测目标进行 3D 多目标跟踪，并生成包围盒、轨迹与朝向信息
+
+当前检测输入直接来自 KITTI Tracking 数据集提供的离线检测结果；后续可替换为任意 3D/多模态目标检测器的实时输出。
 
 ## 🚀 主要功能
 
-### MCTrack 多目标跟踪
-
-- 🎯 支持多种数据集（KITTI、nuScenes、Waymo）
-- 🔄 基于卡尔曼滤波的状态估计
-- 📊 完整的评估框架（HOTA、CLEAR等指标）
-- 🎨 可视化工具和结果分析
-
-### FAST-LIO2 激光雷达SLAM
-
-- ⚡ 高效的激光雷达-惯性里程计
-- 🗺️ 实时3D建图和定位
-- 🔧 支持Velodyne激光雷达
-- 📦 KITTI数据集适配
+- 🔗 **FAST-LIO × MCTrack 融合管线**：将点云/IMU 里程计与检测目标对齐，实时输出包围盒、轨迹与朝向箭头。
+- 🎯 **多数据集兼容的跟踪模块**：MCTrack 支持 KITTI / nuScenes / Waymo；当前默认使用 KITTI Tracking 的检测结果。
+- ⚡ **FAST-LIO 实时里程计**：针对 Velodyne 激光雷达的高效激光雷达-惯性里程计，可直接用于在线和离线 rosbag。
+- 🎨 **统一可视化脚本**：提供离线结果回放与在线融合两个脚本，默认的检测输入来自数据集（未来可改接任意目标检测算法）。
 
 ## 📁 项目结构
 
@@ -139,14 +132,14 @@ catkin_ws/src/fast_lio/PCD/scans.pcd
 pcl_viewer catkin_ws/src/fast_lio/PCD/scans.pcd
 ```
 
-### MCTrack 多目标跟踪
+### FAST-LIO + MCTrack 联合处理
 
 #### 数据目录说明
 
 - `MCTrack/data/`：正式使用的数据目录，包含按照 BaseVersion 规范整理好的 `datasets/`（原始标注、pose、calib 等）与 `base_version/`（JSON 格式的检测结果）。
 - `MCTrack/data_download_temp/`：官方脚本下载压缩包时的临时缓存，若使用项目自带脚本直接整理数据可忽略；若存在，可安全删除以节省磁盘空间。
 
-#### 1. 准备 KITTI Tracking 数据
+#### 1. 准备 KITTI Tracking 数据（当前检测来自数据集）
 
 ```bash
 # 进入项目根目录
@@ -169,7 +162,7 @@ conda run -n MCTrack python preprocess/convert_kitti.py \
 
 完成后，确保 `config/kitti.yaml` 中的 `DETECTOR` 设为 `gt`（本仓库已配置）。
 
-#### 2. 运行 MCTrack 跟踪 + 评估
+#### 2. 在 FAST-LIO 位姿下运行 MCTrack 跟踪 + 评估
 
 ```bash
 cd /home/xc/Projects/ME5400/MCTrack
@@ -251,7 +244,7 @@ conda run -n MCTrack python main.py --dataset kitti -e -p 1
 
 ### 在线 ROS 联动：rosbag → FAST-LIO → MCTrack → RViz
 
-> 适合把 rosbag（或实时激光雷达）流式传入 FAST-LIO，同时发布检测结果，并让 MCTrack 在线输出轨迹/包围盒。
+> 当前检测由 KITTI Tracking 提供的离线检测文件生成并发布；后续可替换为任意目标检测算法的 ROS 输出。
 
 1. **重新编译消息与节点**
    ```bash
