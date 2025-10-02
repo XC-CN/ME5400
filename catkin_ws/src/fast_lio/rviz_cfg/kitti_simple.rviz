@@ -79,7 +79,7 @@ Visualization Manager:
       Channel Name: intensity  # 通道名称
       Class: rviz/PointCloud2  # 点云2显示类
       Color: 255; 255; 255  # 颜色
-      Color Transformer: Intensity  # 颜色变换器
+      Color Transformer: FlatColor  # 颜色变换器
       Decay Time: 0  # 衰减时间
       Enabled: true  # 是否启用
       Invert Rainbow: false  # 是否反转彩虹
@@ -95,7 +95,7 @@ Visualization Manager:
       Topic: /kitti/velo/pointcloud  # 话题
       Unreliable: false  # 是否不可靠
       Use Fixed Frame: true  # 使用固定帧
-      Use rainbow: true  # 使用彩虹
+      Use rainbow: false  # 使用彩虹
       Value: true  # 值
     - Class: rviz/Axes    # 原点坐标轴
       Enabled: true  # 是否启用
@@ -108,7 +108,7 @@ Visualization Manager:
   Global Options:  # 全局坐标 / 背景等
     Background Color: 48; 48; 48  # 背景颜色
     Default Light: true  # 默认光照
-    Fixed Frame: kitti/velo/pointcloud  # 固定帧
+    Fixed Frame: velodyne               # 固定帧
     Frame Rate: 30  # 帧率
   Name: root  # 名称
   Tools:  # 工具列表

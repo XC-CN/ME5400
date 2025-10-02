@@ -10,5 +10,5 @@ if [[ ! -f "$CONFIG" ]]; then
   exit 1
 fi
 
-source Scripts/setup_ros_env.sh
+source "$ROOT_DIR/Scripts/setup_ros_env.sh"
 rosrun rviz rviz -d "$CONFIG"
