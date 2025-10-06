@@ -30,17 +30,93 @@ def load_velodyne_file(path: Path) -> np.ndarray:
     return data.reshape(-1, 4)
 
 
-def create_pointcloud2(points: np.ndarray, timestamp: float, frame_id: str) -> PointCloud2:
+VELODYNE_NUM_SCANS = 64
+VELODYNE_MIN_VERT_ANGLE = -24.9  # degrees
+VELODYNE_MAX_VERT_ANGLE = 2.0    # degrees
+
+
+def estimate_ring_time(points: np.ndarray, scan_rate: float) -> tuple[np.ndarray, np.ndarray]:
+    """Estimate ring index and per-point time offsets for KITTI Velodyne scans."""
+    if points.size == 0:
+        return np.array([], dtype=np.uint16), np.array([], dtype=np.float32)
+
+    scan_rate = scan_rate if scan_rate > 0 else 10.0
+    scan_period = 1.0 / scan_rate
+
+    xy_norm = np.linalg.norm(points[:, :2], axis=1)
+    safe_xy = np.where(xy_norm > 1e-6, xy_norm, 1e-6)
+    vert_angle = np.degrees(np.arctan2(points[:, 2], safe_xy))
+    vert_angle = np.clip(vert_angle, VELODYNE_MIN_VERT_ANGLE, VELODYNE_MAX_VERT_ANGLE)
+
+    relative = (vert_angle - VELODYNE_MIN_VERT_ANGLE) / (VELODYNE_MAX_VERT_ANGLE - VELODYNE_MIN_VERT_ANGLE)
+    ring = np.floor(relative * VELODYNE_NUM_SCANS).astype(np.int32)
+    ring = np.clip(ring, 0, VELODYNE_NUM_SCANS - 1)
+
+    ring_int = ring.astype(np.int32)
+    counts = np.bincount(ring_int, minlength=VELODYNE_NUM_SCANS)
+    progress = np.zeros(VELODYNE_NUM_SCANS, dtype=np.int32)
+    times = np.zeros(points.shape[0], dtype=np.float64)
+
+    for idx, r in enumerate(ring_int):
+        denom = counts[r] - 1
+        if denom <= 0:
+            times[idx] = 0.0
+        else:
+            times[idx] = (progress[r] / denom) * scan_period
+        progress[r] += 1
+
+    ring = ring.astype(np.uint16)
+    time_us = (times * 1e6).astype(np.float32)
+    return ring, time_us
+
+
+def create_pointcloud2(points: np.ndarray, timestamp: float, frame_id: str, scan_rate: float) -> PointCloud2:
     header = Header()
     header.stamp = rospy.Time.from_sec(timestamp)
     header.frame_id = frame_id
+
+    ring, time_us = estimate_ring_time(points, scan_rate)
+
+    dtype = np.dtype([
+        ('x', np.float32),
+        ('y', np.float32),
+        ('z', np.float32),
+        ('pad', np.float32),
+        ('intensity', np.float32),
+        ('time', np.float32),
+        ('ring', np.uint16),
+        ('pad2', np.uint16),
+        ('pad3', np.uint32),
+    ], align=True)
+
+    structured = np.zeros(points.shape[0], dtype=dtype)
+    structured['x'] = points[:, 0].astype(np.float32, copy=False)
+    structured['y'] = points[:, 1].astype(np.float32, copy=False)
+    structured['z'] = points[:, 2].astype(np.float32, copy=False)
+    structured['intensity'] = points[:, 3].astype(np.float32, copy=False)
+    structured['time'] = time_us
+    structured['ring'] = ring
+
     fields = [
         PointField('x', 0, PointField.FLOAT32, 1),
         PointField('y', 4, PointField.FLOAT32, 1),
         PointField('z', 8, PointField.FLOAT32, 1),
-        PointField('intensity', 12, PointField.FLOAT32, 1),
+        PointField('intensity', 16, PointField.FLOAT32, 1),
+        PointField('time', 20, PointField.FLOAT32, 1),
+        PointField('ring', 24, PointField.UINT16, 1),
     ]
-    return pc2.create_cloud(header, fields, points)
+
+    cloud = PointCloud2()
+    cloud.header = header
+    cloud.height = 1
+    cloud.width = points.shape[0]
+    cloud.fields = fields
+    cloud.is_bigendian = False
+    cloud.point_step = structured.dtype.itemsize
+    cloud.row_step = cloud.point_step * cloud.width
+    cloud.is_dense = True
+    cloud.data = structured.tobytes()
+    return cloud
 
 
 def oxts_line_to_dict(values):
@@ -196,7 +272,7 @@ def main():
         for idx, frame_path in enumerate(frame_files):
             timestamp = timestamps[idx]
             points = load_velodyne_file(frame_path)
-            pc_msg = create_pointcloud2(points, timestamp, args.frame_id)
+            pc_msg = create_pointcloud2(points, timestamp, args.frame_id, args.rate)
             bag.write("/kitti/velo/pointcloud", pc_msg, pc_msg.header.stamp)
 
             if idx < len(oxts_lines):
