@@ -106,45 +106,39 @@ pip install -r requirements.txt
    roscore
    ```
 
-2. **加载 ROS 环境（终端 B 及后续每个终端）**
-   ```bash
-   cd ~/Projects/ME5400
-   source Scripts/setup_ros_env.sh
-   ```
-
-3. **【首次或代码更新后】编译工作空间**
+2. **【首次或代码更新后】编译工作空间**
    ```bash
    ./Scripts/build_catkin_ws.sh
    ```
 
-4. **【可选】生成或更新默认 rosbag**
+3. **【可选】生成或更新默认 rosbag**
    ```bash
    ./Scripts/kitti_tracking_to_rosbag.py
    ```
    输出保存到 `tracking/rosbags/seq_0019_with_det.bag`，包含点云、IMU 与检测话题。
 
-5. **播放默认 rosbag（终端 C，保持运行）**
+4. **播放默认 rosbag（终端 C，保持运行）**
    ```bash
    ./Scripts/play_kitti_rosbag.sh
    ```
 
-6. **【可选】打开 RViz（终端 D，与 rosbag 同时运行）**
+5. **【可选】打开 RViz（终端 D，与 rosbag 同时运行）**
    ```bash
    ./Scripts/run_rviz.sh
    ```
    使用 `kitti_simple.rviz` 配置实时查看点云、检测和 MCTrack 目标。
 
-7. **启动 FAST-LIO 映射（终端 E）**
+6. **启动 FAST-LIO 映射（终端 E）**
    ```bash
    ./Scripts/run_fastlio_mapping.sh
    ```
 
-8. **启动 FAST-LIO → Pose 桥接（终端 F）**
+7. **启动 FAST-LIO → Pose 桥接（终端 F）**
    ```bash
    ./Scripts/run_fastlio_pose_bridge.sh
    ```
 
-9. **启动 MCTrack 在线节点（终端 G）**
+8. **启动 MCTrack 在线节点（终端 G）**
    ```bash
    ./Scripts/run_mctrack_online_node.sh
    ```
