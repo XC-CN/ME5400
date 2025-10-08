@@ -5,13 +5,13 @@
   部署位置： D:\OneDrive\NUS\ME5400\MCTrack\
 
   环境配置：
-  - Conda 虚拟环境：MCTrack (Python 3.8)
+  - Conda 虚拟环境：ME5400 (Python 3.8)
   - 所有依赖包已安装完成
 
   如何使用：
 
   1. 激活环境：
-  conda activate MCTrack
+  conda activate ME5400
   2. 进入项目目录：
   cd D:\OneDrive\NUS\ME5400\MCTrack
   3. 运行 KITTI 数据集追踪（示例）：
@@ -223,11 +223,11 @@ scene-0001/
 
 #### 创建虚拟环境
 ```
-$ conda create -n MCTrack python=3.8
+$ conda create -n ME5400 python=3.8
 ```
 #### 激活虚拟环境
 ```
-$ conda activate MCTrack
+$ conda activate ME5400
 ```
 #### 安装Python包
 ```

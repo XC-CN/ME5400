@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- KITTI PointPillars 检测节点启动文件 -->
+    
+    <!-- 参数配置 -->
+    <arg name="config_path" default="/home/zzy/mmdet3d_centerpoint/configs/pointpillars/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py"/>
+    <arg name="checkpoint_path" default="/home/zzy/mmdet3d_centerpoint/checkpoints/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.pth"/>
+    <arg name="data_dir" default="/home/zzy/mmdet3d_centerpoint/data/kitti/2011_09_26_drive_0039_sync/2011_09_26/2011_09_26_drive_0039_sync/velodyne_points/data"/>
+    <arg name="publish_rate" default="10.0"/>
+    <arg name="confidence_threshold" default="0.1"/>
+    <arg name="frame_id" default="lidar"/>
+    <arg name="mode" default="continuous"/>
+    <arg name="frame_idx" default="0"/>
+    
+    <!-- 启动检测节点 -->
+    <node name="kitti_pointpillars_detector" 
+          pkg="mmdet3d_centerpoint" 
+          type="kitti_pointpillars_ros_node.py" 
+          output="screen">
+        
+        <!-- 模型配置 -->
+        <param name="config_path" value="$(arg config_path)"/>
+        <param name="checkpoint_path" value="$(arg checkpoint_path)"/>
+        
+        <!-- 数据配置 -->
+        <param name="data_dir" value="$(arg data_dir)"/>
+        
+        <!-- 发布配置 -->
+        <param name="publish_rate" value="$(arg publish_rate)"/>
+        <param name="confidence_threshold" value="$(arg confidence_threshold)"/>
+        <param name="frame_id" value="$(arg frame_id)"/>
+        
+        <!-- 运行模式 -->
+        <param name="mode" value="$(arg mode)"/>
+        <param name="frame_idx" value="$(arg frame_idx)"/>
+    </node>
+    
+    <!-- 可选: 启动RViz可视化 -->
+    <arg name="rviz" default="false"/>
+    <node if="$(arg rviz)" 
+          name="rviz" 
+          pkg="rviz" 
+          type="rviz" 
+          args="-d $(find mmdet3d_centerpoint)/rviz/kitti_detection.rviz"/>
+    
+</launch>
