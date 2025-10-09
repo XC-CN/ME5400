@@ -20,7 +20,21 @@ if str(THIS_DIR) not in sys.path:
     sys.path.append(str(THIS_DIR))
 
 from kitti_tracking_loader import KITTITrackingLoader  # noqa: E402
-from kitti_tracklets_viz.msg import Detection3D, Detection3DArray  # noqa: E402
+try:
+    from kitti_tracklets_viz.msg import Detection3D, Detection3DArray  # noqa: E402
+except ImportError:  # pragma: no cover - optional dependency
+    Detection3D = Detection3DArray = None
+
+
+def str2bool(value):
+    if isinstance(value, bool):
+        return value
+    value = value.lower()
+    if value in {"1", "true", "t", "yes", "y"}:
+        return True
+    if value in {"0", "false", "f", "no", "n"}:
+        return False
+    raise argparse.ArgumentTypeError(f"Boolean value expected, got '{value}'")
 
 
 def load_velodyne_file(path: Path) -> np.ndarray:
@@ -222,6 +236,12 @@ def main():
         default=None,
         help="Detection root containing <seq>.txt (defaults to det_tracking_lsvm/<split>/det_02)",
     )
+    parser.add_argument(
+        "--include_detections",
+        type=str2bool,
+        default=True,
+        help="Include 3D detections in the bag (True/False)",
+    )
     args = parser.parse_args()
 
     seq = f"{int(args.seq):04d}" if args.seq.isdigit() else args.seq
@@ -259,13 +279,19 @@ def main():
             shift = abs(min_time) + 1e-3
             timestamps = [t + shift for t in timestamps]
 
-    det_root = args.detector_root or default_detector_root(dataset_root)
-    if det_root and not det_root.is_absolute():
-        det_root = (REPO_ROOT / det_root).resolve()
-    loader = KITTITrackingLoader(dataset_root, det_root)
-    detections_by_frame = defaultdict(list)
-    for det in loader._load_detections(seq):
-        detections_by_frame[det.frame].append(det)
+    detections_by_frame = {}
+    if args.include_detections:
+        if Detection3D is None or Detection3DArray is None:
+            raise ImportError(
+                "kitti_tracklets_viz ROS messages not found; install package or run with --include_detections False"
+            )
+        det_root = args.detector_root or default_detector_root(dataset_root)
+        if det_root and not det_root.is_absolute():
+            det_root = (REPO_ROOT / det_root).resolve()
+        loader = KITTITrackingLoader(dataset_root, det_root)
+        detections_by_frame = defaultdict(list)
+        for det in loader._load_detections(seq):
+            detections_by_frame[det.frame].append(det)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with rosbag.Bag(str(output_path), "w") as bag:
@@ -280,7 +306,7 @@ def main():
                 imu_msg = create_imu(oxts_dict, timestamp, args.imu_frame)
                 bag.write("/kitti/oxts/imu", imu_msg, imu_msg.header.stamp)
 
-            if detections_by_frame.get(idx):
+            if detections_by_frame and detections_by_frame.get(idx):
                 det_stamp = pc_msg.header.stamp
                 det_msg = detection_array_message(detections_by_frame[idx], det_stamp, seq)
                 bag.write("/kitti/detections", det_msg, det_msg.header.stamp)

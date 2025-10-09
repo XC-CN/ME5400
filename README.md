@@ -97,6 +97,7 @@ pip install numpy opencv-python matplotlib
 
   > 构建 `mmcv` 时会自动编译 CUDA/C++ 算子，耗时 5~10 分钟，请耐心等待；若内存较小可追加 `MAX_JOBS=4`。
   > 注意：目前 `mmdet3d==1.4.0` 对 `mmcv` 的版本上限为 `< 2.2.0`，请勿安装更高版本。
+  >
 - **常用依赖**
 
   ```bash
@@ -113,7 +114,6 @@ pip install numpy opencv-python matplotlib
   python -c "import mmcv; print('MMCV版本:', mmcv.__version__)"
   python -c "import mmdet3d; print('MMDetection3D版本:', mmdet3d.__version__)"
   ```
-
 
 ## ⚙️ 安装步骤
 
@@ -157,7 +157,7 @@ pip install -r requirements.txt
 可使用提供的工具脚本从 KITTI Tracking 原始数据生成所需 rosbag（默认只需点云与 IMU）：
 
 ```bash
-./Scripts/kitti_tracking_to_rosbag.py --seq 19 --include_detections False
+./Scripts/kitti_tracking_to_rosbag.py --seq 20 --include_detections False
 ```
 
 也可以直接使用 `MMDET3D_KITTI/data/kitti/seq_0019_with_det.bag` 或 `tracking/rosbags/seq_0019_with_det.bag` 作为示例数据。
@@ -177,7 +177,6 @@ pip install -r requirements.txt
    ```bash
    ./Scripts/kitti_tracking_to_rosbag.py --seq 19
    ```
-
 4. **启动 PointPillars 检测节点（终端 C）**
 
    ```bash
@@ -192,7 +191,6 @@ pip install -r requirements.txt
    rosparam set use_sim_time true
    rosbag play tracking/rosbags/seq_0019_with_det.bag --clock --loop
    ```
-
 6. **【可选】打开 RViz（终端 E，与 rosbag 同时运行）**
 
    ```bash
