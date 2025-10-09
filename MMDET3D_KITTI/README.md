@@ -72,43 +72,75 @@ MMDetection3D 是一个基于 PyTorch 的目标检测开源工具箱，下一代
 ## 快速环境配置（ME5400 项目）
 
 - **数据集路径**：`MMDET3D_KITTI/data/kitti/`（rosbag 示例位于 `data/kitti/seq_0019_with_det.bag`）
-- **Conda 环境**：`ME5400`，Python 3.8.20
-- **关键依赖版本**：PyTorch 1.12.0+cu116、MMCV 2.0.1、MMDetection3D 1.4.0、CUDA 11.6
+- **Conda 环境**：`ME5400`，Python 3.10.x
+- **关键依赖版本**：CUDA Toolkit 12.8（含 NVCC）、PyTorch 2.10.0.dev+cu128（nightly）、MMCV 2.1.0（CUDA 12.8 源码编译版）、MMEngine 0.10.7、MMDetection 3.2.0、MMDetection3D 1.4.0
 - **创建与激活环境**
+
   ```bash
-  conda create -n ME5400 python=3.8
+  conda create -n ME5400 python=3.10
   conda activate ME5400
   ```
-- **安装核心组件**
+- **安装 CUDA 12.8（需管理员或本地 Toolkit）**
+
+  1. 安装 NVIDIA 550+ 驱动并下载 [CUDA Toolkit 12.8](https://developer.nvidia.com/cuda-12-8-0-download-archive)。
+  2. 仅选择 `cuda-toolkit` 组件（驱动已安装可跳过），安装路径建议 `/usr/local/cuda-12.8`。
+  3. 在 `~/.bashrc` 增加：
+
+     ```bash
+     export CUDA_HOME=/usr/local/cuda-12.8
+     export PATH=$CUDA_HOME/bin:$PATH
+     export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+     ```
+
+     重新 `source ~/.bashrc`。
+- **安装 PyTorch Nightly（CUDA 12.8）**
+
   ```bash
-  pip install torch==1.12.0+cu116 torchvision==0.13.0+cu116 torchaudio==0.12.0+cu116 --extra-index-url https://download.pytorch.org/whl/cu116
-  pip install mmcv==2.0.1 mmdet==3.0.0 mmdet3d==1.4.0
+  pip install --upgrade pip
+  pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128
   ```
-- **常用依赖**
+- **安装 OpenMMLab 组件（CUDA 12.8 编译）**
+
   ```bash
-  pip install open3d==0.16.0 opencv-python==4.12.0.88 numpy==1.24.4 matplotlib==3.5.3 scipy==1.10.1 \
-              scikit-learn==1.3.2 pandas==2.0.3 pillow==10.4.0 pyyaml==6.0.2 tqdm terminaltables==3.1.10 \
-              shapely==1.8.5.post1 pyquaternion==0.9.9 trimesh==4.8.2 plyfile==1.0.3 imageio==2.35.1 \
-              fire==0.7.1 tensorboard==2.14.0 protobuf==5.29.5
+  pip install openmim
+  mim install mmengine==0.10.7
+  # 需要 NVCC，确保 CUDA_HOME 指向 Toolkit 12.8
+  export CUDA_HOME=${CUDA_HOME:-/usr/local/cuda-12.8}
+  MMCV_WITH_OPS=1 FORCE_CUDA=1 MAX_JOBS=4 mim install mmcv==2.1.0
+  pip install mmdet==3.2.0 mmdet3d==1.4.0
+  ```
+
+  > 构建 `mmcv` 时会自动编译 CUDA/C++ 算子，耗时 5~10 分钟，请耐心等待；若内存较小可追加 `MAX_JOBS=4`。
+  > 注意：目前 `mmdet3d==1.4.0` 对 `mmcv` 的版本上限为 `< 2.2.0`，请勿安装更高版本。
+  >
+- **常用依赖**
+
+  ```bash
+  pip install open3d==0.19.0 opencv-python==4.12.0.88 numpy==2.1.2 matplotlib==3.10.6 scipy==1.15.3 \
+              scikit-learn==1.7.2 pandas==2.3.3 pillow==11.3.0 pyyaml==6.0.3 tqdm terminaltables==3.1.10 \
+              shapely==1.8.5.post1 pyquaternion==0.9.9 trimesh==4.8.3 plyfile==1.1.2 imageio==2.37.0 \
+              fire==0.7.1 tensorboard==2.20.0 protobuf==6.32.1
   pip install rospkg==1.6.0 catkin-pkg==1.1.0
   ```
 - **安装验证**
+
   ```bash
-  python -c "import torch; print('PyTorch版本:', torch.__version__); print('CUDA可用:', torch.cuda.is_available())"
+  python -c "import torch; print('PyTorch版本:', torch.__version__); print('CUDA可用:', torch.cuda.is_available()); print('编译支持架构:', torch.cuda.get_arch_list())"
   python -c "import mmcv; print('MMCV版本:', mmcv.__version__)"
   python -c "import mmdet3d; print('MMDetection3D版本:', mmdet3d.__version__)"
   ```
 - **运行示例**
+
   ```bash
   # 终端 A
-  roscore &
+  roscore
 
   # 终端 B
   conda activate ME5400
   python MMDET3D_KITTI/kitti_pointpillars_bag_node.py
 
   # 终端 C
-  rosbag play Data_Tracking/rosbags/seq_0019_with_det.bag --clock --rate=0.5
+  rosbag play Data_Tracking/rosbags/seq_0019_with_det.bag --clock
   ```
 - 节点发布 `/detection/kitti_tracking` 话题，格式与官方 KITTI Tracking 对齐。
 
@@ -150,7 +182,7 @@ MMDetection3D 是一个基于 PyTorch 的目标检测开源工具箱，下一代
 
 **v1.4.0** 版本已经在 2024.1.8 发布：
 
-- 在 `projects` 中支持了 [DSVT]((https://arxiv.org/abs/2301.06051)) 的训练
+- 在 `projects` 中支持了 [DSVT](https://arxiv.org/abs/2301.06051)) 的训练
 - 在 `projects` 中支持了 [Nerf-Det](https://arxiv.org/abs/2307.14620)
 - 重构了 Waymo 数据集
 
@@ -162,7 +194,7 @@ MMDetection3D 是一个基于 PyTorch 的目标检测开源工具箱，下一代
 **v1.2.0** 版本已经在 2023.7.4 发布：
 
 - 在 `mmdet3d/configs`中支持 [新Config样式](https://mmengine.readthedocs.io/en/latest/advanced_tutorials/config.html#a-pure-python-style-configuration-file-beta)
-- 在 `projects` 中支持 [DSVT]((https://arxiv.org/abs/2301.06051)) 的推理
+- 在 `projects` 中支持 [DSVT](https://arxiv.org/abs/2301.06051)) 的推理
 - 支持通过 `mim` 从 [OpenDataLab](https://opendatalab.com/) 下载数据集
 
 **v1.1.1** 版本已经在 2023.5.30 发布：
