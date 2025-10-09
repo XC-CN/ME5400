@@ -72,20 +72,21 @@ MMDetection3D 是一个基于 PyTorch 的目标检测开源工具箱，下一代
 ## 快速环境配置（ME5400 项目）
 
 完整的 PointPillars 环境搭建步骤已迁移至仓库根目录 `README.md` 的“PointPillars 快速环境配置（ME5400）”章节，请以其为准保持依赖版本和配置一致。
+
 ### **运行示例**
 
-
-  ```bash
+```bash
   # 终端 A
   roscore
 
   # 终端 B
   conda activate ME5400
-  python MMDET3D_KITTI/kitti_pointpillars_bag_node.py
+  python MMDET3D/kitti_pointpillars_bag_node.py
 
   # 终端 C
-  rosbag play Data_Tracking/rosbags/seq_0019_with_det.bag --clock
-  ```
+  rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag
+```
+
 - 节点发布 `/detection/kitti_tracking` 话题，格式与官方 KITTI Tracking 对齐。
 
 <details open>
