@@ -91,7 +91,7 @@ Visualization Manager:
       Size (Pixels): 3  # 大小（像素）
       Size (m): 0.05000000074505806  # 大小（米）
       Style: Points  # 样式
-      Topic: /kitti/velo/pointcloud  # 话题
+      Topic: /detection/pointcloud  # 话题
       Unreliable: false  # 是否不可靠
       Use Fixed Frame: true  # 使用固定帧
       Use rainbow: false  # 使用彩虹
