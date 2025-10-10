@@ -4,24 +4,37 @@ KITTI PointPillars ROS节点 - Bag文件版本
 订阅ROS bag文件中的点云数据，运行MMDetection3D PointPillars检测
 """
 
-import rospy
-import numpy as np
-import json
 import os
+import sys
 from pathlib import Path
-from typing import Dict, List, Any, Optional
-import tf.transformations as tf_trans
+from typing import Any, Dict, List, Optional, Tuple
 
-# ROS消息类型
-from std_msgs.msg import Header, String
-from geometry_msgs.msg import Point, Pose, Quaternion, Vector3
-from std_msgs.msg import ColorRGBA
-from visualization_msgs.msg import Marker, MarkerArray
-from sensor_msgs.msg import PointCloud2, PointField
+import numpy as np
+import rospy
+import tf.transformations as tf_trans
+import torch
 from sensor_msgs import point_cloud2
+from sensor_msgs.msg import PointCloud2
+from std_msgs.msg import Header, String
+from visualization_msgs.msg import Marker, MarkerArray
+
+# 追加 catkin_ws Python 包路径，便于直接运行脚本时找到自定义消息
+CATKIN_PYTHON_PATH = Path(__file__).resolve().parents[4] / 'catkin_ws' / 'devel' / 'lib' / 'python3/dist-packages'
+if CATKIN_PYTHON_PATH.exists():
+    sys.path.insert(0, str(CATKIN_PYTHON_PATH))
 
 # MMDetection3D相关
 from mmdet3d.apis import LidarDet3DInferencer
+from mmdet3d.structures import Box3DMode, LiDARInstance3DBoxes
+
+# 自定义消息
+try:
+    from kitti_tracklets_viz.msg import Detection3D, Detection3DArray
+except ImportError as exc:
+    raise ImportError(
+        "无法导入 kitti_tracklets_viz 消息。请先编译 catkin_ws（运行 ./Scripts/build_catkin_ws.sh），"
+        "并确认已生成 devel/lib/python3/dist-packages。"
+    ) from exc
 
 
 class KittiPointPillarsBagNode:
@@ -32,17 +45,34 @@ class KittiPointPillarsBagNode:
         rospy.init_node('kitti_pointpillars_bag_detector', anonymous=True)
         
         # 获取ROS参数
-        import os
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        self.config_path = rospy.get_param('~config_path', 
-            os.path.join(current_dir, 'configs', 'pointpillars', 'pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py'))
-        self.checkpoint_path = rospy.get_param('~checkpoint_path',
-            os.path.join(current_dir, 'checkpoints', 'pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth'))
-        self.bag_path = rospy.get_param('~bag_path',
-            os.path.join(current_dir, 'data', 'kitti', 'seq_0019_with_det.bag'))
+        self.current_dir = Path(current_dir)
+        self.project_root = self.current_dir.resolve().parents[2]
+        self.workspace_root = self.current_dir.resolve().parents[3]
+
+        self.config_path = rospy.get_param(
+            '~config_path',
+            str(self.project_root / 'configs' / 'pointpillars' / 'pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py')
+        )
+        self.checkpoint_path = rospy.get_param(
+            '~checkpoint_path',
+            str(self.project_root / 'checkpoints' / 'pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth')
+        )
+        self.bag_path = rospy.get_param(
+            '~bag_path',
+            str(self.project_root / 'data' / 'kitti' / 'seq_0019_with_det.bag')
+        )
         self.publish_rate = rospy.get_param('~publish_rate', 10.0)  # Hz
         self.confidence_threshold = rospy.get_param('~confidence_threshold', 0.05)
         self.frame_id = rospy.get_param('~frame_id', 'lidar')
+        self.seq = f"{int(rospy.get_param('~seq', 19)):04d}"
+        dataset_param = rospy.get_param('~dataset_root', str(Path('Data_Tracking') / 'training'))
+        dataset_root = Path(dataset_param)
+        if not dataset_root.is_absolute():
+            dataset_root = (self.workspace_root / dataset_root).resolve()
+        self.dataset_root = dataset_root
+        self.image_width = int(rospy.get_param('~image_width', 1242))
+        self.image_height = int(rospy.get_param('~image_height', 375))
         
         # 类别名称和颜色映射
         self.class_names = ['Car', 'Pedestrian', 'Cyclist']
@@ -51,6 +81,9 @@ class KittiPointPillarsBagNode:
             'Pedestrian': (0.0, 1.0, 0.0, 0.8),  # 绿色
             'Cyclist': (0.0, 0.0, 1.0, 0.8)      # 蓝色
         }
+
+        # 加载标定信息
+        self._load_calibration()
         
         # 初始化推理器
         self._init_inferencer()
@@ -60,6 +93,7 @@ class KittiPointPillarsBagNode:
         self.status_pub = rospy.Publisher('/detection/status', String, queue_size=10)
         self.kitti_tracking_pub = rospy.Publisher('/detection/kitti_tracking', String, queue_size=10)
         self.pointcloud_pub = rospy.Publisher('/detection/pointcloud', PointCloud2, queue_size=10)
+        self.det_pub = rospy.Publisher('/kitti/detections', Detection3DArray, queue_size=2)
         
         # 订阅点云话题
         self.pointcloud_sub = rospy.Subscriber('/kitti/velo/pointcloud', PointCloud2, self._pointcloud_callback)
@@ -72,6 +106,7 @@ class KittiPointPillarsBagNode:
         rospy.loginfo(f"配置文件: {self.config_path}")
         rospy.loginfo(f"检查点: {self.checkpoint_path}")
         rospy.loginfo(f"Bag文件: {self.bag_path}")
+        rospy.loginfo(f"数据集路径: {self.dataset_root} / 序列: {self.seq}")
         rospy.loginfo(f"订阅话题: /kitti/velo/pointcloud")
         rospy.loginfo(f"发布频率: {self.publish_rate} Hz")
     
@@ -91,14 +126,63 @@ class KittiPointPillarsBagNode:
         except Exception as e:
             rospy.logerr(f"推理器初始化失败: {e}")
             raise
+
+    @staticmethod
+    def _empty_detections() -> Dict[str, Any]:
+        return {
+            'bboxes_3d': np.empty((0, 7), dtype=np.float32),
+            'scores_3d': np.empty((0,), dtype=np.float32),
+            'labels_3d': np.empty((0,), dtype=np.int32),
+            'class_names': [],
+        }
+
+    def _load_calibration(self) -> None:
+        """读取KITTI标定文件，构造LiDAR到相机的外参与投影矩阵。"""
+        seq_root = self.dataset_root / "sequences" if (self.dataset_root / "sequences").is_dir() else self.dataset_root
+        calib_dir = seq_root / "calib"
+        if calib_dir.is_dir():
+            calib_path = calib_dir / f"{self.seq}.txt"
+        else:
+            calib_path = seq_root / self.seq / "calib.txt"
+
+        if not calib_path.exists():
+            raise FileNotFoundError(f"找不到标定文件: {calib_path}")
+
+        calib_data: Dict[str, np.ndarray] = {}
+        with calib_path.open("r") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                if ":" in line:
+                    key, values = line.split(":", 1)
+                else:
+                    parts = line.split()
+                    key, values = parts[0], " ".join(parts[1:])
+                calib_data[key] = np.fromstring(values, sep=" ", dtype=np.float64)
+
+        if "Tr_velo_cam" not in calib_data or "P2" not in calib_data:
+            raise ValueError(f"标定文件缺少Tr_velo_cam或P2: {calib_path}")
+
+        lidar2cam = np.vstack((calib_data["Tr_velo_cam"].reshape(3, 4), [0.0, 0.0, 0.0, 1.0]))
+        cam2img = np.eye(4, dtype=np.float64)
+        cam2img[:3, :4] = calib_data["P2"].reshape(3, 4)
+
+        self.lidar2cam = lidar2cam
+        self.cam2img = cam2img
+        self.lidar2cam_tensor = torch.from_numpy(self.lidar2cam[:3, :4]).float()
+        self.cam2img_tensor = torch.from_numpy(self.cam2img[:3, :4]).float()
+
+        rospy.loginfo(f"加载标定文件成功: {calib_path}")
     
     def _pointcloud_callback(self, msg: PointCloud2):
         """点云数据回调函数"""
         try:
             self.frame_count += 1
+            frame_id = max(self.frame_count - 1, 0)
             
             # 发布状态
-            self._publish_status(f"处理帧 {self.frame_count}: {msg.header.stamp}")
+            self._publish_status(f"处理帧 {frame_id}: {msg.header.stamp}")
             
             # 转换点云数据
             points = self._pointcloud2_to_numpy(msg)
@@ -108,13 +192,25 @@ class KittiPointPillarsBagNode:
             
             # 运行推理
             detections = self._run_inference(points, msg.header.stamp)
+
+            det_header = Header(
+                stamp=msg.header.stamp if msg.header.stamp != rospy.Time() else rospy.Time.now(),
+                frame_id=f"seq_{self.seq}",
+            )
+            cam_info = self._publish_detection_array(detections, det_header, frame_id)
             
             # 转换为MarkerArray并发布
             marker_array = self._detections_to_markerarray(detections, self.frame_id)
             self.marker_pub.publish(marker_array)
             
             # 转换为KITTI tracking格式并发布
-            kitti_tracking = self._detections_to_kitti_tracking(detections, self.frame_count)
+            if cam_info is not None:
+                cam_centers, dims_kitti, cam_yaw, class_names, scores, bbox2d_list = cam_info
+                kitti_tracking = self._detections_to_kitti_tracking(
+                    frame_id, cam_centers, dims_kitti, cam_yaw, class_names, scores, bbox2d_list
+                )
+            else:
+                kitti_tracking = ""
             kitti_msg = String()
             kitti_msg.data = kitti_tracking
             self.kitti_tracking_pub.publish(kitti_msg)
@@ -123,8 +219,8 @@ class KittiPointPillarsBagNode:
             self.pointcloud_pub.publish(msg)
             
             # 发布检测统计信息
-            num_detections = len(detections['bboxes_3d'])
-            rospy.loginfo(f"帧 {self.frame_count}: 检测到 {num_detections} 个目标")
+            num_detections = int(detections['bboxes_3d'].shape[0])
+            rospy.loginfo(f"帧 {frame_id}: 检测到 {num_detections} 个目标")
             
             # 频率控制
             current_time = rospy.Time.now()
@@ -184,16 +280,91 @@ class KittiPointPillarsBagNode:
             
         except Exception as e:
             rospy.logerr(f"推理失败: {e}")
-            return {'bboxes_3d': [], 'scores_3d': [], 'labels_3d': [], 'class_names': []}
+            return self._empty_detections()
+
+    def _publish_detection_array(
+        self,
+        detections: Dict[str, Any],
+        header: Header,
+        frame_id: int,
+    ) -> Optional[Tuple[np.ndarray, np.ndarray, np.ndarray, List[str], np.ndarray, List[List[float]]]]:
+        """将检测结果转换为Detection3DArray并发布，返回用于KITTI字符串的关键信息。"""
+        msg = Detection3DArray()
+        msg.header = header
+
+        boxes = detections.get('bboxes_3d')
+        scores = detections.get('scores_3d')
+        labels = detections.get('labels_3d')
+
+        if boxes is None or boxes.size == 0:
+            self.det_pub.publish(msg)
+            return None
+
+        boxes_np = np.asarray(boxes, dtype=np.float32)
+        scores_np = np.asarray(scores, dtype=np.float32)
+        labels_np = np.asarray(labels, dtype=np.int32)
+
+        box_dim = boxes_np.shape[1]
+        lidar_boxes = LiDARInstance3DBoxes(torch.from_numpy(boxes_np), box_dim=box_dim)
+        cam_boxes = lidar_boxes.convert_to(Box3DMode.CAM, rt_mat=self.lidar2cam_tensor, correct_yaw=True)
+        cam_tensor = cam_boxes.tensor.cpu().numpy()
+        corners_cam = cam_boxes.corners.cpu().numpy()
+
+        dims_kitti = np.stack([boxes_np[:, 5], boxes_np[:, 4], boxes_np[:, 3]], axis=1)
+        cam_centers = cam_tensor[:, :3]
+        cam_yaw = cam_tensor[:, 6]
+
+        class_names: List[str] = []
+        bbox2d_list: List[List[float]] = []
+
+        for idx in range(boxes_np.shape[0]):
+            label_idx = int(labels_np[idx])
+            if 0 <= label_idx < len(self.class_names):
+                cls_name = self.class_names[label_idx]
+            else:
+                cls_name = f"class_{label_idx}"
+            class_names.append(cls_name)
+
+            bbox2d = self._project_corners_to_bbox2d(corners_cam[idx])
+            bbox2d_list.append(bbox2d)
+
+            det_msg = Detection3D()
+            det_msg.header = Header(stamp=header.stamp, frame_id=header.frame_id)
+            det_msg.frame = frame_id
+            det_msg.track_id = -1
+            det_msg.cls = cls_name
+            det_msg.score = float(scores_np[idx])
+            det_msg.bbox2d = [float(v) for v in bbox2d]
+            det_msg.dimensions = [float(v) for v in dims_kitti[idx]]
+            det_msg.location = cam_centers[idx].astype(np.float32).tolist()
+            det_msg.rotation_y = float(cam_yaw[idx])
+            msg.detections.append(det_msg)
+
+        self.det_pub.publish(msg)
+        return cam_centers, dims_kitti, cam_yaw, class_names, scores_np, bbox2d_list
+
+    def _project_corners_to_bbox2d(self, corners_cam: np.ndarray) -> List[float]:
+        """将3D包围盒角点投影到图像平面，得到2D bbox。"""
+        ones = np.ones((corners_cam.shape[0], 1), dtype=np.float64)
+        hom = np.hstack([corners_cam, ones])
+        proj = hom @ self.cam2img[:3, :4].T
+        depths = proj[:, 2]
+        valid = depths > 0.1
+        if not np.any(valid):
+            return [0.0, 0.0, 0.0, 0.0]
+        u = proj[valid, 0] / depths[valid]
+        v = proj[valid, 1] / depths[valid]
+        xmin = float(np.clip(np.min(u), 0, self.image_width - 1))
+        xmax = float(np.clip(np.max(u), 0, self.image_width - 1))
+        ymin = float(np.clip(np.min(v), 0, self.image_height - 1))
+        ymax = float(np.clip(np.max(v), 0, self.image_height - 1))
+        if xmax < xmin or ymax < ymin:
+            return [0.0, 0.0, 0.0, 0.0]
+        return [xmin, ymin, xmax, ymax]
     
     def _extract_detections(self, result) -> Dict[str, Any]:
         """从推理结果中提取检测信息"""
-        detections = {
-            'bboxes_3d': [],
-            'scores_3d': [],
-            'labels_3d': [],
-            'class_names': []
-        }
+        detections = self._empty_detections()
         
         try:
             # 处理字典格式的结果
@@ -216,45 +387,46 @@ class KittiPointPillarsBagNode:
                 bboxes = None
                 if hasattr(pred_instances, 'bboxes_3d') and pred_instances.bboxes_3d is not None:
                     if hasattr(pred_instances.bboxes_3d, 'tensor'):
-                        bboxes = pred_instances.bboxes_3d.tensor.cpu().numpy()
+                        bboxes = pred_instances.bboxes_3d.tensor.detach().cpu().numpy()
                     else:
-                        bboxes = pred_instances.bboxes_3d.cpu().numpy()
+                        bboxes = pred_instances.bboxes_3d.detach().cpu().numpy()
                 elif isinstance(pred_instances, dict) and 'bboxes_3d' in pred_instances:
                     bboxes = pred_instances['bboxes_3d']
                 
                 # 获取置信度分数
                 scores = None
                 if hasattr(pred_instances, 'scores_3d') and pred_instances.scores_3d is not None:
-                    scores = pred_instances.scores_3d.cpu().numpy()
+                    scores = pred_instances.scores_3d.detach().cpu().numpy()
                 elif isinstance(pred_instances, dict) and 'scores_3d' in pred_instances:
                     scores = pred_instances['scores_3d']
                 
                 # 获取标签
                 labels = None
                 if hasattr(pred_instances, 'labels_3d') and pred_instances.labels_3d is not None:
-                    labels = pred_instances.labels_3d.cpu().numpy()
+                    labels = pred_instances.labels_3d.detach().cpu().numpy()
                 elif isinstance(pred_instances, dict) and 'labels_3d' in pred_instances:
                     labels = pred_instances['labels_3d']
                 
-                if scores is not None:
-                    # 转换为numpy数组进行过滤
-                    if isinstance(scores, list):
-                        scores = np.array(scores)
-                    if isinstance(bboxes, list):
-                        bboxes = np.array(bboxes)
-                    if isinstance(labels, list):
-                        labels = np.array(labels)
-                    
-                    # 过滤低置信度检测
-                    valid_indices = scores > self.confidence_threshold
-                    
-                    if np.any(valid_indices):
-                        detections['scores_3d'] = scores[valid_indices].tolist()
-                        if bboxes is not None:
-                            detections['bboxes_3d'] = bboxes[valid_indices].tolist()
-                        if labels is not None:
-                            detections['labels_3d'] = labels[valid_indices].tolist()
-                            detections['class_names'] = [self.class_names[label] for label in labels[valid_indices]]
+                if scores is None or bboxes is None or labels is None:
+                    return detections
+
+                scores = np.asarray(scores, dtype=np.float32)
+                bboxes = np.asarray(bboxes, dtype=np.float32)
+                labels = np.asarray(labels, dtype=np.int32)
+
+                if scores.ndim == 2 and scores.shape[1] == 1:
+                    scores = scores.squeeze(axis=1)
+
+                # 过滤低置信度检测
+                valid_indices = scores > self.confidence_threshold
+                if np.any(valid_indices):
+                    detections['scores_3d'] = scores[valid_indices].astype(np.float32)
+                    detections['bboxes_3d'] = bboxes[valid_indices]
+                    detections['labels_3d'] = labels[valid_indices].astype(np.int32)
+                    detections['class_names'] = [
+                        self.class_names[int(label)] if 0 <= int(label) < len(self.class_names) else f"class_{int(label)}"
+                        for label in detections['labels_3d']
+                    ]
         
         except Exception as e:
             rospy.logerr(f"提取检测结果失败: {e}")
@@ -326,37 +498,35 @@ class KittiPointPillarsBagNode:
         
         return marker_array
     
-    def _detections_to_kitti_tracking(self, detections: Dict[str, Any], frame_id: int) -> str:
-        """将检测结果转换为KITTI tracking格式"""
-        kitti_lines = []
-        
-        for i, (bbox, score, class_name) in enumerate(zip(
-            detections['bboxes_3d'], 
-            detections['scores_3d'], 
-            detections['class_names']
-        )):
-            # 解析边界框参数
-            if len(bbox) == 7:
-                x, y, z, length, width, height, yaw = bbox
-            elif len(bbox) == 9:
-                x, y, z, length, width, height, yaw, vx, vy = bbox
-                vx, vy = 0.0, 0.0
-            else:
-                continue
-            
-            # KITTI tracking格式
-            track_id = i
-            truncated = 0.0
-            occluded = 0
-            alpha = yaw
-            bbox_left = 0.0  # 2D边界框需要相机投影，这里设为默认值
-            bbox_top = 0.0
-            bbox_right = 0.0
-            bbox_bottom = 0.0
-            
-            kitti_line = f"{frame_id} {track_id} {class_name} {truncated} {occluded} {alpha:.6f} {bbox_left:.6f} {bbox_top:.6f} {bbox_right:.6f} {bbox_bottom:.6f} {height:.6f} {width:.6f} {length:.6f} {x:.6f} {y:.6f} {z:.6f} {yaw:.6f}"
+    def _detections_to_kitti_tracking(
+        self,
+        frame_id: int,
+        cam_centers: np.ndarray,
+        dims_kitti: np.ndarray,
+        cam_yaw: np.ndarray,
+        class_names: List[str],
+        scores: np.ndarray,
+        bbox2d_list: List[List[float]],
+    ) -> str:
+        """将检测结果转换为KITTI tracking格式字符串。"""
+        kitti_lines: List[str] = []
+
+        for idx, cls_name in enumerate(class_names):
+            h, w, l = dims_kitti[idx]
+            x, y, z = cam_centers[idx]
+            yaw = cam_yaw[idx]
+            bbox_left, bbox_top, bbox_right, bbox_bottom = bbox2d_list[idx]
+
+            # 视角角度 alpha（与KITTI定义一致）
+            alpha = yaw - np.arctan2(x, z) if z != 0 else yaw
+
+            kitti_line = (
+                f"{frame_id} {idx} {cls_name} 0.0 0 {alpha:.6f} "
+                f"{bbox_left:.6f} {bbox_top:.6f} {bbox_right:.6f} {bbox_bottom:.6f} "
+                f"{h:.6f} {w:.6f} {l:.6f} {x:.6f} {y:.6f} {z:.6f} {yaw:.6f} {scores[idx]:.6f}"
+            )
             kitti_lines.append(kitti_line)
-        
+
         return '\n'.join(kitti_lines)
     
     def _publish_status(self, status: str):

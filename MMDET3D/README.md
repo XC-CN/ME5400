@@ -81,13 +81,30 @@ MMDetection3D 是一个基于 PyTorch 的目标检测开源工具箱，下一代
 
   # 终端 B
   conda activate ME5400
-  python MMDET3D/kitti_pointpillars_bag_node.py
+  python MMDET3D/local/ros/nodes/kitti_pointpillars_bag_node.py
 
   # 终端 C
   rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag
 ```
 
 - 节点发布 `/detection/kitti_tracking` 话题，格式与官方 KITTI Tracking 对齐。
+
+### `local/` 目录说明（ME5400 定制）
+
+仓库根目录下新增 `MMDET3D/local/`，用于存放课程项目的自定义脚本、ROS 资源与中间结果，避免与上游开源目录混杂：
+
+```
+local/
+├── ros/            # ROS 节点、launch、rviz 与部署包
+├── scripts/        # 推理/训练脚本入口
+├── tools/          # 数据准备、格式校验等辅助工具
+├── visualization/  # 可视化相关脚本
+├── results/        # 推理输出与统计结果
+├── logs/           # 运行日志与截图记录
+└── data/           # 临时数据缓存（如 temp_kitti_data）
+```
+
+所有 ME5400 专属脚本均可以通过 `python MMDET3D/local/...` 的形式调用；如需打包 ROS 节点，可使用 `local/ros/deployment/` 中的资源。
 
 <details open>
 <summary>主要特性</summary>

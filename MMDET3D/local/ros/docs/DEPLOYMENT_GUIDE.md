@@ -5,20 +5,18 @@
 这个部署包包含了运行KITTI PointPillars ROS节点所需的所有文件：
 
 ```
-kitti_pointpillars_ros_deployment/
-├── kitti_pointpillars_ros_node.py    # 主ROS节点
+MMDET3D/local/ros/deployment/
+├── kitti_pointpillars_ros_node.py    # 打包用主ROS节点副本
 ├── launch/                           # ROS启动文件
 │   └── kitti_pointpillars.launch
-├── rviz/                            # RViz配置文件
+├── rviz/                             # RViz配置文件
 │   └── kitti_detection.rviz
-├── configs/                         # PointPillars配置文件
-│   └── pointpillars/
-│       └── pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
-├── checkpoints/                     # 预训练模型
-│   └── pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
-├── test_ros_node.py                 # 测试脚本
-├── README_ROS_NODE.md               # 详细使用说明
-└── DEPLOYMENT_GUIDE.md             # 本文件
+├── pointpillars/                     # PointPillars配置文件快照
+│   └── pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
+├── checkpoints/                      # 预训练模型（与根目录 checkpoints 相同）
+├── test_ros_node.py                  # 测试脚本
+├── README_ROS_NODE.md                # 详细使用说明
+└── DEPLOYMENT_GUIDE.md               # 本文件
 ```
 
 ## 🚀 快速开始
@@ -64,17 +62,17 @@ data/kitti/2011_09_26_drive_0039_sync/2011_09_26/2011_09_26_drive_0039_sync/velo
 roscore &
 
 # 运行ROS节点
-python kitti_pointpillars_ros_node.py --mode continuous
+python MMDET3D/local/ros/nodes/kitti_pointpillars_ros_node.py --mode continuous
 
-# 或者使用launch文件
-roslaunch launch/kitti_pointpillars.launch
+# 或者使用launch文件（绝对路径）
+roslaunch $(pwd)/MMDET3D/local/ros/launch/kitti_pointpillars.launch
 ```
 
 ### 5. 可视化
 
 ```bash
 # 启动RViz
-rviz -d rviz/kitti_detection.rviz
+rviz -d $(pwd)/MMDET3D/local/ros/rviz/kitti_detection.rviz
 ```
 
 ## 📊 ROS话题
@@ -103,7 +101,7 @@ rviz -d rviz/kitti_detection.rviz
 运行测试脚本验证安装：
 
 ```bash
-python test_ros_node.py
+python MMDET3D/local/ros/tests/test_ros_node.py
 ```
 
 ## 📝 注意事项

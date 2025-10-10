@@ -4,6 +4,10 @@
 
 echo "启动KITTI PointPillars Bag ROS节点..."
 
+# 脚本所在目录与仓库根目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+
 # 检查roscore是否运行
 if ! pgrep -x "roscore" > /dev/null; then
     echo "启动roscore..."
@@ -17,11 +21,11 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate ME5400
 
 # 设置ROS环境变量
-export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)
-export PYTHONPATH=$PYTHONPATH:$(pwd)
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$PROJECT_ROOT
+export PYTHONPATH=$PYTHONPATH:$PROJECT_ROOT
 
 # 检查bag文件是否存在
-BAG_FILE="data/kitti/seq_0019_with_det.bag"
+BAG_FILE="$PROJECT_ROOT/data/kitti/seq_0019_with_det.bag"
 if [ ! -f "$BAG_FILE" ]; then
     echo "错误: bag文件不存在: $BAG_FILE"
     exit 1
@@ -31,7 +35,7 @@ echo "Bag文件: $BAG_FILE"
 
 # 启动ROS节点
 echo "启动KITTI PointPillars Bag节点..."
-python kitti_pointpillars_bag_node.py &
+python "$PROJECT_ROOT/local/ros/nodes/kitti_pointpillars_bag_node.py" &
 NODE_PID=$!
 
 # 等待节点启动
@@ -39,7 +43,7 @@ sleep 5
 
 # 播放bag文件
 echo "播放bag文件..."
-rosbag play $BAG_FILE --clock --rate=0.5  # 0.5倍速播放
+rosbag play "$BAG_FILE" --clock --rate=0.5  # 0.5倍速播放
 
 # 等待处理完成
 wait $NODE_PID

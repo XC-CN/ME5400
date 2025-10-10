@@ -56,7 +56,7 @@ pip install numpy opencv-python matplotlib
 
 ### PointPillars 快速环境配置（ME5400）
 
-- **数据集路径**：`MMDET3D_KITTI/data/kitti/`（rosbag 示例位于 `MMDET3D_KITTI/data/kitti/seq_0019_with_det.bag`）
+- **数据集路径**：`MMDET3D/data/kitti/`（rosbag 示例位于 `MMDET3D/data/kitti/seq_0019_with_det.bag`）
 - **Conda 环境**：`ME5400`，Python 3.10.x
 - **关键依赖版本**：CUDA Toolkit 12.8（含 NVCC）、PyTorch 2.10.0.dev+cu128（nightly）、MMCV 2.1.0（CUDA 12.8 源码编译版）、MMEngine 0.10.7、MMDetection 3.2.0、MMDetection3D 1.4.0
 - **创建与激活环境**
@@ -160,7 +160,7 @@ pip install -r requirements.txt
 ./Scripts/kitti_tracking_to_rosbag.py --seq 20 --include_detections False
 ```
 
-也可以直接使用 `MMDET3D_KITTI/data/kitti/seq_0019_with_det.bag` 或 `tracking/rosbags/seq_0019_with_det.bag` 作为示例数据。
+也可以直接使用 `MMDET3D/data/kitti/seq_0019_with_det.bag` 或 `tracking/rosbags/seq_0019_with_det.bag` 作为示例数据。
 
 1. **启动 roscore（终端 A）**
 
@@ -175,16 +175,16 @@ pip install -r requirements.txt
 3. **【可选】生成或更新默认 rosbag**
 
    ```bash
-   ./Scripts/kitti_tracking_to_rosbag.py --seq 19
+   ./Scripts/kitti_tracking_to_rosbag.py --seq 20
    ```
 4. **启动 PointPillars 检测节点（终端 C）**
 
    ```bash
    conda activate ME5400
-   python MMDET3D_KITTI/kitti_pointpillars_bag_node.py
+   python MMDET3D/local/ros/nodes/kitti_pointpillars_bag_node.py
    ```
 
-   该节点会初始化 PointPillars 推理器并等待 `/kitti/velo/pointcloud` 点云流；需要时可改用 `MMDET3D_KITTI/run_bag_node.sh` 自动拉起 roscore、检测节点与 rosbag。
+   该节点会初始化 PointPillars 推理器并等待 `/kitti/velo/pointcloud` 点云流；需要时可改用 `MMDET3D/local/ros/scripts/run_bag_node.sh` 自动拉起 roscore、检测节点与 rosbag。
 5. **播放 rosbag（终端 D，保持运行）**
 
    ```bash
@@ -219,7 +219,7 @@ pip install -r requirements.txt
 **【可选】一键启动检测+rosbag**
 
 ```bash
-./MMDET3D_KITTI/run_bag_node.sh
+./MMDET3D/local/ros/scripts/run_bag_node.sh
 ```
 
 脚本会激活 `ME5400` 环境并串行启动 PointPillars 节点与默认 bag 播放；其余 FAST-LIO/MCTrack 组件仍需按上文步骤启动（后续会整合一键脚本）。

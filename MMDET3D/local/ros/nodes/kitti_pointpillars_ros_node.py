@@ -4,12 +4,11 @@ KITTI PointPillars ROS节点
 将MMDetection3D PointPillars检测结果转换为ROS MarkerArray消息并发布
 """
 
-import rospy
-import numpy as np
-import json
-import os
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+import rospy
 import tf.transformations as tf_trans
 
 # ROS消息类型
@@ -30,15 +29,18 @@ class KittiPointPillarsROSNode:
         """初始化ROS节点"""
         rospy.init_node('kitti_pointpillars_detector', anonymous=True)
         
-        # 获取ROS参数 - 使用相对路径
-        import os
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        self.config_path = rospy.get_param('~config_path', 
-            os.path.join(current_dir, 'configs', 'pointpillars', 'pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py'))
-        self.checkpoint_path = rospy.get_param('~checkpoint_path',
-            os.path.join(current_dir, 'checkpoints', 'pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth'))
-        self.data_dir = rospy.get_param('~data_dir',
-            os.path.join(current_dir, 'data', 'kitti', '2011_09_26_drive_0039_sync', '2011_09_26', '2011_09_26_drive_0039_sync', 'velodyne_points', 'data'))
+        # 目录结构
+        self.node_dir = Path(__file__).resolve().parent
+        self.project_root = self.node_dir.parents[2]
+
+        # 获取ROS参数 - 默认指向仓库根目录下的资源
+        default_config = self.project_root / 'configs' / 'pointpillars' / 'pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py'
+        default_checkpoint = self.project_root / 'checkpoints' / 'pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth'
+        default_data_dir = self.project_root / 'data' / 'kitti' / '2011_09_26_drive_0039_sync' / '2011_09_26' / '2011_09_26_drive_0039_sync' / 'velodyne_points' / 'data'
+
+        self.config_path = rospy.get_param('~config_path', str(default_config))
+        self.checkpoint_path = rospy.get_param('~checkpoint_path', str(default_checkpoint))
+        self.data_dir = rospy.get_param('~data_dir', str(default_data_dir))
         self.publish_rate = rospy.get_param('~publish_rate', 10.0)  # Hz
         self.confidence_threshold = rospy.get_param('~confidence_threshold', 0.05)
         self.frame_id = rospy.get_param('~frame_id', 'lidar')

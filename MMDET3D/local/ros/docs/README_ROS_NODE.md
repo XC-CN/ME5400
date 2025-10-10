@@ -15,14 +15,15 @@
 ## 文件结构
 
 ```
-mmdet3d_centerpoint/
-├── kitti_pointpillars_ros_node.py    # 主ROS节点
-├── test_ros_node.py                   # 测试节点
-├── launch/
-│   └── kitti_pointpillars.launch     # 启动文件
-├── rviz/
-│   └── kitti_detection.rviz          # RViz配置文件
-└── README_ROS_NODE.md                # 本文档
+MMDET3D/local/ros/
+├── nodes/
+│   ├── kitti_pointpillars_ros_node.py   # 主ROS节点
+│   └── kitti_pointpillars_bag_node.py   # rosbag 输入节点
+├── launch/                              # 示例 launch 文件
+├── rviz/                                # RViz 配置
+├── scripts/run_bag_node.sh              # 一键启动脚本
+├── tests/test_ros_node.py               # 话题发布验证脚本
+└── docs/                                # 使用文档（本文档等）
 ```
 
 ## 安装依赖
@@ -78,12 +79,12 @@ roslaunch mmdet3d_centerpoint kitti_pointpillars.launch rviz:=true
 
 或者手动启动RViz：
 ```bash
-rviz -d /path/to/mmdet3d_centerpoint/rviz/kitti_detection.rviz
+rviz -d $(pwd)/MMDET3D/local/ros/rviz/kitti_detection.rviz
 ```
 
 ### 4. 测试节点
 ```bash
-python test_ros_node.py
+python MMDET3D/local/ros/tests/test_ros_node.py
 ```
 
 ## ROS话题
