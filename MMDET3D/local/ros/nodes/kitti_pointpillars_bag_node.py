@@ -73,6 +73,7 @@ class KittiPointPillarsBagNode:
         self.dataset_root = dataset_root
         self.image_width = int(rospy.get_param('~image_width', 1242))
         self.image_height = int(rospy.get_param('~image_height', 375))
+        self.enable_open3d_vis = rospy.get_param('~enable_open3d_vis', False)
         
         # 类别名称和颜色映射
         self.class_names = ['Car', 'Pedestrian', 'Cyclist']
@@ -264,7 +265,7 @@ class KittiPointPillarsBagNode:
             # 运行推理
             result = self.inferencer(
                 inputs=dict(points=temp_file),
-                show=True,
+                show=self.enable_open3d_vis,
                 wait_time=0,
                 pred_score_thr=self.confidence_threshold,
                 no_save_vis=True,

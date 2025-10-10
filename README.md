@@ -197,7 +197,7 @@ pip install -r requirements.txt
    ./Scripts/run_rviz.sh
    ```
 
-   使用 `kitti_simple.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
+   使用 `Scripts/rviz_cfg/kitti_simple.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
 7. **启动 FAST-LIO 映射（终端 F）**
 
    ```bash
