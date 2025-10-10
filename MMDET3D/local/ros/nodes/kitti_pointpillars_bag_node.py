@@ -64,7 +64,7 @@ class KittiPointPillarsBagNode:
         )
         self.publish_rate = rospy.get_param('~publish_rate', 10.0)  # Hz
         self.confidence_threshold = rospy.get_param('~confidence_threshold', 0.05)
-        self.frame_id = rospy.get_param('~frame_id', 'lidar')
+        self.frame_id = rospy.get_param('~frame_id', 'velodyne')
         self.seq = f"{int(rospy.get_param('~seq', 19)):04d}"
         dataset_param = rospy.get_param('~dataset_root', str(Path('Data_Tracking') / 'training'))
         dataset_root = Path(dataset_param)
