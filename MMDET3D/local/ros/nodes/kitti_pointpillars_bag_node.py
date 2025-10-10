@@ -74,6 +74,10 @@ class KittiPointPillarsBagNode:
         self.image_width = int(rospy.get_param('~image_width', 1242))
         self.image_height = int(rospy.get_param('~image_height', 375))
         self.enable_open3d_vis = rospy.get_param('~enable_open3d_vis', False)
+
+        # Marker 发布状态，用于清理残留标记
+        self._last_marker_count = 0
+        self._last_marker_frame = self.frame_id
         
         # 类别名称和颜色映射
         self.class_names = ['Car', 'Pedestrian', 'Cyclist']
@@ -201,7 +205,9 @@ class KittiPointPillarsBagNode:
             cam_info = self._publish_detection_array(detections, det_header, frame_id)
             
             # 转换为MarkerArray并发布
-            marker_array = self._detections_to_markerarray(detections, self.frame_id)
+            marker_frame_id = msg.header.frame_id if msg.header.frame_id else self.frame_id
+            marker_stamp = msg.header.stamp if msg.header.stamp != rospy.Time() else rospy.Time.now()
+            marker_array = self._detections_to_markerarray(detections, marker_frame_id, marker_stamp)
             self.marker_pub.publish(marker_array)
             
             # 转换为KITTI tracking格式并发布
@@ -436,13 +442,17 @@ class KittiPointPillarsBagNode:
         
         return detections
     
-    def _detections_to_markerarray(self, detections: Dict[str, Any], frame_id: str) -> MarkerArray:
-        """将检测结果转换为MarkerArray消息"""
+    def _detections_to_markerarray(
+        self,
+        detections: Dict[str, Any],
+        frame_id: str,
+        stamp: rospy.Time,
+    ) -> MarkerArray:
+        """将检测结果转换为MarkerArray消息，并清理过期标记。"""
         marker_array = MarkerArray()
-        
-        # 创建时间戳
-        current_time = rospy.Time.now()
-        
+
+        current_count = 0
+
         for i, (bbox, score, class_name) in enumerate(zip(
             detections['bboxes_3d'], 
             detections['scores_3d'], 
@@ -461,7 +471,7 @@ class KittiPointPillarsBagNode:
             # 创建Marker
             marker = Marker()
             marker.header.frame_id = frame_id
-            marker.header.stamp = current_time
+            marker.header.stamp = stamp
             marker.ns = "detection"
             marker.id = i
             marker.type = Marker.CUBE
@@ -492,10 +502,25 @@ class KittiPointPillarsBagNode:
             marker.color.a = color[3]
             
             # 设置生命周期
-            marker.lifetime = rospy.Duration(0.1)  # 100ms
-            marker.frame_locked = False
+            marker.lifetime = rospy.Duration(0.0)  # 0 表示持久，直到被覆盖或删除
+            marker.frame_locked = True
             
             marker_array.markers.append(marker)
+            current_count += 1
+
+        if current_count < self._last_marker_count:
+            # 删除多余的旧Marker，避免残影
+            for marker_id in range(current_count, self._last_marker_count):
+                delete_marker = Marker()
+                delete_marker.header.frame_id = self._last_marker_frame
+                delete_marker.header.stamp = stamp
+                delete_marker.ns = "detection"
+                delete_marker.id = marker_id
+                delete_marker.action = Marker.DELETE
+                marker_array.markers.append(delete_marker)
+
+        self._last_marker_count = current_count
+        self._last_marker_frame = frame_id
         
         return marker_array
     
