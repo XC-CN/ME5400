@@ -148,7 +148,7 @@ pip install -r requirements.txt
 
 运行前请准备好 KITTI Tracking 数据目录（用于工况播放与 MCTrack 标定信息）：
 
-- `tracking/training/`：需包含 `calib/`、`oxts/`、`velodyne/` 等子目录。
+- `Data_Tracking/training/`：需包含 `calib/`、`oxts/`、`velodyne/` 等子目录。
 - `tracking/det_tracking_lsvm/`：仅在评估历史检测时使用；实时检测场景可忽略。
 - 将点云+IMU 数据转换为 rosbag 并放在 `tracking/rosbags/`，或者直接使用仓库提供的示例 bag。
 
