@@ -150,8 +150,11 @@ class KittiPointPillarsBagNode:
         else:
             calib_path = seq_root / self.seq / "calib.txt"
 
+        # 如果calib.txt不存在，尝试读取分开的标定文件
         if not calib_path.exists():
-            raise FileNotFoundError(f"找不到标定文件: {calib_path}")
+            rospy.loginfo(f"calib.txt不存在，尝试读取分开的标定文件")
+            self._load_separate_calibration_files(seq_root / self.seq)
+            return
 
         calib_data: Dict[str, np.ndarray] = {}
         with calib_path.open("r") as f:
@@ -179,6 +182,59 @@ class KittiPointPillarsBagNode:
         self.cam2img_tensor = torch.from_numpy(self.cam2img[:3, :4]).float()
 
         rospy.loginfo(f"加载标定文件成功: {calib_path}")
+
+    def _load_separate_calibration_files(self, calib_dir: Path) -> None:
+        """读取分开的标定文件（calib_cam_to_cam.txt, calib_velo_to_cam.txt等）"""
+        # 读取相机标定文件
+        cam_to_cam_path = calib_dir / "calib_cam_to_cam.txt"
+        velo_to_cam_path = calib_dir / "calib_velo_to_cam.txt"
+        
+        if not cam_to_cam_path.exists() or not velo_to_cam_path.exists():
+            raise FileNotFoundError(f"找不到标定文件: {cam_to_cam_path} 或 {velo_to_cam_path}")
+
+        # 读取P2（相机内参矩阵）
+        p2_data = None
+        with cam_to_cam_path.open("r") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("P_rect_02:"):
+                    values = line.split(":", 1)[1].strip()
+                    p2_data = np.fromstring(values, sep=" ", dtype=np.float64).reshape(3, 4)
+                    break
+        
+        if p2_data is None:
+            raise ValueError(f"找不到P_rect_02在文件: {cam_to_cam_path}")
+
+        # 读取激光雷达到相机的变换矩阵
+        r_data = None
+        t_data = None
+        with velo_to_cam_path.open("r") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("R:"):
+                    values = line.split(":", 1)[1].strip()
+                    r_data = np.fromstring(values, sep=" ", dtype=np.float64).reshape(3, 3)
+                elif line.startswith("T:"):
+                    values = line.split(":", 1)[1].strip()
+                    t_data = np.fromstring(values, sep=" ", dtype=np.float64)
+        
+        if r_data is None or t_data is None:
+            raise ValueError(f"找不到R或T在文件: {velo_to_cam_path}")
+
+        # 构造Tr_velo_cam矩阵（3x4）
+        tr_velo_cam = np.hstack([r_data, t_data.reshape(3, 1)])
+
+        # 构造变换矩阵
+        lidar2cam = np.vstack((tr_velo_cam, [0.0, 0.0, 0.0, 1.0]))
+        cam2img = np.eye(4, dtype=np.float64)
+        cam2img[:3, :4] = p2_data
+
+        self.lidar2cam = lidar2cam
+        self.cam2img = cam2img
+        self.lidar2cam_tensor = torch.from_numpy(self.lidar2cam[:3, :4]).float()
+        self.cam2img_tensor = torch.from_numpy(self.cam2img[:3, :4]).float()
+
+        rospy.loginfo(f"加载分开的标定文件成功: {cam_to_cam_path}, {velo_to_cam_path}")
     
     def _pointcloud_callback(self, msg: PointCloud2):
         """点云数据回调函数"""
@@ -414,26 +470,32 @@ class KittiPointPillarsBagNode:
                 elif isinstance(pred_instances, dict) and 'labels_3d' in pred_instances:
                     labels = pred_instances['labels_3d']
                 
-                if scores is None or bboxes is None or labels is None:
-                    return detections
+                # 转换为numpy数组进行过滤
+                if isinstance(scores, list):
+                    scores = np.array(scores)
+                if isinstance(bboxes, list):
+                    bboxes = np.array(bboxes)
+                if isinstance(labels, list):
+                    labels = np.array(labels)
+                
+                if scores is not None and bboxes is not None and labels is not None:
+                    scores = np.asarray(scores, dtype=np.float32)
+                    bboxes = np.asarray(bboxes, dtype=np.float32)
+                    labels = np.asarray(labels, dtype=np.int32)
 
-                scores = np.asarray(scores, dtype=np.float32)
-                bboxes = np.asarray(bboxes, dtype=np.float32)
-                labels = np.asarray(labels, dtype=np.int32)
+                    if scores.ndim == 2 and scores.shape[1] == 1:
+                        scores = scores.squeeze(axis=1)
 
-                if scores.ndim == 2 and scores.shape[1] == 1:
-                    scores = scores.squeeze(axis=1)
-
-                # 过滤低置信度检测
-                valid_indices = scores > self.confidence_threshold
-                if np.any(valid_indices):
-                    detections['scores_3d'] = scores[valid_indices].astype(np.float32)
-                    detections['bboxes_3d'] = bboxes[valid_indices]
-                    detections['labels_3d'] = labels[valid_indices].astype(np.int32)
-                    detections['class_names'] = [
-                        self.class_names[int(label)] if 0 <= int(label) < len(self.class_names) else f"class_{int(label)}"
-                        for label in detections['labels_3d']
-                    ]
+                    # 过滤低置信度检测
+                    valid_indices = scores > self.confidence_threshold
+                    if np.any(valid_indices):
+                        detections['scores_3d'] = scores[valid_indices].astype(np.float32)
+                        detections['bboxes_3d'] = bboxes[valid_indices]
+                        detections['labels_3d'] = labels[valid_indices].astype(np.int32)
+                        detections['class_names'] = [
+                            self.class_names[int(label)] if 0 <= int(label) < len(self.class_names) else f"class_{int(label)}"
+                            for label in detections['labels_3d']
+                        ]
         
         except Exception as e:
             rospy.logerr(f"提取检测结果失败: {e}")
