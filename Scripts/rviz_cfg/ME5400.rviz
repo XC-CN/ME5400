@@ -128,7 +128,7 @@ Visualization Manager:
           Size (Pixels): 2
           Size (m): 0.05000000074505806
           Style: Points
-          Topic: /cloud_registered
+          Topic: /Laser_map
           Unreliable: false
           Use Fixed Frame: true
           Use rainbow: false

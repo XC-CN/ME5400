@@ -8,7 +8,7 @@ DEFAULT_CONFIG="$ROOT_DIR/MCTrack/config/kitti_fastlio.yaml"
 DEFAULT_SEQ=19
 DEFAULT_DATASET="$ROOT_DIR/tracking/training"
 DEFAULT_DET_ROOT="$ROOT_DIR/tracking/det_tracking_lsvm/training/det_02"
-RVIZ_CFG="$ROOT_DIR/Scripts/rviz_cfg/kitti_simple.rviz"
+RVIZ_CFG="$ROOT_DIR/Scripts/rviz_cfg/ME5400.rviz"
 FRAME_ID="velo_link"
 
 usage() {
