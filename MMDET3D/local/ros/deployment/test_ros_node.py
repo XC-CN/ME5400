@@ -22,11 +22,12 @@ class TestROSNode:
         self.marker_pub = rospy.Publisher('/detection/bboxes_3d', MarkerArray, queue_size=10)
         self.status_pub = rospy.Publisher('/detection/status', String, queue_size=10)
         
-        # 类别颜色映射
+        # 统一线框颜色
+        self.wireframe_color = (0.0, 0.447, 0.741, 1.0)
         self.class_colors = {
-            'Car': (1.0, 0.0, 0.0, 0.8),        # 红色
-            'Pedestrian': (0.0, 1.0, 0.0, 0.8),  # 绿色
-            'Cyclist': (0.0, 0.0, 1.0, 0.8)      # 蓝色
+            'Car': self.wireframe_color,
+            'Pedestrian': self.wireframe_color,
+            'Cyclist': self.wireframe_color,
         }
         
         rospy.loginfo("测试ROS节点初始化完成")
@@ -52,7 +53,7 @@ class TestROSNode:
             marker.header.stamp = current_time
             marker.ns = "detection"
             marker.id = i
-            marker.type = Marker.CUBE
+            marker.type = Marker.LINE_LIST
             marker.action = Marker.ADD
             
             # 设置位置
@@ -67,10 +68,10 @@ class TestROSNode:
             marker.pose.orientation.z = quat[2]
             marker.pose.orientation.w = quat[3]
             
-            # 设置尺寸
-            marker.scale.x = detection['length']
-            marker.scale.y = detection['width']
-            marker.scale.z = detection['height']
+            # 线宽
+            marker.scale.x = 0.05
+            marker.scale.y = 0.0
+            marker.scale.z = 0.0
             
             # 设置颜色
             color = self.class_colors[detection['class']]
@@ -83,6 +84,31 @@ class TestROSNode:
             marker.lifetime = rospy.Duration(0)
             marker.frame_locked = False
             
+            # 构造线框
+            half_l = detection['length'] / 2.0
+            half_w = detection['width'] / 2.0
+            half_h = detection['height'] / 2.0
+            corners = [
+                (half_l, half_w, half_h),
+                (half_l, -half_w, half_h),
+                (-half_l, -half_w, half_h),
+                (-half_l, half_w, half_h),
+                (half_l, half_w, -half_h),
+                (half_l, -half_w, -half_h),
+                (-half_l, -half_w, -half_h),
+                (-half_l, half_w, -half_h),
+            ]
+            edges = [
+                (0, 1), (1, 2), (2, 3), (3, 0),
+                (4, 5), (5, 6), (6, 7), (7, 4),
+                (0, 4), (1, 5), (2, 6), (3, 7),
+            ]
+            for start_idx, end_idx in edges:
+                start = corners[start_idx]
+                end = corners[end_idx]
+                marker.points.append(Point(*start))
+                marker.points.append(Point(*end))
+
             marker_array.markers.append(marker)
         
         return marker_array

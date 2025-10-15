@@ -45,11 +45,8 @@ class KittiPointPillarsROSNode:
         
         # 类别名称和颜色映射
         self.class_names = ['Car', 'Pedestrian', 'Cyclist']
-        self.class_colors = {
-            'Car': (1.0, 0.0, 0.0, 0.8),        # 红色
-            'Pedestrian': (0.0, 1.0, 0.0, 0.8),  # 绿色
-            'Cyclist': (0.0, 0.0, 1.0, 0.8)      # 蓝色
-        }
+        self.wireframe_color = (0.0, 0.447, 0.741, 1.0)
+        self.class_colors = {name: self.wireframe_color for name in self.class_names}
         
         # 初始化推理器
         self._init_inferencer()
@@ -271,7 +268,7 @@ class KittiPointPillarsROSNode:
             marker.header.stamp = current_time
             marker.ns = "detection"
             marker.id = i
-            marker.type = Marker.CUBE
+            marker.type = Marker.LINE_LIST
             marker.action = Marker.ADD
             
             # 设置位置 (边界框中心)
@@ -286,10 +283,10 @@ class KittiPointPillarsROSNode:
             marker.pose.orientation.z = quat[2]
             marker.pose.orientation.w = quat[3]
             
-            # 设置尺寸
-            marker.scale.x = float(length)
-            marker.scale.y = float(width)
-            marker.scale.z = float(height)
+            # 设置线宽
+            marker.scale.x = 0.05
+            marker.scale.y = 0.0
+            marker.scale.z = 0.0
             
             # 设置颜色
             color = self.class_colors.get(class_name, (1.0, 1.0, 1.0, 0.8))
@@ -302,6 +299,31 @@ class KittiPointPillarsROSNode:
             marker.lifetime = rospy.Duration(0)
             marker.frame_locked = False
             
+            # 线框的12条边
+            half_l = float(length) / 2.0
+            half_w = float(width) / 2.0
+            half_h = float(height) / 2.0
+            corners = [
+                (half_l, half_w, half_h),
+                (half_l, -half_w, half_h),
+                (-half_l, -half_w, half_h),
+                (-half_l, half_w, half_h),
+                (half_l, half_w, -half_h),
+                (half_l, -half_w, -half_h),
+                (-half_l, -half_w, -half_h),
+                (-half_l, half_w, -half_h),
+            ]
+            edges = [
+                (0, 1), (1, 2), (2, 3), (3, 0),
+                (4, 5), (5, 6), (6, 7), (7, 4),
+                (0, 4), (1, 5), (2, 6), (3, 7),
+            ]
+            for start_idx, end_idx in edges:
+                start = corners[start_idx]
+                end = corners[end_idx]
+                marker.points.append(Point(*start))
+                marker.points.append(Point(*end))
+
             marker_array.markers.append(marker)
         
         return marker_array
