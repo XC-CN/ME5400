@@ -189,7 +189,7 @@ pip install -r requirements.txt
 
    ```bash
    rosparam set use_sim_time true
-   rosbag play tracking/rosbags/seq_0019_with_det.bag --clock --loop
+   rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag --clock --loop
    ```
 6. **【可选】打开 RViz（终端 E，与 rosbag 同时运行）**
 
