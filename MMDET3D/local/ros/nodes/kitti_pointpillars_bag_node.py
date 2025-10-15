@@ -14,7 +14,7 @@ import rospy
 import tf.transformations as tf_trans
 import torch
 from sensor_msgs import point_cloud2
-from sensor_msgs.msg import PointCloud2
+from sensor_msgs.msg import Imu, PointCloud2
 from geometry_msgs.msg import Point
 from std_msgs.msg import Header, String
 from visualization_msgs.msg import Marker, MarkerArray
@@ -96,10 +96,12 @@ class KittiPointPillarsBagNode:
         self.status_pub = rospy.Publisher('/detection/status', String, queue_size=10)
         self.kitti_tracking_pub = rospy.Publisher('/detection/kitti_tracking', String, queue_size=10)
         self.pointcloud_pub = rospy.Publisher('/detection/pointcloud', PointCloud2, queue_size=10)
+        self.imu_pub = rospy.Publisher('/detection/imu', Imu, queue_size=10)
         self.det_pub = rospy.Publisher('/kitti/detections', Detection3DArray, queue_size=2)
         
         # 订阅点云话题
         self.pointcloud_sub = rospy.Subscriber('/kitti/velo/pointcloud', PointCloud2, self._pointcloud_callback)
+        self.imu_sub = rospy.Subscriber('/kitti/oxts/imu', Imu, self._imu_callback, queue_size=1)
         
         # 统计信息
         self.frame_count = 0
@@ -652,6 +654,10 @@ class KittiPointPillarsBagNode:
         status_msg = String()
         status_msg.data = status
         self.status_pub.publish(status_msg)
+
+    def _imu_callback(self, msg: Imu) -> None:
+        """转发IMU数据"""
+        self.imu_pub.publish(msg)
 
 
 def main():

@@ -38,7 +38,7 @@ class FastLioPoseRecorder:
         self.frame_id = 0
 
         odom_topic = rospy.get_param("~odom_topic", "/aft_mapped_to_init")
-        point_topic = rospy.get_param("~point_topic", "/kitti/velo/pointcloud")
+        point_topic = rospy.get_param("~point_topic", "/detection/pointcloud")
         queue = rospy.get_param("~queue_size", 50)
         slop = rospy.get_param("~time_slop", 0.05)
 

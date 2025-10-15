@@ -246,8 +246,8 @@ pip install -r requirements.txt
 
 ```yaml
 common:
-  lid_topic: "/kitti/velo/pointcloud"  # 激光雷达话题
-  imu_topic: "/kitti/oxts/imu"         # IMU话题
+  lid_topic: "/detection/pointcloud"   # PointPillars 转发的激光雷达话题
+  imu_topic: "/detection/imu"          # PointPillars 转发的 IMU 话题
 
 preprocess:
   lidar_type: 2                        # Velodyne激光雷达
