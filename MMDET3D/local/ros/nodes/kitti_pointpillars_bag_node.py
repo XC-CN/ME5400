@@ -242,8 +242,11 @@ class KittiPointPillarsBagNode:
             self.frame_count += 1
             frame_id = max(self.frame_count - 1, 0)
             
+            # 保存原始时间戳，用于后续发布
+            original_stamp = msg.header.stamp
+            
             # 发布状态
-            self._publish_status(f"处理帧 {frame_id}: {msg.header.stamp}")
+            self._publish_status(f"处理帧 {frame_id}: {original_stamp}")
             
             # 转换点云数据
             points = self._pointcloud2_to_numpy(msg)
@@ -252,18 +255,17 @@ class KittiPointPillarsBagNode:
                 return
             
             # 运行推理
-            detections = self._run_inference(points, msg.header.stamp)
+            detections = self._run_inference(points, original_stamp)
 
             det_header = Header(
-                stamp=msg.header.stamp if msg.header.stamp != rospy.Time() else rospy.Time.now(),
+                stamp=original_stamp,  # 使用原始时间戳
                 frame_id=f"seq_{self.seq}",
             )
             cam_info = self._publish_detection_array(detections, det_header, frame_id)
             
             # 转换为MarkerArray并发布
             marker_frame_id = msg.header.frame_id if msg.header.frame_id else self.frame_id
-            marker_stamp = msg.header.stamp if msg.header.stamp != rospy.Time() else rospy.Time.now()
-            marker_array = self._detections_to_markerarray(detections, marker_frame_id, marker_stamp)
+            marker_array = self._detections_to_markerarray(detections, marker_frame_id, original_stamp)
             self.marker_pub.publish(marker_array)
             
             # 转换为KITTI tracking格式并发布
@@ -319,6 +321,7 @@ class KittiPointPillarsBagNode:
     
     def _run_inference(self, points: np.ndarray, timestamp) -> Dict[str, Any]:
         """运行推理"""
+        temp_file = None
         try:
             # 保存临时点云文件
             temp_file = f"/tmp/kitti_points_{timestamp.secs}_{timestamp.nsecs}.bin"
@@ -334,9 +337,6 @@ class KittiPointPillarsBagNode:
                 no_save_pred=True
             )
             
-            # 清理临时文件
-            os.remove(temp_file)
-            
             # 提取检测结果
             detections = self._extract_detections(result)
             return detections
@@ -344,6 +344,13 @@ class KittiPointPillarsBagNode:
         except Exception as e:
             rospy.logerr(f"推理失败: {e}")
             return self._empty_detections()
+        finally:
+            # 确保临时文件被清理
+            if temp_file and os.path.exists(temp_file):
+                try:
+                    os.remove(temp_file)
+                except OSError:
+                    pass  # 忽略删除失败的错误
 
     def _publish_detection_array(
         self,
