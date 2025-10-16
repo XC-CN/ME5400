@@ -290,9 +290,12 @@ class KittiPointPillarsBagNode:
             # 频率控制
             current_time = rospy.Time.now()
             dt = (current_time - self.last_time).to_sec()
-            if dt < 1.0 / self.publish_rate:
+            if dt < 0.0:
+                rospy.logwarn("检测到仿真时间回退，重置发布节流器状态")
+                dt = 0.0
+            if 0.0 < dt < 1.0 / self.publish_rate:
                 rospy.sleep(1.0 / self.publish_rate - dt)
-            self.last_time = rospy.Time.now()
+            self.last_time = current_time
             
         except Exception as e:
             rospy.logerr(f"点云处理失败: {e}")

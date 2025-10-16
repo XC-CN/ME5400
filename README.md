@@ -142,7 +142,7 @@ pip install -r requirements.txt
 
 ## 🎯 使用指南
 
-### 在线 ROS 联动：KITTI Tracking 点云 → PointPillars → FAST-LIO → MCTrack → RViz
+**在线 ROS 联动：KITTI Tracking 点云 → PointPillars → FAST-LIO → MCTrack → RViz**
 
 > 当前检测由 MMDetection3D PointPillars 推理节点发布至 `/detection/bboxes_3d` 与 `/detection/kitti_tracking`；后续如需替换，可接入其他检测器但需保持话题接口一致。
 
