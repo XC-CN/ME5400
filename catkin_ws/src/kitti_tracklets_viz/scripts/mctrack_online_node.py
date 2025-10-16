@@ -111,6 +111,32 @@ def angle_wrap(angle: float) -> float:
     return angle
 
 
+def resolve_dataset_root(dataset_param: Optional[str]) -> Path:
+    candidates: List[Path] = []
+
+    if dataset_param:
+        dataset_root = Path(dataset_param)
+        if not dataset_root.is_absolute():
+            dataset_root = (REPO_ROOT / dataset_root).resolve()
+        candidates.append(dataset_root)
+
+    default_roots = [
+        REPO_ROOT / "tracking" / "training",
+        REPO_ROOT / "Data_Tracking" / "training",
+    ]
+    for root in default_roots:
+        resolved = root.resolve()
+        if resolved not in candidates:
+            candidates.append(resolved)
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+
+    checked = ", ".join(str(path) for path in candidates) or "<none>"
+    raise FileNotFoundError(f"Unable to locate KITTI dataset. Checked: {checked}")
+
+
 def get_global_yaw(rot_y: float, lidar2global: np.ndarray) -> float:
     cos_theta = lidar2global[0, 0]
     sin_theta = lidar2global[1, 0]
@@ -125,10 +151,9 @@ def get_global_yaw(rot_y: float, lidar2global: np.ndarray) -> float:
 class MCTrackOnlineNode:
     def __init__(self) -> None:
         self.seq = f"{int(rospy.get_param('~seq', 19)):04d}"
-        dataset_param = rospy.get_param("~dataset_root", "tracking/training")
-        dataset_root = Path(dataset_param)
-        if not dataset_root.is_absolute():
-            dataset_root = (REPO_ROOT / dataset_root).resolve()
+        dataset_param = rospy.get_param("~dataset_root", None)
+        dataset_root = resolve_dataset_root(dataset_param)
+        rospy.loginfo("dataset_root=%s", dataset_root)
 
         seq_root = dataset_root / "sequences" if (dataset_root / "sequences").is_dir() else dataset_root
         calib_dir = seq_root / "calib" if (seq_root / "calib").is_dir() else None

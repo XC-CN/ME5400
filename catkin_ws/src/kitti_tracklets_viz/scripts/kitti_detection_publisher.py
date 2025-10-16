@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 import numpy as np
 import rospy
@@ -20,15 +20,38 @@ from kitti_tracking_loader import KITTITrackingLoader  # noqa: E402
 from kitti_tracklets_viz.msg import Detection3D, Detection3DArray  # noqa: E402
 
 
-class DetectionPublisher:
-    def __init__(self) -> None:
-        dataset_param = rospy.get_param("~dataset_root", "tracking/training")
-        det_param = rospy.get_param("~detector_root", "")
+def resolve_dataset_root(dataset_param: Optional[str]) -> Path:
+    candidates: List[Path] = []
 
+    if dataset_param:
         dataset_root = Path(dataset_param)
         if not dataset_root.is_absolute():
             dataset_root = (REPO_ROOT / dataset_root).resolve()
-        self.dataset_root = dataset_root
+        candidates.append(dataset_root)
+
+    default_roots = [
+        REPO_ROOT / "tracking" / "training",
+        REPO_ROOT / "Data_Tracking" / "training",
+    ]
+    for root in default_roots:
+        resolved = root.resolve()
+        if resolved not in candidates:
+            candidates.append(resolved)
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+
+    checked = ", ".join(str(path) for path in candidates) or "<none>"
+    raise FileNotFoundError(f"Unable to locate KITTI dataset. Checked: {checked}")
+
+
+class DetectionPublisher:
+    def __init__(self) -> None:
+        dataset_param = rospy.get_param("~dataset_root", None)
+        det_param = rospy.get_param("~detector_root", "")
+
+        self.dataset_root = resolve_dataset_root(dataset_param)
 
         det_root_path: Optional[Path]
         if det_param:
