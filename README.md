@@ -198,12 +198,13 @@ pip install -r requirements.txt
    ```
 
    使用 `Scripts/rviz_cfg/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
-7. **启动 FAST-LIO 映射（终端 F）**
+7. **启动 FAST-LIO 建图（终端 F）**
 
    ```bash
    ./Scripts/run_fastlio_mapping.sh
    ```
 8. **启动 FAST-LIO → Pose 桥接（终端 G）**
+   同时会发布全图坐标系到Lidar坐标系的TF变换，使其可以同时可视化建图结果、点云、检测结果、轨迹
 
    ```bash
    ./Scripts/run_fastlio_pose_bridge.sh
