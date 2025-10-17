@@ -26,14 +26,24 @@
 
 ```
 ME5400/
-├── MCTrack/                 # 多目标跟踪系统
-│   ├── tracker/             # 跟踪算法核心
-│   ├── evaluation/          # 评估工具
-│   ├── config/              # 配置文件
-│   └── results/             # 实验结果
-├── catkin_ws/               # ROS工作空间
-│   └── src/fast_lio/        # FAST-LIO2源码
-└── README.md                # 项目说明
+├── catkin_ws/                         # ROS 工作空间
+│   ├── src/fast_lio/                  # FAST-LIO2 源码（含定制化配置、输出目录等）
+│   │   ├── config/                    # 传感器与映射参数（如 velodyne.yaml）
+│   │   ├── launch/                    # ROS 启动文件
+│   │   └── src/                       # FAST-LIO 核心实现
+│   ├── src/kitti_tracklets_viz/       # MCTrack 联动 ROS 节点（在线跟踪、Marker、桥接脚本）
+│   └── src/kitti_tracklets_viz/msg/   # 自定义 Detection3D/Detection3DArray 消息
+├── MCTrack/                           # 多目标跟踪框架（配置、评估与跟踪算法）
+├── MMDET3D/                           # PointPillars 检测推理环境与脚本
+├── Scripts/                           # 一键启动、数据处理与 RViz 配置
+│   ├── run_mctrack_online.sh          # 串联 rosbag、FAST-LIO、MCTrack、RViz 的总控脚本
+│   ├── run_mctrack_online_node.sh     # 单独启动 MCTrack 在线节点
+│   ├── run_fastlio_mapping.sh         # 启动 FAST-LIO 映射节点
+│   ├── kitti_tracking_to_rosbag.py    # 将 KITTI Tracking 转换为 rosbag
+│   └── rviz_cfg/                      # RViz 可视化配置（ME5400、loam_livox 等）
+├── Data_Tracking/                     # KITTI Tracking 数据与示例 rosbag
+├── PCD/                               # FAST-LIO 自动导出的全局点云
+└── README.md
 ```
 
 ## 🛠️ 环境要求
