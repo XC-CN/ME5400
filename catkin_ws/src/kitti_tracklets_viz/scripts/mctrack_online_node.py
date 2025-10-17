@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Online MCTrack node consuming FAST-LIO pose and KITTI detections."""
+"""Online MCTrack node consuming FAST-LIO pose and PointPillars detections."""
 from __future__ import annotations
 
 import math
@@ -12,7 +12,7 @@ import numpy as np
 import rospy
 import yaml
 from geometry_msgs.msg import Point, PoseStamped
-from std_msgs.msg import Header
+from std_msgs.msg import Header, String
 from visualization_msgs.msg import Marker, MarkerArray
 
 PACKAGE_DIR = Path(__file__).resolve()
@@ -27,7 +27,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from tracker.frame import Frame  # noqa: E402
 from tracker.bbox import BBox  # noqa: E402
 from tracker.base_tracker import Base3DTracker  # noqa: E402
-from kitti_tracklets_viz.msg import Detection3DArray  # noqa: E402
+from kitti_tracklets_viz.msg import Detection3D, Detection3DArray  # noqa: E402
 
 
 def read_calib(calib_path: Path) -> Dict[str, np.ndarray]:
@@ -153,7 +153,7 @@ class MCTrackOnlineNode:
         self.seq = f"{int(rospy.get_param('~seq', 19)):04d}"
         dataset_param = rospy.get_param("~dataset_root", None)
         dataset_root = resolve_dataset_root(dataset_param)
-        rospy.loginfo("dataset_root=%s", dataset_root)
+        rospy.loginfo("数据集根目录: %s", dataset_root)
 
         seq_root = dataset_root / "sequences" if (dataset_root / "sequences").is_dir() else dataset_root
         calib_dir = seq_root / "calib" if (seq_root / "calib").is_dir() else None
@@ -163,7 +163,7 @@ class MCTrackOnlineNode:
             calib_path = seq_root / self.seq / "calib.txt"
         config_path = Path(rospy.get_param("~config", MCTrack_DIR / "config" / "kitti_fastlio.yaml"))
         self.pose_topic = rospy.get_param("~pose_topic", "/mctrack/lidar_pose")
-        self.det_topic = rospy.get_param("~det_topic", "/kitti/detections")
+        self.det_topic = rospy.get_param("~det_topic", "/detection/kitti_tracking")
         self.frame_rate = float(rospy.get_param("~frame_rate", 10.0))
         self.arrow_length = float(rospy.get_param("~arrow_length", 3.0))
         self.history_size = int(rospy.get_param("~history_size", 200))
@@ -191,20 +191,26 @@ class MCTrackOnlineNode:
 
         self.marker_pub = rospy.Publisher("/mctrack/markers", MarkerArray, queue_size=1)
         self.pose_sub = rospy.Subscriber(self.pose_topic, PoseStamped, self.pose_callback, queue_size=20)
-        self.det_sub = rospy.Subscriber(self.det_topic, Detection3DArray, self.det_callback, queue_size=10)
+        self.det_sub = rospy.Subscriber(self.det_topic, String, self.kitti_tracking_callback, queue_size=10)
         rospy.loginfo(
-            "MCTrackOnlineNode initialized (seq=%s, calib=%s, config=%s)",
+            "MCTrackOnlineNode 初始化完成 (序列=%s, 标定=%s, 配置=%s, 检测话题=%s)",
             self.seq,
             calib_path,
             config_path,
+            self.det_topic,
         )
 
     def pose_callback(self, msg: PoseStamped) -> None:
         self.pose_matrix = pose_to_matrix(msg)
 
+    def kitti_tracking_callback(self, msg: String) -> None:
+        detection_msg = self._convert_kitti_tracking_to_array(msg)
+        if detection_msg is not None:
+            self.det_callback(detection_msg)
+
     def det_callback(self, msg: Detection3DArray) -> None:
         if self.pose_matrix is None:
-            rospy.logwarn_throttle(5.0, "No FAST-LIO pose yet; skipping detections")
+            rospy.logwarn_throttle(5.0, "尚未收到 FAST-LIO 位姿，暂时跳过检测结果")
             return
         frame_id = 0
         if msg.detections:
@@ -261,6 +267,45 @@ class MCTrackOnlineNode:
 
         outputs = self.tracker.track_single_frame(frame)
         self.publish_markers(outputs, header)
+
+    def _convert_kitti_tracking_to_array(self, msg: String) -> Optional[Detection3DArray]:
+        data = msg.data.strip()
+        if not data:
+            empty_msg = Detection3DArray()
+            empty_msg.header = Header(stamp=rospy.Time.now(), frame_id=f"seq_{self.seq}")
+            return empty_msg
+
+        lines = [line.strip() for line in data.splitlines() if line.strip()]
+        stamp = rospy.Time.now()
+        array_msg = Detection3DArray()
+        array_msg.header = Header(stamp=stamp, frame_id=f"seq_{self.seq}")
+
+        for line in lines:
+            # KITTI tracking format: frame track_id type truncation occlusion alpha bbox_left bbox_top bbox_right bbox_bottom h w l x y z yaw score
+            parts = line.split()
+            if len(parts) < 18:
+                rospy.logwarn_throttle(
+                    10.0,
+                    "忽略字段数量不足的 KITTI 行 (%d 项): %s",
+                    len(parts),
+                    line,
+                )
+                continue
+            try:
+                det_msg = Detection3D()
+                det_msg.header = Header(stamp=stamp, frame_id=array_msg.header.frame_id)
+                det_msg.frame = int(float(parts[0]))
+                det_msg.track_id = -1
+                det_msg.cls = parts[2]
+                det_msg.score = float(parts[17])
+                det_msg.bbox2d = [float(parts[i]) for i in range(6, 10)]
+                det_msg.dimensions = [float(parts[i]) for i in range(10, 13)]
+                det_msg.location = [float(parts[i]) for i in range(13, 16)]
+                det_msg.rotation_y = float(parts[16])
+                array_msg.detections.append(det_msg)
+            except (ValueError, IndexError) as exc:
+                rospy.logwarn_throttle(10.0, "解析 KITTI 行 '%s' 失败: %s", line, exc)
+        return array_msg
 
     def publish_markers(self, outputs: Dict[int, BBox], header: Header) -> None:
         markers: List[Marker] = []

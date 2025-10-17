@@ -7,7 +7,6 @@ DEFAULT_BAG="$ROOT_DIR/tracking/rosbags/seq_0019_with_det.bag"
 DEFAULT_CONFIG="$ROOT_DIR/MCTrack/config/kitti_fastlio.yaml"
 DEFAULT_SEQ=19
 DEFAULT_DATASET="$ROOT_DIR/tracking/training"
-DEFAULT_DET_ROOT="$ROOT_DIR/tracking/det_tracking_lsvm/training/det_02"
 RVIZ_CFG="$ROOT_DIR/Scripts/rviz_cfg/ME5400.rviz"
 FRAME_ID="velo_link"
 
@@ -16,23 +15,21 @@ usage() {
 用法: $0 [选项]
   --bag <path>             KITTI 点云+IMU rosbag (默认: $DEFAULT_BAG)
   --dataset <path>         KITTI Tracking 根目录 (默认: $DEFAULT_DATASET)
-  --detector_root <path>   检测结果路径 (默认: $DEFAULT_DET_ROOT)
   --seq <id>               序列号 (默认: $DEFAULT_SEQ)
   --config <path>          MCTrack 配置文件 (默认: $DEFAULT_CONFIG)
-  --rate <Hz>              检测发布频率 (默认: 10)
   --norviz                 不启动 RViz
   --noloop                 rosbag 不循环
   --print                  仅打印命令
   -h|--help                显示帮助
+
+提示：请先单独启动 PointPillars 检测节点，确保其发布 /detection/kitti_tracking。
 EOF
 }
 
 BAG_PATH="$DEFAULT_BAG"
 DATASET_ROOT="$DEFAULT_DATASET"
-DET_ROOT="$DEFAULT_DET_ROOT"
 SEQ="$DEFAULT_SEQ"
 CONFIG_PATH="$DEFAULT_CONFIG"
-RATE=10
 NORVIZ=false
 LOOP=true
 PRINT_ONLY=false
@@ -41,10 +38,8 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     --bag) BAG_PATH="$2"; shift 2;;
     --dataset) DATASET_ROOT="$2"; shift 2;;
-    --detector_root) DET_ROOT="$2"; shift 2;;
     --seq) SEQ="$2"; shift 2;;
     --config) CONFIG_PATH="$2"; shift 2;;
-    --rate) RATE="$2"; shift 2;;
     --norviz) NORVIZ=true; shift;;
     --noloop) LOOP=false; shift;;
     --print) PRINT_ONLY=true; shift;;
@@ -59,10 +54,6 @@ if [[ ! -f "$BAG_PATH" ]]; then
 fi
 if [[ ! -d "$DATASET_ROOT" ]]; then
   echo "[错误] 数据集路径不存在: $DATASET_ROOT" >&2
-  exit 1
-fi
-if [[ ! -d "$DET_ROOT" ]]; then
-  echo "[错误] 检测路径不存在: $DET_ROOT" >&2
   exit 1
 fi
 if [[ ! -f "$CONFIG_PATH" ]]; then
@@ -83,9 +74,8 @@ fi
 
 ROSCORE_CMD="roscore"
 BAG_CMD="rosbag play '$BAG_PATH' $PLAY_OPTS"
-DET_CMD="rosrun kitti_tracklets_viz kitti_detection_publisher.py --dataset_root $DATASET_ROOT --detector_root $DET_ROOT --seq $SEQ --rate $RATE"
 POSE_CMD="rosrun kitti_tracklets_viz fastlio_pose_bridge.py"
-TRACK_CMD="rosrun kitti_tracklets_viz mctrack_online_node.py --dataset_root $DATASET_ROOT --seq $SEQ --config $CONFIG_PATH"
+TRACK_CMD="rosrun kitti_tracklets_viz mctrack_online_node.py _dataset_root:=$DATASET_ROOT _seq:=$SEQ _config:=$CONFIG_PATH"
 RVIZ_CMD="rviz -d '$RVIZ_CFG' -f '$FRAME_ID'"
 
 if $PRINT_ONLY; then
@@ -93,12 +83,11 @@ if $PRINT_ONLY; then
 计划执行的命令：
 1) $ROSCORE_CMD
 2) $BAG_CMD
-3) $DET_CMD
-4) $POSE_CMD
-5) $TRACK_CMD
+3) $POSE_CMD
+4) $TRACK_CMD
 EOF
   if [[ "$NORVIZ" == false ]]; then
-    echo "6) $RVIZ_CMD"
+    echo "5) $RVIZ_CMD"
   fi
   exit 0
 fi
@@ -120,8 +109,6 @@ fi
 
 launch_terminal "$BAG_CMD"
 sleep 2
-launch_terminal "$DET_CMD"
-sleep 2
 launch_terminal "$POSE_CMD"
 sleep 2
 launch_terminal "$TRACK_CMD"
@@ -131,4 +118,4 @@ if [[ "$NORVIZ" == false ]]; then
   launch_terminal "$RVIZ_CMD"
 fi
 
-echo "所有节点已启动。检测: /kitti/detections, 里程计: /mctrack/lidar_pose, 结果: /mctrack/markers"
+echo "所有节点已启动。请确保 PointPillars 检测节点已发布 /detection/kitti_tracking。里程计: /mctrack/lidar_pose, 结果: /mctrack/markers"

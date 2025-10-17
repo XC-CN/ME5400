@@ -38,7 +38,65 @@
 #include <thread>
 #include <fstream>
 #include <csignal>
+#include <string>
+#include <sys/stat.h>
 #include <unistd.h>
+
+namespace {
+
+std::string ensure_trailing_slash(std::string path) {
+    if (path.empty() || path.back() == '/')
+        return path;
+    return path + "/";
+}
+
+void ensure_directory_exists(const std::string &dir_path) {
+    if (dir_path.empty())
+        return;
+
+    std::string path = ensure_trailing_slash(dir_path);
+    std::string current;
+    std::size_t start = 0;
+    if (!path.empty() && path.front() == '/') {
+        current = "/";
+        start = 1;
+    }
+
+    for (std::size_t pos = start; pos < path.size(); ) {
+        std::size_t slash = path.find('/', pos);
+        if (slash == std::string::npos)
+            break;
+        std::string segment = path.substr(pos, slash - pos);
+        pos = slash + 1;
+        if (segment.empty())
+            continue;
+
+        if (!current.empty() && current.back() != '/')
+            current += '/';
+        current += segment;
+        if (access(current.c_str(), F_OK) != 0) {
+            mkdir(current.c_str(), 0755);
+        }
+    }
+}
+
+std::string compute_default_pcd_dir(const std::string &package_root) {
+    std::string normalized = package_root;
+    if (!normalized.empty() && normalized.back() == '/')
+        normalized.pop_back();
+    const std::string suffix = "/catkin_ws/src/fast_lio";
+    std::string base_dir;
+    std::size_t pos = normalized.rfind(suffix);
+    if (pos != std::string::npos) {
+        base_dir = normalized.substr(0, pos) + "/PCD/";
+    } else {
+        base_dir = package_root + "PCD/";
+    }
+    ensure_directory_exists(base_dir);
+    return ensure_trailing_slash(base_dir);
+}
+
+}  // namespace
 #include <Python.h>
 #include <so3_math.h>
 #include <ros/ros.h>
@@ -82,6 +140,7 @@ mutex mtx_buffer;
 condition_variable sig_buffer;
 
 string root_dir = ROOT_DIR;
+string pcd_output_root = compute_default_pcd_dir(root_dir);
 string map_file_path, lid_topic, imu_topic;
 
 double res_mean_last = 0.05, total_residual = 0.0;
@@ -522,9 +581,9 @@ void publish_frame_world(const ros::Publisher & pubLaserCloudFull)
         if (pcl_wait_save->size() > 0 && pcd_save_interval > 0  && scan_wait_num >= pcd_save_interval)
         {
             pcd_index ++;
-            string all_points_dir(string(string(ROOT_DIR) + "PCD/scans_") + to_string(pcd_index) + string(".pcd"));
+            string all_points_dir = pcd_output_root + "scans_" + to_string(pcd_index) + ".pcd";
             pcl::PCDWriter pcd_writer;
-            cout << "current scan saved to /PCD/" << all_points_dir << endl;
+            cout << "current scan saved to " << all_points_dir << endl;
             pcd_writer.writeBinary(all_points_dir, *pcl_wait_save);
             pcl_wait_save->clear();
             scan_wait_num = 0;
@@ -792,6 +851,13 @@ int main(int argc, char** argv)
     nh.param<bool>("mapping/extrinsic_est_en", extrinsic_est_en, true);
     nh.param<bool>("pcd_save/pcd_save_en", pcd_save_en, false);
     nh.param<int>("pcd_save/interval", pcd_save_interval, -1);
+    std::string configured_pcd_dir;
+    nh.param<std::string>("pcd_save/output_dir", configured_pcd_dir, pcd_output_root);
+    if (!configured_pcd_dir.empty()) {
+        configured_pcd_dir = ensure_trailing_slash(configured_pcd_dir);
+        ensure_directory_exists(configured_pcd_dir);
+        pcd_output_root = configured_pcd_dir;
+    }
     nh.param<vector<double>>("mapping/extrinsic_T", extrinT, vector<double>());
     nh.param<vector<double>>("mapping/extrinsic_R", extrinR, vector<double>());
 
@@ -1025,9 +1091,9 @@ int main(int argc, char** argv)
     if (pcl_wait_save->size() > 0 && pcd_save_en)
     {
         string file_name = string("scans.pcd");
-        string all_points_dir(string(string(ROOT_DIR) + "PCD/") + file_name);
+        string all_points_dir = pcd_output_root + file_name;
         pcl::PCDWriter pcd_writer;
-        cout << "current scan saved to /PCD/" << file_name<<endl;
+        cout << "current scan saved to " << all_points_dir << endl;
         pcd_writer.writeBinary(all_points_dir, *pcl_wait_save);
     }
 

@@ -109,7 +109,7 @@ Visualization Manager:
       
     - Class: rviz/Group        # FAST-LIO 建图输出
       Displays:
-        - Alpha: 1            # FAST-LIO 注册点云
+        - Alpha: 1            # FAST-LIO 环绕地图
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
             Max Value: 10
@@ -125,14 +125,14 @@ Visualization Manager:
           Invert Rainbow: false
           Max Color: 0; 255; 0
           Min Color: 0; 255; 0
-          Name: FAST-LIO Registered Cloud
+          Name: FAST-LIO Surround Map
           Position Transformer: XYZ
           Queue Size: 5
           Selectable: true
           Size (Pixels): 2
           Size (m): 0.05000000074505806
           Style: Points
-          Topic: /cloud_registered
+          Topic: /mapping/surround
           Unreliable: false
           Use Fixed Frame: true
           Use rainbow: false

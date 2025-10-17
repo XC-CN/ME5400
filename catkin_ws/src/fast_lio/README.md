@@ -254,7 +254,7 @@ roslaunch fast_lio mapping_marsim.launch
 
 ### 3.5 PCD文件保存
 
-在启动文件中将 ``pcd_save_enable`` 设置为 ``1``。所有扫描（在全局坐标系中）将在FAST-LIO终止后累积并保存到文件 ``FAST_LIO/PCD/scans.pcd``。``pcl_viewer scans.pcd`` 可以可视化点云。
+在启动文件中将 ``pcd_save_enable`` 设置为 ``1``。所有扫描（在全局坐标系中）将在 FAST-LIO 终止后累积并保存到项目根目录的 ``PCD/scans.pcd``。``pcl_viewer scans.pcd`` 可以可视化点云。
 
 *pcl_viewer使用技巧：*
 

@@ -45,6 +45,5 @@ install(PROGRAMS
   scripts/mctrack_marker_publisher.py
   scripts/fastlio_pose_recorder.py
   scripts/fastlio_pose_bridge.py
-  scripts/kitti_detection_publisher.py
   scripts/mctrack_online_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

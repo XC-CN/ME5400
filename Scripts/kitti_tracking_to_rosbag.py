@@ -393,9 +393,9 @@ def main():
                 bag.write("/kitti/detections", det_msg, det_msg.header.stamp)
 
             if idx % 100 == 0:
-                print(f"Processed frame {idx}/{len(frame_files)}")
+                print(f"已处理帧 {idx}/{len(frame_files)}")
 
-    print(f"Saved rosbag to {args.output}")
+    print(f"已保存 rosbag 文件到 {args.output}")
 
 
 if __name__ == "__main__":
