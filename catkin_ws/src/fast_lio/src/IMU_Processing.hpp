@@ -112,6 +112,9 @@ void ImuProcess::Reset()
   imu_need_init_    = true;
   start_timestamp_  = -1;
   init_iter_num     = 1;
+  b_first_frame_    = true;
+  last_lidar_end_time_ = -1;
+  first_lidar_time  = 0.0;
   v_imu_.clear();
   IMUpose.clear();
   last_imu_.reset(new sensor_msgs::Imu());

@@ -33,6 +33,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 #include <omp.h>
+#include <atomic>
+#include <algorithm>
 #include <mutex>
 #include <math.h>
 #include <thread>
@@ -41,6 +43,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <new>
 
 namespace {
 
@@ -199,6 +202,28 @@ geometry_msgs::PoseStamped msg_body_pose;
 shared_ptr<Preprocess> p_pre(new Preprocess());
 shared_ptr<ImuProcess> p_imu(new ImuProcess());
 
+std::atomic<bool> reset_requested(false);
+std::atomic<bool> preserve_reset_buffers(false);
+
+void perform_system_reset();
+
+void request_system_reset(const char *source)
+{
+    bool first_request = !reset_requested.exchange(true);
+    if (first_request)
+    {
+        ROS_WARN_STREAM("[fast_lio] 检测到 " << source << " 时间回跳，准备重置 Fast-LIO 状态");
+        lidar_buffer.clear();
+        time_buffer.clear();
+        imu_buffer.clear();
+        lidar_pushed = false;
+    }
+
+    preserve_reset_buffers.store(true);
+    last_timestamp_lidar = 0.0;
+    last_timestamp_imu = -1.0;
+}
+
 void SigHandle(int sig)
 {
     flg_exit = true;
@@ -342,8 +367,7 @@ void standard_pcl_cbk(const sensor_msgs::PointCloud2::ConstPtr &msg)
     double preprocess_start_time = omp_get_wtime();
     if (msg->header.stamp.toSec() < last_timestamp_lidar)
     {
-        ROS_ERROR("lidar loop back, clear buffer");
-        lidar_buffer.clear();
+        request_system_reset("LiDAR");
     }
 
     PointCloudXYZI::Ptr  ptr(new PointCloudXYZI());
@@ -414,8 +438,7 @@ void imu_cbk(const sensor_msgs::Imu::ConstPtr &msg_in)
 
     if (timestamp < last_timestamp_imu)
     {
-        ROS_WARN("imu loop back, clear buffer");
-        imu_buffer.clear();
+        request_system_reset("IMU");
     }
 
     last_timestamp_imu = timestamp;
@@ -633,6 +656,85 @@ void publish_map(const ros::Publisher & pubLaserCloudMap)
     laserCloudMap.header.stamp = ros::Time().fromSec(lidar_end_time);
     laserCloudMap.header.frame_id = "camera_init";
     pubLaserCloudMap.publish(laserCloudMap);
+}
+
+void perform_system_reset()
+{
+    bool preserve_current_buffers = preserve_reset_buffers.exchange(false);
+    std::lock_guard<std::mutex> lock(mtx_buffer);
+
+    if (!preserve_current_buffers)
+    {
+        time_buffer.clear();
+        lidar_buffer.clear();
+        imu_buffer.clear();
+    }
+    lidar_pushed = false;
+
+    timediff_lidar_wrt_imu = 0.0;
+    timediff_set_flg = false;
+    lidar_mean_scantime = 0.0;
+    scan_num = 0;
+    first_lidar_time = 0.0;
+    lidar_end_time = 0.0;
+    total_distance = 0.0;
+    last_timestamp_lidar = 0.0;
+    last_timestamp_imu = -1.0;
+    flg_first_scan = true;
+    flg_EKF_inited = false;
+    publish_count = 0;
+    scan_count = 0;
+    total_residual = 0.0;
+    process_increments = 0;
+    Localmap_Initialized = false;
+    memset(&LocalMap_Points, 0, sizeof(LocalMap_Points));
+    cub_needrm.clear();
+    pointSearchInd_surf.clear();
+    Nearest_Points.clear();
+
+    std::fill_n(point_selected_surf, sizeof(point_selected_surf) / sizeof(point_selected_surf[0]), true);
+    std::fill_n(res_last, sizeof(res_last) / sizeof(res_last[0]), -1000.0f);
+
+    featsFromMap->clear();
+    feats_undistort->clear();
+    feats_down_body->clear();
+    feats_down_world->clear();
+    normvec->clear();
+    laserCloudOri->clear();
+    corr_normvect->clear();
+    if (_featsArray)
+    {
+        _featsArray->clear();
+    }
+
+    pcl_wait_pub->clear();
+    pcl_wait_save->clear();
+
+    Measures = MeasureGroup();
+
+    p_imu->Reset();
+    p_imu->set_extrinsic(Lidar_T_wrt_IMU, Lidar_R_wrt_IMU);
+    p_imu->first_lidar_time = 0.0;
+
+    state_point = state_ikfom();
+    esekfom::esekf<state_ikfom, 12, input_ikfom>::cov init_cov =
+        esekfom::esekf<state_ikfom, 12, input_ikfom>::cov::Identity();
+    kf.change_x(state_point);
+    kf.change_P(init_cov);
+
+    ikdtree.~KD_TREE<PointType>();
+    new (&ikdtree) KD_TREE<PointType>();
+    ikdtree.set_downsample_param(filter_size_map_min);
+
+    path.poses.clear();
+    path.header.stamp = ros::Time::now();
+    odomAftMapped = nav_msgs::Odometry();
+    odomAftMapped.child_frame_id = "body";
+    geoQuat = geometry_msgs::Quaternion();
+    msg_body_pose = geometry_msgs::PoseStamped();
+
+    reset_requested.store(false);
+    ROS_INFO("[fast_lio] 已重置内部状态，等待新的 bag 数据重新开始");
 }
 
 template<typename T>
@@ -933,6 +1035,13 @@ int main(int argc, char** argv)
     {
         if (flg_exit) break;
         ros::spinOnce();
+        if (reset_requested.load())
+        {
+            perform_system_reset();
+            status = ros::ok();
+            rate.sleep();
+            continue;
+        }
         if(sync_packages(Measures)) 
         {
             if (flg_first_scan)
