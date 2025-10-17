@@ -1,14 +1,3 @@
-# ------------------------------------------------------------
-# KITTI 可视化 RViz 配置文件
-# 作用：用于可视化 /kitti/velo/pointcloud 点云并快速查看
-# 使用说明：
-#   1. 若点云不显示，首先确认 Fixed Frame 与消息中的 frame_id 一致。
-#   2. 可在 Displays 面板中勾选/取消 “KITTI PointCloud” 来调节开关。
-#   3. 若想加轨迹，可添加 Path 显示并订阅 /path。
-#   4. 如果使用其它数据集，可修改 Topic 字段。
-#   5. Window Geometry 里是窗口大小位置，删除或调整不会影响功能。
-# ------------------------------------------------------------
-# Panels:
 Panels:
   - Class: rviz/Displays
     Help Height: 138
@@ -17,6 +6,9 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /FAST-LIO Mapping1
+        - /FAST-LIO Mapping1/FAST-LIO Surround Map1
+        - /FAST-LIO Mapping1/FAST-LIO Current Points1
       Splitter Ratio: 0.5
     Tree Height: 1716
   - Class: rviz/Selection
@@ -37,76 +29,68 @@ Panels:
     Name: Time
     SyncMode: 0
     SyncSource: ""
-
-# 首选项（已按 4K 屏幕配置调整）
-Preferences:  # 首选项配置
-  PromptSaveOnExit: true   # 退出时提示保存
-
-# 工具栏设置（4K 屏幕配置）
-Toolbars:  # 工具栏配置
-  toolButtonStyle: 2       # 按钮样式：0=图标,1=文本,2=图标+文本（视 RViz 版本而定）
-
-# 主配置节点，以下是所有显示插件与全局选项
-Visualization Manager:  
-  Class: ""  # 类（空）
-  Displays:  # 显示列表
-    - Alpha: 0.5          # 网格透明度
-      Cell Size: 10  # 单元格大小
-      Class: rviz/Grid  # 网格显示类
-      Color: 160; 160; 164  # 颜色
-      Enabled: true  # 是否启用
-      Line Style:  # 线样式
-        Line Width: 0.029999999329447746  # 线宽
-        Value: Lines  # 值
-      Name: Grid  # 名称
-      Normal Cell Count: 0  # 法向单元格计数
-      Offset:  # 偏移
-        X: 0  # X 偏移
-        Y: 0  # Y 偏移
-        Z: 0  # Z 偏移
-      Plane: XY  # 平面
-      Plane Cell Count: 100  # 平面单元格计数
-      Reference Frame: <Fixed Frame>  # 参考帧
-      Value: true  # 值
-    - Alpha: 1            # 点云显示：主点云（KITTI）
-      Autocompute Intensity Bounds: true  # 自动计算强度边界
-      Autocompute Value Bounds:  # 自动计算值边界
-        Max Value: 10  # 最大值
-        Min Value: -10  # 最小值
-        Value: true  # 值
-      Axis: Z  # 轴
-      Channel Name: intensity  # 通道名称
-      Class: rviz/PointCloud2  # 点云2显示类
-      Color: 255; 255; 255  # 颜色
-      Color Transformer: FlatColor  # 颜色变换器
-      Decay Time: 0  # 衰减时间
-      Enabled: true  # 是否启用
-      Invert Rainbow: false  # 是否反转彩虹
-      Max Color: 255; 255; 255  # 最大颜色
-      Min Color: 0; 0; 0  # 最小颜色
-      Name: KITTI PointCloud  # 名称
-      Position Transformer: XYZ  # 位置变换器
-      Queue Size: 10  # 队列大小
-      Selectable: true  # 是否可选择
-      Size (Pixels): 3  # 大小（像素）
-      Size (m): 0.05000000074505806  # 大小（米）
-      Style: Points  # 样式
-      Topic: /detection/pointcloud  # 话题
-      Unreliable: false  # 是否不可靠
-      Use Fixed Frame: true  # 使用固定帧
-      Use rainbow: false  # 使用彩虹
-      Value: true  # 值
-
-
-    - Class: rviz/MarkerArray     # PointPillars 检测框
+Preferences:
+  PromptSaveOnExit: true
+Toolbars:
+  toolButtonStyle: 2
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 10
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 100
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: KITTI PointCloud
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.05000000074505806
+      Style: Points
+      Topic: /detection/pointcloud
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: false
+      Value: true
+    - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /detection/bboxes_3d
       Name: PointPillars BBoxes
       Namespaces:
-        detection: true
+        {}
       Queue Size: 100
-
-    - Class: rviz/MarkerArray     # MCTrack 跟踪结果
+      Value: true
+    - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /mctrack/markers
       Name: MCTrack Tracking
@@ -114,44 +98,15 @@ Visualization Manager:
         {}
       Queue Size: 100
       Value: true
-
-      
-    - Class: rviz/Group        # FAST-LIO 建图输出
+    - Class: rviz/Group
       Displays:
-        - Alpha: 1            # FAST-LIO 累积地图（surround）
+        # FAST-LIO current points
+        - Alpha: 0.1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
             Max Value: 10
             Min Value: -10
             Value: true
-          Axis: Z
-          Channel Name: intensity
-          Class: rviz/PointCloud2
-          Color: 238; 238; 236
-          Color Transformer: Intensity
-          Decay Time: 0
-          Enabled: true
-          Invert Rainbow: false
-          Max Color: 255; 255; 255
-          Min Color: 238; 238; 236
-          Name: FAST-LIO Surround Map
-          Position Transformer: XYZ
-          Queue Size: 1
-          Selectable: false
-          Size (Pixels): 3
-          Size (m): 0.05000000074505806
-          Style: Points
-          Topic: /cloud_registered
-          Unreliable: false
-          Use Fixed Frame: true
-          Use rainbow: true
-          Value: true
-        - Alpha: 0.10000000149011612  # FAST-LIO 当前帧叠加（currPoints）
-          Autocompute Intensity Bounds: true
-          Autocompute Value Bounds:
-            Max Value: 15
-            Min Value: -5
-            Value: false
           Axis: Z
           Channel Name: intensity
           Class: rviz/PointCloud2
@@ -174,7 +129,9 @@ Visualization Manager:
           Use Fixed Frame: true
           Use rainbow: true
           Value: true
-        - Alpha: 1            # FAST-LIO 轨迹
+
+        # FAST-LIO 轨迹
+        - Alpha: 1
           Buffer Length: 2
           Class: rviz/Path
           Color: 255; 170; 0
@@ -191,13 +148,16 @@ Visualization Manager:
             Z: 0
           Pose Color: 255; 170; 0
           Pose Style: None
+          Queue Size: 10
           Radius: 0.029999999329447746
           Shaft Diameter: 0.4000000059604645
           Shaft Length: 0.4000000059604645
           Topic: /path
           Unreliable: false
           Value: true
-        - Angle Tolerance: 0.009999999776482582  # FAST-LIO 里程计
+
+
+        - Angle Tolerance: 0.009999999776482582
           Class: rviz/Odometry
           Covariance:
             Orientation:
@@ -218,6 +178,7 @@ Visualization Manager:
           Keep: 1
           Name: FAST-LIO Odometry
           Position Tolerance: 0.0010000000474974513
+          Queue Size: 10
           Shape:
             Alpha: 1
             Axes Length: 1
@@ -233,76 +194,78 @@ Visualization Manager:
           Value: true
       Enabled: true
       Name: FAST-LIO Mapping
-    - Class: rviz/Axes    # 原点坐标轴
-      Enabled: true  # 是否启用
-      Length: 5  # 长度
-      Name: Coordinate Axes  # 名称
-      Radius: 0.5  # 半径
-      Reference Frame: <Fixed Frame>  # 参考帧
-      Value: true  # 值
-  Enabled: true  # 是否启用
-  Global Options:  # 全局坐标 / 背景等
-    Background Color: 48; 48; 48  # 背景颜色
-    Default Light: true  # 默认光照
-    Fixed Frame: camera_init        # 固定帧（FAST-LIO 使用 camera_init 作为世界坐标系）
-    Frame Rate: 30  # 帧率
-  Name: root  # 名称
-  Tools:  # 工具列表
-    - Class: rviz/Interact  # 交互工具类
-      Hide Inactive Objects: true  # 隐藏非活动对象
-    - Class: rviz/MoveCamera  # 移动相机工具类
-    - Class: rviz/Select  # 选择工具类
-    - Class: rviz/FocusCamera  # 聚焦相机工具类
-    - Class: rviz/Measure  # 测量工具类
-    - Class: rviz/SetInitialPose  # 设置初始姿态工具类
-      Theta std deviation: 0.2617993950843811  # Theta 标准差
-      Topic: /initialpose  # 话题
-      X std deviation: 0.5  # X 标准差
-      Y std deviation: 0.5  # Y 标准差
-    - Class: rviz/SetGoal  # 设置目标工具类
-      Topic: /move_base_simple/goal  # 话题
-    - Class: rviz/PublishPoint  # 发布点工具类
-      Single click: true  # 单次点击
-      Topic: /clicked_point  # 话题
-  Value: true  # 值
-  Views:            # 视角参数（Orbit 相机）
-    Current:  # 当前视图
-      Class: rviz/Orbit  # 轨道视图类
-      Distance: 50  # 距离
-      Enable Stereo Rendering:  # 启用立体渲染
-        Stereo Eye Separation: 0.05999999865889549  # 立体眼分离
-        Stereo Focal Distance: 1  # 立体焦距
-        Swap Stereo Eyes: false  # 交换立体眼
-        Value: false  # 值
-      Focal Point:  # 焦点
-        X: 0  # X
-        Y: 0  # Y
-        Z: 0  # Z
-      Focal Shape Fixed Size: true  # 焦点形状固定大小
-      Focal Shape Size: 0.05000000074505806  # 焦点形状大小
-      Invert Z Axis: false  # 反转 Z 轴
-      Name: Current View  # 名称
-      Near Clip Distance: 0.009999999776482582  # 近裁剪距离
-      Pitch: 0.5  # 俯仰
-      Target Frame: <Fixed Frame>  # 目标帧
-      Value: Orbit (rviz)  # 值
-      Yaw: 0.5  # 偏航
-    Saved: ~  # 保存的视图（空）
-Window Geometry:            # 4K 屏幕窗口几何参数
-  Displays:  # 显示面板
-    collapsed: false  # 是否折叠
+    - Alpha: 1
+      Class: rviz/Axes
+      Enabled: true
+      Length: 5
+      Name: Coordinate Axes
+      Radius: 0.5
+      Reference Frame: <Fixed Frame>
+      Show Trail: false
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Default Light: true
+    Fixed Frame: camera_init
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+      Theta std deviation: 0.2617993950843811
+      Topic: /initialpose
+      X std deviation: 0.5
+      Y std deviation: 0.5
+    - Class: rviz/SetGoal
+      Topic: /move_base_simple/goal
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 726.615478515625
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.05999999865889549
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Field of View: 0.7853981852531433
+      Focal Point:
+        X: 175.21633911132812
+        Y: -116.68792724609375
+        Z: -179.06602478027344
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05000000074505806
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.009999999776482582
+      Pitch: 0.5
+      Target Frame: <Fixed Frame>
+      Yaw: 0.5
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
   Height: 2226
-  Hide Left Dock: false  # 隐藏左侧停靠
-  Hide Right Dock: false  # 隐藏右侧停靠
-  QMainWindow State: 000000ff00000000fd0000000400000000000001f7000007acfc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000006e000007ac0000018200fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000015f000007acfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000006e000007ac0000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000011200000005efc0100000002fb0000000800540069006d0065010000000000001120000006dc00fffffffb0000000800540069006d0065010000000000000450000000000000000000000db2000007ac00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
-  Selection:  # 选择面板
-    collapsed: false  # 是否折叠
-  Time:  # 时间面板
-    collapsed: false  # 是否折叠
-  Tool Properties:  # 工具属性面板
-    collapsed: false  # 是否折叠
-  Views:  # 视图面板
-    collapsed: false  # 是否折叠
+  Hide Left Dock: false
+  Hide Right Dock: true
+  QMainWindow State: 000000ff00000000fd00000004000000000000047d000007acfc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000006e000007ac0000018200fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c000002610000000100000289000007acfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000006e000007ac0000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000011200000005efc0100000002fb0000000800540069006d0065010000000000001120000006dc00fffffffb0000000800540069006d0065010000000000000450000000000000000000000c97000007ac00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: true
   Width: 4384
   X: 0
   Y: 54
