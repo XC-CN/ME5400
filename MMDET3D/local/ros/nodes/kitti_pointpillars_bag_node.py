@@ -28,15 +28,6 @@ if CATKIN_PYTHON_PATH.exists():
 from mmdet3d.apis import LidarDet3DInferencer
 from mmdet3d.structures import Box3DMode, LiDARInstance3DBoxes
 
-# 自定义消息
-try:
-    from kitti_tracklets_viz.msg import Detection3D, Detection3DArray
-except ImportError as exc:
-    raise ImportError(
-        "无法导入 kitti_tracklets_viz 消息。请先编译 catkin_ws（运行 ./Scripts/build_catkin_ws.sh），"
-        "并确认已生成 devel/lib/python3/dist-packages。"
-    ) from exc
-
 
 class KittiPointPillarsBagNode:
     """KITTI PointPillars ROS节点 - Bag文件版本"""
@@ -97,7 +88,6 @@ class KittiPointPillarsBagNode:
         self.kitti_tracking_pub = rospy.Publisher('/detection/kitti_tracking', String, queue_size=10)
         self.pointcloud_pub = rospy.Publisher('/detection/pointcloud', PointCloud2, queue_size=10)
         self.imu_pub = rospy.Publisher('/detection/imu', Imu, queue_size=10)
-        self.det_pub = rospy.Publisher('/kitti/detections', Detection3DArray, queue_size=2)
         
         # 订阅点云话题
         self.pointcloud_sub = rospy.Subscriber('/kitti/velo/pointcloud', PointCloud2, self._pointcloud_callback)
@@ -361,16 +351,12 @@ class KittiPointPillarsBagNode:
         header: Header,
         frame_id: int,
     ) -> Optional[Tuple[np.ndarray, np.ndarray, np.ndarray, List[str], np.ndarray, List[List[float]]]]:
-        """将检测结果转换为Detection3DArray并发布，返回用于KITTI字符串的关键信息。"""
-        msg = Detection3DArray()
-        msg.header = header
-
+        """将检测结果转换为KITTI格式所需的关键信息。"""
         boxes = detections.get('bboxes_3d')
         scores = detections.get('scores_3d')
         labels = detections.get('labels_3d')
 
         if boxes is None or boxes.size == 0:
-            self.det_pub.publish(msg)
             return None
 
         boxes_np = np.asarray(boxes, dtype=np.float32)
@@ -401,19 +387,6 @@ class KittiPointPillarsBagNode:
             bbox2d = self._project_corners_to_bbox2d(corners_cam[idx])
             bbox2d_list.append(bbox2d)
 
-            det_msg = Detection3D()
-            det_msg.header = Header(stamp=header.stamp, frame_id=header.frame_id)
-            det_msg.frame = frame_id
-            det_msg.track_id = -1
-            det_msg.cls = cls_name
-            det_msg.score = float(scores_np[idx])
-            det_msg.bbox2d = [float(v) for v in bbox2d]
-            det_msg.dimensions = [float(v) for v in dims_kitti[idx]]
-            det_msg.location = cam_centers[idx].astype(np.float32).tolist()
-            det_msg.rotation_y = float(cam_yaw[idx])
-            msg.detections.append(det_msg)
-
-        self.det_pub.publish(msg)
         return cam_centers, dims_kitti, cam_yaw, class_names, scores_np, bbox2d_list
 
     def _project_corners_to_bbox2d(self, corners_cam: np.ndarray) -> List[float]:
