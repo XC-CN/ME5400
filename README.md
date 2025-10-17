@@ -152,7 +152,7 @@ pip install -r requirements.txt
 
 ## 🎯 使用指南
 
-**在线 ROS 联动：KITTI Tracking 点云 → PointPillars → FAST-LIO → MCTrack → RViz**
+### **在线 ROS 联动：KITTI Tracking 点云 → PointPillars → FAST-LIO → MCTrack → RViz**
 
 > 当前检测由 MMDetection3D PointPillars 推理节点发布至 `/detection/bboxes_3d` 与 `/detection/kitti_tracking`；后续如需替换，可接入其他检测器但需保持话题接口一致。
 
@@ -172,22 +172,22 @@ pip install -r requirements.txt
 
 也可以直接使用 `MMDET3D/data/kitti/seq_0019_with_det.bag` 或 `tracking/rosbags/seq_0019_with_det.bag` 作为示例数据。
 
-1. **启动 roscore（终端 A）**
+#### 1. **启动 roscore（终端 A）**
 
    ```bash
    roscore
    ```
-2. **【首次或代码更新后】编译工作空间**
+#### 2. **【首次或代码更新后】编译工作空间**
 
    ```bash
    ./Scripts/build_catkin_ws.sh
    ```
-3. **【可选】生成或更新默认 rosbag**
+#### 3. **【可选】生成或更新默认 rosbag**
 
    ```bash
    ./Scripts/kitti_tracking_to_rosbag.py --seq 20
    ```
-4. **启动 PointPillars 检测节点（终端 C）**
+#### 4. **启动 PointPillars 检测节点（终端 C）**
 
    ```bash
    conda activate ME5400
@@ -195,31 +195,26 @@ pip install -r requirements.txt
    ```
 
    该节点会初始化 PointPillars 推理器并等待 `/kitti/velo/pointcloud` 点云流；需要时可改用 `MMDET3D/local/ros/scripts/run_bag_node.sh` 自动拉起 roscore、检测节点与 rosbag。
-5. **播放 rosbag（终端 D，保持运行）**
+#### 5. **播放 rosbag（终端 D，保持运行）**
 
    ```bash
    rosparam set use_sim_time true
    rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag --clock --loop
    ```
-6. **【可选】打开 RViz（终端 E，与 rosbag 同时运行）**
+#### 6. **【可选】打开 RViz（终端 E，与 rosbag 同时运行）**
 
    ```bash
    ./Scripts/run_rviz.sh
    ```
 
    使用 `Scripts/rviz_cfg/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
-7. **启动 FAST-LIO 建图（终端 F）**
+#### 7. **启动 FAST-LIO 系统**
 
-   ```bash
-   ./Scripts/run_fastlio_mapping.sh
-   ```
-8. **启动 FAST-LIO → Pose 桥接（终端 G）**
-   同时会发布全图坐标系到Lidar坐标系的TF变换，使其可以同时可视化建图结果、点云、检测结果、轨迹
+```
+./Scripts/run_fastlio.sh both
+```
 
-   ```bash
-   ./Scripts/run_fastlio_pose_bridge.sh
-   ```
-9. **启动 MCTrack 在线节点（终端 H）**
+#### 8. **启动 MCTrack 在线节点（终端 H）**
 
    ```bash
    ./Scripts/run_mctrack_online_node.sh
@@ -227,13 +222,10 @@ pip install -r requirements.txt
 
    节点订阅 `/mctrack/lidar_pose` 与 `/detection/kitti_tracking`，实时发布 `/mctrack/markers`。
 
-**【可选】一键启动检测+rosbag**
 
-```bash
-./MMDET3D/local/ros/scripts/run_bag_node.sh
-```
 
-脚本会激活 `ME5400` 环境并串行启动 PointPillars 节点与默认 bag 播放；其余 FAST-LIO/MCTrack 组件仍需按上文步骤启动（后续会整合一键脚本）。
+### 单独FastLio可视化实验
+
 
 ## 📊 实验结果
 
