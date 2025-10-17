@@ -1,358 +1,724 @@
+# ------------------------------------------------------------
+# FAST-LIO default RViz configuration.
+# Key displays:
+#   - mapping/surround: accumulated map from /cloud_registered.
+#   - mapping/currPoints: current scan overlay from /cloud_registered.
+#   - mapping/PointCloud2 (disabled): optional sparse map from /Laser_map.
+# Fixed Frame is camera_init; ensure TF tree provides camera_init->body/velodyne.
+# ------------------------------------------------------------
+# 面板配置列表
 Panels:
+  # 组件或显示项的类型
   - Class: rviz/Displays
+    # 帮助区域的高度
     Help Height: 0
+    # 显示项或面板名称
     Name: Displays
+    # 属性树部件设置
     Property Tree Widget:
+      # 默认展开的树节点
       Expanded:
+        # /Global Options1 参数设置
         - /Global Options1
+        # /mapping1 参数设置
         - /mapping1
+        # /mapping1/surround1 参数设置
         - /mapping1/surround1
+        # /mapping1/currPoints1 参数设置
         - /mapping1/currPoints1
+        # /mapping1/currPoints1/Autocompute Value Bounds1 参数设置
         - /mapping1/currPoints1/Autocompute Value Bounds1
+        # /Odometry1/Odometry1 参数设置
         - /Odometry1/Odometry1
+        # /Odometry1/Odometry1/Shape1 参数设置
         - /Odometry1/Odometry1/Shape1
+        # /Odometry1/Odometry1/Covariance1 参数设置
         - /Odometry1/Odometry1/Covariance1
+        # /Odometry1/Odometry1/Covariance1/Position1 参数设置
         - /Odometry1/Odometry1/Covariance1/Position1
+        # /Odometry1/Odometry1/Covariance1/Orientation1 参数设置
         - /Odometry1/Odometry1/Covariance1/Orientation1
+        # /MarkerArray1/Namespaces1 参数设置
         - /MarkerArray1/Namespaces1
+      # 面板分割比例
       Splitter Ratio: 0.6432291865348816
+    # 树形控件的可视高度
     Tree Height: 811
+  # 组件或显示项的类型
   - Class: rviz/Selection
+    # 显示项或面板名称
     Name: Selection
+  # 组件或显示项的类型
   - Class: rviz/Tool Properties
+    # 默认展开的树节点
     Expanded:
+      # /2D Pose Estimate1 参数设置
       - /2D Pose Estimate1
+      # /2D Nav Goal1 参数设置
       - /2D Nav Goal1
+      # /Publish Point1 参数设置
       - /Publish Point1
+    # 显示项或面板名称
     Name: Tool Properties
+    # 面板分割比例
     Splitter Ratio: 0.5886790156364441
+  # 组件或显示项的类型
   - Class: rviz/Views
+    # 默认展开的树节点
     Expanded:
+      # /Current View1 参数设置
       - /Current View1
+    # 显示项或面板名称
     Name: Views
+    # 面板分割比例
     Splitter Ratio: 0.5
+  # 组件或显示项的类型
   - Class: rviz/Time
+    # Experimental 参数设置
     Experimental: false
+    # 显示项或面板名称
     Name: Time
+    # SyncMode 参数设置
     SyncMode: 0
+    # SyncSource 参数设置
     SyncSource: surround
+# 首选项设置
 Preferences:
+  # 退出时是否提示保存
   PromptSaveOnExit: true
+# 工具栏相关设置
 Toolbars:
+  # 工具栏按钮显示风格
   toolButtonStyle: 2
+# 可视化管理器根节点
 Visualization Manager:
+  # 组件或显示项的类型
   Class: ""
+  # 显示项列表
   Displays:
+    # 透明度参数
     - Alpha: 1
+      # 网格单元尺寸
       Cell Size: 1000
+      # 组件或显示项的类型
       Class: rviz/Grid
+      # RGB 颜色值
       Color: 160; 160; 164
+      # 是否启用该显示项
       Enabled: false
+      # 线条样式配置
       Line Style:
+        # 线宽
         Line Width: 0.029999999329447746
+        # 对应的布尔或数值设定
         Value: Lines
+      # 显示项或面板名称
       Name: Grid
+      # 法向方向的单元数量
       Normal Cell Count: 0
+      # 偏移（协方差）
       Offset:
+        # 窗口 X 位置
         X: 0
+        # 窗口 Y 位置
         Y: 0
+        # Z 轴的取值
         Z: 0
+      # 所在平面类型
       Plane: XY
+      # 平面方向单元数量
       Plane Cell Count: 40
+      # 参考坐标系
       Reference Frame: <Fixed Frame>
+      # 对应的布尔或数值设定
       Value: false
+    # 组件或显示项的类型
     - Class: rviz/Axes
+      # 是否启用该显示项
       Enabled: false
+      # 长度参数
       Length: 0.699999988079071
+      # 显示项或面板名称
       Name: Axes
+      # 圆形半径
       Radius: 0.05999999865889549
+      # 参考坐标系
       Reference Frame: <Fixed Frame>
+      # 对应的布尔或数值设定
       Value: false
+    # 组件或显示项的类型
     - Class: rviz/Group
+      # 显示项列表
       Displays:
+        # 透明度参数
         - Alpha: 1
+          # 是否自动计算强度范围
           Autocompute Intensity Bounds: true
+          # 是否自动计算数值范围
           Autocompute Value Bounds:
+            # 最大取值限制
             Max Value: 10
+            # 最小取值限制
             Min Value: -10
+            # 对应的布尔或数值设定
             Value: true
+          # 颜色或尺寸映射的轴向
           Axis: Z
+          # 使用的点云通道名称
           Channel Name: intensity
+          # 组件或显示项的类型
           Class: rviz/PointCloud2
+          # RGB 颜色值
           Color: 238; 238; 236
+          # 颜色映射方式
           Color Transformer: Intensity
+          # 显示衰减时间
           Decay Time: 0
+          # 是否启用该显示项
           Enabled: true
+          # 是否反转彩虹颜色
           Invert Rainbow: false
+          # 最大颜色值
           Max Color: 255; 255; 255
+          # 最小颜色值
           Min Color: 238; 238; 236
+          # 显示项或面板名称
           Name: surround
+          # 点位转换方式
           Position Transformer: XYZ
+          # 订阅队列长度
           Queue Size: 1
+          # 是否可被选中
           Selectable: false
+          # 点的像素尺寸
           Size (Pixels): 3
+          # 点的实际尺寸(米)
           Size (m): 0.05000000074505806
+          # 绘制风格
           Style: Points
+          # 订阅的话题名称
           Topic: /cloud_registered
+          # 是否使用不可靠传输
           Unreliable: false
+          # 是否使用固定坐标系
           Use Fixed Frame: true
+          # 是否启用彩虹色
           Use rainbow: true
+          # 对应的布尔或数值设定
           Value: true
+        # 透明度参数
         - Alpha: 0.10000000149011612
+          # 是否自动计算强度范围
           Autocompute Intensity Bounds: true
+          # 是否自动计算数值范围
           Autocompute Value Bounds:
+            # 最大取值限制
             Max Value: 15
+            # 最小取值限制
             Min Value: -5
+            # 对应的布尔或数值设定
             Value: false
+          # 颜色或尺寸映射的轴向
           Axis: Z
+          # 使用的点云通道名称
           Channel Name: intensity
+          # 组件或显示项的类型
           Class: rviz/PointCloud2
+          # RGB 颜色值
           Color: 255; 255; 255
+          # 颜色映射方式
           Color Transformer: Intensity
+          # 显示衰减时间
           Decay Time: 1000
+          # 是否启用该显示项
           Enabled: true
+          # 是否反转彩虹颜色
           Invert Rainbow: true
+          # 最大颜色值
           Max Color: 255; 255; 255
+          # 最小颜色值
           Min Color: 0; 0; 0
+          # 显示项或面板名称
           Name: currPoints
+          # 点位转换方式
           Position Transformer: XYZ
+          # 订阅队列长度
           Queue Size: 100000
+          # 是否可被选中
           Selectable: true
+          # 点的像素尺寸
           Size (Pixels): 1
+          # 点的实际尺寸(米)
           Size (m): 0.009999999776482582
+          # 绘制风格
           Style: Points
+          # 订阅的话题名称
           Topic: /cloud_registered
+          # 是否使用不可靠传输
           Unreliable: false
+          # 是否使用固定坐标系
           Use Fixed Frame: true
+          # 是否启用彩虹色
           Use rainbow: true
+          # 对应的布尔或数值设定
           Value: true
+        # 透明度参数
         - Alpha: 1
+          # 是否自动计算强度范围
           Autocompute Intensity Bounds: true
+          # 是否自动计算数值范围
           Autocompute Value Bounds:
+            # 最大取值限制
             Max Value: 10
+            # 最小取值限制
             Min Value: -10
+            # 对应的布尔或数值设定
             Value: true
+          # 颜色或尺寸映射的轴向
           Axis: Z
+          # 使用的点云通道名称
           Channel Name: intensity
+          # 组件或显示项的类型
           Class: rviz/PointCloud2
+          # RGB 颜色值
           Color: 255; 0; 0
+          # 颜色映射方式
           Color Transformer: FlatColor
+          # 显示衰减时间
           Decay Time: 0
+          # 是否启用该显示项
           Enabled: false
+          # 是否反转彩虹颜色
           Invert Rainbow: false
+          # 最大颜色值
           Max Color: 255; 255; 255
+          # 最小颜色值
           Min Color: 0; 0; 0
+          # 显示项或面板名称
           Name: PointCloud2
+          # 点位转换方式
           Position Transformer: XYZ
+          # 订阅队列长度
           Queue Size: 10
+          # 是否可被选中
           Selectable: true
+          # 点的像素尺寸
           Size (Pixels): 3
+          # 点的实际尺寸(米)
           Size (m): 0.10000000149011612
+          # 绘制风格
           Style: Flat Squares
+          # 订阅的话题名称
           Topic: /Laser_map
+          # 是否使用不可靠传输
           Unreliable: false
+          # 是否使用固定坐标系
           Use Fixed Frame: true
+          # 是否启用彩虹色
           Use rainbow: true
+          # 对应的布尔或数值设定
           Value: false
+      # 是否启用该显示项
       Enabled: true
+      # 显示项或面板名称
       Name: mapping
+    # 组件或显示项的类型
     - Class: rviz/Group
+      # 显示项列表
       Displays:
+        # 角度容差
         - Angle Tolerance: 0.009999999776482582
+          # 组件或显示项的类型
           Class: rviz/Odometry
+          # 协方差显示设置
           Covariance:
+            # 姿态协方差设置
             Orientation:
+              # 透明度参数
               Alpha: 0.5
+              # RGB 颜色值
               Color: 255; 255; 127
+              # Color Style 参数设置
               Color Style: Unique
+              # 使用的坐标系
               Frame: Local
+              # 偏移（协方差）
               Offset: 1
+              # 缩放比例
               Scale: 1
+              # 对应的布尔或数值设定
               Value: true
+            # 位置协方差设置
             Position:
+              # 透明度参数
               Alpha: 0.30000001192092896
+              # RGB 颜色值
               Color: 204; 51; 204
+              # 缩放比例
               Scale: 1
+              # 对应的布尔或数值设定
               Value: true
+            # 对应的布尔或数值设定
             Value: true
+          # 是否启用该显示项
           Enabled: true
+          # 保留的轨迹帧数
           Keep: 1
+          # 显示项或面板名称
           Name: Odometry
+          # 位置容差
           Position Tolerance: 0.0010000000474974513
+          # 图形显示样式
           Shape:
+            # 透明度参数
             Alpha: 1
+            # 坐标轴长度
             Axes Length: 1
+            # 坐标轴半径
             Axes Radius: 0.20000000298023224
+            # RGB 颜色值
             Color: 255; 85; 0
+            # 路径箭头头长度
             Head Length: 0
+            # 箭头头半径
             Head Radius: 0
+            # 箭杆长度
             Shaft Length: 0.05000000074505806
+            # 箭杆半径
             Shaft Radius: 0.05000000074505806
+            # 对应的布尔或数值设定
             Value: Axes
+          # 订阅的话题名称
           Topic: /Odometry
+          # 是否使用不可靠传输
           Unreliable: false
+          # 对应的布尔或数值设定
           Value: true
+      # 是否启用该显示项
       Enabled: true
+      # 显示项或面板名称
       Name: Odometry
+    # 组件或显示项的类型
     - Class: rviz/Axes
+      # 是否启用该显示项
       Enabled: true
+      # 长度参数
       Length: 0.699999988079071
+      # 显示项或面板名称
       Name: Axes
+      # 圆形半径
       Radius: 0.10000000149011612
+      # 参考坐标系
       Reference Frame: <Fixed Frame>
+      # 对应的布尔或数值设定
       Value: true
+    # 透明度参数
     - Alpha: 0
+      # 缓冲区长度
       Buffer Length: 2
+      # 组件或显示项的类型
       Class: rviz/Path
+      # RGB 颜色值
       Color: 25; 255; 255
+      # 是否启用该显示项
       Enabled: true
+      # 路径箭头头直径
       Head Diameter: 0
+      # 路径箭头头长度
       Head Length: 0
+      # 长度参数
       Length: 0.30000001192092896
+      # 线条样式配置
       Line Style: Billboards
+      # 线宽
       Line Width: 0.20000000298023224
+      # 显示项或面板名称
       Name: Path
+      # 偏移（协方差）
       Offset:
+        # 窗口 X 位置
         X: 0
+        # 窗口 Y 位置
         Y: 0
+        # Z 轴的取值
         Z: 0
+      # 位姿颜色
       Pose Color: 25; 255; 255
+      # 位姿显示样式
       Pose Style: None
+      # 圆形半径
       Radius: 0.029999999329447746
+      # 轴直径
       Shaft Diameter: 0.4000000059604645
+      # 箭杆长度
       Shaft Length: 0.4000000059604645
+      # 订阅的话题名称
       Topic: /path
+      # 是否使用不可靠传输
       Unreliable: false
+      # 对应的布尔或数值设定
       Value: true
+    # 透明度参数
     - Alpha: 1
+      # 是否自动计算强度范围
       Autocompute Intensity Bounds: false
+      # 是否自动计算数值范围
       Autocompute Value Bounds:
+        # 最大取值限制
         Max Value: 10
+        # 最小取值限制
         Min Value: -10
+        # 对应的布尔或数值设定
         Value: true
+      # 颜色或尺寸映射的轴向
       Axis: Z
+      # 使用的点云通道名称
       Channel Name: intensity
+      # 组件或显示项的类型
       Class: rviz/PointCloud2
+      # RGB 颜色值
       Color: 255; 255; 255
+      # 颜色映射方式
       Color Transformer: Intensity
+      # 显示衰减时间
       Decay Time: 0
+      # 是否启用该显示项
       Enabled: false
+      # 是否反转彩虹颜色
       Invert Rainbow: false
+      # 最大颜色值
       Max Color: 239; 41; 41
+      # 最大强度
       Max Intensity: 0
+      # 最小颜色值
       Min Color: 239; 41; 41
+      # 最小强度
       Min Intensity: 0
+      # 显示项或面板名称
       Name: PointCloud2
+      # 点位转换方式
       Position Transformer: XYZ
+      # 订阅队列长度
       Queue Size: 10
+      # 是否可被选中
       Selectable: true
+      # 点的像素尺寸
       Size (Pixels): 4
+      # 点的实际尺寸(米)
       Size (m): 0.30000001192092896
+      # 绘制风格
       Style: Spheres
+      # 订阅的话题名称
       Topic: /cloud_effected
+      # 是否使用不可靠传输
       Unreliable: false
+      # 是否使用固定坐标系
       Use Fixed Frame: true
+      # 是否启用彩虹色
       Use rainbow: true
+      # 对应的布尔或数值设定
       Value: false
+    # 透明度参数
     - Alpha: 1
+      # 是否自动计算强度范围
       Autocompute Intensity Bounds: true
+      # 是否自动计算数值范围
       Autocompute Value Bounds:
+        # 最大取值限制
         Max Value: 13.139549255371094
+        # 最小取值限制
         Min Value: -32.08251953125
+        # 对应的布尔或数值设定
         Value: true
+      # 颜色或尺寸映射的轴向
       Axis: Z
+      # 使用的点云通道名称
       Channel Name: intensity
+      # 组件或显示项的类型
       Class: rviz/PointCloud2
+      # RGB 颜色值
       Color: 138; 226; 52
+      # 颜色映射方式
       Color Transformer: FlatColor
+      # 显示衰减时间
       Decay Time: 0
+      # 是否启用该显示项
       Enabled: false
+      # 是否反转彩虹颜色
       Invert Rainbow: false
+      # 最大颜色值
       Max Color: 138; 226; 52
+      # 最小颜色值
       Min Color: 138; 226; 52
+      # 显示项或面板名称
       Name: PointCloud2
+      # 点位转换方式
       Position Transformer: XYZ
+      # 订阅队列长度
       Queue Size: 10
+      # 是否可被选中
       Selectable: true
+      # 点的像素尺寸
       Size (Pixels): 3
+      # 点的实际尺寸(米)
       Size (m): 0.10000000149011612
+      # 绘制风格
       Style: Flat Squares
+      # 订阅的话题名称
       Topic: /Laser_map
+      # 是否使用不可靠传输
       Unreliable: false
+      # 是否使用固定坐标系
       Use Fixed Frame: true
+      # 是否启用彩虹色
       Use rainbow: true
+      # 对应的布尔或数值设定
       Value: false
+    # 组件或显示项的类型
     - Class: rviz/MarkerArray
+      # 是否启用该显示项
       Enabled: false
+      # MarkerArray 订阅话题
       Marker Topic: /MarkerArray
+      # 显示项或面板名称
       Name: MarkerArray
+      # 可视化的命名空间
       Namespaces:
+        # 列表项
         {}
+      # 订阅队列长度
       Queue Size: 100
+      # 对应的布尔或数值设定
       Value: false
+  # 是否启用该显示项
   Enabled: true
+  # Global Options 参数设置
   Global Options:
+    # 背景颜色
     Background Color: 0; 0; 0
+    # 是否启用默认光照
     Default Light: true
+    # 固定帧
     Fixed Frame: camera_init
+    # 渲染帧率
     Frame Rate: 10
+  # 显示项或面板名称
   Name: root
+  # 工具列表
   Tools:
+    # 组件或显示项的类型
     - Class: rviz/Interact
+      # 是否隐藏非激活对象
       Hide Inactive Objects: true
+    # 组件或显示项的类型
     - Class: rviz/MoveCamera
+    # 组件或显示项的类型
     - Class: rviz/Select
+    # 组件或显示项的类型
     - Class: rviz/FocusCamera
+    # 组件或显示项的类型
     - Class: rviz/Measure
+    # 组件或显示项的类型
     - Class: rviz/SetInitialPose
+      # 角度标准差
       Theta std deviation: 0.2617993950843811
+      # 订阅的话题名称
       Topic: /initialpose
+      # X 方向标准差
       X std deviation: 0.5
+      # Y 方向标准差
       Y std deviation: 0.5
+    # 组件或显示项的类型
     - Class: rviz/SetGoal
+      # 订阅的话题名称
       Topic: /move_base_simple/goal
+    # 组件或显示项的类型
     - Class: rviz/PublishPoint
+      # 是否单击发布
       Single click: true
+      # 订阅的话题名称
       Topic: /clicked_point
+  # 对应的布尔或数值设定
   Value: true
+  # 视图面板配置
   Views:
+    # Current 参数设置
     Current:
+      # 组件或显示项的类型
       Class: rviz/Orbit
+      # 相机到焦点距离
       Distance: 46.0853271484375
+      # 立体渲染设置
       Enable Stereo Rendering:
+        # 立体眼间距
         Stereo Eye Separation: 0.05999999865889549
+        # 立体焦距
         Stereo Focal Distance: 1
+        # 是否交换立体眼
         Swap Stereo Eyes: false
+        # 对应的布尔或数值设定
         Value: false
+      # 焦点坐标
       Focal Point:
+        # 窗口 X 位置
         X: -4.982542037963867
+        # 窗口 Y 位置
         Y: -15.83572006225586
+        # Z 轴的取值
         Z: -3.063523054122925
+      # 焦点形状是否固定大小
       Focal Shape Fixed Size: true
+      # 焦点形状尺寸
       Focal Shape Size: 0.05000000074505806
+      # 是否反转 Z 轴
       Invert Z Axis: false
+      # 显示项或面板名称
       Name: Current View
+      # 近裁剪距离
       Near Clip Distance: 0.009999999776482582
+      # 俯仰角
       Pitch: 0.399796724319458
+      # 目标坐标系
       Target Frame: global
+      # 对应的布尔或数值设定
       Value: Orbit (rviz)
+      # 偏航角
       Yaw: 1.277182698249817
+    # 保存的视图
     Saved: ~
+# 窗口几何参数
 Window Geometry:
+  # 显示项列表
   Displays:
+    # collapsed 参数设置
     collapsed: false
+  # 窗口高度
   Height: 1028
+  # 是否隐藏左侧停靠栏
   Hide Left Dock: false
+  # 是否隐藏右侧停靠栏
   Hide Right Dock: true
+  # 主窗口状态编码
   QMainWindow State: 000000ff00000000fd0000000400000000000001c800000368fc020000000dfb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000002700000368000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d0061006700650000000297000001dc0000000000000000fb0000000a0049006d0061006700650000000394000001600000000000000000fb0000000a0049006d00610067006501000002c5000000c70000000000000000fb0000000a0049006d00610067006501000002c5000000c70000000000000000fb0000000a0049006d00610067006501000002c5000000c700000000000000000000000100000152000004b7fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d000004b7000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000061f00000052fc0100000002fb0000000800540069006d006501000000000000061f000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000004510000036800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  # 选择面板配置
   Selection:
+    # collapsed 参数设置
     collapsed: false
+  # 时间面板配置
   Time:
+    # collapsed 参数设置
     collapsed: false
+  # 工具属性面板配置
   Tool Properties:
+    # collapsed 参数设置
     collapsed: false
+  # 视图面板配置
   Views:
+    # collapsed 参数设置
     collapsed: true
+  # 窗口宽度
   Width: 1567
+  # 窗口 X 位置
   X: 67
+  # 窗口 Y 位置
   Y: 24

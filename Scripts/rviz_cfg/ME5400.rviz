@@ -96,6 +96,8 @@ Visualization Manager:
       Use Fixed Frame: true  # 使用固定帧
       Use rainbow: false  # 使用彩虹
       Value: true  # 值
+
+
     - Class: rviz/MarkerArray     # PointPillars 检测框
       Enabled: true
       Marker Topic: /detection/bboxes_3d
@@ -103,6 +105,8 @@ Visualization Manager:
       Namespaces:
         detection: true
       Queue Size: 100
+
+      
     - Class: rviz/Group        # FAST-LIO 建图输出
       Displays:
         - Alpha: 1            # FAST-LIO 注册点云
@@ -128,7 +132,7 @@ Visualization Manager:
           Size (Pixels): 2
           Size (m): 0.05000000074505806
           Style: Points
-          Topic: /Laser_map
+          Topic: /cloud_registered
           Unreliable: false
           Use Fixed Frame: true
           Use rainbow: false

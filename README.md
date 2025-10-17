@@ -262,10 +262,6 @@ mapping:
                 0, 0, 1]
 ```
 
-### MCTrack 配置
-
-主要配置文件：`ME5400_MCTrack/config/kitti.yaml`
-
 ## 🤝 贡献
 
 欢迎提交Issue和Pull Request！
