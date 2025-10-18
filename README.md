@@ -201,20 +201,14 @@ pip install -r requirements.txt
    rosparam set use_sim_time true
    rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag --clock --loop
    ```
-#### 6. **【可选】打开 RViz（终端 E，与 rosbag 同时运行）**
 
-   ```bash
-   ./Scripts/run_rviz.sh
-   ```
-
-   使用 `Scripts/rviz_cfg/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
-#### 7. **启动 FAST-LIO 系统**
+#### 6. **启动 FAST-LIO 系统**
 
 ```
 ./Scripts/run_fastlio.sh both
 ```
 
-#### 8. **启动 MCTrack 在线节点（终端 H）**
+#### 7. **启动 MCTrack 在线节点（终端 H）**
 
    ```bash
    ./Scripts/run_mctrack_online_node.sh
@@ -222,7 +216,13 @@ pip install -r requirements.txt
 
    节点订阅 `/mctrack/lidar_pose` 与 `/detection/kitti_tracking`，实时发布 `/mctrack/markers`。
 
+#### 8. **【可选】打开 RViz（终端 E，与 rosbag 同时运行）**
 
+   ```bash
+   ./Scripts/run_rviz.sh
+   ```
+
+   使用 `Scripts/rviz_cfg/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
 
 ### 单独FastLio可视化实验
 
