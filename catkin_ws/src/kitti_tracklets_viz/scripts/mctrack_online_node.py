@@ -231,11 +231,11 @@ class MCTrackOnlineNode:
 
         for det in msg.detections:
             cls = det.cls.lower()
-            if cls not in cat_map:
+            # 仅保留 car 类别
+            if cls != "car":
                 continue
-            score_idx = cat_map[cls]
-            score_thresh = online_scores[score_idx]
-            if det.score < score_thresh:
+            # 分数阈值放宽到0.2
+            if det.score < 0.2:
                 continue
             dims = np.array(det.dimensions, dtype=np.float64)
             lwh = [dims[2], dims[1], dims[0]]
@@ -313,7 +313,7 @@ class MCTrackOnlineNode:
         clear.action = Marker.DELETEALL
         markers.append(clear)
         stamp = header.stamp if header.stamp != rospy.Time() else rospy.Time.now()
-        frame_id_base = "map"
+        frame_id_base = "camera_init"
         for track_id, bbox in outputs.items():
             pos = bbox.global_xyz
             yaw = bbox.global_yaw
@@ -348,41 +348,23 @@ class MCTrackOnlineNode:
             cube.color.a = 0.35
             markers.append(cube)
 
-            arrow = Marker()
-            arrow.header = cube.header
-            arrow.ns = "mctrack_heading"
-            arrow.id = track_id * 10 + 1
-            arrow.type = Marker.ARROW
-            arrow.action = Marker.ADD
-            start = Point(x=pos[0], y=pos[1], z=pos[2])
-            end = Point(
-                x=pos[0] + math.cos(yaw) * self.arrow_length,
-                y=pos[1] + math.sin(yaw) * self.arrow_length,
-                z=pos[2],
-            )
-            arrow.points = [start, end]
-            arrow.scale.x = 0.2
-            arrow.scale.y = 0.4
-            arrow.scale.z = 0.6
-            arrow.color.r = r
-            arrow.color.g = g
-            arrow.color.b = b
-            arrow.color.a = 0.8
-            markers.append(arrow)
-
-            line = Marker()
-            line.header = cube.header
-            line.ns = "mctrack_traj"
-            line.id = track_id * 10 + 2
-            line.type = Marker.LINE_STRIP
-            line.action = Marker.ADD
-            line.scale.x = 0.1
-            line.color.r = r
-            line.color.g = g
-            line.color.b = b
-            line.color.a = 0.9
-            line.points = [Point(x=p[0], y=p[1], z=p[2]) for p in history]
-            markers.append(line)
+            # 添加ID文本标记
+            text = Marker()
+            text.header = cube.header
+            text.ns = "mctrack_id"
+            text.id = track_id * 10 + 1
+            text.type = Marker.TEXT_VIEW_FACING
+            text.action = Marker.ADD
+            text.pose.position.x = pos[0]
+            text.pose.position.y = pos[1]
+            text.pose.position.z = pos[2] + height/2 + 0.5  # 在边界框上方显示ID
+            text.scale.z = 1.0  # 文字大小
+            text.color.r = r
+            text.color.g = g
+            text.color.b = b
+            text.color.a = 1.0
+            text.text = f"ID:{track_id}"
+            markers.append(text)
 
         marker_array = MarkerArray(markers=markers)
         self.marker_pub.publish(marker_array)

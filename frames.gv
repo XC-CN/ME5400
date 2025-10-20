@@ -1,0 +1,8 @@
+digraph G {
+"camera_init" -> "body"[label="Broadcaster: /laserMapping\nAverage rate: 2.917 Hz\nMost recent transform: 28.001 ( 11.346 sec old)\nBuffer length: 4.800 sec\n"];
+"camera_init" -> "velodyne"[label="Broadcaster: /fastlio_pose_bridge\nAverage rate: 2.917 Hz\nMost recent transform: 28.001 ( 11.346 sec old)\nBuffer length: 4.800 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 39.346"[ shape=plaintext ] ;
+ }->"camera_init";
+}
