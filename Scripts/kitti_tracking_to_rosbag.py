@@ -279,8 +279,8 @@ def main():
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("tracking/rosbags/seq_0019_with_det.bag"),
-        help="output bag path",
+        default=None,
+        help="output bag path (defaults to tracking/rosbags/seq_<seq>_<with|no>det.bag)",
     )
     parser.add_argument("--frame_id", type=str, default="velodyne")
     parser.add_argument("--imu_frame", type=str, default="imu")
@@ -294,7 +294,7 @@ def main():
     parser.add_argument(
         "--include_detections",
         type=str2bool,
-        default=True,
+        default=False,
         help="Include 3D detections in the bag (True/False)",
     )
     args = parser.parse_args()
@@ -304,6 +304,9 @@ def main():
     if not dataset_root.is_absolute():
         dataset_root = (REPO_ROOT / dataset_root).resolve()
     output_path = args.output
+    if output_path is None:
+        suffix = "with_det" if args.include_detections else "nodet"
+        output_path = Path(f"tracking/rosbags/seq_{seq}_{suffix}.bag")
     if not output_path.is_absolute():
         output_path = (REPO_ROOT / output_path).resolve()
 
@@ -395,7 +398,7 @@ def main():
             if idx % 100 == 0:
                 print(f"已处理帧 {idx}/{len(frame_files)}")
 
-    print(f"已保存 rosbag 文件到 {args.output}")
+    print(f"已保存 rosbag 文件到 {output_path}")
 
 
 if __name__ == "__main__":
