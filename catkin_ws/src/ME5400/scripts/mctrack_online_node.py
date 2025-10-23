@@ -230,10 +230,7 @@ class MCTrackOnlineNode:
 
         for det in msg.detections:
             cls = det.cls.lower()
-            # 仅保留 car 类别
-            if cls != "car":
-                continue
-            # 分数阈值放宽到0.2
+            # 分数阈值放宽到0.2（支持所有类别：car, pedestrian, cyclist）
             if det.score < 0.2:
                 continue
             dims = np.array(det.dimensions, dtype=np.float64)

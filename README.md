@@ -215,19 +215,19 @@ roscore
 ./Scripts/utils/kitti_tracking_to_rosbag.py --seq 20
 ```
 
-#### 4. **启动 PointPillars 检测节点（终端 C）**
+#### 4. **启动 PointPillars 检测节点（终端 B）**
 
 ```bash
 ./Scripts/pointpillars/run_pointpillars_node.sh
 ```
 
-#### 5. **启动 FAST-LIO 系统**
+#### 5. **启动 FAST-LIO 系统（终端 C）**
 
 ```bash
 ./Scripts/fastlio/run_fastlio.sh both
 ```
 
-#### 6. **启动 MCTrack 在线节点（终端 H）**
+#### 6. **启动 MCTrack 在线节点（终端 D）**
 
 ```bash
 ./Scripts/mctrack/run_mctrack_online_node.sh
@@ -235,7 +235,11 @@ roscore
 
 节点订阅 `/detection/lidar_tracking`（PointPillars LiDAR 坐标系检测）和 `/mctrack/lidar_pose`（FAST-LIO 位姿），实时发布跟踪结果到 `/mctrack/markers`。
 
-> **说明**：本项目是纯 LiDAR 系统。PointPillars 直接输出 LiDAR 坐标系的 3D 检测框，MCTrack 作为纯跟踪算法只需要检测框和位姿信息，**无需任何标定文件或序列号**。
+> **说明**：
+> - 本项目是纯 LiDAR 系统。PointPillars 直接输出 LiDAR 坐标系的 3D 检测框。
+> - MCTrack 支持跟踪所有 KITTI 类别：**Car**、**Pedestrian**、**Cyclist**
+> - 无需任何相机标定文件或序列号
+> - 检测阈值：`score >= 0.2`（可在 `mctrack_online_node.py` 中调整）
 
 #### 7. **打开 RViz（终端 E，与 rosbag 同时运行）**
 
@@ -245,7 +249,7 @@ roscore
 
    使用 `Scripts/rviz/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
 
-#### 8. **播放 rosbag（终端 D，保持运行）**
+#### 8. **播放 rosbag（终端 F，保持运行）**
 
 ```bash
 rosparam set use_sim_time true
@@ -253,7 +257,7 @@ rosparam set use_sim_time true
 # 高速公路场景
 rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag --clock --loop
    
-#行人多场景
+# 城市街道行人密集场景
 rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop 
 ```
 

@@ -1,4 +1,4 @@
-# FAST-LIO pose driven KITTI config (cars only)
+# FAST-LIO pose driven KITTI config (all classes: car, pedestrian, cyclist)
 DATASET: 'kitti'
 SPLIT: 'val'
 DETECTOR: gt
@@ -10,43 +10,45 @@ IS_RV_MATCHING: True
 FRAME_RATE: 10
 TRACKING_SEQS: [0]
 
-CATEGORY_LIST: ['car']
+CATEGORY_LIST: ['car', 'pedestrian', 'cyclist']
 CATEGORY_MAP_TO_NUMBER : {
     "car": 0,
+    "pedestrian": 1,
+    "cyclist": 2,
 }
 
 MATCHING:
   BEV:
-    COST_STATE: {0: "Predict"}
-    COST_MODE: {0: "RO_GDIOU_3D"}
+    COST_STATE: {0: "Predict", 1: "Predict", 2: "Predict"}
+    COST_MODE: {0: "RO_GDIOU_3D", 1: "RO_GDIOU_3D", 2: "RO_GDIOU_3D"}
     MATCHING_MODE: Hungarian
   RV:
-    COST_STATE: {0: "Predict"}
-    COST_MODE: {0: "SDIOU_2D"}
+    COST_STATE: {0: "Predict", 1: "Predict", 2: "Predict"}
+    COST_MODE: {0: "SDIOU_2D", 1: "SDIOU_2D", 2: "SDIOU_2D"}
     MATCHING_MODE : Greedy
 
 THRESHOLD:
   GLOBAL_TRACK_SCORE: 1.4
-  NMS_THRE: {0: 0.08}
+  NMS_THRE: {0: 0.08, 1: 0.08, 2: 0.08}
   INPUT_SCORE:
-    ONLINE: {0: 0.375}
-    OFFLINE: {0: 0.3775}
-  COST_STATE_PREDICT_RATION: {0: 0.5}
+    ONLINE: {0: 0.3, 1: 0.3, 2: 0.3}
+    OFFLINE: {0: 0.3775, 1: 0.3775, 2: 0.3775}
+  COST_STATE_PREDICT_RATION: {0: 0.5, 1: 0.5, 2: 0.5}
   BEV:
-    COST_THRE: {0: 1.4}
-    WEIGHT_RO_GDIOU: {0: {"w1": 1.0, "w2": 1.0}}
+    COST_THRE: {0: 1.4, 1: 1.4, 2: 1.4}
+    WEIGHT_RO_GDIOU: {0: {"w1": 1.0, "w2": 1.0}, 1: {"w1": 1.0, "w2": 1.0}, 2: {"w1": 1.0, "w2": 1.0}}
   RV:
-    COST_THRE: {0: -0.3}
+    COST_THRE: {0: -0.3, 1: -0.3, 2: -0.3}
 
   TRAJECTORY_THRE:
-    CACHE_BBOX_LENGTH: {0: 1000}
-    PREDICT_BBOX_LENGTH: {0: 30}
-    MAX_UNMATCH_LENGTH: {0: 0}
-    CONFIRMED_TRACK_LENGTH: {0: 1}
-    DELET_OUT_VIEW_LENGTH: {0: 0}
-    CONFIRMED_DET_SCORE: {0: 0.7}
-    IS_FILTER_PREDICT_BOX: {0: 0}
-    CONFIRMED_MATCHED_SCORE: {0: 0.3}
+    CACHE_BBOX_LENGTH: {0: 1000, 1: 1000, 2: 1000}
+    PREDICT_BBOX_LENGTH: {0: 30, 1: 30, 2: 30}
+    MAX_UNMATCH_LENGTH: {0: 0, 1: 0, 2: 0}
+    CONFIRMED_TRACK_LENGTH: {0: 1, 1: 1, 2: 1}
+    DELET_OUT_VIEW_LENGTH: {0: 0, 1: 0, 2: 0}
+    CONFIRMED_DET_SCORE: {0: 0.7, 1: 0.7, 2: 0.7}
+    IS_FILTER_PREDICT_BOX: {0: 0, 1: 0, 2: 0}
+    CONFIRMED_MATCHED_SCORE: {0: 0.3, 1: 0.3, 2: 0.3}
 
 KALMAN_FILTER_POSE:
   MOTION_MODE: {0: "CV"}
