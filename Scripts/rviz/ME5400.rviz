@@ -1,4 +1,11 @@
+# ============================================================
+# RViz 配置文件 - ME5400 项目可视化配置
+# 用于显示：KITTI点云、PointPillars检测、MCTrack跟踪、FAST-LIO建图
+# ============================================================
+
+# 面板配置
 Panels:
+  # 显示面板 - 管理所有可视化元素
   - Class: rviz/Displays
     Help Height: 138
     Name: Displays
@@ -11,8 +18,10 @@ Panels:
         - /FAST-LIO Mapping1/FAST-LIO Current Points1
       Splitter Ratio: 0.5
     Tree Height: 1716
+  # 选择工具面板
   - Class: rviz/Selection
     Name: Selection
+  # 工具属性面板
   - Class: rviz/Tool Properties
     Expanded:
       - /2D Pose Estimate1
@@ -20,26 +29,35 @@ Panels:
       - /Publish Point1
     Name: Tool Properties
     Splitter Ratio: 0.5886790156364441
+  # 视图控制面板
   - Class: rviz/Views
     Expanded:
       - /Current View1
     Name: Views
     Splitter Ratio: 0.5
+  # 时间显示面板
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
     SyncSource: ""
+# 偏好设置
 Preferences:
-  PromptSaveOnExit: true
+  PromptSaveOnExit: true  # 退出时提示保存
 Toolbars:
   toolButtonStyle: 2
+# ============================================================
+# 可视化管理器 - 所有显示项的配置
+# ============================================================
 Visualization Manager:
   Class: ""
   Displays:
-    - Alpha: 0.5
-      Cell Size: 10
+    # ------------------------------------------------------------
+    # 网格显示 - 提供参考坐标网格
+    # ------------------------------------------------------------
+    - Alpha: 0.5  # 透明度
+      Cell Size: 10  # 单元格大小（米）
       Class: rviz/Grid
-      Color: 160; 160; 164
+      Color: 160; 160; 164  # 网格颜色 (灰色)
       Enabled: true
       Line Style:
         Line Width: 0.029999999329447746
@@ -50,22 +68,27 @@ Visualization Manager:
         X: 0
         Y: 0
         Z: 0
-      Plane: XY
-      Plane Cell Count: 100
-      Reference Frame: <Fixed Frame>
+      Plane: XY  # 在XY平面显示
+      Plane Cell Count: 100  # 100x100网格
+      Reference Frame: <Fixed Frame>  # 使用全局固定坐标系
       Value: true
-    - Alpha: 1
+    
+    # ------------------------------------------------------------
+    # KITTI 点云显示 - 来自检测模块的原始点云
+    # Topic: /detection/pointcloud
+    # ------------------------------------------------------------
+    - Alpha: 1  # 不透明
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
         Max Value: 10
         Min Value: -10
         Value: true
       Axis: Z
-      Channel Name: intensity
+      Channel Name: intensity  # 强度通道
       Class: rviz/PointCloud2
-      Color: 255; 255; 255
-      Color Transformer: FlatColor
-      Decay Time: 0
+      Color: 255; 255; 255  # 白色
+      Color Transformer: FlatColor  # 使用纯色
+      Decay Time: 0  # 不衰减，立即刷新
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
@@ -74,14 +97,19 @@ Visualization Manager:
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
-      Size (Pixels): 3
+      Size (Pixels): 3  # 点大小3像素
       Size (m): 0.05000000074505806
-      Style: Points
+      Style: Points  # 点渲染模式
       Topic: /detection/pointcloud
       Unreliable: false
-      Use Fixed Frame: true
+      Use Fixed Frame: true  # 使用全局固定坐标系
       Use rainbow: false
       Value: true
+    
+    # ------------------------------------------------------------
+    # PointPillars 3D边界框 - 目标检测结果
+    # Topic: /detection/bboxes_3d
+    # ------------------------------------------------------------
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /detection/bboxes_3d
@@ -90,6 +118,11 @@ Visualization Manager:
         {}
       Queue Size: 100
       Value: true
+    
+    # ------------------------------------------------------------
+    # MCTrack 跟踪结果 - 多目标跟踪轨迹和ID
+    # Topic: /mctrack/markers
+    # ------------------------------------------------------------
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /mctrack/markers
@@ -98,68 +131,86 @@ Visualization Manager:
         {}
       Queue Size: 100
       Value: true
+    
+    # ============================================================
+    # FAST-LIO 建图模块 - LiDAR惯性里程计与建图
+    # ============================================================
     - Class: rviz/Group
       Displays:
-        # FAST-LIO current points
-        - Alpha: 0.1
+        # ------------------------------------------------------------
+        # FAST-LIO 建图结果点云
+        # Topic: /cloud_registered
+        # 坐标系: camera_init（不随全局固定坐标系变化）
+        # ------------------------------------------------------------
+        - Alpha: 0.1  # 透明度0.1（较透明，便于观察其他元素）
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
             Max Value: 10
             Min Value: -10
             Value: true
           Axis: Z
-          Channel Name: intensity
+          Channel Name: intensity  # 强度通道
           Class: rviz/PointCloud2
-          Color: 255; 255; 255
-          Color Transformer: Intensity
-          Decay Time: 1000
+          Color: 255; 255; 255  # 白色
+          Color Transformer: Intensity  # 使用强度值着色
+          Decay Time: 1000  # 保留1000秒（用于累积地图）
           Enabled: true
-          Invert Rainbow: true
+          Invert Rainbow: true  # 反转彩虹色
           Max Color: 255; 255; 255
           Min Color: 0; 0; 0
           Name: FAST-LIO Current Points
           Position Transformer: XYZ
-          Queue Size: 100000
+          Queue Size: 100000  # 大队列，保存更多历史点云
+          Reference Frame: camera_init  # 固定在camera_init坐标系
           Selectable: true
-          Size (Pixels): 1
+          Size (Pixels): 1  # 点大小1像素（建图点云较密集）
           Size (m): 0.009999999776482582
           Style: Points
-          Topic: /cloud_registered
+          Topic: /cloud_registered  # 配准后的点云
           Unreliable: false
-          Use Fixed Frame: true
-          Use rainbow: true
+          Use Fixed Frame: false  # 不使用全局固定坐标系，使用自定义Reference Frame
+          Use rainbow: true  # 使用彩虹色
           Value: true
 
-        # FAST-LIO 轨迹
-        - Alpha: 1
-          Buffer Length: 2
+        # ------------------------------------------------------------
+        # FAST-LIO 轨迹路径
+        # Topic: /path
+        # 显示LiDAR里程计的运动轨迹
+        # ------------------------------------------------------------
+        - Alpha: 1  # 不透明
+          Buffer Length: 2  # 缓冲长度
           Class: rviz/Path
-          Color: 255; 170; 0
+          Color: 255; 170; 0  # 橙色轨迹
           Enabled: true
           Head Diameter: 0
           Head Length: 0
           Length: 0.30000001192092896
-          Line Style: Billboards
-          Line Width: 0.20000000298023224
+          Line Style: Billboards  # 广告牌渲染模式（始终面向相机）
+          Line Width: 0.20000000298023224  # 线宽
           Name: FAST-LIO Path
           Offset:
             X: 0
             Y: 0
             Z: 0
-          Pose Color: 255; 170; 0
+          Pose Color: 255; 170; 0  # 姿态颜色（橙色）
           Pose Style: None
           Queue Size: 10
           Radius: 0.029999999329447746
           Shaft Diameter: 0.4000000059604645
           Shaft Length: 0.4000000059604645
-          Topic: /path
+          Topic: /path  # 路径话题
           Unreliable: false
           Value: true
 
 
+        # ------------------------------------------------------------
+        # FAST-LIO 里程计
+        # Topic: /Odometry
+        # 显示当前LiDAR位姿（坐标轴）
+        # ------------------------------------------------------------
         - Angle Tolerance: 0.009999999776482582
           Class: rviz/Odometry
-          Covariance:
+          Covariance:  # 协方差显示（已禁用）
             Orientation:
               Alpha: 0.5
               Color: 255; 127; 39
@@ -175,97 +226,113 @@ Visualization Manager:
               Value: false
             Value: false
           Enabled: true
-          Keep: 1
+          Keep: 1  # 仅保留最新的1个里程计姿态
           Name: FAST-LIO Odometry
           Position Tolerance: 0.0010000000474974513
           Queue Size: 10
           Shape:
             Alpha: 1
-            Axes Length: 1
+            Axes Length: 1  # 坐标轴长度1米
             Axes Radius: 0.20000000298023224
-            Color: 255; 127; 39
+            Color: 255; 127; 39  # 橙色
             Head Length: 0
             Head Radius: 0
             Shaft Length: 0.05000000074505806
             Shaft Radius: 0.05000000074505806
-            Value: Axes
-          Topic: /Odometry
+            Value: Axes  # 显示为坐标轴
+          Topic: /Odometry  # 里程计话题
           Unreliable: false
           Value: true
       Enabled: true
-      Name: FAST-LIO Mapping
+      Name: FAST-LIO Mapping  # 组名称
+    
+    # ------------------------------------------------------------
+    # 坐标轴显示 - 显示全局坐标系方向
+    # ------------------------------------------------------------
     - Alpha: 1
       Class: rviz/Axes
       Enabled: true
-      Length: 5
+      Length: 5  # 坐标轴长度5米
       Name: Coordinate Axes
-      Radius: 0.5
-      Reference Frame: <Fixed Frame>
+      Radius: 0.5  # 坐标轴半径
+      Reference Frame: <Fixed Frame>  # 使用全局固定坐标系
       Show Trail: false
       Value: true
   Enabled: true
+  # ============================================================
+  # 全局选项
+  # ============================================================
   Global Options:
-    Background Color: 48; 48; 48
-    Default Light: true
-    Fixed Frame: camera_init
-    Frame Rate: 30
+    Background Color: 48; 48; 48  # 深灰色背景
+    Default Light: true  # 使用默认光照
+    Fixed Frame: camera_init  # 全局固定坐标系（Velodyne LiDAR坐标系）
+    Frame Rate: 30  # 刷新率30Hz
   Name: root
+  # ============================================================
+  # 工具栏 - 交互工具
+  # ============================================================
   Tools:
     - Class: rviz/Interact
-      Hide Inactive Objects: true
-    - Class: rviz/MoveCamera
-    - Class: rviz/Select
-    - Class: rviz/FocusCamera
-    - Class: rviz/Measure
-    - Class: rviz/SetInitialPose
+      Hide Inactive Objects: true  # 隐藏非活动对象
+    - Class: rviz/MoveCamera  # 移动相机工具
+    - Class: rviz/Select  # 选择工具
+    - Class: rviz/FocusCamera  # 聚焦相机工具
+    - Class: rviz/Measure  # 测量工具
+    - Class: rviz/SetInitialPose  # 设置初始位姿（用于定位）
       Theta std deviation: 0.2617993950843811
       Topic: /initialpose
       X std deviation: 0.5
       Y std deviation: 0.5
-    - Class: rviz/SetGoal
+    - Class: rviz/SetGoal  # 设置导航目标点
       Topic: /move_base_simple/goal
-    - Class: rviz/PublishPoint
+    - Class: rviz/PublishPoint  # 发布点击点
       Single click: true
       Topic: /clicked_point
   Value: true
+  # ============================================================
+  # 视图配置 - 3D相机视角
+  # ============================================================
   Views:
     Current:
-      Class: rviz/Orbit
-      Distance: 726.615478515625
-      Enable Stereo Rendering:
+      Class: rviz/Orbit  # 轨道相机（围绕焦点旋转）
+      Distance: 726.615478515625  # 相机距离焦点的距离
+      Enable Stereo Rendering:  # 立体渲染（VR相关，已禁用）
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
-      Field of View: 0.7853981852531433
-      Focal Point:
+      Field of View: 0.7853981852531433  # 视场角（弧度）≈45度
+      Focal Point:  # 焦点位置（相机注视的中心点）
         X: 175.21633911132812
         Y: -116.68792724609375
         Z: -179.06602478027344
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
-      Invert Z Axis: false
+      Invert Z Axis: false  # 不反转Z轴
       Name: Current View
-      Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5
-      Target Frame: <Fixed Frame>
-      Yaw: 0.5
-    Saved: ~
+      Near Clip Distance: 0.009999999776482582  # 近裁剪面距离
+      Pitch: 0.5  # 俯仰角
+      Target Frame: <Fixed Frame>  # 目标坐标系
+      Yaw: 0.5  # 偏航角
+    Saved: ~  # 未保存自定义视图
+# ============================================================
+# 窗口几何配置 - RViz窗口布局和尺寸
+# ============================================================
 Window Geometry:
   Displays:
-    collapsed: false
-  Height: 2226
-  Hide Left Dock: false
-  Hide Right Dock: true
+    collapsed: false  # 显示面板展开
+  Height: 2226  # 窗口高度（像素）
+  Hide Left Dock: false  # 显示左侧面板
+  Hide Right Dock: true  # 隐藏右侧面板
   QMainWindow State: 000000ff00000000fd00000004000000000000047d000007acfc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b000fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000006e000007ac0000018200fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c000002610000000100000289000007acfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000006e000007ac0000013200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000011200000005efc0100000002fb0000000800540069006d0065010000000000001120000006dc00fffffffb0000000800540069006d0065010000000000000450000000000000000000000c97000007ac00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
-    collapsed: false
+    collapsed: false  # 选择面板展开
   Time:
-    collapsed: false
+    collapsed: false  # 时间面板展开
   Tool Properties:
-    collapsed: false
+    collapsed: false  # 工具属性面板展开
   Views:
-    collapsed: true
-  Width: 4384
-  X: 0
-  Y: 54
+    collapsed: true  # 视图面板折叠
+  Width: 4384  # 窗口宽度（像素）
+  X: 0  # 窗口X位置（屏幕坐标）
+  Y: 54  # 窗口Y位置（屏幕坐标）

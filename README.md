@@ -212,7 +212,7 @@ roscore
 #### 3. **【可选】生成或更新默认 rosbag**
 
 ```bash
-./Scripts/utils/kitti_tracking_to_rosbag.py --seq 20
+./Scripts/utils/kitti_tracking_to_rosbag.py --seq 20  #制作第20号场景的rosbag
 ```
 
 #### 4. **启动 PointPillars 检测节点（终端 B）**
@@ -241,15 +241,7 @@ roscore
 > - 无需任何相机标定文件或序列号
 > - 检测阈值：`score >= 0.2`（可在 `mctrack_online_node.py` 中调整）
 
-#### 7. **打开 RViz（终端 E，与 rosbag 同时运行）**
-
-```bash
-./Scripts/rviz/run_rviz.sh
-```
-
-   使用 `Scripts/rviz/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
-
-#### 8. **播放 rosbag（终端 F，保持运行）**
+#### 7. **播放 rosbag（终端 F，保持运行）**
 
 ```bash
 rosparam set use_sim_time true
@@ -260,6 +252,14 @@ rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag --clock --loop
 # 城市街道行人密集场景
 rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop 
 ```
+
+#### 8. **打开 RViz（终端 E，与 rosbag 同时运行）**
+
+```bash
+./Scripts/rviz/run_rviz.sh
+```
+
+   使用 `Scripts/rviz/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
 
 ### 单独FastLio可视化实验
 
