@@ -6,6 +6,12 @@
 
 这是ME5400高级机器人与自主系统课程项目，聚焦于**FAST-LIO 里程计与 MCTrack 多目标跟踪的融合管线**，用于自动驾驶场景下将实时点云/IMU 位姿与三维目标检测数据统一处理并可视化。
 
+## 🤖 面向协助代理的提示
+
+- 请始终使用中文与项目成员沟通。
+- 修改任意代码或脚本后，务必同步更新 `README.md`，保持流程说明与实现一致。
+- 在修改完代码，请尝试运行，确保运行顺利再交付
+
 ## 📋 项目概述
 
 本项目包含两个主要组件：
@@ -24,7 +30,6 @@
 
 ## 📁 项目结构
 
-```
 ME5400/
 ├── catkin_ws/                         # ROS 工作空间
 │   ├── src/fast_lio/                  # FAST-LIO2 源码（含定制化配置、输出目录等）
@@ -36,15 +41,15 @@ ME5400/
 ├── MCTrack/                           # 多目标跟踪框架（配置、评估与跟踪算法）
 ├── MMDET3D/                           # PointPillars 检测推理环境与脚本
 ├── Scripts/                           # 一键启动、数据处理与 RViz 配置
-│   ├── run_mctrack_online.sh          # 串联 rosbag、FAST-LIO、MCTrack、RViz 的总控脚本
-│   ├── run_mctrack_online_node.sh     # 单独启动 MCTrack 在线节点
-│   ├── run_fastlio_mapping.sh         # 启动 FAST-LIO 映射节点
+│   ├── run_fastlio.sh                 # FAST-LIO 映射与桥接入口
+│   ├── run_mctrack_online_node.sh     # 启动 MCTrack 在线节点
+│   ├── play_kitti_rosbag.sh           # rosbag 播放辅助脚本
 │   ├── kitti_tracking_to_rosbag.py    # 将 KITTI Tracking 转换为 rosbag
+│   ├── run_rviz.sh                    # 加载项目 RViz 配置
 │   └── rviz_cfg/                      # RViz 可视化配置（ME5400、loam_livox 等）
 ├── Data_Tracking/                     # KITTI Tracking 数据与示例 rosbag
 ├── PCD/                               # FAST-LIO 自动导出的全局点云
 └── README.md
-```
 
 ## 🛠️ 环境要求
 
@@ -174,33 +179,42 @@ pip install -r requirements.txt
 
 #### 1. **启动 roscore（终端 A）**
 
-   ```bash
-   roscore
-   ```
+```bash
+roscore
+```
+
 #### 2. **【首次或代码更新后】编译工作空间**
 
-   ```bash
-   ./Scripts/build_catkin_ws.sh
-   ```
+```bash
+./Scripts/build_catkin_ws.sh
+```
+
 #### 3. **【可选】生成或更新默认 rosbag**
 
-   ```bash
-   ./Scripts/kitti_tracking_to_rosbag.py --seq 20
-   ```
+```bash
+./Scripts/kitti_tracking_to_rosbag.py --seq 20
+```
+
 #### 4. **启动 PointPillars 检测节点（终端 C）**
 
-   ```bash
-   conda activate ME5400
-   python MMDET3D/local/ros/nodes/kitti_pointpillars_bag_node.py
-   ```
+```bash
+conda activate ME5400
+python MMDET3D/local/ros/nodes/kitti_pointpillars_bag_node.py
+```
 
    该节点会初始化 PointPillars 推理器并等待 `/kitti/velo/pointcloud` 点云流；需要时可改用 `MMDET3D/local/ros/scripts/run_bag_node.sh` 自动拉起 roscore、检测节点与 rosbag。
+
 #### 5. **播放 rosbag（终端 D，保持运行）**
 
-   ```bash
-   rosparam set use_sim_time true
-   rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag --clock --loop
-   ```
+```bash
+rosparam set use_sim_time true
+   
+# 高速公路场景
+rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag --clock --loop
+   
+#行人多场景
+rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop 
+```
 
 #### 6. **启动 FAST-LIO 系统**
 
@@ -210,22 +224,23 @@ pip install -r requirements.txt
 
 #### 7. **启动 MCTrack 在线节点（终端 H）**
 
-   ```bash
-   ./Scripts/run_mctrack_online_node.sh
-   ```
+```bash
+./Scripts/run_mctrack_online_node.sh
+```
 
-   节点订阅 `/mctrack/lidar_pose` 与 `/detection/kitti_tracking`，实时发布 `/mctrack/markers`。
+节点订阅 `/detection/lidar_tracking`（PointPillars LiDAR 坐标系检测）和 `/mctrack/lidar_pose`（FAST-LIO 位姿），实时发布跟踪结果到 `/mctrack/markers`。
+
+> **说明**：本项目是纯 LiDAR 系统。PointPillars 直接输出 LiDAR 坐标系的 3D 检测框，MCTrack 作为纯跟踪算法只需要检测框和位姿信息，**无需任何标定文件或序列号**。
 
 #### 8. **【可选】打开 RViz（终端 E，与 rosbag 同时运行）**
 
-   ```bash
-   ./Scripts/run_rviz.sh
-   ```
+```bash
+./Scripts/run_rviz.sh
+```
 
    使用 `Scripts/rviz_cfg/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
 
 ### 单独FastLio可视化实验
-
 
 ## 📊 实验结果
 

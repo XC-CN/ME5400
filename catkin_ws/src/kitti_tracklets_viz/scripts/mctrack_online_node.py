@@ -138,6 +138,7 @@ def resolve_dataset_root(dataset_param: Optional[str]) -> Path:
 
 
 def get_global_yaw(rot_y: float, lidar2global: np.ndarray) -> float:
+    """从相机坐标系yaw转换到全局坐标系yaw"""
     cos_theta = lidar2global[0, 0]
     sin_theta = lidar2global[1, 0]
     cos_theta = max(-1.0, min(1.0, cos_theta))
@@ -148,54 +149,51 @@ def get_global_yaw(rot_y: float, lidar2global: np.ndarray) -> float:
     return angle_wrap(new_yaw + theta)
 
 
+def get_global_yaw_from_lidar(lidar_yaw: float, lidar2global: np.ndarray) -> float:
+    """从LiDAR坐标系yaw转换到全局坐标系yaw"""
+    cos_theta = lidar2global[0, 0]
+    sin_theta = lidar2global[1, 0]
+    cos_theta = max(-1.0, min(1.0, cos_theta))
+    theta = math.acos(cos_theta)
+    if sin_theta < 0:
+        theta = 2 * math.pi - theta
+    # LiDAR坐标系：直接加上旋转角
+    return angle_wrap(lidar_yaw + theta)
+
+
 class MCTrackOnlineNode:
     def __init__(self) -> None:
-        self.seq = f"{int(rospy.get_param('~seq', 19)):04d}"
-        dataset_param = rospy.get_param("~dataset_root", None)
-        dataset_root = resolve_dataset_root(dataset_param)
-        rospy.loginfo("数据集根目录: %s", dataset_root)
-
-        seq_root = dataset_root / "sequences" if (dataset_root / "sequences").is_dir() else dataset_root
-        calib_dir = seq_root / "calib" if (seq_root / "calib").is_dir() else None
-        if calib_dir and calib_dir.is_dir():
-            calib_path = calib_dir / f"{self.seq}.txt"
-        else:
-            calib_path = seq_root / self.seq / "calib.txt"
         config_path = Path(rospy.get_param("~config", MCTrack_DIR / "config" / "kitti_fastlio.yaml"))
         self.pose_topic = rospy.get_param("~pose_topic", "/mctrack/lidar_pose")
-        self.det_topic = rospy.get_param("~det_topic", "/detection/kitti_tracking")
+        # 默认使用LiDAR坐标系检测（PointPillars直接输出）
+        self.det_topic = rospy.get_param("~det_topic", "/detection/lidar_tracking")
         self.frame_rate = float(rospy.get_param("~frame_rate", 10.0))
         self.arrow_length = float(rospy.get_param("~arrow_length", 3.0))
         self.history_size = int(rospy.get_param("~history_size", 200))
-
-        if not calib_path.exists():
-            raise FileNotFoundError(f"Calibration file not found: {calib_path}")
 
         with config_path.open("r") as f:
             self.cfg = yaml.safe_load(f)
 
         self.tracker = Base3DTracker(self.cfg)
-        calib_data = read_calib(calib_path)
-        if "Tr_velo_cam" not in calib_data:
-            raise ValueError("Calibration missing Tr_velo_cam")
-        lidar2camera = np.vstack((calib_data["Tr_velo_cam"].reshape(3, 4), [0, 0, 0, 1]))
-        camera2image = np.eye(4)
-        camera2image[:3, :4] = calib_data["P2"].reshape(3, 4)
-        self.camera2lidar = np.linalg.inv(lidar2camera)
-        self.lidar2camera = lidar2camera
-        self.camera2image = camera2image
-        self.cameras_transform_matrix = build_camera_info(self.lidar2camera, self.camera2image)
+        
+        # PointPillars直接输出LiDAR坐标系，无需相机标定
+        # MCTrack只需要知道检测框在LiDAR坐标系即可
+        self.cameras_transform_matrix = {"CAM_FRONT": {
+            "lidar2camera": None,
+            "camera2image": None,
+            "camera_token": None,
+            "camera_image": None,
+        }}
 
         self.pose_matrix: Optional[np.ndarray] = None
         self.traj_history: Dict[int, List[np.ndarray]] = defaultdict(list)
 
         self.marker_pub = rospy.Publisher("/mctrack/markers", MarkerArray, queue_size=1)
         self.pose_sub = rospy.Subscriber(self.pose_topic, PoseStamped, self.pose_callback, queue_size=20)
-        self.det_sub = rospy.Subscriber(self.det_topic, String, self.kitti_tracking_callback, queue_size=10)
+        self.det_sub = rospy.Subscriber(self.det_topic, String, self.lidar_tracking_callback, queue_size=10)
+        
         rospy.loginfo(
-            "MCTrackOnlineNode 初始化完成 (序列=%s, 标定=%s, 配置=%s, 检测话题=%s)",
-            self.seq,
-            calib_path,
+            "MCTrackOnlineNode 初始化完成 (配置=%s, 检测话题=%s)",
             config_path,
             self.det_topic,
         )
@@ -203,8 +201,9 @@ class MCTrackOnlineNode:
     def pose_callback(self, msg: PoseStamped) -> None:
         self.pose_matrix = pose_to_matrix(msg)
 
-    def kitti_tracking_callback(self, msg: String) -> None:
-        detection_msg = self._convert_kitti_tracking_to_array(msg)
+    def lidar_tracking_callback(self, msg: String) -> None:
+        """处理LiDAR坐标系检测结果"""
+        detection_msg = self._convert_lidar_tracking_to_array(msg)
         if detection_msg is not None:
             self.det_callback(detection_msg)
 
@@ -239,11 +238,12 @@ class MCTrackOnlineNode:
                 continue
             dims = np.array(det.dimensions, dtype=np.float64)
             lwh = [dims[2], dims[1], dims[0]]
-            camera_xyz = np.array(det.location, dtype=np.float64)
-            lidar_xyz = camera_to_lidar(camera_xyz, det.rotation_y, self.camera2lidar)
-            lidar_xyz[2] += lwh[2] / 2.0
+            
+            # 检测框已经在LiDAR坐标系，直接转换到全局坐标系
+            lidar_xyz = np.array(det.location, dtype=np.float64)
             global_xyz = project_global(lidar_xyz, lidar2global)
-            global_yaw = get_global_yaw(det.rotation_y, lidar2global)
+            lidar_yaw = det.rotation_y
+            global_yaw = get_global_yaw_from_lidar(lidar_yaw, lidar2global)
             global_orientation = quaternion_from_yaw(global_yaw)
 
             bbox = {
@@ -268,17 +268,67 @@ class MCTrackOnlineNode:
         outputs = self.tracker.track_single_frame(frame)
         self.publish_markers(outputs, header)
 
-    def _convert_kitti_tracking_to_array(self, msg: String) -> Optional[Detection3DArray]:
+    def _convert_lidar_tracking_to_array(self, msg: String) -> Optional[Detection3DArray]:
+        """
+        将LiDAR坐标系tracking格式转换为Detection3DArray
+        格式：frame track_id class score x y z l w h yaw
+        """
         data = msg.data.strip()
         if not data:
             empty_msg = Detection3DArray()
-            empty_msg.header = Header(stamp=rospy.Time.now(), frame_id=f"seq_{self.seq}")
+            empty_msg.header = Header(stamp=rospy.Time.now(), frame_id="velodyne")
             return empty_msg
 
         lines = [line.strip() for line in data.splitlines() if line.strip()]
         stamp = rospy.Time.now()
         array_msg = Detection3DArray()
-        array_msg.header = Header(stamp=stamp, frame_id=f"seq_{self.seq}")
+        array_msg.header = Header(stamp=stamp, frame_id="velodyne")
+
+        for line in lines:
+            # LiDAR tracking format: frame track_id class score x y z l w h yaw
+            parts = line.split()
+            if len(parts) < 11:
+                rospy.logwarn_throttle(
+                    10.0,
+                    "忽略字段数量不足的 LiDAR tracking 行 (%d 项): %s",
+                    len(parts),
+                    line,
+                )
+                continue
+            try:
+                det_msg = Detection3D()
+                det_msg.header = Header(stamp=stamp, frame_id=array_msg.header.frame_id)
+                det_msg.frame = int(float(parts[0]))
+                det_msg.track_id = int(float(parts[1]))
+                det_msg.cls = parts[2]
+                det_msg.score = float(parts[3])
+                # LiDAR坐标系：直接使用xyz作为location
+                x, y, z = float(parts[4]), float(parts[5]), float(parts[6])
+                l, w, h = float(parts[7]), float(parts[8]), float(parts[9])
+                yaw = float(parts[10])
+                
+                # 存储为Detection3D消息（已经在LiDAR坐标系）
+                det_msg.location = [x, y, z]
+                det_msg.dimensions = [h, w, l]  # KITTI格式是h,w,l
+                det_msg.rotation_y = yaw
+                det_msg.bbox2d = [0.0, 0.0, 0.0, 0.0]  # LiDAR检测无2D bbox
+                array_msg.detections.append(det_msg)
+            except (ValueError, IndexError) as exc:
+                rospy.logwarn_throttle(10.0, "解析 LiDAR tracking 行 '%s' 失败: %s", line, exc)
+        return array_msg
+
+    def _convert_kitti_tracking_to_array(self, msg: String) -> Optional[Detection3DArray]:
+        """已弃用：保留用于向后兼容"""
+        data = msg.data.strip()
+        if not data:
+            empty_msg = Detection3DArray()
+            empty_msg.header = Header(stamp=rospy.Time.now(), frame_id="velodyne")
+            return empty_msg
+
+        lines = [line.strip() for line in data.splitlines() if line.strip()]
+        stamp = rospy.Time.now()
+        array_msg = Detection3DArray()
+        array_msg.header = Header(stamp=stamp, frame_id="velodyne")
 
         for line in lines:
             # KITTI tracking format: frame track_id type truncation occlusion alpha bbox_left bbox_top bbox_right bbox_bottom h w l x y z yaw score

@@ -86,6 +86,7 @@ class KittiPointPillarsBagNode:
         self.marker_pub = rospy.Publisher('/detection/bboxes_3d', MarkerArray, queue_size=10)
         self.status_pub = rospy.Publisher('/detection/status', String, queue_size=10)
         self.kitti_tracking_pub = rospy.Publisher('/detection/kitti_tracking', String, queue_size=10)
+        self.lidar_tracking_pub = rospy.Publisher('/detection/lidar_tracking', String, queue_size=10)  # 新增：LiDAR坐标系
         self.pointcloud_pub = rospy.Publisher('/detection/pointcloud', PointCloud2, queue_size=10)
         self.imu_pub = rospy.Publisher('/detection/imu', Imu, queue_size=10)
         
@@ -258,7 +259,7 @@ class KittiPointPillarsBagNode:
             marker_array = self._detections_to_markerarray(detections, marker_frame_id, original_stamp)
             self.marker_pub.publish(marker_array)
             
-            # 转换为KITTI tracking格式并发布
+            # 转换为KITTI tracking格式并发布（相机坐标系，保留用于兼容）
             if cam_info is not None:
                 cam_centers, dims_kitti, cam_yaw, class_names, scores, bbox2d_list = cam_info
                 kitti_tracking = self._detections_to_kitti_tracking(
@@ -269,6 +270,12 @@ class KittiPointPillarsBagNode:
             kitti_msg = String()
             kitti_msg.data = kitti_tracking
             self.kitti_tracking_pub.publish(kitti_msg)
+            
+            # 直接发布LiDAR坐标系检测结果（无需相机标定）
+            lidar_tracking = self._detections_to_lidar_tracking(frame_id, detections)
+            lidar_msg = String()
+            lidar_msg.data = lidar_tracking
+            self.lidar_tracking_pub.publish(lidar_msg)
             
             # 发布原始点云（可选）
             self.pointcloud_pub.publish(msg)
@@ -594,6 +601,43 @@ class KittiPointPillarsBagNode:
         
         return marker_array
     
+    def _detections_to_lidar_tracking(
+        self,
+        frame_id: int,
+        detections: Dict[str, Any],
+    ) -> str:
+        """
+        将检测结果转换为 LiDAR 坐标系 tracking 格式字符串
+        格式：frame track_id class score x y z l w h yaw
+        无需相机标定，直接使用 LiDAR 坐标系的检测结果
+        """
+        boxes = detections.get('bboxes_3d')
+        scores = detections.get('scores_3d')
+        labels = detections.get('labels_3d')
+        class_names = detections.get('class_names', [])
+        
+        if boxes is None or boxes.size == 0:
+            return ""
+        
+        boxes_np = np.asarray(boxes, dtype=np.float32)
+        scores_np = np.asarray(scores, dtype=np.float32)
+        
+        lidar_lines: List[str] = []
+        for idx in range(boxes_np.shape[0]):
+            # LiDAR 坐标系：boxes_np[idx] = [x, y, z, l, w, h, yaw]
+            x, y, z, l, w, h, yaw = boxes_np[idx]
+            score = scores_np[idx]
+            cls_name = class_names[idx] if idx < len(class_names) else "Unknown"
+            
+            # 格式：frame track_id class score x y z l w h yaw
+            lidar_line = (
+                f"{frame_id} {idx} {cls_name} {score:.6f} "
+                f"{x:.6f} {y:.6f} {z:.6f} {l:.6f} {w:.6f} {h:.6f} {yaw:.6f}"
+            )
+            lidar_lines.append(lidar_line)
+        
+        return '\n'.join(lidar_lines)
+    
     def _detections_to_kitti_tracking(
         self,
         frame_id: int,
@@ -604,7 +648,7 @@ class KittiPointPillarsBagNode:
         scores: np.ndarray,
         bbox2d_list: List[List[float]],
     ) -> str:
-        """将检测结果转换为KITTI tracking格式字符串。"""
+        """将检测结果转换为KITTI tracking格式字符串（相机坐标系，需要标定）。"""
         kitti_lines: List[str] = []
 
         for idx, cls_name in enumerate(class_names):
