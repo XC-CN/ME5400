@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+ROOT_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)
 CATKIN_WS="$ROOT_DIR/catkin_ws"
 
 usage() {
@@ -51,7 +52,7 @@ case "$MODE" in
     fi
     ;;
   pose_bridge|bridge|pose)
-    rosrun kitti_tracklets_viz fastlio_pose_bridge.py "$@"
+    rosrun ME5400 fastlio_pose_bridge.py "$@"
     ;;
   both)
     if [[ $# -gt 0 ]]; then
@@ -66,7 +67,7 @@ case "$MODE" in
       fi
     }
     trap cleanup EXIT INT TERM
-    rosrun kitti_tracklets_viz fastlio_pose_bridge.py
+    rosrun ME5400 fastlio_pose_bridge.py
     wait "$MAPPING_PID" || true
     ;;
   *)

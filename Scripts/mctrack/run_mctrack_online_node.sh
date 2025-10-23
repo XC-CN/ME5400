@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+ROOT_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)
 CATKIN_WS="$ROOT_DIR/catkin_ws"
 DEFAULT_CONFIG="$ROOT_DIR/MCTrack/config/kitti_fastlio.yaml"
 
@@ -43,5 +44,5 @@ echo "[信息] 启动MCTrack在线跟踪节点"
 echo "[信息] 订阅话题: /detection/lidar_tracking (PointPillars LiDAR坐标系检测)"
 echo "[信息]           /mctrack/lidar_pose (FAST-LIO 位姿)"
 
-rosrun kitti_tracklets_viz mctrack_online_node.py \
+rosrun ME5400 mctrack_online_node.py \
   _config:="$CONFIG_PATH"

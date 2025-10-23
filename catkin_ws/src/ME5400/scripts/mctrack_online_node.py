@@ -27,7 +27,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from tracker.frame import Frame  # noqa: E402
 from tracker.bbox import BBox  # noqa: E402
 from tracker.base_tracker import Base3DTracker  # noqa: E402
-from kitti_tracklets_viz.msg import Detection3D, Detection3DArray  # noqa: E402
+from ME5400.msg import Detection3D, Detection3DArray  # noqa: E402
 
 
 def read_calib(calib_path: Path) -> Dict[str, np.ndarray]:

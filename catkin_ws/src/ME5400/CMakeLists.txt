@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(kitti_tracklets_viz)
+project(ME5400)
 
 find_package(catkin REQUIRED COMPONENTS
   rospy

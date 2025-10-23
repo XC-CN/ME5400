@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>kitti_tracklets_viz</name>
+  <name>ME5400</name>
   <version>0.0.1</version>
   <description>Publish KITTI tracklet 3D bounding boxes while playing LiDAR bag.</description>
   <maintainer email="user@example.com">User</maintainer>

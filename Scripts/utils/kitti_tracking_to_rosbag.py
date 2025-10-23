@@ -22,7 +22,7 @@ if str(THIS_DIR) not in sys.path:
 
 from kitti_tracking_loader import KITTITrackingLoader  # noqa: E402
 try:
-    from kitti_tracklets_viz.msg import Detection3D, Detection3DArray  # noqa: E402
+    from ME5400.msg import Detection3D, Detection3DArray  # noqa: E402
 except ImportError:  # pragma: no cover - optional dependency
     Detection3D = Detection3DArray = None
 
@@ -341,7 +341,7 @@ def main():
     if args.include_detections:
         if Detection3D is None or Detection3DArray is None:
             raise ImportError(
-                "kitti_tracklets_viz ROS messages not found; install package or run with --include_detections False"
+                "ME5400 ROS messages not found; install package or run with --include_detections False"
             )
         det_root = args.detector_root or default_detector_root(dataset_root)
         if det_root and not det_root.is_absolute():
