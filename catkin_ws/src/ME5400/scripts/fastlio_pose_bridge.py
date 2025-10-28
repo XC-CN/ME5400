@@ -17,7 +17,7 @@ def odom_to_pose(msg: Odometry) -> PoseStamped:
 
 class FastLioPoseBridge:
     def __init__(self) -> None:
-        self.odom_topic = rospy.get_param("~odom_topic", "/Odometry")
+        self.odom_topic = rospy.get_param("~odom_topic", "/Odometry_imu_predicted")
         self.pose_topic = rospy.get_param("~pose_topic", "/mctrack/lidar_pose")
         self.frame_id = rospy.get_param("~frame_id", "map")
         self.child_frame_id = rospy.get_param("~child_frame_id", "velodyne")

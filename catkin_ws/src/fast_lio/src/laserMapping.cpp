@@ -783,6 +783,28 @@ void publish_odometry(const ros::Publisher & pubOdomAftMapped)
     br.sendTransform( tf::StampedTransform( transform, odomAftMapped.header.stamp, "camera_init", "body" ) );
 }
 
+void publish_odometry_imu_predicted(const ros::Publisher & pubOdomImuPredicted)
+{
+    nav_msgs::Odometry odomImuPredicted;
+    odomImuPredicted.header.frame_id = "camera_init";
+    odomImuPredicted.child_frame_id = "body";
+    odomImuPredicted.header.stamp = ros::Time().fromSec(lidar_end_time);
+    set_posestamp(odomImuPredicted.pose);
+    pubOdomImuPredicted.publish(odomImuPredicted);
+    
+    auto P = kf.get_P();
+    for (int i = 0; i < 6; i ++)
+    {
+        int k = i < 3 ? i + 3 : i - 3;
+        odomImuPredicted.pose.covariance[i*6 + 0] = P(k, 3);
+        odomImuPredicted.pose.covariance[i*6 + 1] = P(k, 4);
+        odomImuPredicted.pose.covariance[i*6 + 2] = P(k, 5);
+        odomImuPredicted.pose.covariance[i*6 + 3] = P(k, 0);
+        odomImuPredicted.pose.covariance[i*6 + 4] = P(k, 1);
+        odomImuPredicted.pose.covariance[i*6 + 5] = P(k, 2);
+    }
+}
+
 void publish_path(const ros::Publisher pubPath)
 {
     set_posestamp(msg_body_pose);
@@ -1025,6 +1047,8 @@ int main(int argc, char** argv)
             ("/Laser_map", 100000);
     ros::Publisher pubOdomAftMapped = nh.advertise<nav_msgs::Odometry> 
             ("/Odometry", 100000);
+    ros::Publisher pubOdomImuPredicted = nh.advertise<nav_msgs::Odometry>
+            ("/Odometry_imu_predicted", 100000);
     ros::Publisher pubPath          = nh.advertise<nav_msgs::Path> 
             ("/path", 100000);
 //------------------------------------------------------------------------------------------------------
@@ -1064,6 +1088,16 @@ int main(int argc, char** argv)
             p_imu->Process(Measures, kf, feats_undistort);
             state_point = kf.get_x();
             pos_lid = state_point.pos + state_point.rot * state_point.offset_T_L_I;
+            
+            // 更新四元数，用于后续发布 IMU 预测位姿
+            euler_cur = SO3ToEuler(state_point.rot);
+            geoQuat.x = state_point.rot.coeffs()[0];
+            geoQuat.y = state_point.rot.coeffs()[1];
+            geoQuat.z = state_point.rot.coeffs()[2];
+            geoQuat.w = state_point.rot.coeffs()[3];
+            
+            /******* Publish IMU predicted odometry (before LiDAR update) *******/
+            publish_odometry_imu_predicted(pubOdomImuPredicted);
 
             if (feats_undistort->empty() || (feats_undistort == NULL))
             {
