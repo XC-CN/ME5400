@@ -1,4 +1,5 @@
 #include "preprocess.h"
+#include <algorithm>
 
 #define RETURN0     0x00
 #define RETURN0AND1 0x10
@@ -29,6 +30,19 @@ Preprocess::Preprocess()
   jump_down_limit = cos(jump_down_limit/180*M_PI);
   cos160 = cos(cos160/180*M_PI);
   smallp_intersect = cos(smallp_intersect/180*M_PI);
+  use_dynamic_weights = false;
+  dynamic_speed_ref = 10.0f;
+  dynamic_acc_ref = 4.0f;
+  dynamic_speed_penalty = 0.5f;
+  dynamic_acc_penalty = 0.3f;
+  dynamic_score_penalty = 0.2f;
+  dynamic_min_weight = 0.2f;
+  dynamic_bbox_margin_xy = 0.5f;
+  dynamic_bbox_margin_z = 0.5f;
+  dynamic_object_timeout = 1.0;
+  dynamic_min_track_length = 3;
+  tracked_objects_ = std::make_shared<std::vector<DynamicObject>>();
+  active_scan_time_ = 0.0;
 }
 
 Preprocess::~Preprocess() {}
@@ -39,6 +53,92 @@ void Preprocess::set(bool feat_en, int lid_type, double bld, int pfilt_num)
   lidar_type = lid_type;
   blind = bld;
   point_filter_num = pfilt_num;
+}
+
+void Preprocess::updateDynamicObjects(const std::vector<DynamicObject> &objects)
+{
+  if (!use_dynamic_weights)
+    return;
+  auto snapshot = std::make_shared<std::vector<DynamicObject>>(objects);
+  std::lock_guard<std::mutex> lock(tracked_mutex_);
+  tracked_objects_ = snapshot;
+}
+
+float Preprocess::weightFromAttributes(float speed, float acc, float score, int track_length) const
+{
+  if (!use_dynamic_weights || track_length < dynamic_min_track_length)
+    return 1.0f;
+
+  auto clamp01 = [](float value) {
+    return std::max(0.0f, std::min(1.0f, value));
+  };
+  float speed_term = clamp01(speed / std::max(0.1f, dynamic_speed_ref));
+  float acc_term = clamp01(acc / std::max(0.1f, dynamic_acc_ref));
+  float score_term = clamp01(score);
+
+  float penalty = dynamic_speed_penalty * speed_term +
+                  dynamic_acc_penalty * acc_term +
+                  dynamic_score_penalty * score_term;
+  float weight = 1.0f - penalty;
+  weight = std::max(dynamic_min_weight, weight);
+  weight = std::min(1.0f, weight);
+  return weight;
+}
+
+void Preprocess::prepareDynamicSnapshot(double scan_time)
+{
+  if (!use_dynamic_weights)
+    return;
+  std::lock_guard<std::mutex> lock(tracked_mutex_);
+  active_tracked_objects_ = tracked_objects_;
+  active_scan_time_ = scan_time;
+}
+
+void Preprocess::clearDynamicSnapshot()
+{
+  if (!use_dynamic_weights)
+    return;
+  active_tracked_objects_.reset();
+}
+
+float Preprocess::computePointWeight(const PointType &pt) const
+{
+  if (!use_dynamic_weights)
+    return 1.0f;
+
+  auto objects = active_tracked_objects_;
+  if (!objects || objects->empty())
+    return 1.0f;
+
+  float weight = 1.0f;
+  for (const auto &obj : *objects)
+  {
+    if (active_scan_time_ - obj.stamp > dynamic_object_timeout)
+      continue;
+    if (isPointInsideObject(pt, obj))
+    {
+      weight = std::min(weight, obj.weight);
+      if (weight <= dynamic_min_weight)
+        break;
+    }
+  }
+  return weight;
+}
+
+bool Preprocess::isPointInsideObject(const PointType &pt, const DynamicObject &obj) const
+{
+  float dx = pt.x - obj.center.x();
+  float dy = pt.y - obj.center.y();
+  float local_x = obj.cos_yaw * dx + obj.sin_yaw * dy;
+  float local_y = -obj.sin_yaw * dx + obj.cos_yaw * dy;
+  if (fabs(local_x) > obj.half_size.x())
+    return false;
+  if (fabs(local_y) > obj.half_size.y())
+    return false;
+  float dz = pt.z - obj.center.z();
+  if (fabs(dz) > obj.half_size.z())
+    return false;
+  return true;
 }
 
 // Commented out for KITTI Velodyne support
@@ -52,6 +152,8 @@ void Preprocess::process(const livox_ros_driver::CustomMsg::ConstPtr &msg, Point
 
 void Preprocess::process(const sensor_msgs::PointCloud2::ConstPtr &msg, PointCloudXYZI::Ptr &pcl_out)
 {
+  double scan_time = msg->header.stamp.toSec();
+  prepareDynamicSnapshot(scan_time);
   switch (time_unit)
   {
     case SEC:
@@ -90,6 +192,7 @@ void Preprocess::process(const sensor_msgs::PointCloud2::ConstPtr &msg, PointClo
     break;
   }
   *pcl_out = pl_surf;
+  clearDynamicSnapshot();
 }
 
 // Commented out for KITTI Velodyne support
@@ -219,7 +322,10 @@ void Preprocess::oust64_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
       added_pt.x = pl_orig.points[i].x;
       added_pt.y = pl_orig.points[i].y;
       added_pt.z = pl_orig.points[i].z;
-      added_pt.intensity = pl_orig.points[i].intensity;
+      if (use_dynamic_weights)
+        added_pt.intensity = computePointWeight(added_pt);
+      else
+        added_pt.intensity = pl_orig.points[i].intensity;
       added_pt.normal_x = 0;
       added_pt.normal_y = 0;
       added_pt.normal_z = 0;
@@ -274,7 +380,10 @@ void Preprocess::oust64_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
       added_pt.x = pl_orig.points[i].x;
       added_pt.y = pl_orig.points[i].y;
       added_pt.z = pl_orig.points[i].z;
-      added_pt.intensity = pl_orig.points[i].intensity;
+      if (use_dynamic_weights)
+        added_pt.intensity = computePointWeight(added_pt);
+      else
+        added_pt.intensity = pl_orig.points[i].intensity;
       added_pt.normal_x = 0;
       added_pt.normal_y = 0;
       added_pt.normal_z = 0;
@@ -346,7 +455,10 @@ void Preprocess::velodyne_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
         added_pt.x = pl_orig.points[i].x;
         added_pt.y = pl_orig.points[i].y;
         added_pt.z = pl_orig.points[i].z;
-        added_pt.intensity = pl_orig.points[i].intensity;
+        if (use_dynamic_weights)
+          added_pt.intensity = computePointWeight(added_pt);
+        else
+          added_pt.intensity = pl_orig.points[i].intensity;
         added_pt.curvature = pl_orig.points[i].time * time_unit_scale; // units: ms
 
         if (!given_offset_time)

@@ -234,6 +234,7 @@ roscore
 ```
 
 节点订阅 `/detection/lidar_tracking`（PointPillars LiDAR 坐标系检测）和 `/mctrack/lidar_pose`（FAST-LIO 位姿），实时发布跟踪结果到 `/mctrack/markers`。
+此外，节点会同步发布 `/mctrack/tracked_objects`（`TrackedObjectArray` 消息），其中包含每个跟踪目标的 `track_id`、类别、检测置信度、全局姿态、LiDAR 坐标系姿态（`lidar_pose`/`lidar_yaw`）、长宽高，以及 `global_velocity`/`velocity_fusion`/`velocity_diff`/`velocity_curve`/`acceleration` 等运动信息，可供 FAST-LIO 或其他模块做权重建图。
 
 > **说明**：
 > - 本项目是纯 LiDAR 系统。PointPillars 直接输出 LiDAR 坐标系的 3D 检测框。
@@ -299,6 +300,12 @@ mapping:
                 0, 1, 0,
                 0, 0, 1]
 ```
+
+#### FAST-LIO 动态目标降权
+
+- 在 `mapping_velodyne.launch` 中通过 `preprocess/use_dynamic_weights=true` 启用动态目标降权；节点会自动订阅 `/mctrack/tracked_objects`，并根据 `velocity_fusion`、`acceleration` 与检测置信度为每个跟踪目标计算权重。
+- LiDAR 点云在预处理阶段会根据点是否落在动态目标包围盒内将 `intensity` 字段写入 [0.2, 1.0] 的权重值（默认静态点为 1）。FAST-LIO 在线性化时会使用该权重缩放雅可比与残差，从而减弱高速/高置信度车辆对建图的影响。
+- 相关参数（惩罚系数、速度/加速度阈值、bbox 裁剪边界、超时阈值等）均以 `preprocess/dynamic_*` 形式提供，见 `fast_lio/launch/mapping_velodyne.launch`，可按需要在启动命令中覆盖。
 
 ## 🤝 贡献
 

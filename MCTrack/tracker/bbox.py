@@ -25,6 +25,9 @@ class BBox:
         self.global_xyz = bbox["global_xyz"]
         self.global_orientation = bbox["global_orientation"]
         self.global_yaw = bbox["global_yaw"]
+        self.lidar_xyz = bbox.get("lidar_xyz", self.global_xyz)
+        self.lidar_orientation = bbox.get("lidar_orientation", self.global_orientation)
+        self.lidar_yaw = bbox.get("lidar_yaw", self.global_yaw)
         self.global_velocity = bbox["global_velocity"]
         self.global_acceleration = bbox["global_acceleration"]
         self.global_xyz_last = self.backward_prediction()

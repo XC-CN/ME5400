@@ -1,0 +1,16 @@
+std_msgs/Header header
+int32 frame
+int32 track_id
+int32 track_length
+string cls
+float32 detection_score
+float32 yaw
+geometry_msgs/Pose pose
+geometry_msgs/Pose lidar_pose
+float32 lidar_yaw
+float32[3] dimensions
+float32[2] velocity
+float32[2] velocity_fusion
+float32[2] velocity_diff
+float32[2] velocity_curve
+float32[2] acceleration

@@ -11,7 +11,7 @@ from typing import Dict, List, Optional
 import numpy as np
 import rospy
 import yaml
-from geometry_msgs.msg import Point, PoseStamped
+from geometry_msgs.msg import PoseStamped, Pose
 from std_msgs.msg import Header, String
 from visualization_msgs.msg import Marker, MarkerArray
 
@@ -27,7 +27,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from tracker.frame import Frame  # noqa: E402
 from tracker.bbox import BBox  # noqa: E402
 from tracker.base_tracker import Base3DTracker  # noqa: E402
-from ME5400.msg import Detection3D, Detection3DArray  # noqa: E402
+from ME5400.msg import Detection3D, Detection3DArray, TrackedObject, TrackedObjectArray  # noqa: E402
 
 
 def read_calib(calib_path: Path) -> Dict[str, np.ndarray]:
@@ -189,6 +189,7 @@ class MCTrackOnlineNode:
         self.traj_history: Dict[int, List[np.ndarray]] = defaultdict(list)
 
         self.marker_pub = rospy.Publisher("/mctrack/markers", MarkerArray, queue_size=1)
+        self.track_pub = rospy.Publisher("/mctrack/tracked_objects", TrackedObjectArray, queue_size=5)
         self.pose_sub = rospy.Subscriber(self.pose_topic, PoseStamped, self.pose_callback, queue_size=20)
         self.det_sub = rospy.Subscriber(self.det_topic, String, self.lidar_tracking_callback, queue_size=10)
         
@@ -252,6 +253,9 @@ class MCTrackOnlineNode:
                 "lwh": lwh,
                 "global_velocity": [0.0, 0.0],
                 "global_acceleration": [0.0, 0.0],
+                "lidar_xyz": lidar_xyz.tolist(),
+                "lidar_orientation": quaternion_from_yaw(lidar_yaw),
+                "lidar_yaw": float(lidar_yaw),
                 "bbox_image": {
                     "camera_type": "CAM_FRONT",
                     "x1y1x2y2": list(map(float, det.bbox2d)),
@@ -263,6 +267,7 @@ class MCTrackOnlineNode:
             return
 
         outputs = self.tracker.track_single_frame(frame)
+        self.publish_tracks(outputs, header)
         self.publish_markers(outputs, header)
 
     def _convert_lidar_tracking_to_array(self, msg: String) -> Optional[Detection3DArray]:
@@ -415,6 +420,59 @@ class MCTrackOnlineNode:
 
         marker_array = MarkerArray(markers=markers)
         self.marker_pub.publish(marker_array)
+
+    def publish_tracks(self, outputs: Dict[int, BBox], header: Header) -> None:
+        stamp = header.stamp if header.stamp != rospy.Time() else rospy.Time.now()
+        frame_id = header.frame_id or "camera_init"
+        array_msg = TrackedObjectArray()
+        array_msg.header = Header(stamp=stamp, frame_id=frame_id)
+
+        for track_id, bbox in outputs.items():
+            tracked = TrackedObject()
+            tracked.header = Header(stamp=stamp, frame_id=frame_id)
+            tracked.frame = bbox.frame_id
+            tracked.track_id = track_id
+            tracked.track_length = getattr(bbox, "track_length", 0)
+            tracked.cls = bbox.category
+            tracked.detection_score = float(bbox.det_score)
+            tracked.yaw = float(bbox.global_yaw)
+            tracked.dimensions = [float(dim) for dim in bbox.lwh]
+            tracked.velocity = self._vec2(bbox.global_velocity)
+            tracked.velocity_fusion = self._vec2(getattr(bbox, "global_velocity_fusion", bbox.global_velocity))
+            tracked.velocity_diff = self._vec2(getattr(bbox, "global_velocity_diff", [0.0, 0.0]))
+            tracked.velocity_curve = self._vec2(getattr(bbox, "global_velocity_curve", [0.0, 0.0]))
+            tracked.acceleration = self._vec2(getattr(bbox, "global_acceleration", [0.0, 0.0]))
+
+            pose = tracked.pose
+            pose.position.x, pose.position.y, pose.position.z = [float(val) for val in bbox.global_xyz]
+            quat = bbox.global_orientation
+            pose.orientation.x = float(quat[1])
+            pose.orientation.y = float(quat[2])
+            pose.orientation.z = float(quat[3])
+            pose.orientation.w = float(quat[0])
+
+            lidar_pose = tracked.lidar_pose
+            lidar_pose.position.x, lidar_pose.position.y, lidar_pose.position.z = [float(val) for val in bbox.lidar_xyz]
+            lidar_quat = bbox.lidar_orientation
+            lidar_pose.orientation.x = float(lidar_quat[1])
+            lidar_pose.orientation.y = float(lidar_quat[2])
+            lidar_pose.orientation.z = float(lidar_quat[3])
+            lidar_pose.orientation.w = float(lidar_quat[0])
+            tracked.lidar_yaw = float(bbox.lidar_yaw)
+
+            array_msg.objects.append(tracked)
+
+        self.track_pub.publish(array_msg)
+
+    @staticmethod
+    def _vec2(values: List[float]) -> List[float]:
+        if values is None:
+            return [0.0, 0.0]
+        if len(values) >= 2:
+            return [float(values[0]), float(values[1])]
+        if len(values) == 1:
+            return [float(values[0]), 0.0]
+        return [0.0, 0.0]
 
     @staticmethod
     def hsv_to_rgb(h: float, s: float, v: float) -> tuple[float, float, float]:

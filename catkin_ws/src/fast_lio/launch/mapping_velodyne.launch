@@ -25,6 +25,19 @@
   <param name="cube_side_length" type="double" value="1000" />
   <!-- 是否记录运行时位置日志（用于调试/回放） -->
   <param name="runtime_pos_log_enable" type="bool" value="0" />
+  <!-- 动态目标降权（结合 /mctrack/tracked_objects） -->
+  <param name="preprocess/use_dynamic_weights" type="bool" value="true" />
+  <param name="preprocess/tracked_topic" type="string" value="/mctrack/tracked_objects" />
+  <param name="preprocess/dynamic_speed_ref" type="double" value="12.0" />
+  <param name="preprocess/dynamic_acc_ref" type="double" value="4.0" />
+  <param name="preprocess/dynamic_speed_penalty" type="double" value="0.5" />
+  <param name="preprocess/dynamic_acc_penalty" type="double" value="0.3" />
+  <param name="preprocess/dynamic_score_penalty" type="double" value="0.2" />
+  <param name="preprocess/dynamic_min_weight" type="double" value="0.2" />
+  <param name="preprocess/dynamic_bbox_margin_xy" type="double" value="0.6" />
+  <param name="preprocess/dynamic_bbox_margin_z" type="double" value="0.5" />
+  <param name="preprocess/dynamic_timeout" type="double" value="0.7" />
+  <param name="preprocess/dynamic_min_track_length" type="int" value="3" />
 
   <!-- 启动 fast_lio 的 mapping 节点 -->
   <node pkg="fast_lio" type="fastlio_mapping" name="laserMapping" output="screen" /> 

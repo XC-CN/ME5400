@@ -5,6 +5,10 @@
 #include <ros/ros.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <sensor_msgs/PointCloud2.h>
+#include <Eigen/Dense>
+#include <memory>
+#include <mutex>
+#include <vector>
 // #include <livox_ros_driver/CustomMsg.h>  // Commented out for KITTI Velodyne support
 
 using namespace std;
@@ -36,6 +40,23 @@ struct orgtype
     ftype = Nor;
     intersect = 2;
   }
+};
+
+struct DynamicObject
+{
+  Eigen::Vector3f center;
+  Eigen::Vector3f half_size;
+  float cos_yaw;
+  float sin_yaw;
+  float weight;
+  double stamp;
+  DynamicObject()
+    : center(Eigen::Vector3f::Zero()),
+      half_size(Eigen::Vector3f::Zero()),
+      cos_yaw(1.0f),
+      sin_yaw(0.0f),
+      weight(1.0f),
+      stamp(0.0) {}
 };
 
 namespace velodyne_ros {
@@ -94,6 +115,8 @@ class Preprocess
   // void process(const livox_ros_driver::CustomMsg::ConstPtr &msg, PointCloudXYZI::Ptr &pcl_out);  // Commented out for KITTI
   void process(const sensor_msgs::PointCloud2::ConstPtr &msg, PointCloudXYZI::Ptr &pcl_out);
   void set(bool feat_en, int lid_type, double bld, int pfilt_num);
+  void updateDynamicObjects(const std::vector<DynamicObject> &objects);
+  float weightFromAttributes(float speed, float acc, float score, int track_length) const;
 
   // sensor_msgs::PointCloud2::ConstPtr pointcloud;
   PointCloudXYZI pl_full, pl_corn, pl_surf;
@@ -104,6 +127,18 @@ class Preprocess
   double blind;
   bool feature_enabled, given_offset_time;
   ros::Publisher pub_full, pub_surf, pub_corn;
+
+  bool use_dynamic_weights;
+  float dynamic_speed_ref;
+  float dynamic_acc_ref;
+  float dynamic_speed_penalty;
+  float dynamic_acc_penalty;
+  float dynamic_score_penalty;
+  float dynamic_min_weight;
+  float dynamic_bbox_margin_xy;
+  float dynamic_bbox_margin_z;
+  double dynamic_object_timeout;
+  int dynamic_min_track_length;
     
 
   private:
@@ -116,6 +151,10 @@ class Preprocess
   int  plane_judge(const PointCloudXYZI &pl, vector<orgtype> &types, uint i, uint &i_nex, Eigen::Vector3d &curr_direct);
   bool small_plane(const PointCloudXYZI &pl, vector<orgtype> &types, uint i_cur, uint &i_nex, Eigen::Vector3d &curr_direct);
   bool edge_jump_judge(const PointCloudXYZI &pl, vector<orgtype> &types, uint i, Surround nor_dir);
+  void prepareDynamicSnapshot(double scan_time);
+  void clearDynamicSnapshot();
+  float computePointWeight(const PointType &pt) const;
+  bool isPointInsideObject(const PointType &pt, const DynamicObject &obj) const;
   
   int group_size;
   double disA, disB, inf_bound;
@@ -126,5 +165,9 @@ class Preprocess
   double edgea, edgeb;
   double smallp_intersect, smallp_ratio;
   double vx, vy, vz;
+  std::shared_ptr<std::vector<DynamicObject>> tracked_objects_;
+  std::shared_ptr<const std::vector<DynamicObject>> active_tracked_objects_;
+  mutable std::mutex tracked_mutex_;
+  double active_scan_time_;
 };
 #endif

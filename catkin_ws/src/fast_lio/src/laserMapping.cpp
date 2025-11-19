@@ -37,6 +37,7 @@
 #include <algorithm>
 #include <mutex>
 #include <math.h>
+#include <cmath>
 #include <thread>
 #include <fstream>
 #include <csignal>
@@ -44,6 +45,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <new>
+#include <utility>
 
 namespace {
 
@@ -118,6 +120,7 @@ std::string compute_default_pcd_dir(const std::string &package_root) {
 #include <tf/transform_broadcaster.h>
 #include <geometry_msgs/Vector3.h>
 #include <livox_ros_driver/CustomMsg.h>
+#include <ME5400/TrackedObjectArray.h>
 #include "preprocess.h"
 #include <ikd-Tree/ikd_Tree.h>
 
@@ -378,6 +381,39 @@ void standard_pcl_cbk(const sensor_msgs::PointCloud2::ConstPtr &msg)
     s_plot11[scan_count] = omp_get_wtime() - preprocess_start_time;
     mtx_buffer.unlock();
     sig_buffer.notify_all();
+}
+
+void tracked_objects_cb(const ME5400::TrackedObjectArray::ConstPtr &msg)
+{
+    if (!p_pre->use_dynamic_weights)
+        return;
+
+    std::vector<DynamicObject> objects;
+    objects.reserve(msg->objects.size());
+    double stamp = msg->header.stamp.toSec();
+
+    for (const auto &obj : msg->objects)
+    {
+        DynamicObject dyn;
+        dyn.center = Eigen::Vector3f(
+            obj.lidar_pose.position.x,
+            obj.lidar_pose.position.y,
+            obj.lidar_pose.position.z);
+        dyn.half_size = Eigen::Vector3f(
+            obj.dimensions[0] * 0.5f + p_pre->dynamic_bbox_margin_xy,
+            obj.dimensions[1] * 0.5f + p_pre->dynamic_bbox_margin_xy,
+            obj.dimensions[2] * 0.5f + p_pre->dynamic_bbox_margin_z);
+        double yaw = obj.lidar_yaw;
+        dyn.cos_yaw = std::cos(yaw);
+        dyn.sin_yaw = std::sin(yaw);
+        float speed = std::hypot(obj.velocity_fusion[0], obj.velocity_fusion[1]);
+        float acc = std::hypot(obj.acceleration[0], obj.acceleration[1]);
+        dyn.weight = p_pre->weightFromAttributes(speed, acc, obj.detection_score, obj.track_length);
+        dyn.stamp = stamp;
+        objects.emplace_back(std::move(dyn));
+    }
+
+    p_pre->updateDynamicObjects(objects);
 }
 
 double timediff_lidar_wrt_imu = 0.0;
@@ -934,7 +970,13 @@ void h_share_model(state_ikfom &s, esekfom::dyn_share_datastruct<double> &ekfom_
         }
 
         /*** Measuremnt: distance to the closest surface/corner ***/
-        ekfom_data.h(i) = -norm_p.intensity;
+        double weight = 1.0;
+        if (p_pre->use_dynamic_weights)
+        {
+            weight = std::max<double>(p_pre->dynamic_min_weight, std::min<double>(1.0, laser_p.intensity));
+        }
+        ekfom_data.h_x.block<1, 12>(i,0) *= weight;
+        ekfom_data.h(i) = -norm_p.intensity * weight;
     }
     solve_time += omp_get_wtime() - solve_start_;
 }
@@ -971,6 +1013,29 @@ int main(int argc, char** argv)
     nh.param<int>("preprocess/scan_rate", p_pre->SCAN_RATE, 10);
     nh.param<int>("point_filter_num", p_pre->point_filter_num, 2);
     nh.param<bool>("feature_extract_enable", p_pre->feature_enabled, false);
+    nh.param<bool>("preprocess/use_dynamic_weights", p_pre->use_dynamic_weights, false);
+    double tmp_param = 0.0;
+    nh.param<double>("preprocess/dynamic_speed_ref", tmp_param, 10.0);
+    p_pre->dynamic_speed_ref = tmp_param;
+    nh.param<double>("preprocess/dynamic_acc_ref", tmp_param, 4.0);
+    p_pre->dynamic_acc_ref = tmp_param;
+    nh.param<double>("preprocess/dynamic_speed_penalty", tmp_param, 0.5);
+    p_pre->dynamic_speed_penalty = tmp_param;
+    nh.param<double>("preprocess/dynamic_acc_penalty", tmp_param, 0.3);
+    p_pre->dynamic_acc_penalty = tmp_param;
+    nh.param<double>("preprocess/dynamic_score_penalty", tmp_param, 0.2);
+    p_pre->dynamic_score_penalty = tmp_param;
+    nh.param<double>("preprocess/dynamic_min_weight", tmp_param, 0.2);
+    p_pre->dynamic_min_weight = tmp_param;
+    nh.param<double>("preprocess/dynamic_bbox_margin_xy", tmp_param, 0.5);
+    p_pre->dynamic_bbox_margin_xy = tmp_param;
+    nh.param<double>("preprocess/dynamic_bbox_margin_z", tmp_param, 0.5);
+    p_pre->dynamic_bbox_margin_z = tmp_param;
+    nh.param<double>("preprocess/dynamic_timeout", tmp_param, 1.0);
+    p_pre->dynamic_object_timeout = tmp_param;
+    int tmp_int = 3;
+    nh.param<int>("preprocess/dynamic_min_track_length", tmp_int, 3);
+    p_pre->dynamic_min_track_length = tmp_int;
     nh.param<bool>("runtime_pos_log_enable", runtime_pos_log, 0);
     nh.param<bool>("mapping/extrinsic_est_en", extrinsic_est_en, true);
     nh.param<bool>("pcd_save/pcd_save_en", pcd_save_en, false);
@@ -1037,6 +1102,13 @@ int main(int argc, char** argv)
     /*** ROS subscribe initialization ***/
     ros::Subscriber sub_pcl = nh.subscribe(lid_topic, 200000, standard_pcl_cbk);
     ros::Subscriber sub_imu = nh.subscribe(imu_topic, 200000, imu_cbk);
+    ros::Subscriber sub_tracks;
+    if (p_pre->use_dynamic_weights)
+    {
+        std::string track_topic;
+        nh.param<std::string>("preprocess/tracked_topic", track_topic, std::string("/mctrack/tracked_objects"));
+        sub_tracks = nh.subscribe(track_topic, 5, tracked_objects_cb);
+    }
     ros::Publisher pubLaserCloudFull = nh.advertise<sensor_msgs::PointCloud2>
             ("/cloud_registered", 100000);
     ros::Publisher pubLaserCloudFull_body = nh.advertise<sensor_msgs::PointCloud2>

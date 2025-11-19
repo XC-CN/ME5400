@@ -17,6 +17,8 @@ add_message_files(
   FILES
     Detection3D.msg
     Detection3DArray.msg
+    TrackedObject.msg
+    TrackedObjectArray.msg
 )
 
 generate_messages(
