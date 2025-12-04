@@ -322,10 +322,12 @@ void Preprocess::oust64_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
       added_pt.x = pl_orig.points[i].x;
       added_pt.y = pl_orig.points[i].y;
       added_pt.z = pl_orig.points[i].z;
-      if (use_dynamic_weights)
-        added_pt.intensity = computePointWeight(added_pt);
-      else
+      if (use_dynamic_weights) {
+        float dyn_weight = computePointWeight(added_pt);
+        added_pt.intensity = std::min(pl_orig.points[i].intensity, dyn_weight);
+      } else {
         added_pt.intensity = pl_orig.points[i].intensity;
+      }
       added_pt.normal_x = 0;
       added_pt.normal_y = 0;
       added_pt.normal_z = 0;
@@ -380,10 +382,12 @@ void Preprocess::oust64_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
       added_pt.x = pl_orig.points[i].x;
       added_pt.y = pl_orig.points[i].y;
       added_pt.z = pl_orig.points[i].z;
-      if (use_dynamic_weights)
-        added_pt.intensity = computePointWeight(added_pt);
-      else
+      if (use_dynamic_weights) {
+        float dyn_weight = computePointWeight(added_pt);
+        added_pt.intensity = std::min(pl_orig.points[i].intensity, dyn_weight);
+      } else {
         added_pt.intensity = pl_orig.points[i].intensity;
+      }
       added_pt.normal_x = 0;
       added_pt.normal_y = 0;
       added_pt.normal_z = 0;
@@ -589,7 +593,12 @@ void Preprocess::sim_handler(const sensor_msgs::PointCloud2::ConstPtr &msg) {
         added_pt.x = pl_orig.points[i].x;
         added_pt.y = pl_orig.points[i].y;
         added_pt.z = pl_orig.points[i].z;
-        added_pt.intensity = pl_orig.points[i].intensity;
+        if (use_dynamic_weights) {
+            float dyn_weight = computePointWeight(added_pt);
+            added_pt.intensity = std::min(pl_orig.points[i].intensity, dyn_weight);
+        } else {
+            added_pt.intensity = pl_orig.points[i].intensity;
+        }
         added_pt.normal_x = 0;
         added_pt.normal_y = 0;
         added_pt.normal_z = 0;
