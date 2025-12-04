@@ -296,6 +296,8 @@ rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag --clock --loop
 rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop 
 ```
 
+结束运行时，必须先关闭建图进程，再关闭rosbag。
+
 #### 8. **打开 RViz（终端 E，与 rosbag 同时运行）**
 
 ```bash
