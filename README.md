@@ -27,6 +27,8 @@
 - 🎯 **多数据集兼容的跟踪模块**：MCTrack 支持 KITTI / nuScenes / Waymo；当前默认使用 KITTI Tracking 的检测结果。
 - ⚡ **FAST-LIO 实时里程计**：针对 Velodyne 激光雷达的高效激光雷达-惯性里程计，可直接处理实时点云。
 - 🎨 **统一可视化脚本**：提供在线融合脚本，默认的检测输入来自数据集（未来可改接任意目标检测算法）。
+- 🚀 **IMU 预测位姿**：FAST-LIO 发布 IMU 预测位姿（LiDAR 更新前），MCTrack 使用预测位姿提高实时性和响应速度。
+- ⚖️ **动态目标降权**：FAST-LIO 支持对动态目标进行降权处理，减少运动车辆对建图的影响，可通过参数开关控制。
 
 ## 📁 项目结构
 
@@ -46,7 +48,9 @@ ME5400/
 │   │   ├── kitti_pointpillars_bag_node.py  # PointPillars 检测 ROS 节点
 │   │   └── run_pointpillars_node.sh        # 启动脚本（自动化）
 │   ├── fastlio/                       # FAST-LIO 里程计模块
-│   │   └── run_fastlio.sh                  # FAST-LIO 映射与桥接入口
+│   │   ├── run_fastlio.sh                  # FAST-LIO 统一启动脚本（支持 mapping/pose_bridge/both 模式）
+│   │   ├── run_fastlio_both_with_weights.sh    # 启用动态权重优化的 both 模式启动脚本
+│   │   └── run_fastlio_both_without_weights.sh # 禁用动态权重优化的 both 模式启动脚本
 │   ├── mctrack/                       # MCTrack 跟踪模块
 │   │   ├── run_mctrack_online_node.sh      # MCTrack 启动脚本
 │   │   └── mctrack_marker_publisher.py     # Marker 发布工具
@@ -223,9 +227,54 @@ roscore
 
 #### 5. **启动 FAST-LIO 系统（终端 C）**
 
+FAST-LIO 提供三种启动方式：
+
+**方式一：使用统一脚本（推荐，灵活）**
 ```bash
+# 启用动态权重优化（默认）
 ./Scripts/fastlio/run_fastlio.sh both
+
+# 禁用动态权重优化，使用原始方法
+./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
+
+# 仅启动 mapping（支持传递任意 ROS 参数）
+./Scripts/fastlio/run_fastlio.sh mapping rviz:=false use_dynamic_weights:=true
+
+# 仅启动 pose_bridge
+./Scripts/fastlio/run_fastlio.sh pose_bridge
 ```
+
+**方式二：使用专用脚本（简单，固定配置）**
+```bash
+# 启用动态权重优化版本（固定启用权重优化，仅 both 模式）
+./Scripts/fastlio/run_fastlio_both_with_weights.sh
+
+# 禁用动态权重优化版本（固定禁用权重优化，仅 both 模式）
+./Scripts/fastlio/run_fastlio_both_without_weights.sh
+```
+
+**方式三：分别启动（调试场景）**
+```bash
+# 终端 C1：启动 mapping（可指定权重参数）
+./Scripts/fastlio/run_fastlio.sh mapping use_dynamic_weights:=true
+
+# 终端 C2：启动 pose_bridge
+./Scripts/fastlio/run_fastlio.sh pose_bridge
+```
+
+> **统一脚本 vs 专用脚本的区别**：
+> 
+> | 特性 | 统一脚本 (`run_fastlio.sh`) | 专用脚本 (`*_with_weights.sh` / `*_without_weights.sh`) |
+> |------|---------------------------|------------------------------------------------------|
+> | **功能范围** | 支持 `mapping`、`pose_bridge`、`both` 三种模式 | 仅支持 `both` 模式 |
+> | **参数灵活性** | 可通过命令行参数灵活配置（如 `use_dynamic_weights:=false`） | 固定配置，无需参数 |
+> | **使用场景** | 需要灵活切换模式或参数时 | 固定使用场景，追求简单快捷 |
+> | **推荐度** | ⭐⭐⭐ 推荐日常使用 | ⭐⭐ 适合快速启动或脚本自动化 |
+> 
+> **其他说明**：
+> - `both` 模式会同时启动 mapping 和 pose_bridge（mapping 在后台运行）
+> - 动态权重优化功能默认启用，可通过 `use_dynamic_weights` 参数控制
+> - FAST-LIO 会发布 `/Odometry_imu_predicted` 话题（IMU 预测位姿，LiDAR 更新前），用于提高 MCTrack 的实时性
 
 #### 6. **启动 MCTrack 在线节点（终端 D）**
 
@@ -234,9 +283,22 @@ roscore
 ```
 
 节点订阅 `/detection/lidar_tracking`（PointPillars LiDAR 坐标系检测）和 `/mctrack/lidar_pose`（FAST-LIO 位姿），实时发布跟踪结果到 `/mctrack/markers`。
-此外，节点会同步发布 `/mctrack/tracked_objects`（`TrackedObjectArray` 消息），其中包含每个跟踪目标的 `track_id`、类别、检测置信度、全局姿态、LiDAR 坐标系姿态（`lidar_pose`/`lidar_yaw`）、长宽高，以及 `global_velocity`/`velocity_fusion`/`velocity_diff`/`velocity_curve`/`acceleration` 等运动信息，可供 FAST-LIO 或其他模块做权重建图。
+
+**位姿订阅说明**：
+- `fastlio_pose_bridge.py` 桥接节点订阅 `/Odometry_imu_predicted`（FAST-LIO 发布的 IMU 预测位姿，LiDAR 更新前），并转发为 `/mctrack/lidar_pose`
+- 使用 IMU 预测位姿而非最终位姿，可提高 MCTrack 的实时性和响应速度，减少跟踪延迟
+
+**跟踪结果发布**：
+- `/mctrack/markers`：RViz 可视化用的 Marker 消息
+- `/mctrack/tracked_objects`：`TrackedObjectArray` 消息，包含每个跟踪目标的详细信息：
+  - `track_id`、类别、检测置信度
+  - 全局姿态、LiDAR 坐标系姿态（`lidar_pose`/`lidar_yaw`）
+  - 长宽高尺寸
+  - 运动信息：`global_velocity`、`velocity_fusion`、`velocity_diff`、`velocity_curve`、`acceleration`
+  - 这些信息可供 FAST-LIO 或其他模块做动态目标降权建图
 
 > **说明**：
+>
 > - 本项目是纯 LiDAR 系统。PointPillars 直接输出 LiDAR 坐标系的 3D 检测框。
 > - MCTrack 支持跟踪所有 KITTI 类别：**Car**、**Pedestrian**、**Cyclist**
 > - 无需任何相机标定文件或序列号
@@ -262,7 +324,7 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop
 
    使用 `Scripts/rviz/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
 
-### 单独FastLio可视化实验
+
 
 ## 📊 实验结果
 
@@ -303,9 +365,31 @@ mapping:
 
 #### FAST-LIO 动态目标降权
 
-- 在 `mapping_velodyne.launch` 中通过 `preprocess/use_dynamic_weights=true` 启用动态目标降权；节点会自动订阅 `/mctrack/tracked_objects`，并根据 `velocity_fusion`、`acceleration` 与检测置信度为每个跟踪目标计算权重。
-- LiDAR 点云在预处理阶段会根据点是否落在动态目标包围盒内将 `intensity` 字段写入 [0.2, 1.0] 的权重值（默认静态点为 1）。FAST-LIO 在线性化时会使用该权重缩放雅可比与残差，从而减弱高速/高置信度车辆对建图的影响。
-- 相关参数（惩罚系数、速度/加速度阈值、bbox 裁剪边界、超时阈值等）均以 `preprocess/dynamic_*` 形式提供，见 `fast_lio/launch/mapping_velodyne.launch`，可按需要在启动命令中覆盖。
+**功能说明**：
+- FAST-LIO 支持对动态目标进行降权处理，减少运动车辆对建图的影响
+- 在 `mapping_velodyne.launch` 中通过 `use_dynamic_weights` 参数控制是否启用（默认 `true`）
+- 节点会自动订阅 `/mctrack/tracked_objects`，并根据 `velocity_fusion`、`acceleration` 与检测置信度为每个跟踪目标计算权重
+
+**工作原理**：
+- LiDAR 点云在预处理阶段会根据点是否落在动态目标包围盒内将 `intensity` 字段写入 [0.2, 1.0] 的权重值（默认静态点为 1）
+- FAST-LIO 在线性化时会使用该权重缩放雅可比与残差，从而减弱高速/高置信度车辆对建图的影响
+
+**使用方法**：
+```bash
+# 启用动态权重优化（默认）
+./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true
+# 或使用专用脚本
+./Scripts/fastlio/run_fastlio_both_with_weights.sh
+
+# 禁用动态权重优化，使用原始方法
+./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
+# 或使用专用脚本
+./Scripts/fastlio/run_fastlio_both_without_weights.sh
+```
+
+**参数配置**：
+- 相关参数（惩罚系数、速度/加速度阈值、bbox 裁剪边界、超时阈值等）均以 `preprocess/dynamic_*` 形式提供
+- 详见 `catkin_ws/src/fast_lio/launch/mapping_velodyne.launch`，可按需要在启动命令中覆盖
 
 ## 🤝 贡献
 
