@@ -3,6 +3,9 @@
   
   <!-- 是否启动 RViz（可以在运行时通过传入参数覆盖） -->
   <arg name="rviz" default="true" />
+  
+  <!-- 是否启用动态目标权重优化（默认启用，设为 false 则使用原始方法） -->
+  <arg name="use_dynamic_weights" default="true" />
 
   <!-- 使用仿真时间（若播放 rosbag，应设置为 true） -->
   <param name="/use_sim_time" value="true" />
@@ -26,7 +29,7 @@
   <!-- 是否记录运行时位置日志（用于调试/回放） -->
   <param name="runtime_pos_log_enable" type="bool" value="0" />
   <!-- 动态目标降权（结合 /mctrack/tracked_objects） -->
-  <param name="preprocess/use_dynamic_weights" type="bool" value="true" />
+  <param name="preprocess/use_dynamic_weights" type="bool" value="$(arg use_dynamic_weights)" />
   <param name="preprocess/tracked_topic" type="string" value="/mctrack/tracked_objects" />
   <param name="preprocess/dynamic_speed_ref" type="double" value="12.0" />
   <param name="preprocess/dynamic_acc_ref" type="double" value="4.0" />

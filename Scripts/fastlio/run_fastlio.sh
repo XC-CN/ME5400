@@ -45,20 +45,27 @@ source "$CATKIN_WS/devel/setup.bash"
 
 case "$MODE" in
   mapping|map)
+    # 默认启用权重优化（保持向后兼容）
     if [[ $# -eq 0 ]]; then
-      roslaunch fast_lio mapping_velodyne.launch rviz:=false
+      roslaunch fast_lio mapping_velodyne.launch rviz:=false use_dynamic_weights:=true
     else
-      roslaunch fast_lio mapping_velodyne.launch "$@"
+      roslaunch fast_lio mapping_velodyne.launch rviz:=false "$@"
     fi
     ;;
   pose_bridge|bridge|pose)
     rosrun ME5400 fastlio_pose_bridge.py "$@"
     ;;
   both)
-    if [[ $# -gt 0 ]]; then
-      echo "[提示] both 模式暂不支持附加参数, 忽略多余参数: $*" >&2
-    fi
-    roslaunch fast_lio mapping_velodyne.launch rviz:=false &
+    # 检查是否指定了 use_dynamic_weights 参数
+    USE_WEIGHTS="true"  # 默认启用权重优化
+    for arg in "$@"; do
+      if [[ "$arg" == *"use_dynamic_weights"* ]]; then
+        if [[ "$arg" == *"false"* ]]; then
+          USE_WEIGHTS="false"
+        fi
+      fi
+    done
+    roslaunch fast_lio mapping_velodyne.launch rviz:=false use_dynamic_weights:=$USE_WEIGHTS "$@" &
     MAPPING_PID=$!
     cleanup() {
       if kill -0 "$MAPPING_PID" 2>/dev/null; then
