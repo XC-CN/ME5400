@@ -48,9 +48,7 @@ ME5400/
 │   │   ├── kitti_pointpillars_bag_node.py  # PointPillars 检测 ROS 节点
 │   │   └── run_pointpillars_node.sh        # 启动脚本（自动化）
 │   ├── fastlio/                       # FAST-LIO 里程计模块
-│   │   ├── run_fastlio.sh                  # FAST-LIO 统一启动脚本（支持 mapping/pose_bridge/both 模式）
-│   │   ├── run_fastlio_both_with_weights.sh    # 启用动态权重优化的 both 模式启动脚本
-│   │   └── run_fastlio_both_without_weights.sh # 禁用动态权重优化的 both 模式启动脚本
+│   │   └── run_fastlio.sh                  # FAST-LIO 统一启动脚本（支持 mapping/pose_bridge/both 模式）
 │   ├── mctrack/                       # MCTrack 跟踪模块
 │   │   ├── run_mctrack_online_node.sh      # MCTrack 启动脚本
 │   │   └── mctrack_marker_publisher.py     # Marker 发布工具
@@ -244,16 +242,7 @@ FAST-LIO 提供三种启动方式：
 ./Scripts/fastlio/run_fastlio.sh pose_bridge
 ```
 
-**方式二：使用专用脚本（简单，固定配置）**
-```bash
-# 启用动态权重优化版本（固定启用权重优化，仅 both 模式）
-./Scripts/fastlio/run_fastlio_both_with_weights.sh
-
-# 禁用动态权重优化版本（固定禁用权重优化，仅 both 模式）
-./Scripts/fastlio/run_fastlio_both_without_weights.sh
-```
-
-**方式三：分别启动（调试场景）**
+**方式二：分别启动（调试场景）**
 ```bash
 # 终端 C1：启动 mapping（可指定权重参数）
 ./Scripts/fastlio/run_fastlio.sh mapping use_dynamic_weights:=true
@@ -262,16 +251,7 @@ FAST-LIO 提供三种启动方式：
 ./Scripts/fastlio/run_fastlio.sh pose_bridge
 ```
 
-> **统一脚本 vs 专用脚本的区别**：
-> 
-> | 特性 | 统一脚本 (`run_fastlio.sh`) | 专用脚本 (`*_with_weights.sh` / `*_without_weights.sh`) |
-> |------|---------------------------|------------------------------------------------------|
-> | **功能范围** | 支持 `mapping`、`pose_bridge`、`both` 三种模式 | 仅支持 `both` 模式 |
-> | **参数灵活性** | 可通过命令行参数灵活配置（如 `use_dynamic_weights:=false`） | 固定配置，无需参数 |
-> | **使用场景** | 需要灵活切换模式或参数时 | 固定使用场景，追求简单快捷 |
-> | **推荐度** | ⭐⭐⭐ 推荐日常使用 | ⭐⭐ 适合快速启动或脚本自动化 |
-> 
-> **其他说明**：
+> **使用说明**：
 > - `both` 模式会同时启动 mapping 和 pose_bridge（mapping 在后台运行）
 > - 动态权重优化功能默认启用，可通过 `use_dynamic_weights` 参数控制
 > - FAST-LIO 会发布 `/Odometry_imu_predicted` 话题（IMU 预测位姿，LiDAR 更新前），用于提高 MCTrack 的实时性
@@ -378,18 +358,57 @@ mapping:
 ```bash
 # 启用动态权重优化（默认）
 ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true
-# 或使用专用脚本
-./Scripts/fastlio/run_fastlio_both_with_weights.sh
 
 # 禁用动态权重优化，使用原始方法
 ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
-# 或使用专用脚本
-./Scripts/fastlio/run_fastlio_both_without_weights.sh
 ```
 
 **参数配置**：
 - 相关参数（惩罚系数、速度/加速度阈值、bbox 裁剪边界、超时阈值等）均以 `preprocess/dynamic_*` 形式提供
 - 详见 `catkin_ws/src/fast_lio/launch/mapping_velodyne.launch`，可按需要在启动命令中覆盖
+
+#### FAST-LIO 地图保存
+
+**保存位置**：
+- 地图文件保存在项目根目录的 `PCD/scans.pcd`
+- 默认配置下，所有扫描帧会累积保存到一个 PCD 文件中
+
+**保存时机**：
+- 地图在 FAST-LIO 进程正常退出时自动保存
+- 使用 `both` 模式时，脚本会优雅关闭进程（发送 SIGTERM），等待最多 30 秒让进程保存地图
+- 如果进程在 30 秒内未退出，脚本会强制终止（SIGKILL）
+
+**保存进度信息**：
+- FAST-LIO 在保存地图时会显示详细的进度信息：
+  - 点云数量（点数）
+  - 预计文件大小（MB）
+  - 保存路径
+  - 实际文件大小和保存耗时
+  - 保存成功/失败状态
+
+**保存验证**：
+- 脚本会自动验证地图文件是否保存成功：
+  - 检查文件是否存在
+  - 验证文件大小（确保不为0）
+  - 显示文件大小（MB）
+  - 如果保存失败，会显示错误信息
+
+**正确中断建图**：
+```bash
+# 方法一：使用 Ctrl+C（推荐）
+# 脚本会自动处理优雅关闭，等待地图保存，并验证保存结果
+
+# 方法二：单独启动 mapping 时，使用 Ctrl+C
+# FAST-LIO 会捕获信号并正常退出，显示保存进度，地图会被保存
+```
+
+**注意事项**：
+- 确保 `velodyne.yaml` 中 `pcd_save/pcd_save_en: true`（默认已启用）
+- 如果地图文件很大，保存可能需要几秒钟到几十秒时间
+- 脚本会等待最多 30 秒确保地图保存完成
+- 如果进程被强制杀死（kill -9），地图可能不会保存
+- 地图保存位置可通过 `pcd_save/output_dir` 参数自定义
+- 如果点云数据为空，地图文件不会生成（这是正常行为）
 
 ## 🤝 贡献
 

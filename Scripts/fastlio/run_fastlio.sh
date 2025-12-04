@@ -69,13 +69,96 @@ case "$MODE" in
     MAPPING_PID=$!
     cleanup() {
       if kill -0 "$MAPPING_PID" 2>/dev/null; then
-        kill "$MAPPING_PID" 2>/dev/null || true
-        wait "$MAPPING_PID" 2>/dev/null || true
+        echo "[信息] 正在优雅关闭 FAST-LIO mapping 进程，等待地图保存..."
+        # 发送 SIGTERM 信号，让进程有机会保存地图
+        kill -TERM "$MAPPING_PID" 2>/dev/null || true
+        
+        # 等待进程退出，最多30秒
+        local wait_count=0
+        local max_wait=60  # 30秒 = 60 * 0.5秒
+        while kill -0 "$MAPPING_PID" 2>/dev/null && [ $wait_count -lt $max_wait ]; do
+          sleep 0.5
+          wait_count=$((wait_count + 1))
+          if [ $((wait_count % 4)) -eq 0 ]; then
+            echo "[信息] 等待地图保存中... ($((wait_count / 2))秒)"
+          fi
+        done
+        
+        # 如果进程仍在运行，强制终止
+        if kill -0 "$MAPPING_PID" 2>/dev/null; then
+          echo "[警告] 进程未在30秒内退出，强制终止"
+          kill -KILL "$MAPPING_PID" 2>/dev/null || true
+          wait "$MAPPING_PID" 2>/dev/null || true
+        else
+          wait "$MAPPING_PID" 2>/dev/null || true
+          echo "[信息] FAST-LIO mapping 进程已退出，正在验证地图保存..."
+        fi
+        
+        # 验证地图文件是否保存成功
+        verify_map_saved
+      else
+        # Even if process already exited, verify map was saved
+        verify_map_saved
+      fi
+    }
+    
+    verify_map_saved() {
+      local pcd_file="$ROOT_DIR/PCD/scans.pcd"
+      if [ -f "$pcd_file" ]; then
+        local file_size=$(stat -f%z "$pcd_file" 2>/dev/null || stat -c%s "$pcd_file" 2>/dev/null || echo "0")
+        local file_size_mb=$((file_size / 1024 / 1024))
+        
+        if [ "$file_size" -gt 0 ]; then
+          echo "[成功] ✓ 地图文件已保存: $pcd_file"
+          echo "[成功] ✓ 文件大小: ${file_size_mb} MB"
+        else
+          echo "[错误] ✗ 地图文件存在但大小为0，保存可能失败"
+          return 1
+        fi
+      else
+        echo "[警告] ⚠ 地图文件不存在: $pcd_file"
+        echo "[警告] ⚠ 可能原因：1) 点云数据为空 2) 保存被中断 3) 配置中pcd_save_en=false"
       fi
     }
     trap cleanup EXIT INT TERM
-    rosrun ME5400 fastlio_pose_bridge.py
-    wait "$MAPPING_PID" || true
+    # Run pose_bridge in foreground
+    # If pose_bridge exits (e.g., due to rosbag stopping), wait for mapping to finish
+    rosrun ME5400 fastlio_pose_bridge.py || true
+    
+    # After pose_bridge exits, check if mapping is still running
+    # If mapping is still running, wait for it to finish (it will save map when ros::ok() becomes false)
+    if kill -0 "$MAPPING_PID" 2>/dev/null; then
+      echo "[信息] pose_bridge 已退出，等待 FAST-LIO mapping 进程完成并保存地图..."
+      echo "[信息] 提示：如果 rosbag 已停止，mapping 进程会自动检测并保存地图"
+      # Wait for mapping process to finish (it will detect ros::ok() == false and save map)
+      # Give it up to 30 seconds to detect rosbag stop and save map
+      local wait_count=0
+      local max_wait=60  # 30秒
+      while kill -0 "$MAPPING_PID" 2>/dev/null && [ $wait_count -lt $max_wait ]; do
+        sleep 0.5
+        wait_count=$((wait_count + 1))
+        if [ $((wait_count % 4)) -eq 0 ]; then
+          echo "[信息] 等待 mapping 进程检测 rosbag 停止并保存地图... ($((wait_count / 2))秒)"
+        fi
+      done
+      
+      # If still running after waiting, it means it didn't detect rosbag stop
+      # In this case, send SIGTERM to trigger map save
+      if kill -0 "$MAPPING_PID" 2>/dev/null; then
+        echo "[信息] mapping 进程仍在运行，发送退出信号以保存地图..."
+        kill -TERM "$MAPPING_PID" 2>/dev/null || true
+        wait "$MAPPING_PID" || true
+      else
+        wait "$MAPPING_PID" || true
+      fi
+      echo "[信息] FAST-LIO mapping 进程已退出"
+    else
+      # Mapping already exited, verify map was saved
+      echo "[信息] FAST-LIO mapping 进程已退出，验证地图保存..."
+    fi
+    
+    # Call cleanup to verify map was saved (cleanup will handle the verification)
+    cleanup
     ;;
   *)
     echo "[错误] 未知模式: $MODE" >&2

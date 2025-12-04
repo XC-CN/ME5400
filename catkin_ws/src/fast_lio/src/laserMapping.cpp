@@ -1127,10 +1127,33 @@ int main(int argc, char** argv)
     signal(SIGINT, SigHandle);
     ros::Rate rate(5000);
     bool status = ros::ok();
-    while (status)
+    bool should_exit = false;
+    while (!should_exit)
     {
-        if (flg_exit) break;
-        ros::spinOnce();
+        // Check exit flag first
+        if (flg_exit)
+        {
+            should_exit = true;
+            break;
+        }
+        
+        // If ros::ok() becomes false (e.g., rosbag stops), set exit flag and break immediately
+        // to ensure map saving code executes
+        if (!ros::ok() && status)
+        {
+            ROS_WARN("[FAST-LIO] ROS shutdown detected (e.g., rosbag stopped), preparing to exit and save map...");
+            flg_exit = true;
+            should_exit = true;
+            status = false;
+            // Break immediately to allow map saving code to execute
+            break;
+        }
+        
+        // Only call ros::spinOnce() if ROS is still ok
+        if (ros::ok())
+        {
+            ros::spinOnce();
+        }
         if (reset_requested.load())
         {
             perform_system_reset();
@@ -1296,8 +1319,18 @@ int main(int argc, char** argv)
             }
         }
 
-        status = ros::ok();
-        rate.sleep();
+        // Update status, but don't exit immediately if ros::ok() becomes false
+        // This allows the map saving code to execute even if rosbag stops first
+        if (ros::ok())
+        {
+            status = true;
+            rate.sleep();
+        }
+        else
+        {
+            // If ROS is not ok, sleep briefly to avoid busy waiting
+            usleep(1000);  // 1ms sleep
+        }
     }
 
     /**************** save map ****************/
@@ -1308,8 +1341,49 @@ int main(int argc, char** argv)
         string file_name = string("scans.pcd");
         string all_points_dir = pcd_output_root + file_name;
         pcl::PCDWriter pcd_writer;
-        cout << "current scan saved to " << all_points_dir << endl;
-        pcd_writer.writeBinary(all_points_dir, *pcl_wait_save);
+        
+        // 计算点云大小（MB）
+        size_t point_count = pcl_wait_save->size();
+        double estimated_size_mb = (point_count * sizeof(pcl::PointXYZI)) / (1024.0 * 1024.0);
+        
+        ROS_INFO("========================================");
+        ROS_INFO("[FAST-LIO] Starting map save...");
+        ROS_INFO("[FAST-LIO] Point cloud count: %zu points", point_count);
+        ROS_INFO("[FAST-LIO] Estimated size: ~%.2f MB", estimated_size_mb);
+        ROS_INFO("[FAST-LIO] Save path: %s", all_points_dir.c_str());
+        ROS_INFO("[FAST-LIO] Writing file, please wait...");
+        
+        double save_start_time = ros::Time::now().toSec();
+        int result = pcd_writer.writeBinary(all_points_dir, *pcl_wait_save);
+        double save_end_time = ros::Time::now().toSec();
+        
+        if (result == 0)
+        {
+            // Check if file exists and get actual size
+            struct stat file_stat;
+            if (stat(all_points_dir.c_str(), &file_stat) == 0)
+            {
+                double file_size_mb = file_stat.st_size / (1024.0 * 1024.0);
+                ROS_INFO("[FAST-LIO] Map saved successfully!");
+                ROS_INFO("[FAST-LIO] Actual file size: %.2f MB", file_size_mb);
+                ROS_INFO("[FAST-LIO] Save time: %.2f seconds", save_end_time - save_start_time);
+                ROS_INFO("========================================");
+            }
+            else
+            {
+                ROS_ERROR("[FAST-LIO] Map save failed: Cannot verify file");
+                ROS_ERROR("========================================");
+            }
+        }
+        else
+        {
+            ROS_ERROR("[FAST-LIO] Map save failed: PCL write error (return code: %d)", result);
+            ROS_ERROR("========================================");
+        }
+    }
+    else if (pcd_save_en && pcl_wait_save->size() == 0)
+    {
+        ROS_WARN("[FAST-LIO] Map save enabled but point cloud data is empty, skipping save");
     }
 
     fout_out.close();
