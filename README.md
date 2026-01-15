@@ -181,7 +181,7 @@ pip install -r requirements.txt
 
 ### **在线 ROS 联动：KITTI Tracking 点云 → PointPillars → FAST-LIO → MCTrack → RViz**
 
-> 当前检测由 MMDetection3D PointPillars 推理节点发布至 `/detection/bboxes_3d` 与 `/detection/kitti_tracking`；后续如需替换，可接入其他检测器但需保持话题接口一致。
+> 当前检测由 MMDetection3D PointPillars 推理节点发布至 `/detection/bboxes_3d` 与 `/detection/kitti_tracking`；新增 `/detection/lidar_detections`（`Detection3DArray`，带原始点云时间戳），后续如需替换，可接入其他检测器但需保持话题接口一致。
 
 运行前请准备好 KITTI Tracking 数据目录（用于工况播放与 MCTrack 标定信息）：
 
@@ -262,7 +262,8 @@ FAST-LIO 提供三种启动方式：
 ./Scripts/mctrack/run_mctrack_online_node.sh
 ```
 
-节点订阅 `/detection/lidar_tracking`（PointPillars LiDAR 坐标系检测）和 `/mctrack/lidar_pose`（FAST-LIO 位姿），实时发布跟踪结果到 `/mctrack/markers`。
+节点订阅 `/detection/lidar_detections`（`Detection3DArray`，带原始点云时间戳）和 `/mctrack/lidar_pose`（FAST-LIO 位姿），实时发布跟踪结果到 `/mctrack/markers`。
+如需兼容旧版字符串格式，可在启动时设置 `_use_lidar_tracking_string:=true` 并将 `~det_topic` 指向 `/detection/lidar_tracking`。
 
 **位姿订阅说明**：
 - `fastlio_pose_bridge.py` 桥接节点订阅 `/Odometry_imu_predicted`（FAST-LIO 发布的 IMU 预测位姿，LiDAR 更新前），并转发为 `/mctrack/lidar_pose`

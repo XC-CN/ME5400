@@ -41,7 +41,7 @@ fi
 source "$CATKIN_WS/devel/setup.bash"
 
 echo "[信息] 启动MCTrack在线跟踪节点"
-echo "[信息] 订阅话题: /detection/lidar_tracking (PointPillars LiDAR坐标系检测)"
+echo "[信息] 订阅话题: /detection/lidar_detections (Detection3DArray, 带时间戳)"
 echo "[信息]           /mctrack/lidar_pose (FAST-LIO 位姿)"
 
 rosrun ME5400 mctrack_online_node.py \

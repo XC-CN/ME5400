@@ -3,7 +3,7 @@
   
   <!-- 是否启动 RViz（可以在运行时通过传入参数覆盖） -->
   <arg name="rviz" default="true" />
-  
+
   <!-- 是否启用动态目标权重优化（默认启用，设为 false 则使用原始方法） -->
   <arg name="use_dynamic_weights" default="true" />
 

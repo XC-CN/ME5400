@@ -165,8 +165,12 @@ class MCTrackOnlineNode:
     def __init__(self) -> None:
         config_path = Path(rospy.get_param("~config", MCTrack_DIR / "config" / "kitti_fastlio.yaml"))
         self.pose_topic = rospy.get_param("~pose_topic", "/mctrack/lidar_pose")
-        # 默认使用LiDAR坐标系检测（PointPillars直接输出）
-        self.det_topic = rospy.get_param("~det_topic", "/detection/lidar_tracking")
+        self.use_string_det = bool(rospy.get_param("~use_lidar_tracking_string", False))
+        # 默认使用带时间戳的Detection3DArray（LiDAR坐标系）
+        if self.use_string_det:
+            self.det_topic = rospy.get_param("~det_topic", "/detection/lidar_tracking")
+        else:
+            self.det_topic = rospy.get_param("~det_topic", "/detection/lidar_detections")
         self.frame_rate = float(rospy.get_param("~frame_rate", 10.0))
         self.arrow_length = float(rospy.get_param("~arrow_length", 3.0))
         self.history_size = int(rospy.get_param("~history_size", 200))
@@ -191,12 +195,16 @@ class MCTrackOnlineNode:
         self.marker_pub = rospy.Publisher("/mctrack/markers", MarkerArray, queue_size=1)
         self.track_pub = rospy.Publisher("/mctrack/tracked_objects", TrackedObjectArray, queue_size=5)
         self.pose_sub = rospy.Subscriber(self.pose_topic, PoseStamped, self.pose_callback, queue_size=20)
-        self.det_sub = rospy.Subscriber(self.det_topic, String, self.lidar_tracking_callback, queue_size=10)
+        if self.use_string_det:
+            self.det_sub = rospy.Subscriber(self.det_topic, String, self.lidar_tracking_callback, queue_size=10)
+        else:
+            self.det_sub = rospy.Subscriber(self.det_topic, Detection3DArray, self.det_callback, queue_size=10)
         
         rospy.loginfo(
-            "MCTrackOnlineNode 初始化完成 (配置=%s, 检测话题=%s)",
+            "MCTrackOnlineNode 初始化完成 (配置=%s, 检测话题=%s, 旧版String=%s)",
             config_path,
             self.det_topic,
+            self.use_string_det,
         )
 
     def pose_callback(self, msg: PoseStamped) -> None:

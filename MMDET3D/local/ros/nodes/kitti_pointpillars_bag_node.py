@@ -24,6 +24,9 @@ CATKIN_PYTHON_PATH = Path(__file__).resolve().parents[4] / 'catkin_ws' / 'devel'
 if CATKIN_PYTHON_PATH.exists():
     sys.path.insert(0, str(CATKIN_PYTHON_PATH))
 
+# 自定义消息
+from ME5400.msg import Detection3D, Detection3DArray
+
 # MMDetection3D相关
 from mmdet3d.apis import LidarDet3DInferencer
 from mmdet3d.structures import Box3DMode, LiDARInstance3DBoxes
@@ -87,6 +90,7 @@ class KittiPointPillarsBagNode:
         self.status_pub = rospy.Publisher('/detection/status', String, queue_size=10)
         self.kitti_tracking_pub = rospy.Publisher('/detection/kitti_tracking', String, queue_size=10)
         self.lidar_tracking_pub = rospy.Publisher('/detection/lidar_tracking', String, queue_size=10)  # 新增：LiDAR坐标系
+        self.lidar_detection_pub = rospy.Publisher('/detection/lidar_detections', Detection3DArray, queue_size=10)
         self.pointcloud_pub = rospy.Publisher('/detection/pointcloud', PointCloud2, queue_size=10)
         self.imu_pub = rospy.Publisher('/detection/imu', Imu, queue_size=10)
         
@@ -253,6 +257,13 @@ class KittiPointPillarsBagNode:
                 frame_id=f"seq_{self.seq}",
             )
             cam_info = self._publish_detection_array(detections, det_header, frame_id)
+
+            lidar_header = Header(
+                stamp=original_stamp,
+                frame_id=msg.header.frame_id if msg.header.frame_id else self.frame_id,
+            )
+            lidar_array = self._detections_to_lidar_array(detections, lidar_header, frame_id)
+            self.lidar_detection_pub.publish(lidar_array)
             
             # 转换为MarkerArray并发布
             marker_frame_id = msg.header.frame_id if msg.header.frame_id else self.frame_id
@@ -600,6 +611,44 @@ class KittiPointPillarsBagNode:
         self._last_marker_frame = frame_id
         
         return marker_array
+
+    def _detections_to_lidar_array(
+        self,
+        detections: Dict[str, Any],
+        header: Header,
+        frame_id: int,
+    ) -> Detection3DArray:
+        array_msg = Detection3DArray()
+        array_msg.header = header
+
+        bboxes = detections.get('bboxes_3d')
+        scores = detections.get('scores_3d')
+        class_names = detections.get('class_names')
+
+        if bboxes is None or bboxes.size == 0:
+            return array_msg
+
+        for bbox, score, cls_name in zip(bboxes, scores, class_names):
+            if len(bbox) == 7:
+                x, y, z, length, width, height, yaw = bbox
+            elif len(bbox) == 9:
+                x, y, z, length, width, height, yaw, _vx, _vy = bbox
+            else:
+                continue
+
+            det_msg = Detection3D()
+            det_msg.header = header
+            det_msg.frame = int(frame_id)
+            det_msg.track_id = -1
+            det_msg.cls = cls_name
+            det_msg.score = float(score)
+            det_msg.location = [float(x), float(y), float(z)]
+            det_msg.dimensions = [float(height), float(width), float(length)]
+            det_msg.rotation_y = float(yaw)
+            det_msg.bbox2d = [0.0, 0.0, 0.0, 0.0]
+            array_msg.detections.append(det_msg)
+
+        return array_msg
     
     def _detections_to_lidar_tracking(
         self,
