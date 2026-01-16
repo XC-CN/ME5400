@@ -27,7 +27,7 @@
   <!-- 地图分块/体素的边长（米），用于地图管理 -->
   <param name="cube_side_length" type="double" value="1000" />
   <!-- 是否记录运行时位置日志（用于调试/回放） -->
-  <param name="runtime_pos_log_enable" type="bool" value="0" />
+  <param name="runtime_pos_log_enable" type="bool" value="1" />
   <!-- 动态目标降权（结合 /mctrack/tracked_objects） -->
   <param name="preprocess/use_dynamic_weights" type="bool" value="$(arg use_dynamic_weights)" />
   <param name="preprocess/tracked_topic" type="string" value="/mctrack/tracked_objects" />

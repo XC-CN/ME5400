@@ -6,13 +6,24 @@
 
 这是ME5400高级机器人与自主系统课程项目，聚焦于**FAST-LIO 里程计与 MCTrack 多目标跟踪的融合管线**，用于自动驾驶场景下将实时点云/IMU 位姿与三维目标检测数据统一处理并可视化。
 
+## 目录
+
+- [🤖 面向协助代理的提示](#-面向协助代理的提示)
+- [📋 项目概述与功能](#-项目概述与功能)
+- [📁 项目结构](#-项目结构)
+- [🛠️ 环境与安装](#️-环境与安装)
+- [🎯 使用指南](#-使用指南)
+- [📊 实验结果](#-实验结果)
+- [🔧 配置说明](#-配置说明)
+
+
 ## 🤖 面向协助代理的提示
 
 - 请始终使用中文与项目成员沟通。
 - 修改任意代码或脚本后，务必同步更新 `README.md`，保持流程说明与实现一致。
 - 在修改完代码，请尝试运行，确保运行顺利再交付
 
-## 📋 项目概述
+## 📋 项目概述与功能
 
 本项目包含两个主要组件：
 
@@ -21,7 +32,7 @@
 
 项目内置 MMDetection3D PointPillars 推理节点作为统一检测器；如需切换，可替换为其他 3D/多模态目标检测算法的实时输出。
 
-## 🚀 主要功能
+### 主要功能
 
 - 🔗 **FAST-LIO × MCTrack 融合管线**：将点云/IMU 里程计与检测目标对齐，实时输出包围盒、轨迹与朝向箭头。
 - 🎯 **多数据集兼容的跟踪模块**：MCTrack 支持 KITTI / nuScenes / Waymo；当前默认使用 KITTI Tracking 的检测结果。
@@ -73,15 +84,17 @@ ME5400/
 - **MCTrack/**：纯跟踪算法框架
 - **catkin_ws/**：ROS 工作空间，包含 FAST-LIO 和 MCTrack 的 ROS 适配层
 
-## 🛠️ 环境要求
+## 🛠️ 环境与安装
 
-### 系统要求
+### 环境要求
+
+#### 系统要求
 
 - Ubuntu 20.04 LTS
 - ROS Noetic
 - Python 3.8+
 
-### 依赖库
+#### 依赖库
 
 ```bash
 # ROS依赖
@@ -91,7 +104,7 @@ sudo apt install ros-noetic-pcl-ros ros-noetic-eigen-conversions
 pip install numpy opencv-python matplotlib
 ```
 
-### PointPillars 快速环境配置（ME5400）
+#### PointPillars 快速环境配置（ME5400）
 
 - **数据集路径**：`MMDET3D/data/kitti/`（rosbag 示例位于 `MMDET3D/data/kitti/seq_0019_with_det.bag`）
 - **Conda 环境**：`ME5400`，Python 3.10.x
@@ -152,16 +165,16 @@ pip install numpy opencv-python matplotlib
   python -c "import mmdet3d; print('MMDetection3D版本:', mmdet3d.__version__)"
   ```
 
-## ⚙️ 安装步骤
+### 安装步骤
 
-### 1. 克隆仓库
+#### 1. 克隆仓库
 
 ```bash
 git clone https://github.com/XC-CN/ME5400.git
 cd ME5400
 ```
 
-### 2. 编译FAST-LIO2
+#### 2. 编译FAST-LIO2
 
 ```bash
 cd catkin_ws
@@ -170,7 +183,7 @@ catkin_make
 source devel/setup.bash
 ```
 
-### 3. 安装MCTrack依赖
+#### 3. 安装MCTrack依赖
 
 ```bash
 cd MCTrack
@@ -309,6 +322,46 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop
 
 
 
+### 📈 **量化分析：基于 KITTI 真值评估优化效果**
+量化分析旨在验证“动态目标降权”功能对 FAST-LIO 建图精度的影响。我们使用 KITTI Tracking 数据集中提供的高精度 OXTS 真值作为基准。
+
+**步骤 1：生成真值轨迹**
+使用项目提供的工具将 OXTS 数据转换为 LiDAR 坐标系下的真值文件（.txt）：
+```bash
+./Scripts/utils/generate_kitti_pose.py
+# 生成文件位置: MCTrack/data/kitti/datasets/training/pose/<seq>.txt
+```
+
+**步骤 2：开启轨迹记录**
+确认 `catkin_ws/src/fast_lio/launch/mapping_velodyne.launch` 中已启用日志记录：
+```xml
+<param name="runtime_pos_log_enable" type="bool" value="1" />
+```
+
+**步骤 3：执行对比实验**
+分别运行基准组（关闭优化）和实验组（开启优化），并保留生成的轨迹文件：
+
+*   **基准组 (Baseline)**:
+    ```bash
+    ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
+    rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
+    # 运行结束将 Log/pos_log.txt 重命名为 baseline_pos.txt
+    ```
+
+*   **优化组 (Optimized)**:
+    ```bash
+    ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true
+    rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
+    # 运行结束将 Log/pos_log.txt 重命名为 optimized_pos.txt
+    ```
+
+**步骤 4：指标计算 (ATE/RPE)**
+使用 `evo` 工具（需自行安装）对比轨迹与真值：
+```bash
+evo_ape kitti MCTrack/data/kitti/datasets/training/pose/0019.txt baseline_pos.txt -a --plot
+evo_ape kitti MCTrack/data/kitti/datasets/training/pose/0019.txt optimized_pos.txt -a --plot
+```
+
 ## 📊 实验结果
 
 ### FAST-LIO2 建图效果
@@ -416,31 +469,3 @@ mapping:
 - 如果进程被强制杀死（kill -9），地图可能不会保存
 - 地图保存位置可通过 `pcd_save/output_dir` 参数自定义
 - 如果点云数据为空，地图文件不会生成（这是正常行为）
-
-## 🤝 贡献
-
-欢迎提交Issue和Pull Request！
-
-## 📄 许可证
-
-本项目采用MIT许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
-
-## 📚 参考文献
-
-1. **FAST-LIO2**: [Fast Direct LiDAR-Inertial Odometry](https://github.com/hku-mars/FAST_LIO)
-2. **MCTrack**: Multi-Object Tracking with Motion Compensation
-3. **KITTI Dataset**: [Vision meets Robotics](http://www.cvlibs.net/datasets/kitti/)
-
-## 👥 作者
-
-- **XC-CN** - 项目维护者
-
-## 🔗 相关链接
-
-- [项目仓库](https://github.com/XC-CN/ME5400.git)
-- [FAST-LIO原版](https://github.com/hku-mars/FAST_LIO)
-- [KITTI数据集](http://www.cvlibs.net/datasets/kitti/)
-
----
-
-⭐ 如果这个项目对你有帮助，请给个Star！
