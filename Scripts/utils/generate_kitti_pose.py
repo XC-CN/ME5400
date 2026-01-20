@@ -5,7 +5,7 @@ from typing import Dict
 import numpy as np
 from pykitti import utils
 
-ROOT = Path(__file__).resolve().parents[1] / "MCTrack" / "data" / "kitti" / "datasets"
+ROOT = Path(__file__).resolve().parents[2] / "MCTrack" / "data" / "kitti" / "datasets"
 
 
 def read_calib_mat(calib_path: Path) -> Dict[str, np.ndarray]:

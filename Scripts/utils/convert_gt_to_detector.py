@@ -3,7 +3,7 @@
 from pathlib import Path
 import os
 
-ROOT = Path(__file__).resolve().parents[1] / "MCTrack" / "data" / "kitti"
+ROOT = Path(__file__).resolve().parents[2] / "MCTrack" / "data" / "kitti"
 LABEL_DIR = ROOT / "datasets" / "training" / "label_02"
 OUTPUT_BASE = ROOT / "detectors" / "gt"
 SCORE_LOGIT = 10.0  # logistic^{-1}(~0.99995)

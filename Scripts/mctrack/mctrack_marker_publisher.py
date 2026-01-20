@@ -11,7 +11,7 @@ from geometry_msgs.msg import Point
 from visualization_msgs.msg import Marker, MarkerArray
 from tf.transformations import quaternion_from_matrix
 
-DATA_ROOT = Path(__file__).resolve().parents[1] / "MCTrack" / "data" / "kitti"
+DATA_ROOT = Path(__file__).resolve().parents[2] / "MCTrack" / "data" / "kitti"
 
 
 def parse_args() -> argparse.Namespace:

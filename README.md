@@ -12,6 +12,7 @@
 - [📋 项目概述与功能](#-项目概述与功能)
 - [📁 项目结构](#-项目结构)
 - [🛠️ 环境与安装](#️-环境与安装)
+- [📊 数据准备](#-数据准备)
 - [🎯 使用指南](#-使用指南)
 - [📊 实验结果](#-实验结果)
 - [🔧 配置说明](#-配置说明)
@@ -165,6 +166,7 @@ pip install numpy opencv-python matplotlib
   python -c "import mmdet3d; print('MMDetection3D版本:', mmdet3d.__version__)"
   ```
 
+
 ### 安装步骤
 
 #### 1. 克隆仓库
@@ -190,9 +192,39 @@ cd MCTrack
 pip install -r requirements.txt
 ```
 
-## 🎯 使用指南
+### 📊 数据准备
 
-### **在线 ROS 联动：KITTI Tracking 点云 → PointPillars → FAST-LIO → MCTrack → RViz**
+本项目依赖 [KITTI Tracking Benchmark](http://www.cvlibs.net/datasets/kitti/eval_tracking.php) 数据集。请按照以下步骤下载并组织数据。
+
+### 1. 数据集下载
+
+请访问 [KITTI Tracking Benchmark 官网](http://www.cvlibs.net/datasets/kitti/eval_tracking.php) 下载以下文件：
+
+-   **Velodyne point clouds (29 GB)**: `data_tracking_velodyne.zip`
+-   **Training labels of object data (5 MB)**: `data_tracking_label_2.zip`
+-   **Camera calibration matrices of object data (1 MB)**: `data_tracking_calib.zip`
+-   **GPS/IMU data (Overlay of GPS/IMU data on the raw data)**: `data_tracking_oxts.zip`
+
+### 2. 目录结构组织
+
+下载完成后，请解压并将文件放置在 `Data_Tracking` 目录下，结构如下：
+
+```plain
+ME5400/
+└── Data_Tracking/
+    └── training/
+        ├── calib/              # data_tracking_calib.zip 解压内容
+        ├── label_02/           # data_tracking_label_2.zip 解压内容
+        ├── oxts/               # data_tracking_oxts.zip 解压内容
+        └── velodyne/           # data_tracking_velodyne.zip 解压内容
+```
+
+> **注意**：
+>
+> *   `MMDET3D/data/kitti` 目录是为 MMDetection3D 准备的，通常通过软链接指向 `Data_Tracking` 或单独配置。
+> *   本项目提供的脚本默认假设数据位于 `Data_Tracking` 下。
+
+## 🎯 使用指南
 
 > 当前检测由 MMDetection3D PointPillars 推理节点发布至 `/detection/bboxes_3d` 与 `/detection/kitti_tracking`；新增 `/detection/lidar_detections`（`Detection3DArray`，带原始点云时间戳），后续如需替换，可接入其他检测器但需保持话题接口一致。
 
@@ -212,56 +244,41 @@ pip install -r requirements.txt
 
 也可以直接使用 `MMDET3D/data/kitti/seq_0019_with_det.bag` 或 `tracking/rosbags/seq_0019_with_det.bag` 作为示例数据。
 
-#### 1. **启动 roscore（终端 A）**
+### 1. **启动 roscore（终端 A）**
 
 ```bash
 roscore
 ```
 
-#### 2. **【首次运行或代码更新后】编译工作空间**
+### 2. **【首次运行或代码更新后】编译工作空间**
 
 ```bash
 ./Scripts/utils/build_catkin_ws.sh
 ```
 
-#### 3. **【可选】生成或更新默认 rosbag**
+### 3. **【可选】生成或更新默认 rosbag**
 
 ```bash
 ./Scripts/utils/kitti_tracking_to_rosbag.py --seq 20  #制作第20号场景的rosbag
 ```
 
-#### 4. **启动 PointPillars 检测节点（终端 B）**
+### 4. **启动 PointPillars 检测节点（终端 B）**
 
 ```bash
 ./Scripts/pointpillars/run_pointpillars_node.sh
 ```
 
-#### 5. **启动 FAST-LIO 系统（终端 C）**
+### 5. **启动 FAST-LIO 系统（终端 C）**
 
 FAST-LIO 提供三种启动方式：
 
-**方式一：使用统一脚本（推荐，灵活）**
+**使用统一脚本（推荐，灵活）**
 ```bash
 # 启用动态权重优化（默认）
 ./Scripts/fastlio/run_fastlio.sh both
 
 # 禁用动态权重优化，使用原始方法
 ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
-
-# 仅启动 mapping（支持传递任意 ROS 参数）
-./Scripts/fastlio/run_fastlio.sh mapping rviz:=false use_dynamic_weights:=true
-
-# 仅启动 pose_bridge
-./Scripts/fastlio/run_fastlio.sh pose_bridge
-```
-
-**方式二：分别启动（调试场景）**
-```bash
-# 终端 C1：启动 mapping（可指定权重参数）
-./Scripts/fastlio/run_fastlio.sh mapping use_dynamic_weights:=true
-
-# 终端 C2：启动 pose_bridge
-./Scripts/fastlio/run_fastlio.sh pose_bridge
 ```
 
 > **使用说明**：
@@ -269,7 +286,7 @@ FAST-LIO 提供三种启动方式：
 > - 动态权重优化功能默认启用，可通过 `use_dynamic_weights` 参数控制
 > - FAST-LIO 会发布 `/Odometry_imu_predicted` 话题（IMU 预测位姿，LiDAR 更新前），用于提高 MCTrack 的实时性
 
-#### 6. **启动 MCTrack 在线节点（终端 D）**
+### 6. **启动 MCTrack 在线节点（终端 D）**
 
 ```bash
 ./Scripts/mctrack/run_mctrack_online_node.sh
@@ -298,7 +315,7 @@ FAST-LIO 提供三种启动方式：
 > - 无需任何相机标定文件或序列号
 > - 检测阈值：`score >= 0.2`（可在 `mctrack_online_node.py` 中调整）
 
-#### 7. **播放 rosbag（终端 F，保持运行）**
+### 7. **播放 rosbag（终端 F，保持运行）**
 
 ```bash
 rosparam set use_sim_time true
@@ -312,7 +329,7 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop
 
 结束运行时，必须先关闭建图进程，再关闭rosbag。
 
-#### 8. **打开 RViz（终端 E，与 rosbag 同时运行）**
+### 8. **打开 RViz（终端 E，与 rosbag 同时运行）**
 
 ```bash
 ./Scripts/rviz/run_rviz.sh
