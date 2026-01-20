@@ -244,6 +244,32 @@ ME5400/
 
 也可以直接使用 `MMDET3D/data/kitti/seq_0019_with_det.bag` 或 `tracking/rosbags/seq_0019_with_det.bag` 作为示例数据。
 
+### 🚀 **一键启动（推荐）**
+
+如果您已准备好环境和数据，可以直接运行以下脚本启动全流程（自动跳过数据生成步骤）：
+
+```bash
+# 播放默认的 0020 序列
+./Scripts/run_all.sh
+
+# 播放指定的 0019 序列
+./Scripts/run_all.sh 0019
+```
+该脚本将自动执行以下操作：
+- 启动 `roscore`
+- 执行 `build_catkin_ws.sh` 确保工作空间已编译（若已编译则跳过）
+- 启动 **PointPillars** 检测节点
+- 启动 **FAST-LIO** 系统（Mapping + Pose Bridge）
+- 启动 **MCTrack** 在线跟踪节点
+- 启动 **RViz** 可视化
+- 播放指定的 rosbag（默认为 `seq_0020_nodet.bag`），并循环播放
+
+---
+
+### **分步启动指南**
+
+以下是手动分步启动的详细流程：
+
 ### 1. **启动 roscore（终端 A）**
 
 ```bash
@@ -272,7 +298,7 @@ roscore
 
 FAST-LIO 提供三种启动方式：
 
-**使用统一脚本（推荐，灵活）**
+
 ```bash
 # 启用动态权重优化（默认）
 ./Scripts/fastlio/run_fastlio.sh both
