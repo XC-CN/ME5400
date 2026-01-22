@@ -188,8 +188,21 @@ def main():
     ax1.set_xlabel("X (m)")
     ax1.set_ylabel("Y (m)")
     ax1.legend()
-    ax1.axis('equal')
+    ax1.set_aspect('equal', adjustable='datalim')
     ax1.grid(True)
+    
+    # Force X range to 0-400
+    ax1.set_xlim(0, 400)
+    ax1.set_ylim(-600, 0)
+    
+    # Calculate data Y-center
+    all_y = np.concatenate([gt_opt[:, 1], pred_opt[:, 1]])
+    if baseline_data is not None:
+         all_y = np.concatenate([all_y, pred_base[:, 1]])
+    
+    y_center = (np.max(all_y) + np.min(all_y)) / 2.0
+    # Set a tiny Y-range seed to force 'datalim' to expand Y (preserving X-width)
+    ax1.set_ylim(y_center - 1.0, y_center + 1.0)
     
     # Bottom: Errors
     if error_base is not None and len(error_base) > 0:
