@@ -37,10 +37,8 @@
 
    * **动态路标剔除**：MCTrack 实时反馈动态目标（如行驶车辆、行人）的 3D 包围盒、速度与加速度信息。
    * **自适应降权**：FAST-LIO 前端接收反馈后，对落在动态区域的点云进行实时降权或剔除。这有效防止了动态物体被错误地融入静态地图，从而生成更清晰、无鬼影的全局点云地图。
-   
 
 ![alt text](image/drawio.png)
-
 
 ## 📁 项目结构
 
@@ -319,30 +317,6 @@ FAST-LIO 提供三种启动方式：
 ./Scripts/mctrack/run_mctrack_online_node.sh
 ```
 
-节点订阅 `/detection/lidar_detections`（`Detection3DArray`，带原始点云时间戳）和 `/mctrack/lidar_pose`（FAST-LIO 位姿），实时发布跟踪结果到 `/mctrack/markers`。
-如需兼容旧版字符串格式，可在启动时设置 `_use_lidar_tracking_string:=true` 并将 `~det_topic` 指向 `/detection/lidar_tracking`。
-
-**位姿订阅说明**：
-
-- `fastlio_pose_bridge.py` 桥接节点订阅 `/Odometry_imu_predicted`（FAST-LIO 发布的 IMU 预测位姿，LiDAR 更新前），并转发为 `/mctrack/lidar_pose`
-- 使用 IMU 预测位姿而非最终位姿，可提高 MCTrack 的实时性和响应速度，减少跟踪延迟
-
-**跟踪结果发布**：
-
-- `/mctrack/markers`：RViz 可视化用的 Marker 消息
-- `/mctrack/tracked_objects`：`TrackedObjectArray` 消息，包含每个跟踪目标的详细信息：
-  - `track_id`、类别、检测置信度
-  - 全局姿态、LiDAR 坐标系姿态（`lidar_pose`/`lidar_yaw`）
-  - 长宽高尺寸
-  - 运动信息：`global_velocity`、`velocity_fusion`、`velocity_diff`、`velocity_curve`、`acceleration`
-  - 这些信息可供 FAST-LIO 或其他模块做动态目标降权建图
-
-> **说明**：
->
-> - 本项目是纯 LiDAR 系统。PointPillars 直接输出 LiDAR 坐标系的 3D 检测框。
-> - MCTrack 支持跟踪所有 KITTI 类别：**Car**、**Pedestrian**、**Cyclist**
-> - 无需任何相机标定文件或序列号
-> - 检测阈值：`score >= 0.2`（可在 `mctrack_online_node.py` 中调整）
 
 ### 7. **播放 rosbag（终端 F，保持运行）**
 
@@ -358,7 +332,7 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 
 --loop为循环运行
 
-结束运行时，必须先关闭建图进程，再关闭rosbag。
+结束运行时，必须先关闭fastlio建图进程，再关闭rosbag。
 
 ### 8. **打开 RViz（终端 E，与 rosbag 同时运行）**
 
@@ -368,66 +342,7 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 
    使用 `Scripts/rviz/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
 
-### 📈 **量化分析：基于 KITTI 真值评估优化效果**
-
-量化分析旨在验证“动态目标降权”功能对 FAST-LIO 建图精度的影响。我们使用 KITTI Tracking 数据集中提供的高精度 OXTS 真值作为基准。
-
-**步骤 1：生成真值轨迹**
-使用项目提供的工具将 OXTS 数据转换为 LiDAR 坐标系下的真值文件（.txt）：
-
-```bash
-./Scripts/utils/generate_kitti_pose.py
-# 生成文件位置: MCTrack/data/kitti/datasets/training/pose/<seq>.txt
-```
-
-**步骤 2：开启轨迹记录**
-确认 `catkin_ws/src/fast_lio/launch/mapping_velodyne.launch` 中已启用日志记录：
-
-```xml
-<param name="runtime_pos_log_enable" type="bool" value="1" />
-```
-
-**步骤 3：执行对比实验**
-分别运行基准组（关闭优化）和实验组（开启优化），并保留生成的轨迹文件：
-
-* **基准组 (Baseline)**:
-
-  ```bash
-  ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
-  rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
-  # 运行结束将 Log/pos_log.txt 重命名为 baseline_pos.txt
-  ```
-* **优化组 (Optimized)**:
-
-  ```bash
-  ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true
-  rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
-  # 运行结束将 Log/pos_log.txt 重命名为 optimized_pos.txt
-  ```
-
-**步骤 4：指标计算 (ATE/RPE)**
-使用 `evo` 工具（需自行安装）对比轨迹与真值：
-
-```bash
-evo_ape kitti MCTrack/data/kitti/datasets/training/pose/0019.txt baseline_pos.txt -a --plot
-evo_ape kitti MCTrack/data/kitti/datasets/training/pose/0019.txt optimized_pos.txt -a --plot
-```
-
-## 📊 实验结果
-
-### FAST-LIO2 建图效果
-
-- **处理数据**: KITTI 2011_09_26_drive_0019_sync (481帧)
-- **生成点云**: 14,508,582个点
-- **地图文件**: 464MB PCD格式
-
-### MCTrack 跟踪性能
-
-- **KITTI数据集**: 支持车辆跟踪评估
-- **评估指标**: HOTA、CLEAR、Identity等
-- **可视化**: 提供轨迹和性能图表
-
-## 🔧 配置说明
+### 🔧 配置说明
 
 ### FAST-LIO2 配置
 

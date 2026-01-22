@@ -1,79 +1,79 @@
 #!/bin/bash
 set -e
 
-# get project root
+# 获取项目根目录
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 PROJECT_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 
-# Function to handle cleanup on exit
+# 退出时处理清理工作的函数
 cleanup() {
-    echo -e "\n[INFO] Stopping all processes..."
-    # Kill all child processes in the same process group
+    echo -e "\n[INFO] 正在停止所有进程..."
+    # 杀死同一进程组中的所有子进程
     trap - SIGTERM && kill -- -$$
 }
 
-# Trap SIGINT (Ctrl+C) and EXIT
+# 捕获 SIGINT (Ctrl+C) 和 EXIT 信号
 trap cleanup SIGINT EXIT
 
-echo "[INFO] Starting ME5400 Full Pipeline (Excluding Step 3)..."
+echo "[INFO] 正在启动 ME5400 完整流水线 (不包括步骤 3)..."
 
-# 1. Start roscore
-echo "[STEP 1] Starting roscore..."
+# 1. 启动 roscore
+echo "[步骤 1] 正在启动 roscore..."
 roscore &
 ROSCORE_PID=$!
-sleep 5  # Wait for roscore to initialize
+sleep 5  # 等待 roscore 初始化
 
-# 2. Build catkin workspace (Fast if already built)
-echo "[STEP 2] Building/Verifying catkin workspace..."
+# 2. 构建 catkin 工作空间 (如果已构建则速度很快)
+echo "[步骤 2] 正在构建/验证 catkin 工作空间..."
 "$PROJECT_ROOT/Scripts/utils/build_catkin_ws.sh"
 
-# 4. Start PointPillars Node
-echo "[STEP 4] Starting PointPillars Node..."
+# 4. 启动 PointPillars 节点
+echo "[步骤 4] 正在启动 PointPillars 节点..."
 "$PROJECT_ROOT/Scripts/pointpillars/run_pointpillars_node.sh" &
 PP_PID=$!
-sleep 5 # Wait for model to load
+sleep 5 # 等待模型加载
 
-# 5. Start FAST-LIO System
-echo "[STEP 5] Starting FAST-LIO (Mapping + Pose Bridge)..."
+# 5. 启动 FAST-LIO 系统
+echo "[步骤 5] 正在启动 FAST-LIO (建图 + 位姿桥接)..."
 "$PROJECT_ROOT/Scripts/fastlio/run_fastlio.sh" both &
 FL_PID=$!
 sleep 3
 
-# 6. Start MCTrack Online Node
-echo "[STEP 6] Starting MCTrack Online Node..."
+# 6. 启动 MCTrack 在线节点
+echo "[步骤 6] 正在启动 MCTrack 在线节点..."
 "$PROJECT_ROOT/Scripts/mctrack/run_mctrack_online_node.sh" &
 MC_PID=$!
 sleep 2
 
-# 8. Open RViz
-echo "[STEP 8] Starting RViz..."
+# 8. 启动 RViz
+echo "[步骤 8] 正在启动 RViz..."
 "$PROJECT_ROOT/Scripts/rviz/run_rviz.sh" &
 RVIZ_PID=$!
 sleep 5
 
-# 7. Play Rosbag
-# Default sequence is 0020
+# 7. 播放 Rosbag
+# 默认序列为 0020
 SEQ_ID=${1:-"0020"}
 BAG_FILE="$PROJECT_ROOT/Data_Tracking/rosbags/seq_${SEQ_ID}_nodet.bag"
 
 if [[ ! -f "$BAG_FILE" ]]; then
-    echo "[WARN] Bag file not found at $BAG_FILE"
-    echo "       Please check if the sequence ID '$SEQ_ID' is correct and the bag exists in Data_Tracking/rosbags/"
-    echo "       Running without bag play (Manual play required)."
+    echo "[警告] 在 $BAG_FILE 未找到 Bag 文件"
+    echo "       请检查序列 ID '$SEQ_ID' 是否正确，以及 bag 是否存在于 Data_Tracking/rosbags/ 中"
+    echo "       将在不播放 bag 的情况下运行 (需要手动播放)。"
     wait $RVIZ_PID
 else
-    echo "[STEP 7] Playing Rosbag: $BAG_FILE"
+    echo "[步骤 7] 正在播放 Rosbag: $BAG_FILE"
     rosparam set use_sim_time true
     rosbag play "$BAG_FILE" --clock --loop &
     BAG_PID=$!
     
     echo "========================================================="
-    echo "   Pipeline Running! Press Ctrl+C to stop everything.    "
+    echo "   流水线已运行！按 Ctrl+C 停止所有进程。                "
     echo "========================================================="
     
-    # Wait for the bag player or user interrupt
+    # 等待 bag 播放器或用户中断
     wait $BAG_PID
 fi
 
-# Keep script running if bag play was skipped or finished (if loop is off, but here loop is on)
+# 如果跳过或结束了 bag 播放，保持脚本运行
 wait
