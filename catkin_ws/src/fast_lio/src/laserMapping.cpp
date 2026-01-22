@@ -141,6 +141,7 @@ float res_last[100000] = {0.0};
 float DET_RANGE = 300.0f;
 const float MOV_THRESHOLD = 1.5f;
 double time_diff_lidar_to_imu = 0.0;
+ofstream traj_file;
 
 mutex mtx_buffer;
 condition_variable sig_buffer;
@@ -803,6 +804,14 @@ void publish_odometry(const ros::Publisher & pubOdomAftMapped)
         odomAftMapped.pose.covariance[i*6 + 3] = P(k, 0);
         odomAftMapped.pose.covariance[i*6 + 4] = P(k, 1);
         odomAftMapped.pose.covariance[i*6 + 5] = P(k, 2);
+        odomAftMapped.pose.covariance[i*6 + 5] = P(k, 2);
+    }
+
+    if (traj_file.is_open()) {
+        traj_file << fixed << setprecision(6) 
+                  << lidar_end_time << " " 
+                  << state_point.pos(0) << " " << state_point.pos(1) << " " << state_point.pos(2) << " "
+                  << geoQuat.x << " " << geoQuat.y << " " << geoQuat.z << " " << geoQuat.w << endl;
     }
 
     static tf::TransformBroadcaster br;
@@ -1097,7 +1106,43 @@ int main(int argc, char** argv)
     if (fout_pre && fout_out)
         cout << "~~~~"<<ROOT_DIR<<" file opened" << endl;
     else
+    if (fout_pre && fout_out)
+        cout << "~~~~"<<ROOT_DIR<<" file opened" << endl;
+    else
         cout << "~~~~"<<ROOT_DIR<<" doesn't exist" << endl;
+
+    /*** Trajectory Saving Initialization ***/
+    string results_dir;
+    // Attempt to deduce Results directory parallel to PCD directory mechanism
+    string pkg_suffix = "/catkin_ws/src/fast_lio";
+    size_t pos = root_dir.rfind(pkg_suffix);
+    if (pos != string::npos) {
+        results_dir = root_dir.substr(0, pos) + "/Results/";
+    } else {
+        // Fallback: assume root_dir is inside package, try to go up
+        // Or simply use current directory/Results if all else fails
+        results_dir = root_dir + "/../../Results/"; 
+        // Note: root_dir usually points to cmake source dir.
+        // If ROOT_DIR is the package root, then:
+        results_dir = root_dir + "/Results/";
+    }
+    
+    // Fallback logic to be safe: ensure we are writing to project root if possible
+    // Given the user setup: Projects/ME5400/catkin_ws/src/fast_lio matches the suffix logic.
+    // But root_dir might be just .../fast_lio. 
+    // Let's use the same logic as pcd_output_root but replace PCD with Results
+    string base_pcd_dir = compute_default_pcd_dir(root_dir);
+    // base_pcd_dir ends with PCD/. Remove it and add Results/
+    results_dir = base_pcd_dir.substr(0, base_pcd_dir.length() - 4) + "Results/";
+    
+    ensure_directory_exists(results_dir);
+    string traj_path = results_dir + "trajectory.txt";
+    traj_file.open(traj_path, ios::out | ios::trunc);
+    if (traj_file.is_open()) {
+        cout << "[FAST-LIO] Trajectory file opened at: " << traj_path << endl;
+    } else {
+        cerr << "[FAST-LIO] Failed to open trajectory file at: " << traj_path << endl;
+    }
 
     /*** ROS subscribe initialization ***/
     ros::Subscriber sub_pcl = nh.subscribe(lid_topic, 200000, standard_pcl_cbk);
@@ -1387,7 +1432,9 @@ int main(int argc, char** argv)
     }
 
     fout_out.close();
+    fout_out.close();
     fout_pre.close();
+    if (traj_file.is_open()) traj_file.close();
 
     if (runtime_pos_log)
     {
