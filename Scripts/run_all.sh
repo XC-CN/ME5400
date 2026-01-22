@@ -45,63 +45,103 @@ if ! kill -0 $PP_PID 2>/dev/null; then
     exit 1
 fi
 
-# 5. 启动 FAST-LIO 系统
-echo "[步骤 5] 正在启动 FAST-LIO (建图 + 位姿桥接)..."
-"$PROJECT_ROOT/Scripts/fastlio/run_fastlio.sh" both &
+# 5. 启动 FAST-LIO 系统 (第一遍：基准测试 - 无 MCTrack 优化)
+echo "========================================================="
+echo "   阶段 A: 运行基准测试 (无 MCTrack 优化)                "
+echo "========================================================="
+
+echo "[步骤 5A] 正在启动 FAST-LIO (基准模式: use_dynamic_weights=false)..."
+"$PROJECT_ROOT/Scripts/fastlio/run_fastlio.sh" both use_dynamic_weights:=false &
 FL_PID=$!
 sleep 5
 
 # 检查 FastLIO 是否存活
 if ! kill -0 $FL_PID 2>/dev/null; then
-    echo "[错误] FastLIO 启动失败"
+    echo "[错误] FastLIO (基准) 启动失败"
     exit 1
 fi
 
-# 6. 启动 MCTrack 在线节点
+# 7A. 播放 Rosbag (基准)
+SEQ_ID=${1:-"0020"}
+BAG_FILE="$PROJECT_ROOT/Data_Tracking/rosbags/seq_${SEQ_ID}_nodet.bag"
+
+if [[ ! -f "$BAG_FILE" ]]; then
+    echo "[错误] Bag 文件未找到: $BAG_FILE"
+    exit 1
+fi
+
+echo "[步骤 7A] 正在播放 Rosbag (基准)..."
+rosparam set use_sim_time true
+rosbag play "$BAG_FILE" --clock &
+BAG_PID=$!
+
+echo "Waiting for Baseline Run..."
+wait $BAG_PID
+sleep 5
+
+# 停止 FastLIO 并重命名轨迹文件
+echo "[步骤 5A] 基准测试结束，停止 FastLIO..."
+kill -TERM $FL_PID 2>/dev/null || true
+wait $FL_PID 2>/dev/null || true
+# 等待文件写入完成
+sleep 2
+
+if [[ -f "$PROJECT_ROOT/Results/trajectory.txt" ]]; then
+    mv "$PROJECT_ROOT/Results/trajectory.txt" "$PROJECT_ROOT/Results/trajectory_baseline.txt"
+    echo "[信息] 基准轨迹已保存为 Results/trajectory_baseline.txt"
+else
+    echo "[警告] 未找到基准轨迹文件！"
+fi
+
+# 重置 FastLIO 状态或稍作等待
+sleep 5
+
+# 5. 启动 FAST-LIO 系统 (第二遍：优化测试 - 有 MCTrack 优化)
+echo "========================================================="
+echo "   阶段 B: 运行优化测试 (带 MCTrack 优化)                "
+echo "========================================================="
+
+# 6. 启动 MCTrack 在线节点 (确保它在运行)
+# 检查 MCTrack 是否还需要重启？建议重启以重置状态
+if kill -0 $MC_PID 2>/dev/null; then
+    kill $MC_PID 2>/dev/null || true
+fi
+
 echo "[步骤 6] 正在启动 MCTrack 在线节点..."
 "$PROJECT_ROOT/Scripts/mctrack/run_mctrack_online_node.sh" &
 MC_PID=$!
 sleep 3
 
-# 8. 启动 RViz
-echo "[步骤 8] 正在启动 RViz..."
-"$PROJECT_ROOT/Scripts/rviz/run_rviz.sh" &
-RVIZ_PID=$!
+echo "[步骤 5B] 正在启动 FAST-LIO (优化模式: use_dynamic_weights=true)..."
+"$PROJECT_ROOT/Scripts/fastlio/run_fastlio.sh" both use_dynamic_weights:=true &
+FL_PID=$!
 sleep 5
 
-# 7. 播放 Rosbag
-# 默认序列为 0020
-SEQ_ID=${1:-"0020"}
-BAG_FILE="$PROJECT_ROOT/Data_Tracking/rosbags/seq_${SEQ_ID}_nodet.bag"
+# 7B. 播放 Rosbag (优化)
+echo "[步骤 7B] 正在播放 Rosbag (优化)..."
+rosparam set use_sim_time true
+rosbag play "$BAG_FILE" --clock &
+BAG_PID=$!
 
-if [[ ! -f "$BAG_FILE" ]]; then
-    echo "[警告] 在 $BAG_FILE 未找到 Bag 文件"
-    echo "       请检查序列 ID '$SEQ_ID' 是否正确，以及 bag 是否存在于 Data_Tracking/rosbags/ 中"
-    echo "       将在不播放 bag 的情况下运行 (需要手动播放)。"
-    wait $RVIZ_PID
-else
-    echo "[步骤 7] 正在播放 Rosbag: $BAG_FILE"
-    rosparam set use_sim_time true
-    # 移除 --loop 选项以避免无限循环，从头播放一次以便评估
-    rosbag play "$BAG_FILE" --clock &
-    BAG_PID=$!
-    
-    echo "========================================================="
-    echo "   流水线已运行！等待 Bag 播放结束...                    "
-    echo "========================================================="
-    
-    # 等待 bag 播放器结束
-    wait $BAG_PID
-    echo "[信息] Bag 播放结束，等待 5 秒以确保所有数据处理完成..."
-    sleep 5
-fi
+echo "Waiting for Optimized Run..."
+wait $BAG_PID
+sleep 5
+
+# 停止 FastLIO
+echo "[步骤 5B] 优化测试结束，停止 FastLIO..."
+kill -TERM $FL_PID 2>/dev/null || true
+wait $FL_PID 2>/dev/null || true
+sleep 2
+echo "[信息] 优化轨迹已保存为 Results/trajectory.txt"
 
 # 自动评估
-echo "[步骤 9] 正在运行轨迹评估..."
+echo "[步骤 9] 正在运行增强轨迹评估..."
 python "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectory.py" \
     --pred "$PROJECT_ROOT/Results/trajectory.txt" \
+    --baseline "$PROJECT_ROOT/Results/trajectory_baseline.txt" \
     --gt "$PROJECT_ROOT/Data_Tracking/training/oxts/$SEQ_ID.txt" \
     --output "$PROJECT_ROOT/Results/"
+
 
 echo "========================================================="
 echo "   评估完成！结果保存在 Results/ 目录                    "

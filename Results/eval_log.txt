@@ -1,0 +1,9 @@
+Script Started
+Loading Optimized Prediction: Results/trajectory.txt
+Loading Baseline Prediction: Results/trajectory_baseline.txt
+Loading Ground Truth: Data_Tracking/training/oxts/0020.txt
+[WARN] times.txt not found, assuming 10Hz
+Optimized RMSE: 8.0307 m
+Baseline RMSE: 24.2599 m
+Improvement: 66.90%
+Plot saved to Results/evaluation_result.png
