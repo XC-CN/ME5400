@@ -18,11 +18,12 @@ from sensor_msgs.msg import Imu, PointCloud2
 from geometry_msgs.msg import Point
 from std_msgs.msg import Header, String
 from visualization_msgs.msg import Marker, MarkerArray
-
 # 追加 catkin_ws Python 包路径，便于直接运行脚本时找到自定义消息
-CATKIN_PYTHON_PATH = Path(__file__).resolve().parent.parent / 'catkin_ws' / 'devel' / 'lib' / 'python3/dist-packages'
+CATKIN_PYTHON_PATH = Path(__file__).resolve().parent.parent.parent / 'catkin_ws' / 'devel' / 'lib' / 'python3/dist-packages'
 if CATKIN_PYTHON_PATH.exists():
     sys.path.insert(0, str(CATKIN_PYTHON_PATH))
+
+from ME5400.msg import Detection3D, Detection3DArray
 
 # MMDetection3D相关
 from mmdet3d.apis import LidarDet3DInferencer
@@ -90,6 +91,7 @@ class KittiPointPillarsBagNode:
         self.lidar_tracking_pub = rospy.Publisher('/detection/lidar_tracking', String, queue_size=10)  # 新增：LiDAR坐标系
         self.pointcloud_pub = rospy.Publisher('/detection/pointcloud', PointCloud2, queue_size=10)
         self.imu_pub = rospy.Publisher('/detection/imu', Imu, queue_size=10)
+        self.lidar_detections_pub = rospy.Publisher('/detection/lidar_detections', Detection3DArray, queue_size=10)
         
         # 订阅点云话题
         self.pointcloud_sub = rospy.Subscriber('/kitti/velo/pointcloud', PointCloud2, self._pointcloud_callback)
@@ -277,6 +279,11 @@ class KittiPointPillarsBagNode:
             lidar_msg = String()
             lidar_msg.data = lidar_tracking
             self.lidar_tracking_pub.publish(lidar_msg)
+
+            # 发布结构化 LiDAR 检测结果 (Detection3DArray)
+            det_array = self._detections_to_msg_array(detections, det_header, frame_id)
+            if det_array is not None:
+                self.lidar_detections_pub.publish(det_array)
             
             # 发布原始点云（可选）
             self.pointcloud_pub.publish(msg)
@@ -601,6 +608,51 @@ class KittiPointPillarsBagNode:
         self._last_marker_frame = frame_id
         
         return marker_array
+    
+    def _detections_to_msg_array(
+        self,
+        detections: Dict[str, Any],
+        header: Header,
+        frame_id: int,
+    ) -> Optional[Detection3DArray]:
+        """Convert detections to Detection3DArray msg (LiDAR Frame)."""
+        boxes = detections.get('bboxes_3d')
+        scores = detections.get('scores_3d')
+        class_names_list = detections.get('class_names', [])
+        
+        if boxes is None or boxes.size == 0:
+            return None
+        
+        boxes_np = np.asarray(boxes, dtype=np.float32)
+        scores_np = np.asarray(scores, dtype=np.float32)
+        
+        msg_array = Detection3DArray()
+        msg_array.header = header
+        
+        for idx in range(boxes_np.shape[0]):
+            # LiDAR frame: [x, y, z, l, w, h, yaw]
+            if boxes_np.shape[1] >= 7:
+                 x, y, z, l, w, h, yaw = boxes_np[idx][:7]
+            else:
+                 continue
+
+            det = Detection3D()
+            det.header = header
+            det.frame = frame_id
+            det.track_id = -1
+            det.score = float(scores_np[idx])
+            det.cls = class_names_list[idx] if idx < len(class_names_list) else "Unknown"
+            
+            # MCTrack expects LiDAR coordinates
+            det.location = [x, y, z]
+            # MCTrack expects [h, w, l] order based on its parsing logic
+            det.dimensions = [h, w, l]
+            det.rotation_y = yaw
+            det.bbox2d = [0.0, 0.0, 0.0, 0.0]
+            
+            msg_array.detections.append(det)
+            
+        return msg_array
     
     def _detections_to_lidar_tracking(
         self,

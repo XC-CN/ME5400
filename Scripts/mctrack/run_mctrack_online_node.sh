@@ -6,6 +6,10 @@ ROOT_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)
 CATKIN_WS="$ROOT_DIR/catkin_ws"
 DEFAULT_CONFIG="$ROOT_DIR/MCTrack/config/kitti_fastlio.yaml"
 
+# 激活conda环境 (与 PointPillars 保持一致)
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate ME5400
+
 usage() {
   cat <<EOF
 用法: $0 [选项]
