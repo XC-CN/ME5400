@@ -17,7 +17,6 @@
 - [📊 实验结果](#-实验结果)
 - [🔧 配置说明](#-配置说明)
 
-
 ## 🤖 面向协助代理的提示
 
 - 请始终使用中文与项目成员沟通。
@@ -166,7 +165,6 @@ pip install numpy opencv-python matplotlib
   python -c "import mmdet3d; print('MMDetection3D版本:', mmdet3d.__version__)"
   ```
 
-
 ### 安装步骤
 
 #### 1. 克隆仓库
@@ -200,10 +198,10 @@ pip install -r requirements.txt
 
 请访问 [KITTI Tracking Benchmark 官网](http://www.cvlibs.net/datasets/kitti/eval_tracking.php) 下载以下文件：
 
--   **Velodyne point clouds (29 GB)**: `data_tracking_velodyne.zip`
--   **Training labels of object data (5 MB)**: `data_tracking_label_2.zip`
--   **Camera calibration matrices of object data (1 MB)**: `data_tracking_calib.zip`
--   **GPS/IMU data (Overlay of GPS/IMU data on the raw data)**: `data_tracking_oxts.zip`
+- **Velodyne point clouds (29 GB)**: `data_tracking_velodyne.zip`
+- **Training labels of object data (5 MB)**: `data_tracking_label_2.zip`
+- **Camera calibration matrices of object data (1 MB)**: `data_tracking_calib.zip`
+- **GPS/IMU data (Overlay of GPS/IMU data on the raw data)**: `data_tracking_oxts.zip`
 
 ### 2. 目录结构组织
 
@@ -221,8 +219,8 @@ ME5400/
 
 > **注意**：
 >
-> *   `MMDET3D/data/kitti` 目录是为 MMDetection3D 准备的，通常通过软链接指向 `Data_Tracking` 或单独配置。
-> *   本项目提供的脚本默认假设数据位于 `Data_Tracking` 下。
+> * `MMDET3D/data/kitti` 目录是为 MMDetection3D 准备的，通常通过软链接指向 `Data_Tracking` 或单独配置。
+> * 本项目提供的脚本默认假设数据位于 `Data_Tracking` 下。
 
 ## 🎯 使用指南
 
@@ -255,7 +253,9 @@ ME5400/
 # 播放指定的 0019 序列
 ./Scripts/run_all.sh 0019
 ```
+
 该脚本将自动执行以下操作：
+
 - 启动 `roscore`
 - 执行 `build_catkin_ws.sh` 确保工作空间已编译（若已编译则跳过）
 - 启动 **PointPillars** 检测节点
@@ -298,7 +298,6 @@ roscore
 
 FAST-LIO 提供三种启动方式：
 
-
 ```bash
 # 启用动态权重优化（默认）
 ./Scripts/fastlio/run_fastlio.sh both
@@ -308,6 +307,7 @@ FAST-LIO 提供三种启动方式：
 ```
 
 > **使用说明**：
+>
 > - `both` 模式会同时启动 mapping 和 pose_bridge（mapping 在后台运行）
 > - 动态权重优化功能默认启用，可通过 `use_dynamic_weights` 参数控制
 > - FAST-LIO 会发布 `/Odometry_imu_predicted` 话题（IMU 预测位姿，LiDAR 更新前），用于提高 MCTrack 的实时性
@@ -322,10 +322,12 @@ FAST-LIO 提供三种启动方式：
 如需兼容旧版字符串格式，可在启动时设置 `_use_lidar_tracking_string:=true` 并将 `~det_topic` 指向 `/detection/lidar_tracking`。
 
 **位姿订阅说明**：
+
 - `fastlio_pose_bridge.py` 桥接节点订阅 `/Odometry_imu_predicted`（FAST-LIO 发布的 IMU 预测位姿，LiDAR 更新前），并转发为 `/mctrack/lidar_pose`
 - 使用 IMU 预测位姿而非最终位姿，可提高 MCTrack 的实时性和响应速度，减少跟踪延迟
 
 **跟踪结果发布**：
+
 - `/mctrack/markers`：RViz 可视化用的 Marker 消息
 - `/mctrack/tracked_objects`：`TrackedObjectArray` 消息，包含每个跟踪目标的详细信息：
   - `track_id`、类别、检测置信度
@@ -347,11 +349,13 @@ FAST-LIO 提供三种启动方式：
 rosparam set use_sim_time true
    
 # 高速公路场景
-rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag --clock --loop
+rosbag play Data_Tracking/rosbags/seq_0020_nodet.bag --clock 
    
 # 城市街道行人密集场景
-rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop 
+rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 ```
+
+--loop为循环运行
 
 结束运行时，必须先关闭建图进程，再关闭rosbag。
 
@@ -363,13 +367,13 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop
 
    使用 `Scripts/rviz/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
 
-
-
 ### 📈 **量化分析：基于 KITTI 真值评估优化效果**
+
 量化分析旨在验证“动态目标降权”功能对 FAST-LIO 建图精度的影响。我们使用 KITTI Tracking 数据集中提供的高精度 OXTS 真值作为基准。
 
 **步骤 1：生成真值轨迹**
 使用项目提供的工具将 OXTS 数据转换为 LiDAR 坐标系下的真值文件（.txt）：
+
 ```bash
 ./Scripts/utils/generate_kitti_pose.py
 # 生成文件位置: MCTrack/data/kitti/datasets/training/pose/<seq>.txt
@@ -377,6 +381,7 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop
 
 **步骤 2：开启轨迹记录**
 确认 `catkin_ws/src/fast_lio/launch/mapping_velodyne.launch` 中已启用日志记录：
+
 ```xml
 <param name="runtime_pos_log_enable" type="bool" value="1" />
 ```
@@ -384,22 +389,24 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock --loop
 **步骤 3：执行对比实验**
 分别运行基准组（关闭优化）和实验组（开启优化），并保留生成的轨迹文件：
 
-*   **基准组 (Baseline)**:
-    ```bash
-    ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
-    rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
-    # 运行结束将 Log/pos_log.txt 重命名为 baseline_pos.txt
-    ```
+* **基准组 (Baseline)**:
 
-*   **优化组 (Optimized)**:
-    ```bash
-    ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true
-    rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
-    # 运行结束将 Log/pos_log.txt 重命名为 optimized_pos.txt
-    ```
+  ```bash
+  ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
+  rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
+  # 运行结束将 Log/pos_log.txt 重命名为 baseline_pos.txt
+  ```
+* **优化组 (Optimized)**:
+
+  ```bash
+  ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true
+  rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
+  # 运行结束将 Log/pos_log.txt 重命名为 optimized_pos.txt
+  ```
 
 **步骤 4：指标计算 (ATE/RPE)**
 使用 `evo` 工具（需自行安装）对比轨迹与真值：
+
 ```bash
 evo_ape kitti MCTrack/data/kitti/datasets/training/pose/0019.txt baseline_pos.txt -a --plot
 evo_ape kitti MCTrack/data/kitti/datasets/training/pose/0019.txt optimized_pos.txt -a --plot
@@ -445,11 +452,13 @@ mapping:
 #### FAST-LIO 动态目标降权
 
 **功能说明**：
+
 - FAST-LIO 支持对动态目标进行降权处理，减少运动车辆对建图的影响
 - 在 `mapping_velodyne.launch` 中通过 `use_dynamic_weights` 参数控制是否启用（默认 `true`）
 - 节点会自动订阅 `/mctrack/tracked_objects`，并根据 `velocity_fusion`、`acceleration` 与检测置信度为每个跟踪目标计算权重
 
 **工作原理**：
+
 - **权重注入**：LiDAR 点云在预处理阶段会检查每个点是否落在动态目标包围盒内。若在框内，计算出的动态权重（基于速度/加速度/置信度）将与原始 `intensity` 取最小值写入 `intensity` 字段（确保高强度点被降权，低强度点保持原样）。
 - **优化降权**：FAST-LIO 在后端优化线性化时，读取该 `intensity` 作为权重缩放雅可比矩阵与残差，从而减弱高速/高置信度车辆对建图的影响。
 - **时序闭环**：
@@ -458,6 +467,7 @@ mapping:
   - **时刻 T+1**：FastLIO 接收到 $O_t$，利用它来计算下一帧点云的权重。
 
 **使用方法**：
+
 ```bash
 # 启用动态权重优化（默认）
 ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true
@@ -467,21 +477,25 @@ mapping:
 ```
 
 **参数配置**：
+
 - 相关参数（惩罚系数、速度/加速度阈值、bbox 裁剪边界、超时阈值等）均以 `preprocess/dynamic_*` 形式提供
 - 详见 `catkin_ws/src/fast_lio/launch/mapping_velodyne.launch`，可按需要在启动命令中覆盖
 
 #### FAST-LIO 地图保存
 
 **保存位置**：
+
 - 地图文件保存在项目根目录的 `PCD/scans.pcd`
 - 默认配置下，所有扫描帧会累积保存到一个 PCD 文件中
 
 **保存时机**：
+
 - 地图在 FAST-LIO 进程正常退出时自动保存
 - 使用 `both` 模式时，脚本会优雅关闭进程（发送 SIGTERM），等待最多 30 秒让进程保存地图
 - 如果进程在 30 秒内未退出，脚本会强制终止（SIGKILL）
 
 **保存进度信息**：
+
 - FAST-LIO 在保存地图时会显示详细的进度信息：
   - 点云数量（点数）
   - 预计文件大小（MB）
@@ -490,6 +504,7 @@ mapping:
   - 保存成功/失败状态
 
 **保存验证**：
+
 - 脚本会自动验证地图文件是否保存成功：
   - 检查文件是否存在
   - 验证文件大小（确保不为0）
@@ -497,6 +512,7 @@ mapping:
   - 如果保存失败，会显示错误信息
 
 **正确中断建图**：
+
 ```bash
 # 方法一：使用 Ctrl+C（推荐）
 # 脚本会自动处理优雅关闭，等待地图保存，并验证保存结果
@@ -506,6 +522,7 @@ mapping:
 ```
 
 **注意事项**：
+
 - 确保 `velodyne.yaml` 中 `pcd_save/pcd_save_en: true`（默认已启用）
 - 如果地图文件很大，保存可能需要几秒钟到几十秒时间
 - 脚本会等待最多 30 秒确保地图保存完成
