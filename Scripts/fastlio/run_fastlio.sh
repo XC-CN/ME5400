@@ -109,6 +109,22 @@ case "$MODE" in
         local file_size_mb=$((file_size / 1024 / 1024))
         
         if [ "$file_size" -gt 0 ]; then
+          # Check modification time to ensure it's a new file
+          local current_time=$(date +%s)
+          # Try stat -c %Y (Linux) then stat -f %m (BSD/macOS)
+          local file_mtime=$(stat -c %Y "$pcd_file" 2>/dev/null || stat -f %m "$pcd_file" 2>/dev/null || echo "0")
+          local time_diff=$((current_time - file_mtime))
+          
+          # Allow up to 60 seconds delay
+          if [ "$time_diff" -gt 60 ]; then
+            echo "[错误] ✗ 地图文件存在，但似乎是旧文件！"
+            echo "        文件修改时间: $(date -d @$file_mtime '+%Y-%m-%d %H:%M:%S')"
+            echo "        当前系统时间: $(date -d @$current_time '+%Y-%m-%d %H:%M:%S')"
+            echo "        时间差异: ${time_diff} 秒 (阈值: 60秒)"
+            echo "        建议：检查 FAST-LIO 是否成功保存了地图，或尝试手动删除 scan.pcd 后重试"
+            return 1
+          fi
+
           echo "[成功] ✓ 地图文件已保存: $pcd_file"
           echo "[成功] ✓ 文件大小: ${file_size_mb} MB"
         else
