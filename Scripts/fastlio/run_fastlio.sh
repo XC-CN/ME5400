@@ -73,25 +73,29 @@ case "$MODE" in
         # 发送 SIGTERM 信号，让进程有机会保存地图
         kill -TERM "$MAPPING_PID" 2>/dev/null || true
         
-        # 等待进程退出，最多30秒
-        local wait_count=0
-        local max_wait=60  # 30秒 = 60 * 0.5秒
-        while kill -0 "$MAPPING_PID" 2>/dev/null && [ $wait_count -lt $max_wait ]; do
-          sleep 0.5
-          wait_count=$((wait_count + 1))
-          if [ $((wait_count % 4)) -eq 0 ]; then
-            echo "[信息] 等待地图保存中... ($((wait_count / 2))秒)"
-          fi
-        done
+        # 使用 wait 等待进程结束
+        # 如果进程正确处理了 SIGTERM，它会在保存完地图后退出
+        # 我们使用 timeout 机制来防止卡死 (这里使用简单的后台wait + sleep实现timeout)
+        (
+            wait "$MAPPING_PID" || true
+        ) &
+        WAIT_PID=$!
         
-        # 如果进程仍在运行，强制终止
-        if kill -0 "$MAPPING_PID" 2>/dev/null; then
-          echo "[警告] 进程未在30秒内退出，强制终止"
+        # 等待进程退出，最多5秒 (加快Ctrl+C响应)
+        local wait_count=0
+        local max_wait=10  # 5秒 = 10 * 0.5秒
+        while kill -0 "$WAIT_PID" 2>/dev/null && [ $wait_count -lt $max_wait ]; do
+            sleep 0.5
+            wait_count=$((wait_count + 1))
+        done
+
+        # 如果 wait 进程还在运行，说明 fast_lio 还没退出
+        if kill -0 "$WAIT_PID" 2>/dev/null; then
+          echo "[警告] 进程未在5秒内退出，强制终止"
           kill -KILL "$MAPPING_PID" 2>/dev/null || true
-          wait "$MAPPING_PID" 2>/dev/null || true
+          kill "$WAIT_PID" 2>/dev/null || true # 停止 wait 子shell
         else
-          wait "$MAPPING_PID" 2>/dev/null || true
-          echo "[信息] FAST-LIO mapping 进程已退出，正在验证地图保存..."
+           echo "[信息] FAST-LIO mapping 进程已退出"
         fi
         
         # 验证地图文件是否保存成功

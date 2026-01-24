@@ -10,6 +10,8 @@ cleanup() {
     echo -e "\n[INFO] 正在停止所有进程..."
     # 杀死同一进程组中的所有子进程
     trap - SIGTERM && kill -- -$$
+    if kill -0 $RVIZ_PID 2>/dev/null; then kill $RVIZ_PID; fi
+    if [ ! -z "$MC_PID" ] && kill -0 $MC_PID 2>/dev/null; then kill $MC_PID; fi
 }
 
 # 捕获 SIGINT (Ctrl+C) 和 EXIT 信号
@@ -33,6 +35,12 @@ fi
 # 确保 Results 目录存在
 mkdir -p "$PROJECT_ROOT/Results"
 
+# 3. 启动 RViz 可视化
+echo "[步骤 3] 正在启动 RViz..."
+"$PROJECT_ROOT/Scripts/rviz/run_rviz.sh" &
+RVIZ_PID=$!
+
+
 # 4. 启动 PointPillars 节点
 echo "[步骤 4] 正在启动 PointPillars 节点..."
 "$PROJECT_ROOT/Scripts/pointpillars/run_pointpillars_node.sh" &
@@ -45,12 +53,18 @@ if ! kill -0 $PP_PID 2>/dev/null; then
     exit 1
 fi
 
-# 5. 启动 FAST-LIO 系统 (第一遍：基准测试 - 无 MCTrack 优化)
+# 5. 启动 MCTrack 节点 (第一次启动)
+echo "[步骤 5] 正在启动 MCTrack 在线节点..."
+"$PROJECT_ROOT/Scripts/mctrack/run_mctrack_online_node.sh" &
+MC_PID=$!
+sleep 2
+
+# 6. 启动 FAST-LIO 系统 (第一遍：基准测试 - 无 MCTrack 优化)
 echo "========================================================="
 echo "   阶段 A: 运行基准测试 (无 MCTrack 优化)                "
 echo "========================================================="
 
-echo "[步骤 5A] 正在启动 FAST-LIO (基准模式: use_dynamic_weights=false)..."
+echo "[步骤 6A] 正在启动 FAST-LIO (基准模式: use_dynamic_weights=false)..."
 "$PROJECT_ROOT/Scripts/fastlio/run_fastlio.sh" both use_dynamic_weights:=false &
 FL_PID=$!
 sleep 5
@@ -77,14 +91,12 @@ BAG_PID=$!
 
 echo "Waiting for Baseline Run..."
 wait $BAG_PID
-sleep 5
 
 # 停止 FastLIO 并重命名轨迹文件
-echo "[步骤 5A] 基准测试结束，停止 FastLIO..."
+echo "[步骤 6A] 基准测试结束，停止 FastLIO..."
 kill -TERM $FL_PID 2>/dev/null || true
 wait $FL_PID 2>/dev/null || true
-# 等待文件写入完成
-sleep 2
+# 等待文件写入完成 (fastlio 脚本内已处理等待)
 
 if [[ -f "$PROJECT_ROOT/Results/trajectory.txt" ]]; then
     mv "$PROJECT_ROOT/Results/trajectory.txt" "$PROJECT_ROOT/Results/trajectory_baseline.txt"
@@ -94,25 +106,25 @@ else
 fi
 
 # 重置 FastLIO 状态或稍作等待
-sleep 5
 
 # 5. 启动 FAST-LIO 系统 (第二遍：优化测试 - 有 MCTrack 优化)
 echo "========================================================="
 echo "   阶段 B: 运行优化测试 (带 MCTrack 优化)                "
 echo "========================================================="
 
-# 6. 启动 MCTrack 在线节点 (确保它在运行)
-# 检查 MCTrack 是否还需要重启？建议重启以重置状态
+# 6. 重启 MCTrack 在线节点 (重置状态)
 if kill -0 $MC_PID 2>/dev/null; then
+    echo "[信息] 重启 MCTrack 以重置状态..."
     kill $MC_PID 2>/dev/null || true
+    wait $MC_PID 2>/dev/null || true
 fi
 
-echo "[步骤 6] 正在启动 MCTrack 在线节点..."
+echo "[步骤 8] 正在启动 MCTrack 在线节点..."
 "$PROJECT_ROOT/Scripts/mctrack/run_mctrack_online_node.sh" &
 MC_PID=$!
 sleep 3
 
-echo "[步骤 5B] 正在启动 FAST-LIO (优化模式: use_dynamic_weights=true)..."
+echo "[步骤 6B] 正在启动 FAST-LIO (优化模式: use_dynamic_weights=true)..."
 "$PROJECT_ROOT/Scripts/fastlio/run_fastlio.sh" both use_dynamic_weights:=true &
 FL_PID=$!
 sleep 5
@@ -125,13 +137,11 @@ BAG_PID=$!
 
 echo "Waiting for Optimized Run..."
 wait $BAG_PID
-sleep 5
 
 # 停止 FastLIO
 echo "[步骤 5B] 优化测试结束，停止 FastLIO..."
 kill -TERM $FL_PID 2>/dev/null || true
 wait $FL_PID 2>/dev/null || true
-sleep 2
 echo "[信息] 优化轨迹已保存为 Results/trajectory.txt"
 
 # 自动评估
