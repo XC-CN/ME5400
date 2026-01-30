@@ -1048,8 +1048,8 @@ int main(int argc, char** argv)
     p_pre->dynamic_remove_mode = tmp_bool_param;
     nh.param<double>("preprocess/dynamic_remove_threshold", tmp_param, 0.3);
     p_pre->dynamic_remove_threshold = tmp_param;
-    int tmp_int = 3;
-    nh.param<int>("preprocess/dynamic_min_track_length", tmp_int, 3);
+    int tmp_int = 2;
+    nh.param<int>("preprocess/dynamic_min_track_length", tmp_int, 2);
     p_pre->dynamic_min_track_length = tmp_int;
     nh.param<bool>("runtime_pos_log_enable", runtime_pos_log, 0);
     nh.param<bool>("mapping/extrinsic_est_en", extrinsic_est_en, true);

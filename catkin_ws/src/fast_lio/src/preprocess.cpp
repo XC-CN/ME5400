@@ -31,7 +31,7 @@ Preprocess::Preprocess()
   cos160 = cos(cos160/180*M_PI);
   smallp_intersect = cos(smallp_intersect/180*M_PI);
   use_dynamic_weights = false;
-  dynamic_remove_mode = false;      // 默认降权模式
+  dynamic_remove_mode = true;       // 默认剔除模式（消除残影）
   dynamic_remove_threshold = 0.3f;  // 剔除阈值
   dynamic_speed_ref = 10.0f;
   dynamic_acc_ref = 4.0f;
@@ -42,7 +42,7 @@ Preprocess::Preprocess()
   dynamic_bbox_margin_xy = 0.8f;    // 增大边界余量
   dynamic_bbox_margin_z = 0.5f;
   dynamic_object_timeout = 1.0;
-  dynamic_min_track_length = 3;
+  dynamic_min_track_length = 2;     // 更快响应新目标
   tracked_objects_ = std::make_shared<std::vector<DynamicObject>>();
   active_scan_time_ = 0.0;
 }

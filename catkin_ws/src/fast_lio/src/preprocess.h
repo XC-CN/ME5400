@@ -129,7 +129,7 @@ class Preprocess
   ros::Publisher pub_full, pub_surf, pub_corn;
 
   bool use_dynamic_weights;
-  bool dynamic_remove_mode;        // true: 完全剔除动态点; false: 降权模式（默认）
+  bool dynamic_remove_mode;        // true: 完全剔除动态点（默认）; false: 降权模式
   float dynamic_remove_threshold;  // 剔除模式下，weight低于此阈值的点被剔除
   float dynamic_speed_ref;
   float dynamic_acc_ref;
