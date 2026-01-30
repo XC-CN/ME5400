@@ -42,3 +42,4 @@ MMDET3D/all_frames_results/
 MMDET3D/continuous_inference_results/
 MMDET3D/multi_frame_results/
 MMDET3D/visualization_results/
+_codeql_detected_source_root
