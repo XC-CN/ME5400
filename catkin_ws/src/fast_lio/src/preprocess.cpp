@@ -31,13 +31,15 @@ Preprocess::Preprocess()
   cos160 = cos(cos160/180*M_PI);
   smallp_intersect = cos(smallp_intersect/180*M_PI);
   use_dynamic_weights = false;
+  dynamic_remove_mode = false;      // 默认降权模式
+  dynamic_remove_threshold = 0.3f;  // 剔除阈值
   dynamic_speed_ref = 10.0f;
   dynamic_acc_ref = 4.0f;
   dynamic_speed_penalty = 0.5f;
   dynamic_acc_penalty = 0.3f;
   dynamic_score_penalty = 0.2f;
-  dynamic_min_weight = 0.2f;
-  dynamic_bbox_margin_xy = 0.5f;
+  dynamic_min_weight = 0.1f;        // 降低默认最小权重
+  dynamic_bbox_margin_xy = 0.8f;    // 增大边界余量
   dynamic_bbox_margin_z = 0.5f;
   dynamic_object_timeout = 1.0;
   dynamic_min_track_length = 3;
@@ -322,11 +324,15 @@ void Preprocess::oust64_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
       added_pt.x = pl_orig.points[i].x;
       added_pt.y = pl_orig.points[i].y;
       added_pt.z = pl_orig.points[i].z;
+      float orig_intensity = pl_orig.points[i].intensity;
       if (use_dynamic_weights) {
         float dyn_weight = computePointWeight(added_pt);
-        added_pt.intensity = std::min(pl_orig.points[i].intensity, dyn_weight);
+        // 剔除模式：跳过低权重的动态点
+        if (dynamic_remove_mode && dyn_weight < dynamic_remove_threshold)
+          continue;
+        added_pt.intensity = std::min(orig_intensity, dyn_weight);
       } else {
-        added_pt.intensity = pl_orig.points[i].intensity;
+        added_pt.intensity = orig_intensity;
       }
       added_pt.normal_x = 0;
       added_pt.normal_y = 0;
@@ -382,11 +388,15 @@ void Preprocess::oust64_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
       added_pt.x = pl_orig.points[i].x;
       added_pt.y = pl_orig.points[i].y;
       added_pt.z = pl_orig.points[i].z;
+      float orig_intensity = pl_orig.points[i].intensity;
       if (use_dynamic_weights) {
         float dyn_weight = computePointWeight(added_pt);
-        added_pt.intensity = std::min(pl_orig.points[i].intensity, dyn_weight);
+        // 剔除模式：跳过低权重的动态点
+        if (dynamic_remove_mode && dyn_weight < dynamic_remove_threshold)
+          continue;
+        added_pt.intensity = std::min(orig_intensity, dyn_weight);
       } else {
-        added_pt.intensity = pl_orig.points[i].intensity;
+        added_pt.intensity = orig_intensity;
       }
       added_pt.normal_x = 0;
       added_pt.normal_y = 0;
@@ -459,10 +469,16 @@ void Preprocess::velodyne_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
         added_pt.x = pl_orig.points[i].x;
         added_pt.y = pl_orig.points[i].y;
         added_pt.z = pl_orig.points[i].z;
-        if (use_dynamic_weights)
-          added_pt.intensity = computePointWeight(added_pt);
-        else
-          added_pt.intensity = pl_orig.points[i].intensity;
+        float orig_intensity = pl_orig.points[i].intensity;
+        if (use_dynamic_weights) {
+          float dyn_weight = computePointWeight(added_pt);
+          // 剔除模式：跳过低权重的动态点
+          if (dynamic_remove_mode && dyn_weight < dynamic_remove_threshold)
+            continue;
+          added_pt.intensity = std::min(orig_intensity, dyn_weight);
+        } else {
+          added_pt.intensity = orig_intensity;
+        }
         added_pt.curvature = pl_orig.points[i].time * time_unit_scale; // units: ms
 
         if (!given_offset_time)
@@ -570,6 +586,18 @@ void Preprocess::velodyne_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
         {
           if(added_pt.x*added_pt.x+added_pt.y*added_pt.y+added_pt.z*added_pt.z > (blind * blind))
           {
+            // 动态物体点处理：剔除或降权
+            if (use_dynamic_weights)
+            {
+              float dyn_weight = computePointWeight(added_pt);
+              if (dynamic_remove_mode && dyn_weight < dynamic_remove_threshold)
+              {
+                // 剔除模式：跳过低权重的动态点
+                continue;
+              }
+              // 降权模式：将权重写入intensity
+              added_pt.intensity = std::min(added_pt.intensity, dyn_weight);
+            }
             pl_surf.points.push_back(added_pt);
           }
         }
@@ -593,11 +621,15 @@ void Preprocess::sim_handler(const sensor_msgs::PointCloud2::ConstPtr &msg) {
         added_pt.x = pl_orig.points[i].x;
         added_pt.y = pl_orig.points[i].y;
         added_pt.z = pl_orig.points[i].z;
+        float orig_intensity = pl_orig.points[i].intensity;
         if (use_dynamic_weights) {
             float dyn_weight = computePointWeight(added_pt);
-            added_pt.intensity = std::min(pl_orig.points[i].intensity, dyn_weight);
+            // 剔除模式：跳过低权重的动态点
+            if (dynamic_remove_mode && dyn_weight < dynamic_remove_threshold)
+                continue;
+            added_pt.intensity = std::min(orig_intensity, dyn_weight);
         } else {
-            added_pt.intensity = pl_orig.points[i].intensity;
+            added_pt.intensity = orig_intensity;
         }
         added_pt.normal_x = 0;
         added_pt.normal_y = 0;

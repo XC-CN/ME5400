@@ -7,6 +7,9 @@
   <!-- 是否启用动态目标权重优化（默认启用，设为 false 则使用原始方法） -->
   <arg name="use_dynamic_weights" default="true" />
 
+  <!-- 动态点处理模式：true=完全剔除动态点，false=降权模式（默认启用剔除模式以消除残影） -->
+  <arg name="dynamic_remove_mode" default="true" />
+
   <!-- 使用仿真时间（若播放 rosbag，应设置为 true） -->
   <param name="/use_sim_time" value="true" />
 
@@ -28,19 +31,22 @@
   <param name="cube_side_length" type="double" value="1000" />
   <!-- 是否记录运行时位置日志（用于调试/回放） -->
   <param name="runtime_pos_log_enable" type="bool" value="1" />
-  <!-- 动态目标降权（结合 /mctrack/tracked_objects） -->
+  
+  <!-- 动态目标处理参数（结合 /mctrack/tracked_objects） -->
   <param name="preprocess/use_dynamic_weights" type="bool" value="$(arg use_dynamic_weights)" />
+  <param name="preprocess/dynamic_remove_mode" type="bool" value="$(arg dynamic_remove_mode)" />
+  <param name="preprocess/dynamic_remove_threshold" type="double" value="0.3" />
   <param name="preprocess/tracked_topic" type="string" value="/mctrack/tracked_objects" />
-  <param name="preprocess/dynamic_speed_ref" type="double" value="12.0" />
+  <param name="preprocess/dynamic_speed_ref" type="double" value="10.0" />
   <param name="preprocess/dynamic_acc_ref" type="double" value="4.0" />
   <param name="preprocess/dynamic_speed_penalty" type="double" value="0.5" />
   <param name="preprocess/dynamic_acc_penalty" type="double" value="0.3" />
   <param name="preprocess/dynamic_score_penalty" type="double" value="0.2" />
-  <param name="preprocess/dynamic_min_weight" type="double" value="0.2" />
-  <param name="preprocess/dynamic_bbox_margin_xy" type="double" value="0.6" />
+  <param name="preprocess/dynamic_min_weight" type="double" value="0.1" />
+  <param name="preprocess/dynamic_bbox_margin_xy" type="double" value="0.8" />
   <param name="preprocess/dynamic_bbox_margin_z" type="double" value="0.5" />
   <param name="preprocess/dynamic_timeout" type="double" value="0.7" />
-  <param name="preprocess/dynamic_min_track_length" type="int" value="3" />
+  <param name="preprocess/dynamic_min_track_length" type="int" value="2" />
 
   <!-- 启动 fast_lio 的 mapping 节点 -->
   <node pkg="fast_lio" type="fastlio_mapping" name="laserMapping" output="screen" /> 

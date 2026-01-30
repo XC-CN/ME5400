@@ -1034,14 +1034,20 @@ int main(int argc, char** argv)
     p_pre->dynamic_acc_penalty = tmp_param;
     nh.param<double>("preprocess/dynamic_score_penalty", tmp_param, 0.2);
     p_pre->dynamic_score_penalty = tmp_param;
-    nh.param<double>("preprocess/dynamic_min_weight", tmp_param, 0.2);
+    nh.param<double>("preprocess/dynamic_min_weight", tmp_param, 0.1);
     p_pre->dynamic_min_weight = tmp_param;
-    nh.param<double>("preprocess/dynamic_bbox_margin_xy", tmp_param, 0.5);
+    nh.param<double>("preprocess/dynamic_bbox_margin_xy", tmp_param, 0.8);
     p_pre->dynamic_bbox_margin_xy = tmp_param;
     nh.param<double>("preprocess/dynamic_bbox_margin_z", tmp_param, 0.5);
     p_pre->dynamic_bbox_margin_z = tmp_param;
     nh.param<double>("preprocess/dynamic_timeout", tmp_param, 1.0);
     p_pre->dynamic_object_timeout = tmp_param;
+    // 新增剔除模式参数
+    bool tmp_bool_param = true;
+    nh.param<bool>("preprocess/dynamic_remove_mode", tmp_bool_param, true);
+    p_pre->dynamic_remove_mode = tmp_bool_param;
+    nh.param<double>("preprocess/dynamic_remove_threshold", tmp_param, 0.3);
+    p_pre->dynamic_remove_threshold = tmp_param;
     int tmp_int = 3;
     nh.param<int>("preprocess/dynamic_min_track_length", tmp_int, 3);
     p_pre->dynamic_min_track_length = tmp_int;

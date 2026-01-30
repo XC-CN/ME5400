@@ -14,10 +14,17 @@ usage() {
   both          同时启动 mapping 与 pose_bridge（mapping 在后台运行）
   -h, --help    打印本帮助信息
 
+动态目标处理参数：
+  use_dynamic_weights:=true/false    是否启用动态目标处理（默认 true）
+  dynamic_remove_mode:=true/false    剔除模式（默认 true）：
+                                     true  = 完全剔除动态点（推荐，无残影）
+                                     false = 降权模式（保守方法）
+
 示例:
   ./run_fastlio.sh mapping rviz:=false
-  ./run_fastlio.sh pose_bridge
-  ./run_fastlio.sh both
+  ./run_fastlio.sh both                                    # 默认启用剔除模式
+  ./run_fastlio.sh both dynamic_remove_mode:=false         # 使用降权模式
+  ./run_fastlio.sh both use_dynamic_weights:=false         # 禁用动态处理
 EOF
 }
 

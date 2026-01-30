@@ -391,18 +391,29 @@ mapping:
                 0, 0, 1]
 ```
 
-#### FAST-LIO 动态目标降权
+#### FAST-LIO 动态目标处理（剔除/降权）
 
 **功能说明**：
 
-- FAST-LIO 支持对动态目标进行降权处理，减少运动车辆对建图的影响
-- 在 `mapping_velodyne.launch` 中通过 `use_dynamic_weights` 参数控制是否启用（默认 `true`）
+- FAST-LIO 支持两种动态目标处理模式：**完全剔除**（推荐）和 **降权处理**
+- 在 `mapping_velodyne.launch` 中通过以下参数控制：
+  - `use_dynamic_weights`：是否启用动态目标处理（默认 `true`）
+  - `dynamic_remove_mode`：处理模式（默认 `true` = 完全剔除，`false` = 降权模式）
 - 节点会自动订阅 `/mctrack/tracked_objects`，并根据 `velocity_fusion`、`acceleration` 与检测置信度为每个跟踪目标计算权重
+
+**处理模式对比**：
+
+| 模式 | 参数 | 说明 | 适用场景 |
+|------|------|------|----------|
+| **完全剔除**（推荐） | `dynamic_remove_mode:=true` | 直接丢弃动态区域内的点 | 高速公路、运动车辆较多的场景，需要无残影地图 |
+| **降权处理** | `dynamic_remove_mode:=false` | 保留点但降低权重 | 需要保留部分动态信息用于后续分析 |
 
 **工作原理**：
 
-- **权重注入**：LiDAR 点云在预处理阶段会检查每个点是否落在动态目标包围盒内。若在框内，计算出的动态权重（基于速度/加速度/置信度）将与原始 `intensity` 取最小值写入 `intensity` 字段（确保高强度点被降权，低强度点保持原样）。
-- **优化降权**：FAST-LIO 在后端优化线性化时，读取该 `intensity` 作为权重缩放雅可比矩阵与残差，从而减弱高速/高置信度车辆对建图的影响。
+- **权重计算**：根据跟踪目标的速度、加速度和检测置信度计算动态权重（0-1）
+- **包围盒检测**：检查每个点是否落在动态目标的扩展包围盒内（包含margin边界）
+- **剔除模式**：若点的权重低于 `dynamic_remove_threshold`（默认0.3），直接跳过该点不添加到点云
+- **降权模式**：将计算出的权重与原始 `intensity` 取最小值，在后端优化时降低该点对建图的影响
 - **时序闭环**：
   - **时刻 T**：FastLIO 基于 IMU 预积分和当前点云计算出位姿 $P_t$。此时它使用的是上一帧（T-1）传回的动态权重（基于连续性假设）。
   - **时刻 T**：McTrack 接收 $P_t$ 和点云，进行检测和跟踪，输出动态物体列表 $O_t$。
@@ -411,16 +422,29 @@ mapping:
 **使用方法**：
 
 ```bash
-# 启用动态权重优化（默认）
-./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true
+# 启用完全剔除模式（默认，推荐用于消除残影）
+./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true dynamic_remove_mode:=true
 
-# 禁用动态权重优化，使用原始方法
+# 使用降权模式（保守方法）
+./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true dynamic_remove_mode:=false
+
+# 禁用动态目标处理，使用原始方法
 ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
 ```
 
 **参数配置**：
 
-- 相关参数（惩罚系数、速度/加速度阈值、bbox 裁剪边界、超时阈值等）均以 `preprocess/dynamic_*` 形式提供
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `dynamic_remove_mode` | `true` | 剔除模式开关 |
+| `dynamic_remove_threshold` | `0.3` | 剔除阈值，权重低于此值的点被剔除 |
+| `dynamic_min_weight` | `0.1` | 最小权重下限 |
+| `dynamic_bbox_margin_xy` | `0.8` | 包围盒XY方向扩展边界（米） |
+| `dynamic_bbox_margin_z` | `0.5` | 包围盒Z方向扩展边界（米） |
+| `dynamic_speed_ref` | `10.0` | 速度参考值（m/s），用于归一化 |
+| `dynamic_min_track_length` | `2` | 最小跟踪帧数，低于此值不处理 |
+
+- 相关参数均以 `preprocess/dynamic_*` 形式提供
 - 详见 `catkin_ws/src/fast_lio/launch/mapping_velodyne.launch`，可按需要在启动命令中覆盖
 
 #### FAST-LIO 地图保存
