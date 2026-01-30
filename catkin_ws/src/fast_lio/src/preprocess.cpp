@@ -570,6 +570,11 @@ void Preprocess::velodyne_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
         {
           if(added_pt.x*added_pt.x+added_pt.y*added_pt.y+added_pt.z*added_pt.z > (blind * blind))
           {
+            // 应用动态权重（非feature模式）
+            if (use_dynamic_weights) {
+              float dyn_weight = computePointWeight(added_pt);
+              added_pt.intensity = std::min(added_pt.intensity, dyn_weight);
+            }
             pl_surf.points.push_back(added_pt);
           }
         }

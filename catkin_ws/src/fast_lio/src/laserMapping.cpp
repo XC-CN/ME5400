@@ -626,13 +626,20 @@ void publish_frame_world(const ros::Publisher & pubLaserCloudFull)
     if (pcd_save_en)
     {
         int size = feats_undistort->points.size();
-        PointCloudXYZI::Ptr laserCloudWorld( \
-                        new PointCloudXYZI(size, 1));
+        PointCloudXYZI::Ptr laserCloudWorld(new PointCloudXYZI());
+        laserCloudWorld->reserve(size);
 
         for (int i = 0; i < size; i++)
         {
-            RGBpointBodyToWorld(&feats_undistort->points[i], \
-                                &laserCloudWorld->points[i]);
+            // 过滤低权重动态点（不保存到最终地图）
+            if (p_pre->use_dynamic_weights && 
+                feats_undistort->points[i].intensity < p_pre->dynamic_min_weight + 0.05f)
+            {
+                continue;
+            }
+            PointType pt_world;
+            RGBpointBodyToWorld(&feats_undistort->points[i], &pt_world);
+            laserCloudWorld->push_back(pt_world);
         }
         *pcl_wait_save += *laserCloudWorld;
 
