@@ -1177,6 +1177,7 @@ int main(int argc, char** argv)
             ("/path", 100000);
 //------------------------------------------------------------------------------------------------------
     signal(SIGINT, SigHandle);
+    signal(SIGTERM, SigHandle);
     ros::Rate rate(5000);
     bool status = ros::ok();
     bool should_exit = false;

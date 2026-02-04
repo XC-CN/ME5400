@@ -35,8 +35,11 @@ NODE_PID=$!
 sleep 5
 
 # 播放bag文件
-echo "播放bag文件..."
-rosbag play "$BAG_FILE" --clock --rate=0.5  # 0.5倍速播放
+# 播放bag文件
+if [ ! -z "$BAG_FILE" ]; then
+    echo "播放bag文件: $BAG_FILE"
+    rosbag play "$BAG_FILE" --clock --rate=0.5  # 0.5倍速播放
+fi
 
 # 等待处理完成
 wait $NODE_PID
