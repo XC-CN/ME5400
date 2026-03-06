@@ -29,6 +29,9 @@ from tracker.bbox import BBox  # noqa: E402
 from tracker.base_tracker import Base3DTracker  # noqa: E402
 from ME5400.msg import Detection3D, Detection3DArray, TrackedObject, TrackedObjectArray  # noqa: E402
 
+DEFAULT_SCORE_THRESHOLD = 0.2
+MIN_DT_THRESHOLD = 1e-3
+
 
 def read_calib(calib_path: Path) -> Dict[str, np.ndarray]:
     data: Dict[str, np.ndarray] = {}
@@ -268,7 +271,11 @@ class MCTrackOnlineNode:
         for det in msg.detections:
             cls = det.cls.lower()
             cls_idx = cat_map.get(cls)
-            score_thre = online_scores.get(cls_idx, 0.2) if cls_idx is not None else 0.2
+            score_thre = (
+                online_scores.get(cls_idx, DEFAULT_SCORE_THRESHOLD)
+                if cls_idx is not None
+                else DEFAULT_SCORE_THRESHOLD
+            )
             if det.score < score_thre:
                 continue
             valid_detections.append(det)
@@ -320,14 +327,23 @@ class MCTrackOnlineNode:
         lidar2global: np.ndarray,
     ) -> List[Tuple[List[float], List[float]]]:
         if not detections:
-            self.prev_det_states = defaultdict(list)
-            self.prev_det_stamp = stamp_sec
             return []
 
-        if self.prev_det_stamp is None:
-            dt = 1.0 / max(self.frame_rate, 1e-3)
-        else:
-            dt = max(stamp_sec - self.prev_det_stamp, 1e-3)
+        has_history = self.prev_det_stamp is not None
+        dt = 0.0
+        if has_history:
+            delta_t = stamp_sec - self.prev_det_stamp
+            if delta_t < 0:
+                rospy.logwarn_throttle(
+                    5.0,
+                    "检测时间戳回退 (当前=%.6f, 上一帧=%.6f)，本帧速度先验回退为零",
+                    stamp_sec,
+                    self.prev_det_stamp,
+                )
+                has_history = False
+            else:
+                dt = max(delta_t, MIN_DT_THRESHOLD)
+        radius_sq = self.velocity_match_radius * self.velocity_match_radius
 
         results: List[Tuple[List[float], List[float]]] = []
         current_states: Dict[str, List[Dict[str, np.ndarray]]] = defaultdict(list)
@@ -341,22 +357,27 @@ class MCTrackOnlineNode:
             vel = np.zeros(2, dtype=np.float64)
             acc = np.zeros(2, dtype=np.float64)
 
-            if self.use_pose_velocity_prior:
+            if self.use_pose_velocity_prior and has_history:
                 prev_candidates = self.prev_det_states.get(cls, [])
                 best_idx = -1
-                best_dist = float("inf")
+                best_dist_sq = float("inf")
                 best_state: Optional[Dict[str, np.ndarray]] = None
                 for idx, state in enumerate(prev_candidates):
                     if idx in used_prev_indices[cls]:
                         continue
-                    dist = float(np.linalg.norm(curr_xy - state["xy"]))
-                    if dist < best_dist:
-                        best_dist = dist
+                    dist_sq = np.sum((curr_xy - state["xy"]) ** 2)
+                    if dist_sq < best_dist_sq:
+                        best_dist_sq = dist_sq
                         best_idx = idx
                         best_state = state
 
-                if best_state is not None and best_dist <= self.velocity_match_radius:
+                if (
+                    best_state is not None
+                    and best_dist_sq <= radius_sq
+                    and dt >= MIN_DT_THRESHOLD
+                ):
                     raw_vel = (curr_xy - best_state["xy"]) / dt
+                    # EMA: alpha weights current observed velocity, (1-alpha) weights previous estimate.
                     smoothed = self.velocity_ema_alpha * raw_vel + (1.0 - self.velocity_ema_alpha) * best_state["vel"]
                     speed = float(np.linalg.norm(smoothed))
                     if speed > self.max_prior_speed:
