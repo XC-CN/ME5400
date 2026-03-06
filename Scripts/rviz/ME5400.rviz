@@ -247,6 +247,35 @@ Visualization Manager:
       Name: FAST-LIO Mapping  # 组名称
     
     # ------------------------------------------------------------
+    # GT Path - 真实数据集轨迹
+    # Topic: /gt_path
+    # ------------------------------------------------------------
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 0; 255; 0  # 绿色轨迹
+      Enabled: true
+      Head Diameter: 0
+      Head Length: 0
+      Length: 0.3
+      Line Style: Billboards
+      Line Width: 0.3  # 稍微粗一点
+      Name: Ground Truth Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 0; 255; 0
+      Pose Style: None
+      Queue Size: 10
+      Radius: 0.03
+      Shaft Diameter: 0.4
+      Shaft Length: 0.4
+      Topic: /gt_path
+      Unreliable: false
+      Value: true
+
+    # ------------------------------------------------------------
     # 坐标轴显示 - 显示全局坐标系方向
     # ------------------------------------------------------------
     - Alpha: 1

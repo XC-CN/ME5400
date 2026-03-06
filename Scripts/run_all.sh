@@ -10,8 +10,11 @@ cleanup() {
     echo -e "\n[INFO] 正在停止所有进程..."
     # 杀死同一进程组中的所有子进程
     trap - SIGTERM && kill -- -$$
-    if kill -0 $RVIZ_PID 2>/dev/null; then kill $RVIZ_PID; fi
+    if [ "$SUCCESS" != "true" ]; then
+        if kill -0 $RVIZ_PID 2>/dev/null; then kill $RVIZ_PID; fi
+    fi
     if [ ! -z "$MC_PID" ] && kill -0 $MC_PID 2>/dev/null; then kill $MC_PID; fi
+    if [ ! -z "$PUB_PID" ] && kill -0 $PUB_PID 2>/dev/null; then kill $PUB_PID; fi
 }
 
 # 解析参数
@@ -81,8 +84,17 @@ fi
 mkdir -p "$PROJECT_ROOT/Results"
 mkdir -p "$PROJECT_ROOT/PCD"
 
-# 3. 启动 RViz 可视化
-echo "[步骤 3] 正在启动 RViz..."
+# 3. 启动 RViz 可视化与真实的轨迹
+echo "[步骤 3] 正在启动真实轨迹发布与 RViz..."
+
+GT_FILE="$PROJECT_ROOT/Data_Tracking/training/oxts/${SEQ_ID}.txt"
+if [[ -f "$GT_FILE" ]]; then
+    python3 "$PROJECT_ROOT/Scripts/utils/publish_gt_path.py" "$GT_FILE" &
+    PUB_PID=$!
+else
+    echo "[警告] 真实数据轨迹文件 $GT_FILE 未找到，将不会发布"
+fi
+
 "$PROJECT_ROOT/Scripts/rviz/run_rviz.sh" &
 RVIZ_PID=$!
 
@@ -232,14 +244,15 @@ else
 fi
 
 # 主动停止所有后台进程
-echo "[INFO] 任务完成，正在停止所有后台进程..."
+echo "[INFO] 任务完成，正在停止部分后台进程..."
 kill $PP_PID 2>/dev/null || true
 kill $MC_PID 2>/dev/null || true
-kill $RVIZ_PID 2>/dev/null || true
+kill $PUB_PID 2>/dev/null || true
 kill $ROSCORE_PID 2>/dev/null || true
 
 # 短暂等待进程退出
 sleep 2
 
-echo "[INFO] 所有进程已停止，脚本正常退出"
+echo "[INFO] 所有进程已停止，但保留 RViz 继续运行，脚本正常退出"
+SUCCESS=true
 exit 0
