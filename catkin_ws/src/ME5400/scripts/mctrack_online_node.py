@@ -6,7 +6,7 @@ import math
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import rospy
@@ -28,6 +28,9 @@ from tracker.frame import Frame  # noqa: E402
 from tracker.bbox import BBox  # noqa: E402
 from tracker.base_tracker import Base3DTracker  # noqa: E402
 from ME5400.msg import Detection3D, Detection3DArray, TrackedObject, TrackedObjectArray  # noqa: E402
+
+DEFAULT_SCORE_THRESHOLD = 0.2
+MIN_DT_THRESHOLD = 1e-3
 
 
 def read_calib(calib_path: Path) -> Dict[str, np.ndarray]:
@@ -177,8 +180,35 @@ class MCTrackOnlineNode:
 
         with config_path.open("r") as f:
             self.cfg = yaml.safe_load(f)
+        fusion_cfg = self.cfg.get("FUSION", {})
 
         self.tracker = Base3DTracker(self.cfg)
+        self.use_pose_velocity_prior = bool(
+            rospy.get_param(
+                "~use_pose_velocity_prior",
+                fusion_cfg.get("USE_POSE_VELOCITY_PRIOR", True),
+            )
+        )
+        self.velocity_match_radius = float(
+            rospy.get_param(
+                "~velocity_match_radius",
+                fusion_cfg.get("VELOCITY_MATCH_RADIUS", 3.0),
+            )
+        )
+        self.velocity_ema_alpha = float(
+            rospy.get_param(
+                "~velocity_ema_alpha",
+                fusion_cfg.get("VELOCITY_EMA_ALPHA", 0.7),
+            )
+        )
+        self.max_prior_speed = float(
+            rospy.get_param(
+                "~max_prior_speed",
+                fusion_cfg.get("MAX_PRIOR_SPEED", 25.0),
+            )
+        )
+        self.prev_det_states: Dict[str, List[Dict[str, np.ndarray]]] = defaultdict(list)
+        self.prev_det_stamp: Optional[float] = None
         
         # PointPillars直接输出LiDAR坐标系，无需相机标定
         # MCTrack只需要知道检测框在LiDAR坐标系即可
@@ -201,10 +231,11 @@ class MCTrackOnlineNode:
             self.det_sub = rospy.Subscriber(self.det_topic, Detection3DArray, self.det_callback, queue_size=10)
         
         rospy.loginfo(
-            "MCTrackOnlineNode 初始化完成 (配置=%s, 检测话题=%s, 旧版String=%s)",
+            "MCTrackOnlineNode 初始化完成 (配置=%s, 检测话题=%s, 旧版String=%s, 速度先验=%s)",
             config_path,
             self.det_topic,
             self.use_string_det,
+            self.use_pose_velocity_prior,
         )
 
     def pose_callback(self, msg: PoseStamped) -> None:
@@ -236,12 +267,23 @@ class MCTrackOnlineNode:
 
         online_scores = self.cfg["THRESHOLD"]["INPUT_SCORE"]["ONLINE"]
         cat_map = self.cfg["CATEGORY_MAP_TO_NUMBER"]
-
+        valid_detections: List[Detection3D] = []
         for det in msg.detections:
             cls = det.cls.lower()
-            # 分数阈值放宽到0.2（支持所有类别：car, pedestrian, cyclist）
-            if det.score < 0.2:
+            cls_idx = cat_map.get(cls)
+            score_thre = (
+                online_scores.get(cls_idx, DEFAULT_SCORE_THRESHOLD)
+                if cls_idx is not None
+                else DEFAULT_SCORE_THRESHOLD
+            )
+            if det.score < score_thre:
                 continue
+            valid_detections.append(det)
+
+        motion_priors = self.estimate_motion_priors(valid_detections, header.stamp.to_sec(), lidar2global)
+
+        for det, (global_velocity, global_acceleration) in zip(valid_detections, motion_priors):
+            cls = det.cls.lower()
             dims = np.array(det.dimensions, dtype=np.float64)
             lwh = [dims[2], dims[1], dims[0]]
             
@@ -259,8 +301,8 @@ class MCTrackOnlineNode:
                 "global_orientation": global_orientation.tolist(),
                 "global_yaw": float(global_yaw),
                 "lwh": lwh,
-                "global_velocity": [0.0, 0.0],
-                "global_acceleration": [0.0, 0.0],
+                "global_velocity": global_velocity,
+                "global_acceleration": global_acceleration,
                 "lidar_xyz": lidar_xyz.tolist(),
                 "lidar_orientation": quaternion_from_yaw(lidar_yaw),
                 "lidar_yaw": float(lidar_yaw),
@@ -277,6 +319,79 @@ class MCTrackOnlineNode:
         outputs = self.tracker.track_single_frame(frame)
         self.publish_tracks(outputs, header)
         self.publish_markers(outputs, header)
+
+    def estimate_motion_priors(
+        self,
+        detections: List[Detection3D],
+        stamp_sec: float,
+        lidar2global: np.ndarray,
+    ) -> List[Tuple[List[float], List[float]]]:
+        if not detections:
+            return []
+
+        has_history = self.prev_det_stamp is not None
+        dt = 0.0
+        if has_history:
+            delta_t = stamp_sec - self.prev_det_stamp
+            if delta_t < 0:
+                rospy.logwarn_throttle(
+                    5.0,
+                    "检测时间戳回退 (当前=%.6f, 上一帧=%.6f)，本帧速度先验回退为零",
+                    stamp_sec,
+                    self.prev_det_stamp,
+                )
+                has_history = False
+            else:
+                dt = max(delta_t, MIN_DT_THRESHOLD)
+        radius_sq = self.velocity_match_radius * self.velocity_match_radius
+
+        results: List[Tuple[List[float], List[float]]] = []
+        current_states: Dict[str, List[Dict[str, np.ndarray]]] = defaultdict(list)
+        used_prev_indices: Dict[str, set] = defaultdict(set)
+
+        for det in detections:
+            cls = det.cls.lower()
+            lidar_xyz = np.array(det.location, dtype=np.float64)
+            global_xyz = project_global(lidar_xyz, lidar2global)
+            curr_xy = global_xyz[:2]
+            vel = np.zeros(2, dtype=np.float64)
+            acc = np.zeros(2, dtype=np.float64)
+
+            if self.use_pose_velocity_prior and has_history:
+                prev_candidates = self.prev_det_states.get(cls, [])
+                best_idx = -1
+                best_dist_sq = float("inf")
+                best_state: Optional[Dict[str, np.ndarray]] = None
+                for idx, state in enumerate(prev_candidates):
+                    if idx in used_prev_indices[cls]:
+                        continue
+                    dist_sq = np.sum((curr_xy - state["xy"]) ** 2)
+                    if dist_sq < best_dist_sq:
+                        best_dist_sq = dist_sq
+                        best_idx = idx
+                        best_state = state
+
+                if (
+                    best_state is not None
+                    and best_dist_sq <= radius_sq
+                    and dt >= MIN_DT_THRESHOLD
+                ):
+                    raw_vel = (curr_xy - best_state["xy"]) / dt
+                    # EMA: alpha weights current observed velocity, (1-alpha) weights previous estimate.
+                    smoothed = self.velocity_ema_alpha * raw_vel + (1.0 - self.velocity_ema_alpha) * best_state["vel"]
+                    speed = float(np.linalg.norm(smoothed))
+                    if speed > self.max_prior_speed:
+                        smoothed = smoothed * (self.max_prior_speed / speed)
+                    vel = smoothed
+                    acc = (vel - best_state["vel"]) / dt
+                    used_prev_indices[cls].add(best_idx)
+
+            current_states[cls].append({"xy": curr_xy, "vel": vel})
+            results.append((vel.tolist(), acc.tolist()))
+
+        self.prev_det_states = current_states
+        self.prev_det_stamp = stamp_sec
+        return results
 
     def _convert_lidar_tracking_to_array(self, msg: String) -> Optional[Detection3DArray]:
         """
