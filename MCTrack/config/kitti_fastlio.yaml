@@ -6,7 +6,7 @@ DATASET_ROOT: "data/kitti/datasets/"
 DETECTIONS_ROOT: "data/base_version_fastlio/kitti/"
 SAVE_PATH: 'results/'
 TRACKING_MODE: 'ONLINE'
-IS_RV_MATCHING: True
+IS_RV_MATCHING: False
 FRAME_RATE: 10
 TRACKING_SEQS: [0]
 
