@@ -30,6 +30,7 @@ __pycache__/
 .vscode/
 .idea/
 .cache/
+.cursor/
 
 Data_Tracking/
 build/
