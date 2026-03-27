@@ -191,7 +191,7 @@ def main():
     ax1.set_ylabel("Y (m)")
     ax1.legend()
     ax1.grid(True)
-    ax1.set_xlim(0, 400)
+    ax1.set_aspect('equal', adjustable='datalim') # 确保 XY 比例 1:1，避免轨迹变形
     
     # Bottom: Errors
     if error_base is not None and len(error_base) > 0:
