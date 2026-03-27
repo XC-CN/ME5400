@@ -7,11 +7,19 @@
   <!-- 是否启用动态目标权重优化（默认启用，设为 false 则使用原始方法） -->
   <arg name="use_dynamic_weights" default="true" />
 
+  <!-- 话题订阅配置 -->
+  <arg name="lidar_topic" default="/detection/pointcloud" />
+  <arg name="imu_topic" default="/detection/imu" />
+
   <!-- 使用仿真时间（若播放 rosbag，应设置为 true） -->
   <param name="/use_sim_time" value="true" />
 
   <!-- 加载点云/传感器等相关配置（位于 fast_lio 包下的 velodyne.yaml） -->
   <rosparam command="load" file="$(find fast_lio)/config/velodyne.yaml" />
+
+  <!-- 覆盖话题参数 -->
+  <param name="common/lid_topic" value="$(arg lidar_topic)" />
+  <param name="common/imu_topic" value="$(arg imu_topic)" />
 
   <!-- 算法参数 -->
   <!-- 是否启用特征提取（0/1） -->

@@ -194,8 +194,7 @@ ME5400/
 │   ├── utils/                         # 通用工具脚本 (编译、数据转换等)
 │   └── run_all.sh                     # 全流程一键启动脚本
 ├── Data_Tracking/                     # KITTI Tracking 数据与示例 rosbag
-├── PCD/                               # FAST-LIO 自动导出的全局点云
-├── Results/                           # 评估结果图表与数据
+├── Results/                           # 评估结果图表、归档轨迹与自动生成的 PCD 局部地图
 ├── image/                             # 项目相关图片素材
 └── README.md
 ```
@@ -393,28 +392,32 @@ ME5400/
 
 ### 🚀 **一键启动（推荐）**
 
-如果您已准备好环境和数据，可以直接运行以下脚本启动全流程（自动跳过数据生成步骤）：
+如果您已准备好环境和数据，可以直接使用项目内的自动化脚本执行测试。为了保证各司其职且不相互干扰，系统提供了三个独立的快捷启动脚本：
+
+#### 1. 自动化全流程连跑 (双轨一键对比)
+最推荐的方式。脚本会自动先执行一遍纯净的 Baseline，结束后自动清理后台并紧接着执行带感知闭环的优化管线，最后自动输出两者的量化对比评估图表。
 
 ```bash
-# 默认模式：运行序列 0020
+# 完美控制变量的双轨连跑，并自动输出图表到 0020_results/ 
 ./Scripts/run_all.sh 0020
 
-# 基准运行：仅运行基准测试 (无优化)
-./Scripts/run_all.sh --baseline 0020
+# 🚀 强烈推荐：无可视化模式运行，跳过一切界面与真值发布，极省资源且最高效
+./Scripts/run_all.sh --headless 0020
+```
+*(注：`--headless` 或 `-n` 参数会关闭 RViz 渲染前端在后台静默高速运算。0019序列 为高速路场景，0020 为城市街道。)*
 
-# 0019为高速路
+#### 2. 分解独立模块执行
+如果您只需要跑单一环境获取固定数据，或进行单步调试开发，可直接使用独立脚本（同样支持 `--headless`）：
+
+```bash
+# 仅运行纯净基准测试 (不加载庞大的感知检测模块，仅执行原生基础版 FAST-LIO)
+./Scripts/run_baseline.sh 0020
+
+# 仅运行深度学习优化管线 (满载运行 PointPillars + MCTrack + 动态加权机制的 FAST-LIO)
+./Scripts/run_optimized.sh 0020
 ```
 
-
-该脚本将自动执行以下操作：
-
-1. 启动 `roscore`
-2. 执行 `build_catkin_ws.sh` 确保工作空间已编译（若已编译则跳过）
-3. 启动 `RViz` 可视化
-4. 启动 `PointPillars` 检测节点
-5. **(默认模式)** 运行优化后的 `FAST-LIO` (带 MCTrack) 并保存地图/轨迹 (`scans_optimized.pcd`)
-6. **(基准模式)** 运行基准 `FAST-LIO` (无优化) 并保存地图/轨迹 (`scans_baseline.pcd`)
-7. 生成评估报告 (仅在默认模式下且存在基准结果时)
+> 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`）、建图产出的对应点云地图（`.pcd`），以及最终生成的 ATE/RPE 对比评测图（`.png`）与指标（`metrics.txt`），系统都会自动为您统一存放入 `Results/<序列号>_results/` 的同属专有目录下，避免文件散落或被相互覆盖。
 
 ---
 
@@ -511,8 +514,6 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 
 ### 🔧 配置说明
 
-### FAST-LIO2 配置
-
 主要配置文件：`catkin_ws/src/fast_lio/config/velodyne.yaml`
 
 ```yaml
@@ -568,7 +569,8 @@ mapping:
 
 **保存位置**：
 
-- 地图文件保存在项目根目录的 `PCD/scans.pcd`
+- 地图文件在原 FAST-LIO 临时存储后，由我们封装的启动脚本（`run_optimized.sh` / `run_baseline.sh`）全程接管。
+- 最终都会被自动安全归档放入对应序列的结果库内：`Results/<序列号>_results/scans_*.pcd`
 - 默认配置下，所有扫描帧会累积保存到一个 PCD 文件中
 
 **保存时机**：
@@ -606,8 +608,8 @@ mapping:
 
 **注意事项**：
 
-- 确保 `velodyne.yaml` 中 `pcd_save/pcd_save_en: true`（默认已启用）
-- 如果地图文件很大，保存可能需要几秒钟到几十秒时间
+- 为避免占用大量存储空间及缩短程序等待时间，`velodyne.yaml` 中的 `pcd_save/pcd_save_en` 现已**默认关闭（false）**。
+- 如果您确实需要导出 `.pcd` 全局点云文件用于离线可视化，请在运行前手工将此参数临时改为 `true`。开启后需要注意，如果地图文件很大，保存可能需要几秒钟到几分钟时间，请在此期间切勿强杀进程。
 - 脚本会等待最多 30 秒确保地图保存完成
 - 如果进程被强制杀死（kill -9），地图可能不会保存
 - 地图保存位置可通过 `pcd_save/output_dir` 参数自定义

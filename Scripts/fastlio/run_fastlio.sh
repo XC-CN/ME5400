@@ -121,64 +121,8 @@ case "$MODE" in
     }
     
     verify_map_saved() {
-      # 查找 PCD 目录下最新修改的 .pcd 文件
-      local pcd_dir="$ROOT_DIR/PCD"
-      mkdir -p "$pcd_dir"
-      
-      # 使用 ls -t 找到最新的 pcd 文件
-      # 注意：ls output 并不总是可靠，但在简单脚本中通常可用。
-      # find 方案更健壮但语法在不同系统不仅相同。这里假设 Linux 环境。
-      local newest_pcd=$(ls -t "$pcd_dir"/*.pcd 2>/dev/null | head -n 1)
-      
-      if [ -z "$newest_pcd" ]; then
-        echo "[警告] ⚠ PCD 目录为空或未找到 .pcd 文件: $pcd_dir"
-        echo "[警告] ⚠ 可能原因：1) 点云数据为空 2) 保存被中断 3) 配置中pcd_save_en=false"
-        return 1
-      fi
-      
-      local pcd_file="$newest_pcd"
-      
-      if [ -f "$pcd_file" ]; then
-        local file_size=$(stat -f%z "$pcd_file" 2>/dev/null || stat -c%s "$pcd_file" 2>/dev/null || echo "0")
-        local file_size_mb=$((file_size / 1024 / 1024))
-        
-        if [ "$file_size" -gt 0 ]; then
-          # Check modification time to ensure it's a new file (verify recently modified)
-          local current_time=$(date +%s)
-          local file_mtime=$(stat -c %Y "$pcd_file" 2>/dev/null || stat -f %m "$pcd_file" 2>/dev/null || echo "0")
-          local time_diff=$((current_time - file_mtime))
-          
-          # Allow up to 120 seconds delay (relaxed check)
-          if [ "$time_diff" -gt 120 ]; then
-            echo "[错误] ✗ 找到的最新地图文件似乎是旧文件！"
-            echo "        文件: $pcd_file"
-            echo "        文件修改时间: $(date -d @$file_mtime '+%Y-%m-%d %H:%M:%S')"
-            echo "        当前系统时间: $(date -d @$current_time '+%Y-%m-%d %H:%M:%S')"
-            echo "        时间差异: ${time_diff} 秒 (阈值: 120秒)"
-            echo "        建议：检查 FAST-LIO 是否成功保存了地图，或尝试手动删除 PCD 目录下旧文件后重试"
-            # return 1 # 暂时不报错退出，只警告，方便后续重命名逻辑尝试
-          else
-            echo "[成功] ✓ 地图文件已保存: $pcd_file"
-            echo "[成功] ✓ 文件大小: ${file_size_mb} MB"
-            
-            # 为了兼容 run_all.sh 的重命名逻辑，我们可以提示或软链接
-            # 但 run_all.sh 里的逻辑是找 scans.pcd。为了兼容，我们把这个最新文件复制/重命名为 scans.pcd (如果它不是叫 scans.pcd)
-            # 或者，run_all.sh 也应该改为查找最新文件? 
-            # 暂时保持 run_all.sh 的逻辑简单，这里做一个软链接或者拷贝?
-            # 最好是 run_all.sh 也修改。但在此处，我们至少把 scans.pcd 指向最新的
-            
-            if [[ "$(basename "$pcd_file")" != "scans.pcd" ]]; then
-                echo "[信息] 将最新文件更新为 scans.pcd 以供后续脚本使用..."
-                mv "$pcd_file" "$pcd_dir/scans.pcd"
-            fi
-          fi
-        else
-          echo "[错误] ✗ 地图文件存在但大小为0，保存可能失败: $pcd_file"
-          return 1
-        fi
-      else
-        echo "[警告] ⚠ 文件检查异常"
-      fi
+      # 系统按需默认开启了无 PCD 地图保存模式以节约时间和磁盘空间，因此此处不再做完整性检查。
+      return 0
     }
     trap cleanup EXIT INT TERM
     

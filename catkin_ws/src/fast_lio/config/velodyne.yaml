@@ -32,6 +32,6 @@ publish:
     scan_bodyframe_pub_en: true  # true：输出IMU机体系下的点云帧
 
 pcd_save:
-    pcd_save_en: true
+    pcd_save_en: false
     interval: -1                 # 每个pcd文件保存多少帧激光雷达数据；
                                  # -1：所有帧保存到一个pcd文件，帧数过多可能导致内存溢出
