@@ -8,13 +8,12 @@
 
 ## 目录
 
-- [🤖 面向协助代理的提示](#-面向协助代理的提示)
-- [📋 项目概述与功能](#-项目概述与功能)
-- [📁 项目结构](#-项目结构)
+- [📋 项目介绍](#-项目介绍)
+- [📁 目录结构](#-目录结构)
+- [📊 实验结果](#-实验结果)
 - [🛠️ 环境与安装](#️-环境与安装)
 - [📊 数据准备](#-数据准备)
 - [🎯 使用指南](#-使用指南)
-- [📊 实验结果](#-实验结果)
 - [🔧 配置说明](#-配置说明)
 
 ## 📋 项目介绍
@@ -184,28 +183,20 @@ ME5400/
 │   └── src/ME5400/msg/                # 自定义 Detection3D/Detection3DArray 消息
 ├── MCTrack/                           # 多目标跟踪框架（配置、评估与跟踪算法）
 ├── MMDET3D/                           # PointPillars 算法库（配置、权重、数据）
+│   └── local/ros/nodes/               # PointPillars 检测 ROS 节点 (kitti_pointpillars_bag_node.py)
 ├── Scripts/                           # 🔥 融合管线统一启动脚本（按算法分类）
-│   ├── pointpillars/                  # PointPillars 检测模块
-│   │   ├── kitti_pointpillars_bag_node.py  # PointPillars 检测 ROS 节点
-│   │   └── run_pointpillars_node.sh        # 启动脚本（自动化）
-│   ├── fastlio/                       # FAST-LIO 里程计模块
-│   │   └── run_fastlio.sh                  # FAST-LIO 统一启动脚本（支持 mapping/pose_bridge/both 模式）
-│   ├── mctrack/                       # MCTrack 跟踪模块
-│   │   ├── run_mctrack_online_node.sh      # MCTrack 启动脚本
-│   │   └── mctrack_marker_publisher.py     # Marker 发布工具
-│   ├── joint_backend/                 # 可选：ego-only 联合后端模块
-│   │   └── run_joint_backend_ego.sh        # 联合后端启动脚本（输出 /joint_backend/odom）
-│   ├── rviz/                          # RViz 可视化模块
-│   │   ├── run_rviz.sh                     # 加载项目 RViz 配置
-│   │   ├── rviz_headless_check.py          # 无头模式检查
-│   │   └── ME5400.rviz                     # RViz 配置文件
-│   └── utils/                         # 通用工具脚本
-│       ├── kitti_tracking_to_rosbag.py     # KITTI 数据转 rosbag
-│       ├── play_kitti_rosbag.sh            # rosbag 播放辅助
-│       ├── build_catkin_ws.sh              # 工作空间编译脚本
-│       └── ...                             # 其他工具脚本
+│   ├── evaluation/                    # 轨迹评估模块 (ATE/RPE)
+│   ├── pointpillars/                  # PointPillars 检测模块启动脚本
+│   ├── fastlio/                       # FAST-LIO 里程计模块启动脚本
+│   ├── mctrack/                       # MCTrack 跟踪模块启动脚本
+│   ├── joint_backend/                 # 可选：ego-only 联合后端模块启动脚本
+│   ├── rviz/                          # RViz 可视化模块配置与脚本
+│   ├── utils/                         # 通用工具脚本 (编译、数据转换等)
+│   └── run_all.sh                     # 全流程一键启动脚本
 ├── Data_Tracking/                     # KITTI Tracking 数据与示例 rosbag
 ├── PCD/                               # FAST-LIO 自动导出的全局点云
+├── Results/                           # 评估结果图表与数据
+├── image/                             # 项目相关图片素材
 └── README.md
 ```
 
@@ -408,6 +399,7 @@ ME5400/
 # 默认运行：仅执行优化测试 (FAST-LIO + MCTrack)
 # 示例：运行序列 0020 (默认)
 ./Scripts/run_all.sh
+
 # 示例：运行序列 0019
 ./Scripts/run_all.sh 0019
 
