@@ -157,17 +157,18 @@ if [ "$MODE" = "BASELINE" ]; then
     wait $FL_PID 2>/dev/null || true
     
     # 保存结果并重命名
+    mkdir -p "$PROJECT_ROOT/Results/${SEQ_ID}_results"
     if [[ -f "$PROJECT_ROOT/Results/trajectory.txt" ]]; then
-        mv "$PROJECT_ROOT/Results/trajectory.txt" "$PROJECT_ROOT/Results/trajectory_baseline.txt"
-        echo "[信息] 基准轨迹已保存为 Results/trajectory_baseline.txt"
+        mv "$PROJECT_ROOT/Results/trajectory.txt" "$PROJECT_ROOT/Results/${SEQ_ID}_results/trajectory_baseline.txt"
+        echo "[信息] 基准轨迹已保存为 Results/${SEQ_ID}_results/trajectory_baseline.txt"
     else
         echo "[警告] 未找到基准轨迹文件！"
     fi
 
     # 重命名地图文件 (防止被覆盖)
     if [[ -f "$PROJECT_ROOT/PCD/scans.pcd" ]]; then
-        mv "$PROJECT_ROOT/PCD/scans.pcd" "$PROJECT_ROOT/PCD/scans_baseline.pcd"
-        echo "[信息] 基准地图已保存为 PCD/scans_baseline.pcd"
+        mv "$PROJECT_ROOT/PCD/scans.pcd" "$PROJECT_ROOT/PCD/scans_baseline_${SEQ_ID}.pcd"
+        echo "[信息] 基准地图已保存为 PCD/scans_baseline_${SEQ_ID}.pcd"
     else
         echo "[警告] 未找到基准地图文件 (scans.pcd)"
     fi
@@ -216,27 +217,32 @@ else
     echo "[步骤 6B] 优化测试结束，停止 FastLIO..."
     kill -TERM $FL_PID 2>/dev/null || true
     wait $FL_PID 2>/dev/null || true
-    echo "[信息] 优化轨迹已保存为 Results/trajectory.txt"
+    # 保存结果并重命名
+    mkdir -p "$PROJECT_ROOT/Results/${SEQ_ID}_results"
+    if [[ -f "$PROJECT_ROOT/Results/trajectory.txt" ]]; then
+        mv "$PROJECT_ROOT/Results/trajectory.txt" "$PROJECT_ROOT/Results/${SEQ_ID}_results/trajectory.txt"
+        echo "[信息] 优化轨迹已保存为 Results/${SEQ_ID}_results/trajectory.txt"
+    fi
 
     # 重命名地图文件
     if [[ -f "$PROJECT_ROOT/PCD/scans.pcd" ]]; then
-        mv "$PROJECT_ROOT/PCD/scans.pcd" "$PROJECT_ROOT/PCD/scans_optimized.pcd"
-        echo "[信息] 优化地图已保存为 PCD/scans_optimized.pcd"
+        mv "$PROJECT_ROOT/PCD/scans.pcd" "$PROJECT_ROOT/PCD/scans_optimized_${SEQ_ID}.pcd"
+        echo "[信息] 优化地图已保存为 PCD/scans_optimized_${SEQ_ID}.pcd"
     else
         echo "[警告] 未找到优化地图文件 (scans.pcd)"
     fi
 
     # 自动评估 (仅当 baseline 存在时运行，或者修改评估脚本)
-    if [ -f "$PROJECT_ROOT/Results/trajectory_baseline.txt" ]; then
+    if [ -f "$PROJECT_ROOT/Results/${SEQ_ID}_results/trajectory_baseline.txt" ]; then
         echo "[步骤 9] 正在运行增强轨迹评估..."
         python "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectory.py" \
-            --pred "$PROJECT_ROOT/Results/trajectory.txt" \
-            --baseline "$PROJECT_ROOT/Results/trajectory_baseline.txt" \
+            --pred "$PROJECT_ROOT/Results/${SEQ_ID}_results/trajectory.txt" \
+            --baseline "$PROJECT_ROOT/Results/${SEQ_ID}_results/trajectory_baseline.txt" \
             --gt "$PROJECT_ROOT/Data_Tracking/training/oxts/$SEQ_ID.txt" \
             --output "$PROJECT_ROOT/Results/"
         
         echo "========================================================="
-        echo "   评估完成！结果保存在 Results/ 目录                    "
+        echo "   评估完成！结果保存在 Results/${SEQ_ID}_results/ 目录  "
         echo "========================================================="
     else
         echo "[信息] 未找到基准轨迹，跳过对比评估"

@@ -223,7 +223,7 @@ ME5400/
 
 下图展示了三条轨迹的对比（真值、基准、优化后）以及随时间变化的位姿误差：
 
-![评估结果图表](Results/evaluation_result.png)
+![评估结果图表](Results/0020_results/evaluation_result.png)
 
 * **上图 (轨迹对比)**:
   * **黑色实线**: KITTI 真值 (Ground Truth)
@@ -396,17 +396,16 @@ ME5400/
 如果您已准备好环境和数据，可以直接运行以下脚本启动全流程（自动跳过数据生成步骤）：
 
 ```bash
-# 默认运行：仅执行优化测试 (FAST-LIO + MCTrack)
-# 示例：运行序列 0020 (默认)
-./Scripts/run_all.sh
-
-# 示例：运行序列 0019
-./Scripts/run_all.sh 0019
+# 默认模式：运行序列 0020
+./Scripts/run_all.sh 0020
 
 # 基准运行：仅运行基准测试 (无优化)
-./Scripts/run_all.sh --baseline [SEQ_ID]
+./Scripts/run_all.sh --baseline 0020
+
+# 0019为高速路
 ```
-0
+
+
 该脚本将自动执行以下操作：
 
 1. 启动 `roscore`
@@ -423,31 +422,31 @@ ME5400/
 
 以下是手动分步启动的详细流程：
 
-### 1. **启动 roscore（终端 A）**
+#### 1. **启动 roscore（终端 A）**
 
 ```bash
 roscore
 ```
 
-### 2. **【首次运行或代码更新后】编译工作空间**
+#### 2. **【首次运行或代码更新后】编译工作空间**
 
 ```bash
 ./Scripts/utils/build_catkin_ws.sh
 ```
 
-### 3. **【可选】生成或更新默认 rosbag**
+#### 3. **【可选】生成或更新默认 rosbag**
 
 ```bash
 ./Scripts/utils/kitti_tracking_to_rosbag.py --seq 20  #制作第20号场景的rosbag
 ```
 
-### 4. **启动 PointPillars 检测节点（终端 B）**
+#### 4. **启动 PointPillars 检测节点（终端 B）**
 
 ```bash
 ./Scripts/pointpillars/run_pointpillars_node.sh
 ```
 
-### 5. **启动 FAST-LIO 系统（终端 C）**
+#### 5. **启动 FAST-LIO 系统（终端 C）**
 
 FAST-LIO 提供三种启动方式：
 
@@ -465,13 +464,13 @@ FAST-LIO 提供三种启动方式：
 > - 动态权重优化功能默认启用，可通过 `use_dynamic_weights` 参数控制
 > - FAST-LIO 会发布 `/Odometry_imu_predicted` 话题（IMU 预测位姿，LiDAR 更新前），用于提高 MCTrack 的实时性
 
-### 6. **启动 MCTrack 在线节点（终端 D）**
+#### 6. **启动 MCTrack 在线节点（终端 D）**
 
 ```bash
 ./Scripts/mctrack/run_mctrack_online_node.sh
 ```
 
-### 7. **播放 rosbag（终端 F，保持运行）**
+#### 7. **播放 rosbag（终端 F，保持运行）**
 
 ```bash
 rosparam set use_sim_time true
@@ -487,7 +486,7 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 
 结束运行时，必须先关闭fastlio建图进程，再关闭rosbag。
 
-### 8. **打开 RViz（终端 E，与 rosbag 同时运行）**
+#### 8. **打开 RViz（终端 E，与 rosbag 同时运行）**
 
 ```bash
 ./Scripts/rviz/run_rviz.sh
@@ -495,7 +494,7 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 
    使用 `Scripts/rviz/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
 
-### 9. **【可选】启动 ego-only 联合后端（终端 G）**
+#### 9. **【可选】启动 ego-only 联合后端（终端 G）**
 
 该模块不替代 FAST-LIO，仅额外输出一条优化后的自车里程计（`/joint_backend/odom`）：
 

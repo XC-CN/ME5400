@@ -422,6 +422,8 @@ def main():
         traj_list.append({"name": name.strip(), "path": path.strip()})
 
     out_dir = Path(args.output)
+    seq_name = Path(args.gt).stem
+    out_dir = out_dir / f"{seq_name}_results"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # 加载 Ground Truth
