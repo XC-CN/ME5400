@@ -324,24 +324,24 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit  # 轨道相机（围绕焦点旋转）
-      Distance: 726.615478515625  # 相机距离焦点的距离
+      Distance: 50  # 相机距焦点距离（米），俯视自车
       Enable Stereo Rendering:  # 立体渲染（VR相关，已禁用）
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Field of View: 0.7853981852531433  # 视场角（弧度）≈45度
-      Focal Point:  # 焦点位置（相机注视的中心点）
-        X: 175.21633911132812
-        Y: -116.68792724609375
-        Z: -179.06602478027344
+      Focal Point:  # 焦点位置（相对 body 坐标系原点）
+        X: 0
+        Y: 0
+        Z: 0
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false  # 不反转Z轴
       Name: Current View
       Near Clip Distance: 0.009999999776482582  # 近裁剪面距离
       Pitch: 0.5  # 俯仰角
-      Target Frame: <Fixed Frame>  # 目标坐标系
+      Target Frame: body  # 跟随自车坐标系（FAST-LIO body frame）
       Yaw: 0.5  # 偏航角
     Saved: ~  # 未保存自定义视图
 # ============================================================
