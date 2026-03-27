@@ -62,6 +62,8 @@ ME5400/
 │   ├── mctrack/                       # MCTrack 跟踪模块
 │   │   ├── run_mctrack_online_node.sh      # MCTrack 启动脚本
 │   │   └── mctrack_marker_publisher.py     # Marker 发布工具
+│   ├── joint_backend/                 # 可选：ego-only 联合后端模块
+│   │   └── run_joint_backend_ego.sh        # 联合后端启动脚本（输出 /joint_backend/odom）
 │   ├── rviz/                          # RViz 可视化模块
 │   │   ├── run_rviz.sh                     # 加载项目 RViz 配置
 │   │   ├── rviz_headless_check.py          # 无头模式检查
@@ -370,6 +372,21 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 
    使用 `Scripts/rviz/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
 
+### 9. **【可选】启动 ego-only 联合后端（终端 G）**
+
+该模块不替代 FAST-LIO，仅额外输出一条优化后的自车里程计（`/joint_backend/odom`）：
+
+```bash
+./Scripts/joint_backend/run_joint_backend_ego.sh
+```
+
+可指定配置文件：
+
+```bash
+./Scripts/joint_backend/run_joint_backend_ego.sh \
+  --config ~/ME5400/catkin_ws/src/ME5400/config/joint_backend_ego.yaml
+```
+
 ### 🔧 配置说明
 
 ### FAST-LIO2 配置
@@ -473,3 +490,47 @@ mapping:
 - 如果进程被强制杀死（kill -9），地图可能不会保存
 - 地图保存位置可通过 `pcd_save/output_dir` 参数自定义
 - 如果点云数据为空，地图文件不会生成（这是正常行为）
+
+#### Joint Backend（ego-only）配置
+
+配置文件：`catkin_ws/src/ME5400/config/joint_backend_ego.yaml`
+
+- `window_size`：滑窗长度（帧数）
+- `lambda_obj`：目标观测约束全局权重
+- `score_th`：目标检测置信度门限
+- `track_len_th`：最小轨迹长度门限
+- `max_dt`：目标消息与里程计时间最大允许差（秒）
+- `max_dv`：速度突变量门限（用于剔除不稳定目标）
+- `odom_noise_fallback`：`/Odometry` 协方差异常时的回退噪声 `[sigma_x, sigma_y, sigma_yaw]`
+
+#### Joint Backend（ego-only）调参建议
+
+推荐按以下顺序调参（每次只改 1~2 个参数）：
+
+1. **`lambda_obj`（最关键）**  
+   控制目标观测约束强度。建议范围 `0.1~0.6`，默认从 `0.3` 开始。  
+   - 轨迹被目标“拉偏”或抖动：减小  
+   - 优化效果不明显：增大
+
+2. **`window_size`**  
+   建议 `8~15`（默认 10）。  
+   - 小：响应快但更噪  
+   - 大：更平滑但更滞后
+
+3. **门控参数：`score_th`、`track_len_th`、`max_dt`、`max_dv`**  
+   - `score_th`：建议 `0.5~0.6`，越大越保守  
+   - `track_len_th`：建议 `3~5`，越大越稳定  
+   - `max_dt`：建议 `0.2~0.3s`，太小会丢约束，太大易错配  
+   - `max_dv`：建议 `2.0~3.0`，越小越严格过滤速度突变
+
+4. **`min_obj_weight`**  
+   目标约束下限，建议 `0.1~0.2`。若目标约束太弱可适当提高。
+
+5. **`odom_noise_fallback`**  
+   仅在 `/Odometry` 协方差异常时生效。一般保持默认 `[0.20, 0.20, 0.10]`。
+
+建议实验流程：
+
+1. 先固定同一个 rosbag 与播放倍率。  
+2. 先用 `use_dynamic_weights:=false` 调 joint backend。  
+3. 再切换 `use_dynamic_weights:=true` 联合调参（通常将 `lambda_obj` 略降）。  
