@@ -415,6 +415,8 @@ ME5400/
 
 # 仅运行深度学习优化管线 (满载运行 PointPillars + MCTrack + 动态加权机制的 FAST-LIO)
 ./Scripts/run_optimized.sh 0020
+./Scripts/run_optimized.sh --headless 0020
+
 ```
 
 > 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`）、建图产出的对应点云地图（`.pcd`），以及最终生成的 ATE/RPE 对比评测图（`.png`）与指标（`metrics.txt`），系统都会自动为您统一存放入 `Results/<序列号>_results/` 的同属专有目录下，避免文件散落或被相互覆盖。

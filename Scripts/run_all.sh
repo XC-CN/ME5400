@@ -33,9 +33,28 @@ for arg in "$@"; do
     esac
 done
 
+# 统一管理 roscore 的清理
+cleanup_all() {
+    echo -e "\n[INFO] 正在关闭全局 roscore..."
+    if [ ! -z "$GLOBAL_ROSCORE_PID" ] && kill -0 $GLOBAL_ROSCORE_PID 2>/dev/null; then
+        kill -9 $GLOBAL_ROSCORE_PID 2>/dev/null || true
+    fi
+}
+trap cleanup_all EXIT
+
 echo "========================================================="
 echo "   [ALL] 开始完整验证连跑流: Baseline -> Optimized    "
 echo "========================================================="
+
+# 0. 启动全局 roscore
+if ! rostopic list > /dev/null 2>&1; then
+    echo "[INFO] 启动全局 roscore..."
+    roscore &
+    GLOBAL_ROSCORE_PID=$!
+    sleep 5
+else
+    echo "[INFO] 检测到外部 roscore 已在运行，将直接复用。"
+fi
 
 echo -e "\n>>> [第 1 阶段] 正在运行纯净版基准测试 (run_baseline.sh) ..."
 if ! "$SCRIPT_DIR/run_baseline.sh" "$@"; then
@@ -43,8 +62,8 @@ if ! "$SCRIPT_DIR/run_baseline.sh" "$@"; then
     exit 1
 fi
 
-echo -e "\n[INFO] 基准测试执行完毕，等待 3 秒后清理并启动优化验证流..."
-sleep 3
+echo -e "\n[INFO] 基准测试执行完毕，准备启动优化验证流 (维持 roscore)..."
+sleep 2
 
 echo -e "\n>>> [第 2 阶段] 正在运行深度学习优化管线测试 (run_optimized.sh) ..."
 if ! "$SCRIPT_DIR/run_optimized.sh" "$@"; then

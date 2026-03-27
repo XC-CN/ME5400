@@ -95,7 +95,7 @@ class KittiPointPillarsBagNode:
         self.imu_pub = rospy.Publisher('/detection/imu', Imu, queue_size=10)
         
         # 订阅点云话题
-        self.pointcloud_sub = rospy.Subscriber('/kitti/velo/pointcloud', PointCloud2, self._pointcloud_callback)
+        self.pointcloud_sub = rospy.Subscriber('/kitti/velo/pointcloud', PointCloud2, self._pointcloud_callback, queue_size=10)
         self.imu_sub = rospy.Subscriber('/kitti/oxts/imu', Imu, self._imu_callback, queue_size=1)
         
         # 统计信息
@@ -233,6 +233,7 @@ class KittiPointPillarsBagNode:
     
     def _pointcloud_callback(self, msg: PointCloud2):
         """点云数据回调函数"""
+        start_time = rospy.Time.now()
         try:
             self.frame_count += 1
             frame_id = max(self.frame_count - 1, 0)
@@ -305,6 +306,11 @@ class KittiPointPillarsBagNode:
                 rospy.sleep(1.0 / self.publish_rate - dt)
             self.last_time = current_time
             
+            # 频率警告：如果在 1.0 倍速下处理超过 0.1s，则提示性能不足
+            process_duration = (rospy.Time.now() - start_time).to_sec()
+            if process_duration > 0.1:
+                rospy.logwarn(f"警告: 帧 {frame_id} 处理用时 {process_duration:.3f}s > 0.1s。当前硬件在 1.0 倍速下无法保证实时性，建议降低 rosbag 播放倍速。")
+
         except Exception as e:
             rospy.logerr(f"点云处理失败: {e}")
             import traceback

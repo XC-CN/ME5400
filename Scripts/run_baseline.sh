@@ -13,7 +13,7 @@ cleanup() {
         if [ ! -z "$FL_PID" ] && kill -0 $FL_PID 2>/dev/null; then kill -9 $FL_PID 2>/dev/null || true; fi
         if [ ! -z "$BAG_PID" ] && kill -0 $BAG_PID 2>/dev/null; then kill -9 $BAG_PID 2>/dev/null || true; fi
         if [ ! -z "$PUB_PID" ] && kill -0 $PUB_PID 2>/dev/null; then kill -9 $PUB_PID 2>/dev/null || true; fi
-        if [ ! -z "$ROSCORE_PID" ] && kill -0 $ROSCORE_PID 2>/dev/null; then kill -9 $ROSCORE_PID 2>/dev/null || true; fi
+        if [ "$INTERNAL_ROSCORE" = "true" ] && [ ! -z "$ROSCORE_PID" ] && kill -0 $ROSCORE_PID 2>/dev/null; then kill -9 $ROSCORE_PID 2>/dev/null || true; fi
     fi
 }
 
@@ -55,16 +55,21 @@ echo "[INFO] 数据集序列号: $SEQ_ID"
 # 0. 环境清理
 echo "[步骤 0] 正在清理残留环境..."
 killall -9 rviz 2>/dev/null || true
-killall -9 rosmaster 2>/dev/null || true
-killall -9 roscore 2>/dev/null || true
+# 不再强制清理 roscore，允许外部(如 run_all.sh)维持其生命周期
 killall -9 python 2>/dev/null | grep "ros" || true # 谨慎清理
 sleep 1
 
-# 1. 启动 roscore
-echo "[步骤 1] 正在启动 roscore..."
-roscore &
-ROSCORE_PID=$!
-sleep 8  # 增加等待时间
+# 1. 启动 roscore (条件启动)
+if ! rostopic list > /dev/null 2>&1; then
+    echo "[步骤 1] 正在启动 roscore..."
+    roscore &
+    ROSCORE_PID=$!
+    sleep 8
+    INTERNAL_ROSCORE=true
+else
+    echo "[步骤 1] 检测到 roscore 已在运行，将复用现有环境..."
+    INTERNAL_ROSCORE=false
+fi
 
 # 2. 构建 catkin 工作空间
 echo "[步骤 2] 正在构建/验证 catkin 工作空间..."

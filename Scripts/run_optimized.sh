@@ -15,7 +15,7 @@ cleanup() {
         if [ ! -z "$FL_PID" ] && kill -0 $FL_PID 2>/dev/null; then kill -9 $FL_PID 2>/dev/null || true; fi
         if [ ! -z "$BAG_PID" ] && kill -0 $BAG_PID 2>/dev/null; then kill -9 $BAG_PID 2>/dev/null || true; fi
         if [ ! -z "$PUB_PID" ] && kill -0 $PUB_PID 2>/dev/null; then kill -9 $PUB_PID 2>/dev/null || true; fi
-        if [ ! -z "$ROSCORE_PID" ] && kill -0 $ROSCORE_PID 2>/dev/null; then kill -9 $ROSCORE_PID 2>/dev/null || true; fi
+        if [ "$INTERNAL_ROSCORE" = "true" ] && [ ! -z "$ROSCORE_PID" ] && kill -0 $ROSCORE_PID 2>/dev/null; then kill -9 $ROSCORE_PID 2>/dev/null || true; fi
     fi
 }
 
@@ -57,16 +57,21 @@ echo "[INFO] 数据集序列号: $SEQ_ID"
 # 0. 环境清理
 echo "[步骤 0] 正在清理残留环境..."
 killall -9 rviz 2>/dev/null || true
-killall -9 rosmaster 2>/dev/null || true
-killall -9 roscore 2>/dev/null || true
+# 不再强制清理 roscore，允许外部(如 run_all.sh)维持其生命周期
 killall -9 python 2>/dev/null | grep "ros" || true # 谨慎清理
 sleep 1
 
-# 1. 启动 roscore
-echo "[步骤 1] 正在启动 roscore..."
-roscore &
-ROSCORE_PID=$!
-sleep 8  # 增加等待时间
+# 1. 启动 roscore (条件启动)
+if ! rostopic list > /dev/null 2>&1; then
+    echo "[步骤 1] 正在启动 roscore..."
+    roscore &
+    ROSCORE_PID=$!
+    sleep 8
+    INTERNAL_ROSCORE=true
+else
+    echo "[步骤 1] 检测到 roscore 已在运行，将复用现有环境..."
+    INTERNAL_ROSCORE=false
+fi
 
 # 2. 构建 catkin 工作空间
 echo "[步骤 2] 正在构建/验证 catkin 工作空间..."
@@ -100,17 +105,11 @@ fi
 # 阶段 B: 优化测试
 # =========================================================
 
-# 4. 启动 PointPillars 节点
-echo "[步骤 4] 正在启动 PointPillars 节点..."
-"$PROJECT_ROOT/Scripts/pointpillars/run_pointpillars_node.sh" &
+# 4. 启动 PointPillars 节点 (清除 BAG_FILE 防止其内部触发播放, 传递序列号以便加载正确标定)
+echo "[步骤 4] 正在启动 PointPillars 节点 (Sequence: $SEQ_ID)..."
+BAG_FILE="" "$PROJECT_ROOT/Scripts/pointpillars/run_pointpillars_node.sh" _seq:="$SEQ_ID" &
 PP_PID=$!
-sleep 15 # 给定充足时间加载模型 (通常需要10秒以上)
-
-# 检查 PointPillars 是否存活
-if ! kill -0 $PP_PID 2>/dev/null; then
-    echo "[错误] PointPillars 节点启动失败"
-    exit 1
-fi
+sleep 15 
 
 # 5. 启动 MCTrack 在线节点
 echo "[步骤 5] 正在启动 MCTrack 在线节点..."
@@ -127,15 +126,16 @@ echo "[步骤 6] 正在启动 FAST-LIO (优化模式: use_dynamic_weights=true).
 FL_PID=$!
 sleep 5
 
-BAG_FILE="$PROJECT_ROOT/Data_Tracking/rosbags/seq_${SEQ_ID}_nodet.bag"
-if [[ ! -f "$BAG_FILE" ]]; then
-    echo "[错误] Bag 文件未找到: $BAG_FILE"
+BAG_FILE_PATH="$PROJECT_ROOT/Data_Tracking/rosbags/seq_${SEQ_ID}_nodet.bag"
+if [[ ! -f "$BAG_FILE_PATH" ]]; then
+    echo "[错误] Bag 文件未找到: $BAG_FILE_PATH"
     exit 1
 fi
 
-echo "[步骤 7] 正在播放 Rosbag (优化)..."
+echo "[步骤 7] 正在播放 Rosbag (优化, 以 1.0 倍速运行)..."
 rosparam set use_sim_time true
-rosbag play "$BAG_FILE" --clock &
+# 使用 1.0 倍速播放
+rosbag play "$BAG_FILE_PATH" --clock &
 BAG_PID=$!
 
 echo "Waiting for Optimized Run..."

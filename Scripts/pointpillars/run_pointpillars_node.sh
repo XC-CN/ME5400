@@ -28,7 +28,7 @@ export PYTHONPATH=$PYTHONPATH:$PROJECT_ROOT
 
 # 启动ROS节点
 echo "启动KITTI PointPillars Bag节点..."
-python "$MMDET3D_ROOT/local/ros/nodes/kitti_pointpillars_bag_node.py" &
+python "$MMDET3D_ROOT/local/ros/nodes/kitti_pointpillars_bag_node.py" "$@" &
 NODE_PID=$!
 
 # 等待节点启动
