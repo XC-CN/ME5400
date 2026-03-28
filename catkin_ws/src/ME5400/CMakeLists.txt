@@ -49,4 +49,5 @@ install(PROGRAMS
   scripts/fastlio_pose_bridge.py
   scripts/mctrack_online_node.py
   scripts/joint_backend_ego_node.py
+  scripts/offline_bag_feeder.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

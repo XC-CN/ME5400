@@ -1,0 +1,36 @@
+# 半同步离线调度器配置
+bag_path: "Data_Tracking/rosbags/seq_0020_nodet.bag"
+
+# 输入链路主时钟（LiDAR帧）
+lidar_topic: "/kitti/velo/pointcloud"
+
+# 半同步等待的关键输出话题
+det_topic: "/detection/lidar_detections"
+track_topic: "/mctrack/tracked_objects"
+
+# 是否要求对应结果（false 可仅等待其中之一）
+require_detection: true
+require_tracking: true
+
+# 时间戳匹配窗口（秒）
+stamp_tolerance: 0.06
+
+# 每帧等待超时（秒）
+timeout_det: 4.0
+timeout_track: 5.0
+
+# 等待轮询频率
+wait_poll_hz: 200.0
+
+# /clock 发布（推荐开启，与 use_sim_time 配合）
+publish_clock: true
+clock_topic: "/clock"
+clock_step_sec: 0.002
+auto_set_use_sim_time: true
+
+# 转发时跳过的bag话题
+skip_topics: ["/clock"]
+
+# 其他
+pub_queue_size: 50
+start_delay: 1.5
