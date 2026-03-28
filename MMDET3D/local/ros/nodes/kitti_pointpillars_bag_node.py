@@ -60,8 +60,14 @@ class KittiPointPillarsBagNode:
         self.publish_rate = rospy.get_param('~publish_rate', 10.0)  # Hz
         self.confidence_threshold = rospy.get_param('~confidence_threshold', 0.05)
         self.frame_id = rospy.get_param('~frame_id', 'velodyne')
-        self.seq = f"{int(rospy.get_param('~seq', 19)):04d}"
-        dataset_param = rospy.get_param('~dataset_root', str(Path('Data_Tracking') / 'training'))
+
+        # 兼容两种参数来源：
+        # 1) 私有参数（历史用法） 2) 全局后备参数（用于匿名节点时的稳定覆盖）
+        seq_default = int(rospy.get_param('/me5400_seq', 19))
+        self.seq = f"{int(rospy.get_param('~seq', seq_default)):04d}"
+
+        dataset_default = rospy.get_param('/me5400_dataset_root', str(Path('Data_Tracking') / 'training'))
+        dataset_param = rospy.get_param('~dataset_root', dataset_default)
         dataset_root = Path(dataset_param)
         if not dataset_root.is_absolute():
             dataset_root = (self.workspace_root / dataset_root).resolve()

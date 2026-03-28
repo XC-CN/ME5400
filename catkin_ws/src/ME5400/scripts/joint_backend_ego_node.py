@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import math
+import time
+import threading
 from collections import deque
 from dataclasses import dataclass
 from typing import Dict, Optional
@@ -121,12 +123,20 @@ class JointBackendEgoNode:
         self.odom_buffer = deque(maxlen=400)
         self.track_buffer = deque(maxlen=400)
         self.last_track_speed: Dict[int, float] = {}
+        self.buffer_lock = threading.RLock()
 
-        self.last_opt_time = 0.0
+        self.last_opt_window_end_stamp = -1.0
+        self.latest_correction = np.zeros(3, dtype=np.float64)  # [dx, dy, dyaw] in world frame
+        self.latest_correction_valid = False
+        self.latest_opt_stamp = 0.0
 
         self.sub_odom = rospy.Subscriber(self.odom_topic, Odometry, self.odom_cb, queue_size=50)
         self.sub_tracks = rospy.Subscriber(self.tracks_topic, TrackedObjectArray, self.tracks_cb, queue_size=20)
         self.pub_odom = rospy.Publisher(self.out_topic, Odometry, queue_size=20)
+        self.optimize_timer = rospy.Timer(
+            rospy.Duration(1.0 / max(1.0, self.optimize_hz)),
+            self.optimize_timer_cb,
+        )
 
         rospy.loginfo("[joint_backend_ego] started: window=%d lambda=%.3f", self.window_size, self.lambda_obj)
 
@@ -152,14 +162,13 @@ class JointBackendEgoNode:
             cov=cov,
             raw=msg,
         )
-        self.odom_buffer.append(state)
+        with self.buffer_lock:
+            self.odom_buffer.append(state)
+            corr = self.latest_correction.copy()
+            corr_valid = self.latest_correction_valid
 
-        now = rospy.Time.now().to_sec()
-        if now - self.last_opt_time < 1.0 / max(1.0, self.optimize_hz):
-            return
-        self.last_opt_time = now
-
-        self.optimize_and_publish()
+        out = self.build_output(state, corr if corr_valid else None)
+        self.pub_odom.publish(out)
 
     def tracks_cb(self, msg: TrackedObjectArray):
         stamp = msg.header.stamp.to_sec()
@@ -191,32 +200,61 @@ class JointBackendEgoNode:
             )
             objs[tid] = obs
 
-        self.track_buffer.append(TrackSnapshot(stamp=stamp, objects=objs))
+        with self.buffer_lock:
+            self.track_buffer.append(TrackSnapshot(stamp=stamp, objects=objs))
 
-    def find_nearest_snapshot(self, t: float) -> Optional[TrackSnapshot]:
-        if not self.track_buffer:
+    @staticmethod
+    def find_nearest_snapshot(snapshots, t: float, max_dt: float) -> Optional[TrackSnapshot]:
+        if not snapshots:
             return None
         best = None
         best_dt = 1e9
-        for s in self.track_buffer:
+        for s in snapshots:
             dt = abs(s.stamp - t)
             if dt < best_dt:
                 best_dt = dt
                 best = s
-        if best is None or best_dt > self.max_dt:
+        if best is None or best_dt > max_dt:
             return None
         return best
 
-    def build_window(self):
-        if len(self.odom_buffer) < self.window_size:
+    def build_window(self, odom_buffer):
+        if len(odom_buffer) < self.window_size:
             return None
-        return list(self.odom_buffer)[-self.window_size:]
+        return list(odom_buffer)[-self.window_size:]
 
-    def optimize_and_publish(self):
-        window = self.build_window()
+    def optimize_timer_cb(self, _event):
+        with self.buffer_lock:
+            odom_copy = list(self.odom_buffer)
+            track_copy = list(self.track_buffer)
+
+        window = self.build_window(odom_copy)
         if window is None:
             return
+        if window[-1].stamp <= self.last_opt_window_end_stamp:
+            return
 
+        t0 = time.time()
+        corr = self.solve_window_correction(window, track_copy)
+        elapsed_ms = (time.time() - t0) * 1000.0
+        if elapsed_ms > 95.0:
+            rospy.logwarn_throttle(
+                2.0,
+                "[joint_backend_ego] optimize slow: %.1f ms (window=%d)",
+                elapsed_ms,
+                len(window),
+            )
+
+        if corr is None:
+            return
+
+        with self.buffer_lock:
+            self.latest_correction = corr
+            self.latest_correction_valid = True
+            self.latest_opt_stamp = window[-1].stamp
+            self.last_opt_window_end_stamp = window[-1].stamp
+
+    def solve_window_correction(self, window, snapshots):
         n = len(window)
         x0 = np.zeros(3 * n, dtype=np.float64)
         for i, st in enumerate(window):
@@ -246,7 +284,7 @@ class JointBackendEgoNode:
             # Object observation consistency factors
             for i in range(n):
                 t_i = window[i].stamp
-                snap = self.find_nearest_snapshot(t_i)
+                snap = self.find_nearest_snapshot(snapshots, t_i, self.max_dt)
                 if snap is None:
                     continue
 
@@ -286,31 +324,44 @@ class JointBackendEgoNode:
         try:
             r0 = residual_fn(x0)
             if r0.size < 6:
-                return
+                return None
             # lm works well for small dense windows
             sol = least_squares(residual_fn, x0, method="lm", max_nfev=40)
             x_opt = sol.x.reshape((-1, 3))
         except Exception as exc:
             rospy.logwarn_throttle(2.0, "[joint_backend_ego] optimize failed: %s", str(exc))
-            return
+            return None
 
-        # Publish only latest optimized odom
-        last_raw = window[-1].raw
+        last_raw = window[-1]
         last_opt = x_opt[-1]
+        corr = np.array(
+            [
+                float(last_opt[0] - last_raw.x),
+                float(last_opt[1] - last_raw.y),
+                float(wrap_angle(last_opt[2] - last_raw.yaw)),
+            ],
+            dtype=np.float64,
+        )
+        return corr
 
+    def build_output(self, state: OdomState, corr: Optional[np.ndarray]):
         out = Odometry()
-        out.header = Header(stamp=last_raw.header.stamp, frame_id=last_raw.header.frame_id)
-        out.child_frame_id = last_raw.child_frame_id
+        out.header = Header(stamp=state.raw.header.stamp, frame_id=state.raw.header.frame_id)
+        out.child_frame_id = state.raw.child_frame_id
 
-        out.pose.pose.position = last_raw.pose.pose.position
-        out.pose.pose.position.x = float(last_opt[0])
-        out.pose.pose.position.y = float(last_opt[1])
-        out.pose.pose.orientation = yaw_to_quat(float(last_opt[2]))
-        out.pose.covariance = last_raw.pose.covariance
+        out.pose.pose.position = state.raw.pose.pose.position
+        out.pose.pose.position.x = float(state.x)
+        out.pose.pose.position.y = float(state.y)
+        yaw = state.yaw
+        if corr is not None:
+            out.pose.pose.position.x = float(state.x + corr[0])
+            out.pose.pose.position.y = float(state.y + corr[1])
+            yaw = wrap_angle(state.yaw + corr[2])
 
-        out.twist = last_raw.twist
-
-        self.pub_odom.publish(out)
+        out.pose.pose.orientation = yaw_to_quat(float(yaw))
+        out.pose.covariance = state.raw.pose.covariance
+        out.twist = state.raw.twist
+        return out
 
 
 if __name__ == "__main__":
