@@ -1,12 +1,14 @@
 # joint_backend_ego_node 参数（只优化 ego）
-window_size: 10
-lambda_obj: 0.3
-score_th: 0.5
-track_len_th: 3
-max_dt: 0.2
-max_dv: 3.0
-min_obj_weight: 0.1
+window_size: 8
+lambda_obj: 0.12
+score_th: 0.6
+track_len_th: 5
+max_dt: 0.1
+max_dv: 2.0
+min_obj_weight: 0.03
 optimize_hz: 10.0
+robust_loss: huber      # none/huber/cauchy
+robust_f_scale: 0.5     # 鲁棒核转折尺度，越小抑制离群点越强
 
 # [sigma_x, sigma_y, sigma_yaw]，当 /Odometry 协方差异常时回退
 odom_noise_fallback: [0.20, 0.20, 0.10]

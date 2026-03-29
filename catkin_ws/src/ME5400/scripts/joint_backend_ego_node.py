@@ -110,6 +110,17 @@ class JointBackendEgoNode:
         self.max_dv = float(rospy.get_param("~max_dv", 3.0))
         self.min_obj_weight = float(rospy.get_param("~min_obj_weight", 0.1))
         self.optimize_hz = float(rospy.get_param("~optimize_hz", 10.0))
+        self.robust_loss = str(rospy.get_param("~robust_loss", "huber")).strip().lower()
+        self.robust_f_scale = float(rospy.get_param("~robust_f_scale", 0.5))
+        if self.robust_loss == "none":
+            self.robust_loss = "linear"
+        if self.robust_loss not in ("linear", "huber", "cauchy"):
+            rospy.logwarn(
+                "[joint_backend_ego] unsupported robust_loss='%s', fallback to 'huber'",
+                self.robust_loss,
+            )
+            self.robust_loss = "huber"
+        self.robust_f_scale = max(1e-3, self.robust_f_scale)
 
         fallback = rospy.get_param("~odom_noise_fallback", [0.20, 0.20, 0.10])
         if not isinstance(fallback, list) or len(fallback) != 3:
@@ -138,7 +149,13 @@ class JointBackendEgoNode:
             self.optimize_timer_cb,
         )
 
-        rospy.loginfo("[joint_backend_ego] started: window=%d lambda=%.3f", self.window_size, self.lambda_obj)
+        rospy.loginfo(
+            "[joint_backend_ego] started: window=%d lambda=%.3f robust=%s f_scale=%.3f",
+            self.window_size,
+            self.lambda_obj,
+            self.robust_loss,
+            self.robust_f_scale,
+        )
 
     def odom_cb(self, msg: Odometry):
         yaw = quat_to_yaw(msg.pose.pose.orientation)
@@ -325,8 +342,13 @@ class JointBackendEgoNode:
             r0 = residual_fn(x0)
             if r0.size < 6:
                 return None
-            # lm works well for small dense windows
-            sol = least_squares(residual_fn, x0, method="lm", max_nfev=40)
+            # robust loss (huber/cauchy) requires trust-region methods; linear keeps classic LM.
+            method = "lm" if self.robust_loss == "linear" else "trf"
+            kwargs = {}
+            if self.robust_loss != "linear":
+                kwargs["loss"] = self.robust_loss
+                kwargs["f_scale"] = self.robust_f_scale
+            sol = least_squares(residual_fn, x0, method=method, max_nfev=40, **kwargs)
             x_opt = sol.x.reshape((-1, 3))
         except Exception as exc:
             rospy.logwarn_throttle(2.0, "[joint_backend_ego] optimize failed: %s", str(exc))
