@@ -190,6 +190,7 @@ ME5400/
 │   ├── fastlio/                       # FAST-LIO 里程计模块启动脚本
 │   ├── mctrack/                       # MCTrack 跟踪模块启动脚本
 │   ├── joint_backend/                 # 可选：ego-only 联合后端模块启动脚本
+│   ├── offline/                       # 可选：半同步离线调度模块（替代 rosbag play）
 │   ├── rviz/                          # RViz 可视化模块配置与脚本
 │   ├── utils/                         # 通用工具脚本 (编译、数据转换等)
 │   └── run_all.sh                     # 全流程一键启动脚本
@@ -475,7 +476,9 @@ FAST-LIO 提供三种启动方式：
 ./Scripts/mctrack/run_mctrack_online_node.sh
 ```
 
-#### 7. **播放 rosbag（终端 F，保持运行）**
+#### 7. **驱动数据源（终端 F，二选一）**
+
+在线模式（原流程，保持不变）：
 
 ```bash
 rosparam set use_sim_time true
@@ -490,6 +493,16 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 --loop为循环运行
 
 结束运行时，必须先关闭fastlio建图进程，再关闭rosbag。
+
+离线半同步模式（新增，可替代 rosbag play）：
+
+```bash
+./Scripts/offline/run_offline_feeder.sh \
+  --bag Data_Tracking/rosbags/seq_0020_nodet.bag
+```
+
+> 离线半同步模式会按帧读取 bag：每发布一帧 LiDAR 后，等待检测与跟踪结果（超时可配置）再推进下一帧。  
+> 该模式用于解决实时播放时 PointPillars 跟不上导致的丢帧问题，不会修改原有在线模式。
 
 #### 8. **打开 RViz（终端 E，与 rosbag 同时运行）**
 
@@ -653,6 +666,19 @@ mapping:
 
 建议实验流程：
 
-1. 先固定同一个 rosbag 与播放倍率。
-2. 先用 `use_dynamic_weights:=false` 调 joint backend。
-3. 再切换 `use_dynamic_weights:=true` 联合调参（通常将 `lambda_obj` 略降）。
+1. 先固定同一个 rosbag 与播放倍率。  
+2. 先用 `use_dynamic_weights:=false` 调 joint backend。  
+3. 再切换 `use_dynamic_weights:=true` 联合调参（通常将 `lambda_obj` 略降）。  
+
+#### Offline Feeder（半同步离线调度）配置
+
+配置文件：`catkin_ws/src/ME5400/config/offline_bag_feeder.yaml`
+
+- `bag_path`：离线读取的 rosbag 路径
+- `lidar_topic`：作为主时钟的 LiDAR 话题（按该话题逐帧推进）
+- `det_topic` / `track_topic`：每帧等待的关键输出话题
+- `require_detection` / `require_tracking`：是否必须等待对应结果
+- `stamp_tolerance`：关键输出与当前帧的时间戳匹配窗口（秒）
+- `timeout_det` / `timeout_track`：关键输出等待超时（秒）
+- `publish_clock`：是否发布 `/clock`（建议开启）
+- `clock_step_sec`：等待阶段推进仿真时钟的步长（秒）

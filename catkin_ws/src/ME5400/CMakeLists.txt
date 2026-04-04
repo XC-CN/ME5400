@@ -46,7 +46,9 @@ install(PROGRAMS
   scripts/tracklets_publisher.py
   scripts/mctrack_marker_publisher.py
   scripts/fastlio_pose_recorder.py
+  scripts/odom_to_tum_recorder.py
   scripts/fastlio_pose_bridge.py
   scripts/mctrack_online_node.py
   scripts/joint_backend_ego_node.py
+  scripts/offline_bag_feeder.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
