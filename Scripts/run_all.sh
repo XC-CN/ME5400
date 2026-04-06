@@ -7,6 +7,7 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 # 解析参数，主要是为了帮助文档
 SEQ_ID="0020"
 HEADLESS=false
+SAVE_MAP=false
 
 for arg in "$@"; do
     case $arg in
@@ -14,16 +15,21 @@ for arg in "$@"; do
             echo "用法: $0 [选项] [SEQ_ID]"
             echo "选项:"
             echo "  -n, --headless  无可视化模式 (跳过加载 RViz)"
+            echo "  -m, --save-map  为 baseline 与 optimized 两阶段都启用地图保存"
             echo "  -h, --help      显示帮助信息"
             echo ""
             echo "一键执行完整的验证流：先运行纯净 Baseline，再运行带 MCTrack 的优化管线"
             echo "示例:"
             echo "  $0 0020         # 顺序运行序列0020的两套测试并自动生成对比"
             echo "  $0 --headless 0020 # 以 Headless 模式一键测完并出图"
+            echo "  $0 --save-map 0020 # 两阶段都额外保存全局地图"
             exit 0
         ;;
         -n|--headless|--no-rviz)
             HEADLESS=true
+        ;;
+        -m|--save-map)
+            SAVE_MAP=true
         ;;
         *)
         if [[ ! $arg =~ ^- ]]; then
@@ -45,6 +51,7 @@ trap cleanup_all EXIT
 echo "========================================================="
 echo "   [ALL] 开始完整验证连跑流: Baseline -> Optimized    "
 echo "========================================================="
+echo "[INFO] FAST-LIO 地图保存: $SAVE_MAP"
 
 # 0. 启动全局 roscore
 if ! rostopic list > /dev/null 2>&1; then

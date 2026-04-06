@@ -16,6 +16,7 @@ usage() {
 
 示例:
   ./run_fastlio.sh mapping rviz:=false
+  ./run_fastlio.sh mapping rviz:=false pcd_save_en:=true
   ./run_fastlio.sh pose_bridge
   ./run_fastlio.sh both
 EOF
@@ -47,7 +48,7 @@ case "$MODE" in
   mapping|map)
     # 默认启用权重优化（保持向后兼容）
     if [[ $# -eq 0 ]]; then
-      roslaunch fast_lio mapping_velodyne.launch rviz:=false use_dynamic_weights:=true
+      roslaunch fast_lio mapping_velodyne.launch rviz:=false use_dynamic_weights:=true pcd_save_en:=false
     else
       roslaunch fast_lio mapping_velodyne.launch rviz:=false "$@"
     fi
@@ -58,14 +59,22 @@ case "$MODE" in
   both)
     # 检查是否指定了 use_dynamic_weights 参数
     USE_WEIGHTS="true"  # 默认启用权重优化
+    SAVE_MAP="false"   # 默认关闭地图保存
     for arg in "$@"; do
       if [[ "$arg" == *"use_dynamic_weights"* ]]; then
         if [[ "$arg" == *"false"* ]]; then
           USE_WEIGHTS="false"
         fi
       fi
+      if [[ "$arg" == *"pcd_save_en"* ]]; then
+        if [[ "$arg" == *"true"* ]]; then
+          SAVE_MAP="true"
+        else
+          SAVE_MAP="false"
+        fi
+      fi
     done
-    roslaunch fast_lio mapping_velodyne.launch rviz:=false use_dynamic_weights:=$USE_WEIGHTS "$@" &
+    roslaunch fast_lio mapping_velodyne.launch rviz:=false use_dynamic_weights:=$USE_WEIGHTS pcd_save_en:=$SAVE_MAP "$@" &
     MAPPING_PID=$!
     
     # 启动 pose_bridge 到后台，确保脚本能响应信号
@@ -81,7 +90,11 @@ case "$MODE" in
       fi
 
       if kill -0 "$MAPPING_PID" 2>/dev/null; then
-        echo "[信息] 正在停止 FAST-LIO mapping 节点 (PID=$MAPPING_PID)，等待地图保存..."
+        if [[ "$SAVE_MAP" == "true" ]]; then
+          echo "[信息] 正在停止 FAST-LIO mapping 节点 (PID=$MAPPING_PID)，等待地图保存..."
+        else
+          echo "[信息] 正在停止 FAST-LIO mapping 节点 (PID=$MAPPING_PID)..."
+        fi
         
         # 方案A: 尝试使用 rosnode kill 优雅停止节点 (规避 roslaunch 强制超时)
         # 如果 rosnode 失败 (例如 master 已死), 则回退到 SIGTERM 给脚本启动的 roslaunch 进程

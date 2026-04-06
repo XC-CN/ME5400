@@ -28,7 +28,7 @@
 整个系统分为三层：**前端感知**、**双向融合**、**后端联合优化**。下图展示了完整数据流：
 
 ```mermaid
-
+%%{init: {'theme': 'dark'}}%%
 flowchart TD
     subgraph 数据源["📦 数据源（KITTI rosbag）"]
         PC[/"点云\n/kitti/velo/pointcloud"/]
@@ -109,11 +109,18 @@ flowchart TD
 
 **时序逻辑**（每帧执行顺序）：
 
-```
-T 帧点云到达
-  → FAST-LIO 用上一帧 MCTrack 结果降权点云，完成本帧建图，输出 P_t
-  → MCTrack 收到 P_t 和检测框，更新跟踪，输出 O_t（本帧动态目标列表）
-  → FAST-LIO 存储 O_t，用于下一帧 T+1 的降权
+```mermaid
+%%{init: {'theme': 'dark'}}%%
+sequenceDiagram
+    participant PC as T 帧点云
+    participant FL as FAST-LIO
+    participant MC as MCTrack
+    PC ->> FL: 点云到达
+    Note over FL: 使用 T-1 帧 MCTrack 结果降权
+    FL ->> FL: 完成本帧建图，输出位姿 P_t
+    FL ->> MC: 传递 P_t 和点云到检测/跟踪
+    MC ->> MC: 更新跟踪，输出动态目标 O_t
+    MC ->> FL: 存储 O_t，用于下一帧 T+1 降权
 ```
 
 ---
@@ -156,18 +163,17 @@ detection_score ≥ 0.5      → 过滤低置信度检测
 
 #### 整体数据流汇总
 
-```
-rosbag
-  ├─► PointPillars ──────────────────► MCTrack (跟踪)
-  │                                       │
-  └─► FAST-LIO (建图+里程计) ◄────────── ┘ (动态降权反馈)
-           │                               │
-           └──────────► Joint Backend ◄────┘
-                        (滑窗优化)
-                             │
-                             ▼
-                     /joint_backend/odom
-                     (最终优化轨迹)
+```mermaid
+%%{init: {'theme': 'dark'}}%%
+flowchart TD
+    rosbag["rosbag"]
+    rosbag --> PointPillars["PointPillars"]
+    rosbag --> FL["FAST-LIO (建图+里程计)"]
+    PointPillars --> MCTrack["MCTrack (跟踪)"]
+    MCTrack -- "动态降权反馈" --> FL
+    FL --> JB["Joint Backend\n(滑窗优化)"]
+    MCTrack --> JB
+    JB --> OUT["/joint_backend/odom\n(最终优化轨迹)"]
 ```
 
 
@@ -406,6 +412,9 @@ ME5400/
 
 # 🚀 强烈推荐：无可视化模式运行，跳过一切界面与真值发布，极省资源且最高效
 ./Scripts/run_all.sh --headless 0020
+
+# 如需额外导出 FAST-LIO 全局地图
+./Scripts/run_all.sh --save-map 0020
 ```
 *(注：`--headless` 或 `-n` 参数会关闭 RViz 渲染前端在后台静默高速运算。0019序列 为高速路场景，0020 为城市街道。)*
 
@@ -415,14 +424,16 @@ ME5400/
 ```bash
 # 仅运行纯净基准测试 (不加载庞大的感知检测模块，仅执行原生基础版 FAST-LIO)
 ./Scripts/run_baseline.sh 0020
+./Scripts/run_baseline.sh --save-map 0020
 
 # 仅运行深度学习优化管线 (满载运行 PointPillars + MCTrack + 动态加权机制的 FAST-LIO)
 ./Scripts/run_optimized.sh 0020
 ./Scripts/run_optimized.sh --headless 0020
+./Scripts/run_optimized.sh --save-map 0020
 
 ```
 
-> 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`）、建图产出的对应点云地图（`.pcd`），以及最终生成的 ATE/RPE 对比评测图（`.png`）与指标（`metrics.txt`），系统都会自动为您统一存放入 `Results/<序列号>_results/` 的同属专有目录下，避免文件散落或被相互覆盖。
+> 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`）以及最终生成的 ATE/RPE 对比评测图（`.png`）与指标（`metrics.txt`），系统都会自动统一存放入 `Results/<序列号>_results/`。点云地图（`.pcd`）仅在显式添加 `--save-map` 时生成并归档，默认不会导出。
 
 ---
 
@@ -464,6 +475,9 @@ FAST-LIO 提供三种启动方式：
 
 # 禁用动态权重优化，使用原始方法
 ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
+
+# 如需在退出时额外保存全局地图
+./Scripts/fastlio/run_fastlio.sh both pcd_save_en:=true
 ```
 
 > **使用说明**：
@@ -622,15 +636,28 @@ mapping:
 
 **保存位置**：
 
-- 地图文件在原 FAST-LIO 临时存储后，由我们封装的启动脚本（`run_optimized.sh` / `run_baseline.sh`）全程接管。
+- 自动化脚本（`run_all.sh` / `run_baseline.sh` / `run_optimized.sh`）默认**不保存** FAST-LIO 地图。
+- 只有在显式传入 `--save-map` 时，地图文件才会在 FAST-LIO 临时存储后被脚本接管并归档。
 - 最终都会被自动安全归档放入对应序列的结果库内：`Results/<序列号>_results/scans_*.pcd`
 - 默认配置下，所有扫描帧会累积保存到一个 PCD 文件中
+
+**启用方式**：
+
+```bash
+# baseline / optimized / 全流程脚本都支持
+./Scripts/run_baseline.sh --save-map 0020
+./Scripts/run_optimized.sh --save-map 0020
+./Scripts/run_all.sh --save-map 0020
+
+# 也可以直接透传给 FAST-LIO launch
+./Scripts/fastlio/run_fastlio.sh both pcd_save_en:=true
+```
 
 **保存时机**：
 
 - 地图在 FAST-LIO 进程正常退出时自动保存
-- 使用 `both` 模式时，脚本会优雅关闭进程（发送 SIGTERM），等待最多 30 秒让进程保存地图
-- 如果进程在 30 秒内未退出，脚本会强制终止（SIGKILL）
+- 使用 `both` 模式时，脚本会优雅关闭进程（发送 SIGTERM），等待最多 45 秒让进程保存地图
+- 如果进程在 45 秒内未退出，脚本会强制终止（SIGKILL）
 
 **保存进度信息**：
 
@@ -641,13 +668,10 @@ mapping:
   - 实际文件大小和保存耗时
   - 保存成功/失败状态
 
-**保存验证**：
+**归档策略**：
 
-- 脚本会自动验证地图文件是否保存成功：
-  - 检查文件是否存在
-  - 验证文件大小（确保不为0）
-  - 显示文件大小（MB）
-  - 如果保存失败，会显示错误信息
+- 自动化脚本只会归档“本次运行新生成”的 `scans.pcd`
+- 若检测到旧的残留临时文件，不会误归档到当前序列结果目录
 
 **正确中断建图**：
 
@@ -662,8 +686,8 @@ mapping:
 **注意事项**：
 
 - 为避免占用大量存储空间及缩短程序等待时间，`velodyne.yaml` 中的 `pcd_save/pcd_save_en` 现已**默认关闭（false）**。
-- 如果您确实需要导出 `.pcd` 全局点云文件用于离线可视化，请在运行前手工将此参数临时改为 `true`。开启后需要注意，如果地图文件很大，保存可能需要几秒钟到几分钟时间，请在此期间切勿强杀进程。
-- 脚本会等待最多 30 秒确保地图保存完成
+- 如果您确实需要导出 `.pcd` 全局点云文件用于离线可视化，请优先使用自动脚本参数 `--save-map`，或直接传入 `pcd_save_en:=true`。通常不再需要手工改 `velodyne.yaml`。
+- 脚本会等待最多 45 秒确保地图保存完成
 - 如果进程被强制杀死（kill -9），地图可能不会保存
 - 地图保存位置可通过 `pcd_save/output_dir` 参数自定义
 - 如果点云数据为空，地图文件不会生成（这是正常行为）

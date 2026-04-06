@@ -6,6 +6,8 @@
 
   <!-- 是否启用动态目标权重优化（默认启用，设为 false 则使用原始方法） -->
   <arg name="use_dynamic_weights" default="true" />
+  <!-- 是否在退出时保存全局地图 PCD -->
+  <arg name="pcd_save_en" default="false" />
 
   <!-- 话题订阅配置 -->
   <arg name="lidar_topic" default="/detection/pointcloud" />
@@ -20,6 +22,7 @@
   <!-- 覆盖话题参数 -->
   <param name="common/lid_topic" value="$(arg lidar_topic)" />
   <param name="common/imu_topic" value="$(arg imu_topic)" />
+  <param name="pcd_save/pcd_save_en" value="$(arg pcd_save_en)" />
 
   <!-- 算法参数 -->
   <!-- 是否启用特征提取（0/1） -->

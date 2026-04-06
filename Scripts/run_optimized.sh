@@ -22,6 +22,7 @@ cleanup() {
 # 解析参数
 SEQ_ID="0020"
 HEADLESS=false
+SAVE_MAP=false
 
 for arg in "$@"; do
     case $arg in
@@ -29,16 +30,21 @@ for arg in "$@"; do
             echo "用法: $0 [选项] [SEQ_ID]"
             echo "选项:"
             echo "  -n, --headless  无可视化模式 (跳过加载 RViz)"
+            echo "  -m, --save-map  启用 FAST-LIO 地图保存并归档结果"
             echo "  -h, --help      显示帮助信息"
             echo ""
             echo "运行带 MCTrack 的优化流水线"
             echo "示例:"
             echo "  $0 0020         # 运行序列0020的优化测试"
             echo "  $0 --headless 0020 # 以 Headless 模式运行"
+            echo "  $0 --save-map 0020 # 运行并额外保存全局地图"
             exit 0
         ;;
         -n|--headless|--no-rviz)
             HEADLESS=true
+        ;;
+        -m|--save-map)
+            SAVE_MAP=true
         ;;
         *)
         if [[ ! $arg =~ ^- ]]; then
@@ -53,6 +59,7 @@ trap cleanup SIGINT EXIT
 
 echo "[INFO] 正在启动 ME5400 完整优化流水线..."
 echo "[INFO] 数据集序列号: $SEQ_ID"
+echo "[INFO] FAST-LIO 地图保存: $SAVE_MAP"
 
 # 0. 环境清理
 echo "[步骤 0] 正在清理残留环境..."
@@ -122,7 +129,12 @@ echo "   运行优化测试 (带 MCTrack 优化)                        "
 echo "========================================================="
 
 echo "[步骤 6] 正在启动 FAST-LIO (优化模式: use_dynamic_weights=true)..."
-"$PROJECT_ROOT/Scripts/fastlio/run_fastlio.sh" both use_dynamic_weights:=true &
+FASTLIO_ARGS=(both use_dynamic_weights:=true)
+if [[ "$SAVE_MAP" == "true" ]]; then
+    FASTLIO_ARGS+=(pcd_save_en:=true)
+fi
+MAP_RUN_START_TS=$(date +%s)
+"$PROJECT_ROOT/Scripts/fastlio/run_fastlio.sh" "${FASTLIO_ARGS[@]}" &
 FL_PID=$!
 sleep 5
 
@@ -153,11 +165,17 @@ if [[ -f "$PROJECT_ROOT/Results/trajectory.txt" ]]; then
     echo "[信息] 优化轨迹已保存为 Results/${SEQ_ID}_results/trajectory.txt"
 fi
 
-# 如果配置中开启了 pcd_save_en，则重命名地图文件并移入结果目录
-if [[ -f "$PROJECT_ROOT/PCD/scans.pcd" ]]; then
-    mv "$PROJECT_ROOT/PCD/scans.pcd" "$PROJECT_ROOT/Results/${SEQ_ID}_results/scans_optimized.pcd"
-    # 尝试删除临时的 PCD 目录
-    rmdir "$PROJECT_ROOT/PCD" 2>/dev/null || true
+# 如果本次显式开启了地图保存，则归档新生成的地图文件
+if [[ "$SAVE_MAP" == "true" && -f "$PROJECT_ROOT/PCD/scans.pcd" ]]; then
+    MAP_MTIME=$(stat -c %Y "$PROJECT_ROOT/PCD/scans.pcd")
+    if [[ "$MAP_MTIME" -ge "$MAP_RUN_START_TS" ]]; then
+        mv "$PROJECT_ROOT/PCD/scans.pcd" "$PROJECT_ROOT/Results/${SEQ_ID}_results/scans_optimized.pcd"
+        echo "[信息] 优化地图已保存为 Results/${SEQ_ID}_results/scans_optimized.pcd"
+        # 尝试删除临时的 PCD 目录
+        rmdir "$PROJECT_ROOT/PCD" 2>/dev/null || true
+    else
+        echo "[警告] 检测到旧的 PCD 临时文件，未作为本次优化地图归档"
+    fi
 fi
 
 # 自动评估 (仅当 baseline 存在时运行，或者修改评估脚本)
