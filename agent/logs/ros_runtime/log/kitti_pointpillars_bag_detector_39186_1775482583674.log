@@ -1,0 +1,28 @@
+[rospy.client][INFO] 2026-04-06 21:36:23,677: init_node, name[/kitti_pointpillars_bag_detector_39186_1775482583674], pid[39186]
+[xmlrpc][INFO] 2026-04-06 21:36:23,677: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-06 21:36:23,677: Started XML-RPC server [http://z790m:38573/]
+[rospy.impl.masterslave][INFO] 2026-04-06 21:36:23,678: _ready: http://z790m:38573/
+[rospy.registration][INFO] 2026-04-06 21:36:23,678: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-06 21:36:23,678: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-06 21:36:23,678: ROS Slave URI: [http://z790m:38573/]
+[rospy.init][INFO] 2026-04-06 21:36:23,678: registered with master
+[rospy.rosout][INFO] 2026-04-06 21:36:23,679: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-06 21:36:23,680: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-06 21:36:23,680: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-06 21:36:23,680: connected to core topic /clock
+[rosout][INFO] 2026-04-06 21:36:23,708: 加载标定文件成功: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0016.txt
+[rosout][INFO] 2026-04-06 21:36:23,708: 正在初始化PointPillars推理器...
+[rospy.internal][INFO] 2026-04-06 21:36:23,891: topic[/rosout] adding connection to [/rosout], count 0
+[rosout][INFO] 2026-04-06 21:36:24,548: 推理器初始化成功
+[rosout][INFO] 2026-04-06 21:36:24,551: KITTI PointPillars Bag ROS节点初始化完成
+[rosout][INFO] 2026-04-06 21:36:24,552: 配置文件: /home/xc/Projects/ME5400/MMDET3D/configs/pointpillars/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
+[rosout][INFO] 2026-04-06 21:36:24,552: 检查点: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+[rosout][INFO] 2026-04-06 21:36:24,552: Bag文件: /home/xc/Projects/ME5400/MMDET3D/data/kitti/seq_0019_with_det.bag
+[rosout][INFO] 2026-04-06 21:36:24,553: 数据集路径: /home/xc/Projects/ME5400/Data_Tracking/training / 序列: 0016
+[rosout][INFO] 2026-04-06 21:36:24,553: 订阅话题: /kitti/velo/pointcloud
+[rosout][INFO] 2026-04-06 21:36:24,553: 发布频率: 10.0 Hz
+[rosout][INFO] 2026-04-06 21:36:24,553: 等待点云数据...
+[rospy.core][INFO] 2026-04-06 21:36:45,160: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-06 21:36:45,161: topic[/rosout] removing connection to /rosout
+[rospy.impl.masterslave][INFO] 2026-04-06 21:36:45,162: signal-15
+[rospy.core][INFO] 2026-04-06 21:36:45,765: signal_shutdown [atexit]

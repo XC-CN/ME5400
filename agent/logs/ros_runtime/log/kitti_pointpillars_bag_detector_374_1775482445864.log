@@ -1,0 +1,27 @@
+[rospy.client][INFO] 2026-04-06 21:34:05,868: init_node, name[/kitti_pointpillars_bag_detector_374_1775482445864], pid[374]
+[xmlrpc][INFO] 2026-04-06 21:34:05,868: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][ERROR] 2026-04-06 21:34:05,869: ERROR: Unable to start XML-RPC server: Operation not permitted
+[rospy.internal][ERROR] 2026-04-06 21:34:05,870: Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 252, in run
+    self._run()
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 321, in _run
+    self._run_init()
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 271, in _run_init
+    self.server = ThreadingXMLRPCServer((bind_address, port), log_requests)
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 149, in __init__
+    SimpleXMLRPCServer.__init__(self, addr, SilenceableXMLRPCRequestHandler, log_requests)
+  File "/home/xc/miniconda3/envs/ME5400/lib/python3.10/xmlrpc/server.py", line 605, in __init__
+    socketserver.TCPServer.__init__(self, addr, requestHandler, bind_and_activate)
+  File "/home/xc/miniconda3/envs/ME5400/lib/python3.10/socketserver.py", line 448, in __init__
+    self.socket = socket.socket(self.address_family,
+  File "/home/xc/miniconda3/envs/ME5400/lib/python3.10/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+[rospy.core][INFO] 2026-04-06 21:34:05,870: signal_shutdown [error in XML-RPC server: [Errno 1] Operation not permitted]
+[rospy.init][INFO] 2026-04-06 21:34:05,870: ROS Slave URI: [None]
+[rospy.init][INFO] 2026-04-06 21:34:05,870: registered with master
+[rospy.core][WARNING] 2026-04-06 21:34:05,870: add_shutdown_hook called after shutdown
+[rospy.client][WARNING] 2026-04-06 21:34:05,870: aborting node initialization as shutdown has been triggered
+[rosout][ERROR] 2026-04-06 21:34:05,870: 节点运行错误: init_node interrupted before it could complete
+[rospy.core][INFO] 2026-04-06 21:34:05,873: signal_shutdown [atexit]

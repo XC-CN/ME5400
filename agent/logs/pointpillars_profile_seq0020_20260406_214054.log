@@ -1,0 +1,712 @@
+[run] start 2026-04-06T21:40:58+08:00
+[run] ROS_HOME=/home/xc/Projects/ME5400/agent/logs/ros_runtime/home ROS_LOG_DIR=/home/xc/Projects/ME5400/agent/logs/ros_runtime/log MPLCONFIGDIR=/home/xc/Projects/ME5400/agent/logs/ros_runtime/mpl
+[INFO] [1775482860.317414, 0.000000]: 加载标定文件成功: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0020.txt
+[INFO] [1775482860.317754, 0.000000]: 正在初始化PointPillars推理器...
+/home/xc/miniconda3/envs/ME5400/lib/python3.10/site-packages/mmdet3d/models/dense_heads/anchor3d_head.py:94: UserWarning: dir_offset and dir_limit_offset will be depressed and be incorporated into box coder in the future
+  warnings.warn(
+Loads checkpoint by local backend from path: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+04/06 21:41:00 - mmengine - WARNING - Failed to search registry with scope "mmdet3d" in the "function" registry tree. As a workaround, the current "function" registry in "mmengine" is used to build instance. This may cause unexpected failure when running the built modules. Please check whether "mmdet3d" is a correct scope, or whether the registry is initialized.
+/home/xc/miniconda3/envs/ME5400/lib/python3.10/site-packages/mmengine/visualization/visualizer.py:196: UserWarning: Failed to add <class 'mmengine.visualization.vis_backend.LocalVisBackend'>, please provide the `save_dir` argument.
+  warnings.warn(f'Failed to add {vis_backend.__class__}, '
+[INFO] [1775482861.076172, 0.000000]: 推理器初始化成功
+[INFO] [1775482861.081496, 0.000000]: KITTI PointPillars Bag ROS节点初始化完成
+[INFO] [1775482861.081966, 0.000000]: 配置文件: /home/xc/Projects/ME5400/MMDET3D/configs/pointpillars/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
+[INFO] [1775482861.082374, 0.000000]: 检查点: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+[INFO] [1775482861.082863, 0.000000]: Bag文件: /home/xc/Projects/ME5400/MMDET3D/data/kitti/seq_0019_with_det.bag
+[INFO] [1775482861.083318, 0.000000]: 数据集路径: /home/xc/Projects/ME5400/Data_Tracking/training / 序列: 0020
+[INFO] [1775482861.083760, 0.000000]: 订阅话题: /kitti/velo/pointcloud
+[INFO] [1775482861.084077, 0.000000]: 发布频率: 10.0 Hz
+[INFO] [1775482861.084364, 0.000000]: 等待点云数据...
+[run] rosbag start 2026-04-06T21:41:10+08:00
+[INFO] [1775482870.839074075]: Opening Data_Tracking/rosbags/seq_0020_nodet.bag
+
+Waiting 0.2 seconds after advertising topics... done.
+
+Hit space to toggle paused, or 's' to step.
+ [DELAYED]  Bag Time:      0.001000   Duration: 0.000000 / 83.600000   Delay: 0.00  [RUNNING]  Bag Time:      0.001000   Duration: 0.000000 / 83.600000                [RUNNING]  Bag Time:      0.001000   Duration: 0.000000 / 83.600000                [RUNNING]  Bag Time:      0.047924   Duration: 0.046924 / 83.600000               [INFO] [1775482871.259064, 0.052951]: 转换得到 116179 个点
+ [RUNNING]  Bag Time:      0.098265   Duration: 0.097265 / 83.600000                [RUNNING]  Bag Time:      0.148591   Duration: 0.147591 / 83.600000               /home/xc/miniconda3/envs/ME5400/lib/python3.10/site-packages/torch/functional.py:505: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /pytorch/aten/src/ATen/native/TensorShape.cpp:4333.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+[INFO] [1775482871.536616, 0.193851]: 帧 0: 检测到 9 个目标
+[WARN] [1775482871.537523, 0.193851]: 慢帧 0: 纯计算耗时 386.3ms，分段=inferencer_call=271.7ms, pointcloud_to_numpy=111.4ms, write_temp_bin=0.9ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      0.198880   Duration: 0.197880 / 83.600000                [RUNNING]  Bag Time:      0.249169   Duration: 0.248169 / 83.600000               [INFO] [1775482871.649834, 0.244140]: 转换得到 116129 个点
+Inference  ━━━━━━━━━━          ━━━━━━━━━━            
+[INFO] [1775482871.689023, 0.269285]: 帧 1: 检测到 10 个目标
+[WARN] [1775482871.731752, 0.294423]: 慢帧 1: 纯计算耗时 148.8ms，分段=pointcloud_to_numpy=112.0ms, rate_control_sleep=41.9ms, inferencer_call=33.8ms, camera_projection=0.8ms, write_temp_bin=0.7ms, remove_temp_bin=0.2ms, publish_markers=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      0.299451   Duration: 0.298451 / 83.600000               [INFO] [1775482871.842145, 0.344890]: 转换得到 116144 个点
+ [RUNNING]  Bag Time:      0.349941   Duration: 0.348941 / 83.600000               Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+[INFO] [1775482871.879444, 0.365023]: 帧 2: 检测到 11 个目标
+[WARN] [1775482871.882931, 0.370051]: 慢帧 2: 纯计算耗时 145.2ms，分段=pointcloud_to_numpy=110.2ms, inferencer_call=32.1ms, rate_control_sleep=2.6ms, camera_projection=0.7ms, write_temp_bin=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+[INFO] [1775482871.922901, 0.385134]: 转换得到 115922 个点
+ [RUNNING]  Bag Time:      0.400217   Duration: 0.399217 / 83.600000               Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[INFO] [1775482871.961454, 0.405246]: 帧 3: 检测到 12 个目标
+ [RUNNING]  Bag Time:      0.450593   Duration: 0.449593 / 83.600000                [RUNNING]  Bag Time:      0.500893   Duration: 0.499893 / 83.600000               [INFO] [1775482872.206913, 0.526039]: 转换得到 115836 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775482872.241775, 0.546151]: 帧 4: 检测到 12 个目标
+[WARN] [1775482872.242457, 0.546151]: 慢帧 4: 纯计算耗时 166.3ms，分段=pointcloud_to_numpy=133.9ms, inferencer_call=29.7ms, camera_projection=0.7ms, write_temp_bin=0.7ms, publish_markers=0.3ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      0.551179   Duration: 0.550179 / 83.600000                [RUNNING]  Bag Time:      0.596434   Duration: 0.595434 / 83.600000               [INFO] [1775482872.346373, 0.596434]: 转换得到 115710 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+[INFO] [1775482872.381738, 0.616778]: 帧 5: 检测到 11 个目标
+[WARN] [1775482872.436853, 0.647008]: 慢帧 5: 纯计算耗时 138.8ms，分段=pointcloud_to_numpy=106.0ms, rate_control_sleep=54.3ms, inferencer_call=29.9ms, camera_projection=0.7ms, write_temp_bin=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      0.647008   Duration: 0.646008 / 83.600000               [INFO] [1775482872.545915, 0.692286]: 转换得到 115667 个点
+ [RUNNING]  Bag Time:      0.697335   Duration: 0.696335 / 83.600000               Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482872.583117, 0.717492]: 帧 6: 检测到 11 个目标
+[WARN] [1775482872.583841, 0.717492]: 慢帧 6: 纯计算耗时 144.9ms，分段=pointcloud_to_numpy=110.0ms, inferencer_call=32.2ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      0.747769   Duration: 0.746769 / 83.600000               [INFO] [1775482872.694134, 0.762853]: 转换得到 115596 个点
+Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+[INFO] [1775482872.731946, 0.793024]: 帧 7: 检测到 11 个目标
+ [RUNNING]  Bag Time:      0.798053   Duration: 0.797053 / 83.600000               [WARN] [1775482872.779344, 0.818210]: 慢帧 7: 纯计算耗时 147.5ms，分段=pointcloud_to_numpy=111.8ms, rate_control_sleep=46.6ms, inferencer_call=33.0ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_tracking=0.1ms, publish_lidar_detections=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      0.848527   Duration: 0.847527 / 83.600000               [INFO] [1775482872.891084, 0.873727]: 转换得到 115615 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+[INFO] [1775482872.927380, 0.888809]: 帧 8: 检测到 11 个目标
+[WARN] [1775482872.930614, 0.893838]: 慢帧 8: 纯计算耗时 146.5ms，分段=pointcloud_to_numpy=112.4ms, inferencer_call=31.5ms, rate_control_sleep=2.5ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.1ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      0.898866   Duration: 0.897866 / 83.600000                [RUNNING]  Bag Time:      0.949151   Duration: 0.948151 / 83.600000               [INFO] [1775482873.053042, 0.939093]: 转换得到 115439 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+[INFO] [1775482873.092192, 0.974290]: 帧 9: 检测到 11 个目标
+[WARN] [1775482873.121806, 0.989378]: 慢帧 9: 纯计算耗时 145.5ms，分段=pointcloud_to_numpy=108.5ms, inferencer_call=34.3ms, rate_control_sleep=28.9ms, camera_projection=0.7ms, write_temp_bin=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      0.999437   Duration: 0.998437 / 83.600000               [INFO] [1775482873.212097, 1.024587]: 转换得到 115372 个点
+ [RUNNING]  Bag Time:      1.049734   Duration: 1.048734 / 83.600000               Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+[INFO] [1775482873.253215, 1.054763]: 帧 10: 检测到 10 个目标
+[WARN] [1775482873.292685, 1.074878]: 慢帧 10: 纯计算耗时 106.2ms，分段=pointcloud_to_numpy=70.3ms, rate_control_sleep=38.5ms, inferencer_call=32.0ms, write_temp_bin=1.3ms, camera_projection=1.1ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      1.100102   Duration: 1.099102 / 83.600000                [RUNNING]  Bag Time:      1.150604   Duration: 1.149604 / 83.600000               [INFO] [1775482873.457801, 1.145535]: 转换得到 115229 个点
+Inference         ━━━━━━━━━━          ━━━━━━━━━━     
+[INFO] [1775482873.492880, 1.170716]: 帧 11: 检测到 11 个目标
+[WARN] [1775482873.493582, 1.170716]: 慢帧 11: 纯计算耗时 145.6ms，分段=pointcloud_to_numpy=112.7ms, inferencer_call=30.3ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      1.195965   Duration: 1.194965 / 83.600000                [RUNNING]  Bag Time:      1.247123   Duration: 1.246123 / 83.600000               [INFO] [1775482873.654165, 1.247123]: 转换得到 114978 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+[INFO] [1775482873.691149, 1.272263]: 帧 12: 检测到 10 个目标
+[WARN] [1775482873.691861, 1.272263]: 慢帧 12: 纯计算耗时 144.9ms，分段=pointcloud_to_numpy=110.4ms, inferencer_call=31.9ms, camera_projection=0.7ms, write_temp_bin=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.1ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      1.297405   Duration: 1.296405 / 83.600000                [RUNNING]  Bag Time:      1.347685   Duration: 1.346685 / 83.600000               [INFO] [1775482873.855474, 1.352712]: 转换得到 114999 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482873.893872, 1.372823]: 帧 13: 检测到 10 个目标
+[WARN] [1775482873.894521, 1.372823]: 慢帧 13: 纯计算耗时 147.9ms，分段=pointcloud_to_numpy=111.6ms, inferencer_call=33.7ms, write_temp_bin=0.6ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      1.397962   Duration: 1.396962 / 83.600000               [INFO] [1775482873.985481, 1.418073]: 转换得到 114937 个点
+Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+[INFO] [1775482874.025041, 1.438189]: 帧 14: 检测到 10 个目标
+ [RUNNING]  Bag Time:      1.448246   Duration: 1.447246 / 83.600000                [RUNNING]  Bag Time:      1.498520   Duration: 1.497520 / 83.600000                [RUNNING]  Bag Time:      1.548858   Duration: 1.547858 / 83.600000               [INFO] [1775482874.255665, 1.553886]: 转换得到 114875 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+[INFO] [1775482874.299708, 1.574000]: 帧 15: 检测到 10 个目标
+[WARN] [1775482874.300973, 1.579031]: 慢帧 15: 纯计算耗时 154.3ms，分段=pointcloud_to_numpy=114.1ms, inferencer_call=34.9ms, camera_projection=1.6ms, write_temp_bin=1.3ms, publish_markers=0.4ms, remove_temp_bin=0.3ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      1.599153   Duration: 1.598153 / 83.600000                [RUNNING]  Bag Time:      1.649450   Duration: 1.648450 / 83.600000               [INFO] [1775482874.458601, 1.649450]: 转换得到 114831 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+[INFO] [1775482874.495564, 1.674592]: 帧 16: 检测到 9 个目标
+[WARN] [1775482874.502223, 1.679621]: 慢帧 16: 纯计算耗时 148.5ms，分段=pointcloud_to_numpy=114.0ms, inferencer_call=31.5ms, rate_control_sleep=5.6ms, write_temp_bin=0.7ms, camera_projection=0.6ms, remove_temp_bin=0.2ms, publish_markers=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      1.699734   Duration: 1.698734 / 83.600000                [RUNNING]  Bag Time:      1.750015   Duration: 1.749015 / 83.600000               [INFO] [1775482874.651036, 1.744987]: 转换得到 114706 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+[INFO] [1775482874.690060, 1.770126]: 帧 17: 检测到 10 个目标
+[WARN] [1775482874.693242, 1.775154]: 慢帧 17: 纯计算耗时 143.9ms，分段=pointcloud_to_numpy=107.1ms, inferencer_call=34.2ms, rate_control_sleep=2.5ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      1.800292   Duration: 1.799292 / 83.600000                [RUNNING]  Bag Time:      1.850572   Duration: 1.849572 / 83.600000               [INFO] [1775482874.850431, 1.840516]: 转换得到 114513 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775482874.887088, 1.870682]: 帧 18: 检测到 10 个目标
+[WARN] [1775482874.887698, 1.870682]: 慢帧 18: 纯计算耗时 140.4ms，分段=pointcloud_to_numpy=105.8ms, inferencer_call=32.1ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      1.900848   Duration: 1.899848 / 83.600000                [RUNNING]  Bag Time:      1.951129   Duration: 1.950129 / 83.600000               [INFO] [1775482875.052862, 1.951129]: 转换得到 114454 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+[INFO] [1775482875.090360, 1.971241]: 帧 19: 检测到 9 个目标
+[WARN] [1775482875.091022, 1.971241]: 慢帧 19: 纯计算耗时 142.9ms，分段=pointcloud_to_numpy=107.5ms, inferencer_call=32.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+[INFO] [1775482875.091400, 1.971241]: PointPillars计时汇总(20帧均值): 点云解析=102.8ms, 临时落盘=0.8ms, 模型推理=44.3ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.7ms, 发布Detection3DArray=0.0ms, 发布MarkerArray=0.2ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 转发点云=0.0ms, 纯计算总耗时=150.1ms, 限速休眠=20.0ms, 墙钟总耗时=170.1ms
+ [RUNNING]  Bag Time:      1.996380   Duration: 1.995380 / 83.600000                [RUNNING]  Bag Time:      2.046977   Duration: 2.045977 / 83.600000               [INFO] [1775482875.252290, 2.052004]: 转换得到 114306 个点
+Inference ━━━━━          ━━━━━━━━━━          ━━━━━   
+[INFO] [1775482875.288985, 2.072115]: 帧 20: 检测到 10 个目标
+[WARN] [1775482875.289622, 2.072115]: 慢帧 20: 纯计算耗时 142.3ms，分段=pointcloud_to_numpy=107.8ms, inferencer_call=31.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      2.097261   Duration: 2.096261 / 83.600000               [INFO] [1775482875.405709, 2.121336]: 转换得到 114261 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+[INFO] [1775482875.450731, 2.151517]: 帧 21: 检测到 10 个目标
+ [RUNNING]  Bag Time:      2.156546   Duration: 2.155546 / 83.600000               [WARN] [1775482875.496267, 2.176662]: 慢帧 21: 纯计算耗时 103.4ms，分段=pointcloud_to_numpy=63.1ms, rate_control_sleep=44.6ms, inferencer_call=36.7ms, write_temp_bin=1.5ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      2.196772   Duration: 2.195772 / 83.600000                [RUNNING]  Bag Time:      2.247056   Duration: 2.246056 / 83.600000               [INFO] [1775482875.655766, 2.247056]: 转换得到 114246 个点
+Inference  ━━━━━━━━━━          ━━━━━━━━━━            
+[INFO] [1775482875.692739, 2.272198]: 帧 22: 检测到 9 个目标
+[WARN] [1775482875.693509, 2.272198]: 慢帧 22: 纯计算耗时 145.8ms，分段=pointcloud_to_numpy=111.3ms, inferencer_call=31.7ms, write_temp_bin=0.8ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      2.297323   Duration: 2.296323 / 83.600000                [RUNNING]  Bag Time:      2.347615   Duration: 2.346615 / 83.600000               [INFO] [1775482875.850281, 2.342587]: 转换得到 114264 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+[INFO] [1775482875.889066, 2.372756]: 帧 23: 检测到 10 个目标
+[WARN] [1775482875.889825, 2.372756]: 慢帧 23: 纯计算耗时 143.0ms，分段=pointcloud_to_numpy=106.2ms, inferencer_call=34.1ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      2.397895   Duration: 2.396895 / 83.600000                [RUNNING]  Bag Time:      2.448179   Duration: 2.447179 / 83.600000               [INFO] [1775482876.051657, 2.448179]: 转换得到 114263 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482876.089097, 2.468291]: 帧 24: 检测到 10 个目标
+[WARN] [1775482876.089771, 2.473319]: 慢帧 24: 纯计算耗时 142.6ms，分段=pointcloud_to_numpy=107.2ms, inferencer_call=32.8ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.1ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      2.498458   Duration: 2.497458 / 83.600000               [INFO] [1775482876.183276, 2.513541]: 转换得到 114205 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775482876.220345, 2.533628]: 帧 25: 检测到 9 个目标
+ [RUNNING]  Bag Time:      2.548710   Duration: 2.547710 / 83.600000                [RUNNING]  Bag Time:      2.598975   Duration: 2.597975 / 83.600000                [RUNNING]  Bag Time:      2.649265   Duration: 2.648265 / 83.600000               [INFO] [1775482876.454432, 2.639206]: 转换得到 114111 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+[INFO] [1775482876.491679, 2.669384]: 帧 26: 检测到 9 个目标
+[WARN] [1775482876.492714, 2.674414]: 慢帧 26: 纯计算耗时 145.4ms，分段=pointcloud_to_numpy=110.0ms, inferencer_call=32.2ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      2.699559   Duration: 2.698559 / 83.600000                [RUNNING]  Bag Time:      2.749848   Duration: 2.748848 / 83.600000               [INFO] [1775482876.654078, 2.749848]: 转换得到 114139 个点
+Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+[INFO] [1775482876.689725, 2.769961]: 帧 27: 检测到 9 个目标
+[WARN] [1775482876.692866, 2.774990]: 慢帧 27: 纯计算耗时 143.9ms，分段=pointcloud_to_numpy=110.2ms, inferencer_call=31.0ms, rate_control_sleep=2.4ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      2.800126   Duration: 2.799126 / 83.600000                [RUNNING]  Bag Time:      2.850396   Duration: 2.849396 / 83.600000               [INFO] [1775482876.853782, 2.855424]: 转换得到 114069 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+[INFO] [1775482876.891521, 2.870517]: 帧 28: 检测到 11 个目标
+[WARN] [1775482876.892518, 2.870517]: 慢帧 28: 纯计算耗时 144.8ms，分段=pointcloud_to_numpy=109.2ms, inferencer_call=32.4ms, camera_projection=0.8ms, write_temp_bin=0.7ms, publish_markers=0.3ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      2.900690   Duration: 2.899690 / 83.600000                [RUNNING]  Bag Time:      2.950977   Duration: 2.949977 / 83.600000               [INFO] [1775482877.051165, 2.945949]: 转换得到 114132 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+[INFO] [1775482877.090206, 2.971089]: 帧 29: 检测到 10 个目标
+[WARN] [1775482877.090998, 2.971089]: 慢帧 29: 纯计算耗时 144.3ms，分段=pointcloud_to_numpy=107.2ms, inferencer_call=34.2ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      2.996232   Duration: 2.995232 / 83.600000                [RUNNING]  Bag Time:      3.046994   Duration: 3.045994 / 83.600000               [INFO] [1775482877.254410, 3.052021]: 转换得到 114291 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[INFO] [1775482877.294345, 3.072134]: 帧 30: 检测到 9 个目标
+[WARN] [1775482877.295000, 3.072134]: 慢帧 30: 纯计算耗时 147.9ms，分段=pointcloud_to_numpy=110.6ms, inferencer_call=34.8ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      3.097276   Duration: 3.096276 / 83.600000               [INFO] [1775482877.383187, 3.112361]: 转换得到 114282 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482877.421664, 3.137501]: 帧 31: 检测到 10 个目标
+ [RUNNING]  Bag Time:      3.147558   Duration: 3.146558 / 83.600000                [RUNNING]  Bag Time:      3.197838   Duration: 3.196838 / 83.600000                [RUNNING]  Bag Time:      3.248142   Duration: 3.247142 / 83.600000               [INFO] [1775482877.681820, 3.268260]: 转换得到 114321 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+[INFO] [1775482877.726295, 3.288379]: 帧 32: 检测到 9 个目标
+[WARN] [1775482877.727209, 3.288379]: 慢帧 32: 纯计算耗时 178.8ms，分段=pointcloud_to_numpy=137.2ms, inferencer_call=38.6ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      3.298437   Duration: 3.297437 / 83.600000                [RUNNING]  Bag Time:      3.348720   Duration: 3.347720 / 83.600000               [INFO] [1775482877.852264, 3.353747]: 转换得到 114272 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482877.888970, 3.368832]: 帧 33: 检测到 9 个目标
+[WARN] [1775482877.920744, 3.388939]: 慢帧 33: 纯计算耗时 141.1ms，分段=pointcloud_to_numpy=106.8ms, inferencer_call=31.6ms, rate_control_sleep=31.0ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      3.398993   Duration: 3.397993 / 83.600000                [RUNNING]  Bag Time:      3.449271   Duration: 3.448271 / 83.600000               [INFO] [1775482878.054795, 3.439216]: 转换得到 114317 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+[INFO] [1775482878.090512, 3.469380]: 帧 34: 检测到 9 个目标
+[WARN] [1775482878.091171, 3.469380]: 慢帧 34: 纯计算耗时 143.6ms，分段=pointcloud_to_numpy=109.8ms, inferencer_call=31.2ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      3.499541   Duration: 3.498541 / 83.600000                [RUNNING]  Bag Time:      3.549797   Duration: 3.548797 / 83.600000               [INFO] [1775482878.252241, 3.549797]: 转换得到 114562 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+[INFO] [1775482878.289846, 3.569910]: 帧 35: 检测到 10 个目标
+[WARN] [1775482878.290503, 3.569910]: 慢帧 35: 纯计算耗时 144.3ms，分段=pointcloud_to_numpy=109.1ms, inferencer_call=32.6ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      3.600144   Duration: 3.599144 / 83.600000                [RUNNING]  Bag Time:      3.650678   Duration: 3.649678 / 83.600000               [INFO] [1775482878.452451, 3.635547]: 转换得到 114747 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+[INFO] [1775482878.511068, 3.680915]: 帧 36: 检测到 11 个目标
+[WARN] [1775482878.511715, 3.680915]: 慢帧 36: 纯计算耗时 164.4ms，分段=pointcloud_to_numpy=107.7ms, inferencer_call=54.0ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      3.696048   Duration: 3.695048 / 83.600000               [INFO] [1775482878.589231, 3.711421]: 转换得到 114874 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[INFO] [1775482878.625283, 3.736560]: 帧 37: 检测到 10 个目标
+ [RUNNING]  Bag Time:      3.746607   Duration: 3.745607 / 83.600000                [RUNNING]  Bag Time:      3.796957   Duration: 3.795957 / 83.600000                [RUNNING]  Bag Time:      3.847251   Duration: 3.846251 / 83.600000               [INFO] [1775482878.866820, 3.852278]: 转换得到 114914 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775482878.903079, 3.877419]: 帧 38: 检测到 11 个目标
+[WARN] [1775482878.903718, 3.877419]: 慢帧 38: 纯计算耗时 153.1ms，分段=pointcloud_to_numpy=119.0ms, inferencer_call=31.5ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      3.897523   Duration: 3.896523 / 83.600000                [RUNNING]  Bag Time:      3.947804   Duration: 3.946804 / 83.600000               [INFO] [1775482879.049876, 3.942776]: 转换得到 114966 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+[INFO] [1775482879.087567, 3.967914]: 帧 39: 检测到 11 个目标
+[WARN] [1775482879.098867, 3.977969]: 慢帧 39: 纯计算耗时 140.9ms，分段=pointcloud_to_numpy=105.2ms, inferencer_call=33.1ms, rate_control_sleep=10.6ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+[INFO] [1775482879.099468, 3.977969]: PointPillars计时汇总(20帧均值): 点云解析=97.9ms, 临时落盘=0.8ms, 模型推理=34.1ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.7ms, 发布Detection3DArray=0.0ms, 发布MarkerArray=0.2ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 转发点云=0.0ms, 纯计算总耗时=134.8ms, 限速休眠=15.2ms, 墙钟总耗时=150.0ms
+ [RUNNING]  Bag Time:      3.998082   Duration: 3.997082 / 83.600000                [RUNNING]  Bag Time:      4.048362   Duration: 4.047362 / 83.600000               [INFO] [1775482879.255266, 4.053389]: 转换得到 115085 个点
+Inference ━━━━━          ━━━━━━━━━━          ━━━━━   
+[INFO] [1775482879.291773, 4.073501]: 帧 40: 检测到 10 个目标
+[WARN] [1775482879.292409, 4.073501]: 慢帧 40: 纯计算耗时 144.7ms，分段=pointcloud_to_numpy=110.5ms, inferencer_call=31.6ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      4.098640   Duration: 4.097640 / 83.600000                [RUNNING]  Bag Time:      4.148920   Duration: 4.147920 / 83.600000               [INFO] [1775482879.451271, 4.138864]: 转换得到 115191 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+[INFO] [1775482879.488053, 4.169030]: 帧 41: 检测到 10 个目标
+[WARN] [1775482879.491029, 4.174058]: 慢帧 41: 纯计算耗时 141.3ms，分段=pointcloud_to_numpy=106.6ms, inferencer_call=32.1ms, rate_control_sleep=2.3ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      4.199198   Duration: 4.198198 / 83.600000               [INFO] [1775482879.583697, 4.214282]: 转换得到 115348 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+[INFO] [1775482879.621526, 4.234395]: 帧 42: 检测到 11 个目标
+ [RUNNING]  Bag Time:      4.249479   Duration: 4.248479 / 83.600000                [RUNNING]  Bag Time:      4.299743   Duration: 4.298743 / 83.600000                [RUNNING]  Bag Time:      4.350043   Duration: 4.349043 / 83.600000               [INFO] [1775482879.868581, 4.360105]: 转换得到 115484 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+[INFO] [1775482879.909694, 4.380225]: 帧 43: 检测到 10 个目标
+[WARN] [1775482879.910413, 4.380225]: 慢帧 43: 纯计算耗时 162.6ms，分段=pointcloud_to_numpy=124.2ms, inferencer_call=35.5ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      4.400336   Duration: 4.399336 / 83.600000                [RUNNING]  Bag Time:      4.450602   Duration: 4.449602 / 83.600000               [INFO] [1775482880.050734, 4.445592]: 转换得到 115677 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482880.089902, 4.470713]: 帧 44: 检测到 10 个目标
+[WARN] [1775482880.104416, 4.480768]: 慢帧 44: 纯计算耗时 142.2ms，分段=pointcloud_to_numpy=105.0ms, inferencer_call=34.6ms, rate_control_sleep=13.8ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      4.500881   Duration: 4.499881 / 83.600000                [RUNNING]  Bag Time:      4.551163   Duration: 4.550163 / 83.600000               [INFO] [1775482880.250450, 4.546136]: 转换得到 115809 个点
+Inference           ━━━━━━━━━━          ━━━━━━━━━━   
+[INFO] [1775482880.287939, 4.571273]: 帧 45: 检测到 9 个目标
+[WARN] [1775482880.288630, 4.571273]: 慢帧 45: 纯计算耗时 142.4ms，分段=pointcloud_to_numpy=106.8ms, inferencer_call=32.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      4.596405   Duration: 4.595405 / 83.600000                [RUNNING]  Bag Time:      4.646655   Duration: 4.645655 / 83.600000               [INFO] [1775482880.453785, 4.651680]: 转换得到 115935 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+[INFO] [1775482880.491650, 4.671787]: 帧 46: 检测到 10 个目标
+[WARN] [1775482880.492337, 4.671787]: 慢帧 46: 纯计算耗时 144.9ms，分段=pointcloud_to_numpy=109.2ms, inferencer_call=32.9ms, write_temp_bin=0.9ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      4.696922   Duration: 4.695922 / 83.600000                [RUNNING]  Bag Time:      4.747199   Duration: 4.746199 / 83.600000               [INFO] [1775482880.655114, 4.752226]: 转换得到 115870 个点
+Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+[INFO] [1775482880.694347, 4.772336]: 帧 47: 检测到 11 个目标
+[WARN] [1775482880.695138, 4.772336]: 慢帧 47: 纯计算耗时 148.5ms，分段=pointcloud_to_numpy=111.6ms, inferencer_call=34.0ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      4.797469   Duration: 4.796469 / 83.600000               [INFO] [1775482880.783672, 4.812548]: 转换得到 116133 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+[INFO] [1775482880.820125, 4.837684]: 帧 48: 检测到 9 个目标
+ [RUNNING]  Bag Time:      4.847738   Duration: 4.846738 / 83.600000                [RUNNING]  Bag Time:      4.898031   Duration: 4.897031 / 83.600000                [RUNNING]  Bag Time:      4.948313   Duration: 4.947313 / 83.600000               [INFO] [1775482881.076013, 4.958369]: 转换得到 116326 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+[INFO] [1775482881.113137, 4.983500]: 帧 49: 检测到 10 个目标
+[WARN] [1775482881.113785, 4.983500]: 慢帧 49: 纯计算耗时 164.5ms，分段=pointcloud_to_numpy=129.5ms, inferencer_call=32.1ms, write_temp_bin=1.0ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      4.998584   Duration: 4.997584 / 83.600000                [RUNNING]  Bag Time:      5.048962   Duration: 5.047962 / 83.600000               [INFO] [1775482881.250551, 5.048962]: 转换得到 116552 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[INFO] [1775482881.287295, 5.069074]: 帧 50: 检测到 10 个目标
+[WARN] [1775482881.311249, 5.084162]: 慢帧 50: 纯计算耗时 138.9ms，分段=pointcloud_to_numpy=104.1ms, inferencer_call=32.2ms, rate_control_sleep=23.3ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      5.099245   Duration: 5.098245 / 83.600000                [RUNNING]  Bag Time:      5.149552   Duration: 5.148552 / 83.600000               [INFO] [1775482881.450520, 5.144523]: 转换得到 116849 个点
+Inference         ━━━━━━━━━━          ━━━━━━━━━━     
+[INFO] [1775482881.486451, 5.169665]: 帧 51: 检测到 11 个目标
+[WARN] [1775482881.487111, 5.169665]: 慢帧 51: 纯计算耗时 138.5ms，分段=pointcloud_to_numpy=104.6ms, inferencer_call=31.3ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      5.199831   Duration: 5.198831 / 83.600000                [RUNNING]  Bag Time:      5.250140   Duration: 5.249140 / 83.600000               [INFO] [1775482881.668321, 5.260269]: 转换得到 116966 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+[INFO] [1775482881.706416, 5.280382]: 帧 52: 检测到 11 个目标
+[WARN] [1775482881.707065, 5.280382]: 慢帧 52: 纯计算耗时 156.9ms，分段=pointcloud_to_numpy=121.3ms, inferencer_call=32.9ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      5.300558   Duration: 5.299558 / 83.600000                [RUNNING]  Bag Time:      5.350870   Duration: 5.349870 / 83.600000               [INFO] [1775482881.855249, 5.355898]: 转换得到 117187 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482881.894572, 5.370984]: 帧 53: 检测到 10 个目标
+[WARN] [1775482881.904973, 5.381041]: 慢帧 53: 纯计算耗时 146.2ms，分段=pointcloud_to_numpy=109.3ms, inferencer_call=34.2ms, rate_control_sleep=9.7ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      5.396123   Duration: 5.395123 / 83.600000               [INFO] [1775482881.995491, 5.421901]: 转换得到 117410 个点
+Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+[INFO] [1775482882.036787, 5.442019]: 帧 54: 检测到 9 个目标
+ [RUNNING]  Bag Time:      5.447042   Duration: 5.446042 / 83.600000                [RUNNING]  Bag Time:      5.497333   Duration: 5.496333 / 83.600000                [RUNNING]  Bag Time:      5.547671   Duration: 5.546671 / 83.600000               [INFO] [1775482882.277874, 5.562819]: 转换得到 117653 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+[INFO] [1775482882.314034, 5.583001]: 帧 55: 检测到 8 个目标
+[WARN] [1775482882.314801, 5.583001]: 慢帧 55: 纯计算耗时 164.5ms，分段=pointcloud_to_numpy=130.4ms, inferencer_call=31.3ms, write_temp_bin=0.8ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      5.598202   Duration: 5.597202 / 83.600000                [RUNNING]  Bag Time:      5.648779   Duration: 5.647779 / 83.600000               [INFO] [1775482882.451010, 5.648779]: 转换得到 117848 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+[INFO] [1775482882.487555, 5.668929]: 帧 56: 检测到 10 个目标
+[WARN] [1775482882.510842, 5.684014]: 慢帧 56: 纯计算耗时 139.2ms，分段=pointcloud_to_numpy=104.8ms, inferencer_call=31.8ms, rate_control_sleep=22.5ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      5.699099   Duration: 5.698099 / 83.600000                [RUNNING]  Bag Time:      5.749380   Duration: 5.748380 / 83.600000               [INFO] [1775482882.651080, 5.744352]: 转换得到 117951 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+[INFO] [1775482882.687678, 5.769490]: 帧 57: 检测到 10 个目标
+[WARN] [1775482882.688365, 5.769490]: 慢帧 57: 纯计算耗时 139.8ms，分段=pointcloud_to_numpy=105.4ms, inferencer_call=31.8ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      5.799661   Duration: 5.798661 / 83.600000                [RUNNING]  Bag Time:      5.849942   Duration: 5.848942 / 83.600000               [INFO] [1775482882.852977, 5.829830]: 转换得到 117885 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775482882.890589, 5.870055]: 帧 58: 检测到 9 个目标
+[WARN] [1775482882.891254, 5.870055]: 慢帧 58: 纯计算耗时 142.8ms，分段=pointcloud_to_numpy=107.3ms, inferencer_call=32.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      5.900263   Duration: 5.899263 / 83.600000                [RUNNING]  Bag Time:      5.950846   Duration: 5.949846 / 83.600000               [INFO] [1775482883.055115, 5.945817]: 转换得到 118034 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+[INFO] [1775482883.104419, 5.975995]: 帧 59: 检测到 10 个目标
+[WARN] [1775482883.105198, 5.981025]: 慢帧 59: 纯计算耗时 156.5ms，分段=pointcloud_to_numpy=111.8ms, inferencer_call=40.7ms, write_temp_bin=1.7ms, camera_projection=0.8ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+[INFO] [1775482883.105602, 5.981025]: PointPillars计时汇总(20帧均值): 点云解析=101.7ms, 临时落盘=0.8ms, 模型推理=33.1ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.7ms, 发布Detection3DArray=0.0ms, 发布MarkerArray=0.2ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 转发点云=0.0ms, 纯计算总耗时=137.6ms, 限速休眠=13.0ms, 墙钟总耗时=150.5ms
+ [RUNNING]  Bag Time:      5.996115   Duration: 5.995115 / 83.600000               [INFO] [1775482883.198854, 6.021994]: 转换得到 118036 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482883.238192, 6.047146]: 帧 60: 检测到 9 个目标
+ [RUNNING]  Bag Time:      6.047146   Duration: 6.046146 / 83.600000                [RUNNING]  Bag Time:      6.097432   Duration: 6.096432 / 83.600000                [RUNNING]  Bag Time:      6.147720   Duration: 6.146720 / 83.600000               [INFO] [1775482883.450500, 6.147720]: 转换得到 118120 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+[INFO] [1775482883.489544, 6.172861]: 帧 61: 检测到 10 个目标
+[WARN] [1775482883.490307, 6.172861]: 慢帧 61: 纯计算耗时 141.8ms，分段=pointcloud_to_numpy=104.9ms, inferencer_call=34.1ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      6.198003   Duration: 6.197003 / 83.600000                [RUNNING]  Bag Time:      6.248296   Duration: 6.247296 / 83.600000               [INFO] [1775482883.651563, 6.253323]: 转换得到 118215 个点
+Inference  ━━━━━━━━━━          ━━━━━━━━━━            
+[INFO] [1775482883.690143, 6.268409]: 帧 62: 检测到 10 个目标
+[WARN] [1775482883.691034, 6.273439]: 慢帧 62: 纯计算耗时 142.6ms，分段=pointcloud_to_numpy=106.4ms, inferencer_call=32.9ms, write_temp_bin=1.0ms, camera_projection=0.7ms, remove_temp_bin=0.2ms, publish_markers=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      6.298579   Duration: 6.297579 / 83.600000                [RUNNING]  Bag Time:      6.348859   Duration: 6.347859 / 83.600000               [INFO] [1775482883.851891, 6.343832]: 转换得到 118392 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+[INFO] [1775482883.887292, 6.368973]: 帧 63: 检测到 10 个目标
+[WARN] [1775482883.890802, 6.374001]: 慢帧 63: 纯计算耗时 138.6ms，分段=pointcloud_to_numpy=105.3ms, inferencer_call=30.6ms, rate_control_sleep=2.7ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      6.399140   Duration: 6.398140 / 83.600000                [RUNNING]  Bag Time:      6.449428   Duration: 6.448428 / 83.600000               [INFO] [1775482884.051899, 6.449428]: 转换得到 118461 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482884.092450, 6.469543]: 帧 64: 检测到 10 个目标
+[WARN] [1775482884.093257, 6.474573]: 慢帧 64: 纯计算耗时 143.9ms，分段=pointcloud_to_numpy=105.7ms, inferencer_call=35.0ms, write_temp_bin=1.1ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      6.499715   Duration: 6.498715 / 83.600000                [RUNNING]  Bag Time:      6.550014   Duration: 6.549014 / 83.600000               [INFO] [1775482884.263035, 6.555043]: 转换得到 118631 个点
+Inference           ━━━━━━━━━━          ━━━━━━━━━━   
+[INFO] [1775482884.303432, 6.575162]: 帧 65: 检测到 10 个目标
+[WARN] [1775482884.304402, 6.580191]: 慢帧 65: 纯计算耗时 155.9ms，分段=pointcloud_to_numpy=118.0ms, inferencer_call=33.6ms, camera_projection=1.4ms, write_temp_bin=0.8ms, publish_markers=0.4ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      6.600308   Duration: 6.599308 / 83.600000                [RUNNING]  Bag Time:      6.650596   Duration: 6.649596 / 83.600000               [INFO] [1775482884.461080, 6.640538]: 转换得到 118761 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+[INFO] [1775482884.497926, 6.675741]: 帧 66: 检测到 10 个目标
+[WARN] [1775482884.504344, 6.680769]: 慢帧 66: 纯计算耗时 148.5ms，分段=pointcloud_to_numpy=113.7ms, inferencer_call=32.1ms, rate_control_sleep=5.8ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      6.700882   Duration: 6.699882 / 83.600000               [INFO] [1775482884.585701, 6.720998]: 转换得到 118702 个点
+Inference ━━━━━          ━━━━━━━━━━          ━━━━━   
+[INFO] [1775482884.621930, 6.736083]: 帧 67: 检测到 10 个目标
+ [RUNNING]  Bag Time:      6.751167   Duration: 6.750167 / 83.600000                [RUNNING]  Bag Time:      6.796532   Duration: 6.795532 / 83.600000                [RUNNING]  Bag Time:      6.847105   Duration: 6.846105 / 83.600000               [INFO] [1775482884.850683, 6.847105]: 转换得到 118870 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+[INFO] [1775482884.886168, 6.867216]: 帧 68: 检测到 10 个目标
+[WARN] [1775482884.886846, 6.867216]: 慢帧 68: 纯计算耗时 138.2ms，分段=pointcloud_to_numpy=104.8ms, inferencer_call=30.8ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      6.897380   Duration: 6.896380 / 83.600000                [RUNNING]  Bag Time:      6.947727   Duration: 6.946727 / 83.600000               [INFO] [1775482885.050668, 6.942700]: 转换得到 118891 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+[INFO] [1775482885.086320, 6.967839]: 帧 69: 检测到 10 个目标
+[WARN] [1775482885.086956, 6.967839]: 慢帧 69: 纯计算耗时 138.8ms，分段=pointcloud_to_numpy=105.2ms, inferencer_call=31.0ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.1ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      6.998026   Duration: 6.997026 / 83.600000                [RUNNING]  Bag Time:      7.048430   Duration: 7.047430 / 83.600000               [INFO] [1775482885.255651, 7.053457]: 转换得到 118845 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[INFO] [1775482885.295984, 7.073578]: 帧 70: 检测到 10 个目标
+[WARN] [1775482885.296959, 7.073578]: 慢帧 70: 纯计算耗时 148.8ms，分段=pointcloud_to_numpy=112.8ms, inferencer_call=32.3ms, write_temp_bin=1.3ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      7.098765   Duration: 7.097765 / 83.600000                [RUNNING]  Bag Time:      7.149061   Duration: 7.148061 / 83.600000               [INFO] [1775482885.461751, 7.154090]: 转换得到 118681 个点
+Inference         ━━━━━━━━━━          ━━━━━━━━━━     
+[INFO] [1775482885.498977, 7.174205]: 帧 71: 检测到 10 个目标
+[WARN] [1775482885.499604, 7.174205]: 慢帧 71: 纯计算耗时 151.7ms，分段=pointcloud_to_numpy=116.6ms, inferencer_call=32.4ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      7.199379   Duration: 7.198379 / 83.600000                [RUNNING]  Bag Time:      7.249666   Duration: 7.248666 / 83.600000               [INFO] [1775482885.658591, 7.254693]: 转换得到 118453 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+[INFO] [1775482885.693621, 7.274803]: 帧 72: 检测到 11 个目标
+[WARN] [1775482885.694228, 7.274803]: 慢帧 72: 纯计算耗时 145.3ms，分段=pointcloud_to_numpy=112.3ms, inferencer_call=30.3ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      7.299941   Duration: 7.298941 / 83.600000               [INFO] [1775482885.784988, 7.320095]: 转换得到 118309 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+[INFO] [1775482885.829328, 7.340216]: 帧 73: 检测到 10 个目标
+ [RUNNING]  Bag Time:      7.350274   Duration: 7.349274 / 83.600000                [RUNNING]  Bag Time:      7.400556   Duration: 7.399556 / 83.600000                [RUNNING]  Bag Time:      7.450809   Duration: 7.449809 / 83.600000               [INFO] [1775482886.054281, 7.445781]: 转换得到 118232 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+[INFO] [1775482886.093593, 7.470922]: 帧 74: 检测到 10 个目标
+[WARN] [1775482886.094472, 7.470922]: 慢帧 74: 纯计算耗时 146.4ms，分段=pointcloud_to_numpy=109.8ms, inferencer_call=33.8ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      7.496089   Duration: 7.495089 / 83.600000                [RUNNING]  Bag Time:      7.547030   Duration: 7.546030 / 83.600000               [INFO] [1775482886.255016, 7.552056]: 转换得到 118154 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+[INFO] [1775482886.294725, 7.572168]: 帧 75: 检测到 10 个目标
+[WARN] [1775482886.295500, 7.572168]: 慢帧 75: 纯计算耗时 147.1ms，分段=pointcloud_to_numpy=109.7ms, inferencer_call=34.7ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      7.597364   Duration: 7.596364 / 83.600000                [RUNNING]  Bag Time:      7.647744   Duration: 7.646744 / 83.600000               [INFO] [1775482886.457490, 7.637685]: 转换得到 118082 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+[INFO] [1775482886.493736, 7.672891]: 帧 76: 检测到 10 个目标
+[WARN] [1775482886.494620, 7.672891]: 慢帧 76: 纯计算耗时 146.8ms，分段=pointcloud_to_numpy=113.3ms, inferencer_call=30.4ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      7.698040   Duration: 7.697040 / 83.600000                [RUNNING]  Bag Time:      7.748323   Duration: 7.747323 / 83.600000               [INFO] [1775482886.659532, 7.753350]: 转换得到 118141 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+[INFO] [1775482886.700840, 7.778494]: 帧 77: 检测到 10 个目标
+[WARN] [1775482886.701686, 7.778494]: 慢帧 77: 纯计算耗时 152.9ms，分段=pointcloud_to_numpy=115.6ms, inferencer_call=33.9ms, write_temp_bin=1.3ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      7.798666   Duration: 7.797666 / 83.600000                [RUNNING]  Bag Time:      7.849130   Duration: 7.848130 / 83.600000               [INFO] [1775482886.851857, 7.849130]: 转换得到 118189 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775482886.891118, 7.869266]: 帧 78: 检测到 10 个目标
+[WARN] [1775482886.901659, 7.879326]: 慢帧 78: 纯计算耗时 144.5ms，分段=pointcloud_to_numpy=107.1ms, inferencer_call=34.4ms, rate_control_sleep=9.6ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      7.899438   Duration: 7.898438 / 83.600000                [RUNNING]  Bag Time:      7.949722   Duration: 7.948722 / 83.600000               [INFO] [1775482887.052926, 7.954749]: 转换得到 118133 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+[INFO] [1775482887.092177, 7.969831]: 帧 79: 检测到 11 个目标
+[WARN] [1775482887.092892, 7.974858]: 慢帧 79: 纯计算耗时 145.6ms，分段=pointcloud_to_numpy=108.6ms, inferencer_call=34.3ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+[INFO] [1775482887.093311, 7.974858]: PointPillars计时汇总(20帧均值): 点云解析=100.3ms, 临时落盘=0.9ms, 模型推理=32.9ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.7ms, 发布Detection3DArray=0.0ms, 发布MarkerArray=0.2ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 转发点云=0.0ms, 纯计算总耗时=136.2ms, 限速休眠=11.2ms, 墙钟总耗时=147.3ms
+ [RUNNING]  Bag Time:      7.999998   Duration: 7.998998 / 83.600000               [INFO] [1775482887.185213, 8.020110]: 转换得到 118206 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482887.222121, 8.035193]: 帧 80: 检测到 11 个目标
+ [RUNNING]  Bag Time:      8.050277   Duration: 8.049277 / 83.600000                [RUNNING]  Bag Time:      8.100543   Duration: 8.099543 / 83.600000                [RUNNING]  Bag Time:      8.150844   Duration: 8.149844 / 83.600000               [INFO] [1775482887.449859, 8.150844]: 转换得到 118006 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+[INFO] [1775482887.487707, 8.170955]: 帧 81: 检测到 11 个目标
+[WARN] [1775482887.488555, 8.170955]: 慢帧 81: 纯计算耗时 141.2ms，分段=pointcloud_to_numpy=105.9ms, inferencer_call=32.5ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      8.196100   Duration: 8.195100 / 83.600000                [RUNNING]  Bag Time:      8.247042   Duration: 8.246042 / 83.600000               [INFO] [1775482887.667360, 8.252069]: 转换得到 117945 个点
+Inference  ━━━━━━━━━━          ━━━━━━━━━━            
+[INFO] [1775482887.707832, 8.277215]: 帧 82: 检测到 10 个目标
+[WARN] [1775482887.708979, 8.282245]: 慢帧 82: 纯计算耗时 159.7ms，分段=pointcloud_to_numpy=124.1ms, inferencer_call=31.8ms, write_temp_bin=1.3ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      8.297332   Duration: 8.296332 / 83.600000                [RUNNING]  Bag Time:      8.347615   Duration: 8.346615 / 83.600000               [INFO] [1775482887.849967, 8.347615]: 转换得到 117894 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+[INFO] [1775482887.886845, 8.367726]: 帧 83: 检测到 10 个目标
+[WARN] [1775482887.908591, 8.382810]: 慢帧 83: 纯计算耗时 139.9ms，分段=pointcloud_to_numpy=105.1ms, inferencer_call=32.0ms, rate_control_sleep=20.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      8.397893   Duration: 8.396893 / 83.600000                [RUNNING]  Bag Time:      8.448175   Duration: 8.447175 / 83.600000               [INFO] [1775482888.052411, 8.448175]: 转换得到 117889 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482888.093166, 8.473454]: 帧 84: 检测到 10 个目标
+[WARN] [1775482888.094039, 8.473454]: 慢帧 84: 纯计算耗时 145.6ms，分段=pointcloud_to_numpy=107.4ms, inferencer_call=35.4ms, write_temp_bin=0.8ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      8.498743   Duration: 8.497743 / 83.600000                [RUNNING]  Bag Time:      8.549299   Duration: 8.548299 / 83.600000               [INFO] [1775482888.251828, 8.549299]: 转换得到 117868 个点
+Inference           ━━━━━━━━━━          ━━━━━━━━━━   
+[INFO] [1775482888.290471, 8.569490]: 帧 85: 检测到 10 个目标
+[WARN] [1775482888.291827, 8.574518]: 慢帧 85: 纯计算耗时 143.8ms，分段=pointcloud_to_numpy=107.3ms, inferencer_call=33.6ms, write_temp_bin=0.8ms, camera_projection=0.6ms, rate_control_sleep=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      8.599809   Duration: 8.598809 / 83.600000                [RUNNING]  Bag Time:      8.650196   Duration: 8.649196 / 83.600000               [INFO] [1775482888.452353, 8.640139]: 转换得到 117949 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+[INFO] [1775482888.491546, 8.670307]: 帧 86: 检测到 10 个目标
+[WARN] [1775482888.492481, 8.670307]: 慢帧 86: 纯计算耗时 144.5ms，分段=pointcloud_to_numpy=107.3ms, inferencer_call=34.3ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      8.700558   Duration: 8.699558 / 83.600000               [INFO] [1775482888.586828, 8.710669]: 转换得到 118077 个点
+Inference ━━━━━          ━━━━━━━━━━          ━━━━━   
+[INFO] [1775482888.630201, 8.740884]: 帧 87: 检测到 10 个目标
+ [RUNNING]  Bag Time:      8.750944   Duration: 8.749944 / 83.600000                [RUNNING]  Bag Time:      8.796213   Duration: 8.795213 / 83.600000                [RUNNING]  Bag Time:      8.847009   Duration: 8.846009 / 83.600000               [INFO] [1775482888.857838, 8.841981]: 转换得到 118128 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+[INFO] [1775482888.894949, 8.872150]: 帧 88: 检测到 9 个目标
+[WARN] [1775482888.895877, 8.872150]: 慢帧 88: 纯计算耗时 147.8ms，分段=pointcloud_to_numpy=112.6ms, inferencer_call=32.3ms, write_temp_bin=0.8ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      8.897328   Duration: 8.896328 / 83.600000                [RUNNING]  Bag Time:      8.947727   Duration: 8.946727 / 83.600000               [INFO] [1775482889.051822, 8.947727]: 转换得到 118257 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+[INFO] [1775482889.092368, 8.972949]: 帧 89: 检测到 10 个目标
+[WARN] [1775482889.093004, 8.972949]: 慢帧 89: 纯计算耗时 145.2ms，分段=pointcloud_to_numpy=106.8ms, inferencer_call=35.7ms, write_temp_bin=0.8ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      8.998182   Duration: 8.997182 / 83.600000                [RUNNING]  Bag Time:      9.048697   Duration: 9.047697 / 83.600000               [INFO] [1775482889.254719, 9.053764]: 转换得到 118228 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[INFO] [1775482889.293349, 9.073915]: 帧 90: 检测到 10 个目标
+[WARN] [1775482889.294069, 9.073915]: 慢帧 90: 纯计算耗时 146.0ms，分段=pointcloud_to_numpy=109.4ms, inferencer_call=33.9ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      9.099203   Duration: 9.098203 / 83.600000                [RUNNING]  Bag Time:      9.149855   Duration: 9.148855 / 83.600000               [INFO] [1775482889.455491, 9.149855]: 转换得到 118402 个点
+Inference         ━━━━━━━━━━          ━━━━━━━━━━     
+[INFO] [1775482889.496338, 9.174996]: 帧 91: 检测到 9 个目标
+[WARN] [1775482889.496960, 9.174996]: 慢帧 91: 纯计算耗时 148.9ms，分段=pointcloud_to_numpy=110.2ms, inferencer_call=36.2ms, write_temp_bin=0.8ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      9.200221   Duration: 9.199221 / 83.600000               [INFO] [1775482889.586296, 9.215362]: 转换得到 118478 个点
+Inference           ━━━━━━━━━━          ━━━━━━━━━━   
+[INFO] [1775482889.626769, 9.240548]: 帧 92: 检测到 11 个目标
+ [RUNNING]  Bag Time:      9.250605   Duration: 9.249605 / 83.600000                [RUNNING]  Bag Time:      9.300883   Duration: 9.299883 / 83.600000                [RUNNING]  Bag Time:      9.351174   Duration: 9.350174 / 83.600000               [INFO] [1775482889.858515, 9.356203]: 转换得到 118694 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482889.895189, 9.371293]: 帧 93: 检测到 9 个目标
+[WARN] [1775482889.896149, 9.376322]: 慢帧 93: 纯计算耗时 147.9ms，分段=pointcloud_to_numpy=113.8ms, inferencer_call=31.0ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      9.396440   Duration: 9.395440 / 83.600000                [RUNNING]  Bag Time:      9.447029   Duration: 9.446029 / 83.600000               [INFO] [1775482890.053349, 9.447029]: 转换得到 118597 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+[INFO] [1775482890.087893, 9.472168]: 帧 94: 检测到 10 个目标
+[WARN] [1775482890.097273, 9.477196]: 慢帧 94: 纯计算耗时 139.7ms，分段=pointcloud_to_numpy=107.2ms, inferencer_call=29.7ms, rate_control_sleep=8.6ms, write_temp_bin=0.8ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      9.497308   Duration: 9.496308 / 83.600000                [RUNNING]  Bag Time:      9.547589   Duration: 9.546589 / 83.600000               [INFO] [1775482890.248578, 9.542561]: 转换得到 118649 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+[INFO] [1775482890.282767, 9.567684]: 帧 95: 检测到 9 个目标
+[WARN] [1775482890.288290, 9.572712]: 慢帧 95: 纯计算耗时 136.2ms，分段=pointcloud_to_numpy=104.0ms, inferencer_call=29.4ms, rate_control_sleep=4.7ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      9.597874   Duration: 9.596874 / 83.600000                [RUNNING]  Bag Time:      9.648444   Duration: 9.647444 / 83.600000               [INFO] [1775482890.453133, 9.653506]: 转换得到 118404 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+[INFO] [1775482890.489718, 9.668589]: 帧 96: 检测到 11 个目标
+[WARN] [1775482890.490478, 9.673619]: 慢帧 96: 纯计算耗时 142.6ms，分段=pointcloud_to_numpy=108.6ms, inferencer_call=31.3ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      9.698759   Duration: 9.697759 / 83.600000                [RUNNING]  Bag Time:      9.749399   Duration: 9.748399 / 83.600000               [INFO] [1775482890.652986, 9.754466]: 转换得到 118323 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+[INFO] [1775482890.730053, 9.789788]: 帧 97: 检测到 10 个目标
+[WARN] [1775482890.730725, 9.789788]: 慢帧 97: 纯计算耗时 183.4ms，分段=pointcloud_to_numpy=109.0ms, inferencer_call=71.5ms, camera_projection=0.8ms, write_temp_bin=0.8ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      9.799843   Duration: 9.798843 / 83.600000                [RUNNING]  Bag Time:      9.850418   Duration: 9.849418 / 83.600000               [INFO] [1775482890.851528, 9.845341]: 转换得到 118000 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775482890.887976, 9.870644]: 帧 98: 检测到 12 个目标
+[WARN] [1775482890.924484, 9.890820]: 慢帧 98: 纯计算耗时 141.6ms，分段=pointcloud_to_numpy=107.7ms, rate_control_sleep=35.8ms, inferencer_call=30.8ms, write_temp_bin=0.9ms, camera_projection=0.7ms, publish_markers=0.3ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:      9.900920   Duration: 9.899920 / 83.600000                [RUNNING]  Bag Time:      9.951425   Duration: 9.950425 / 83.600000               [INFO] [1775482891.058287, 9.946397]: 转换得到 117657 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+[INFO] [1775482891.094668, 9.971543]: 帧 99: 检测到 11 个目标
+[WARN] [1775482891.095401, 9.971543]: 慢帧 99: 纯计算耗时 147.8ms，分段=pointcloud_to_numpy=113.7ms, inferencer_call=31.2ms, write_temp_bin=0.8ms, camera_projection=0.8ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+[INFO] [1775482891.095781, 9.971543]: PointPillars计时汇总(20帧均值): 点云解析=99.2ms, 临时落盘=0.8ms, 模型推理=34.9ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.7ms, 发布Detection3DArray=0.0ms, 发布MarkerArray=0.2ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 转发点云=0.0ms, 纯计算总耗时=136.9ms, 限速休眠=13.1ms, 墙钟总耗时=150.1ms
+ [RUNNING]  Bag Time:      9.996726   Duration: 9.995726 / 83.600000               [INFO] [1775482891.195568, 10.021933]: 转换得到 117329 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482891.236016, 10.042047]: 帧 100: 检测到 12 个目标
+ [RUNNING]  Bag Time:     10.047075   Duration: 10.046075 / 83.600000                [RUNNING]  Bag Time:     10.097344   Duration: 10.096344 / 83.600000                [RUNNING]  Bag Time:     10.147748   Duration: 10.146748 / 83.600000               [INFO] [1775482891.448868, 10.142687]: 转换得到 116827 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+[INFO] [1775482891.484828, 10.167858]: 帧 101: 检测到 11 个目标
+[WARN] [1775482891.485483, 10.167858]: 慢帧 101: 纯计算耗时 138.3ms，分段=pointcloud_to_numpy=104.3ms, inferencer_call=31.2ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.3ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     10.198046   Duration: 10.197046 / 83.600000                [RUNNING]  Bag Time:     10.248328   Duration: 10.247328 / 83.600000               [INFO] [1775482891.653242, 10.253354]: 转换得到 116582 个点
+Inference  ━━━━━━━━━━          ━━━━━━━━━━            
+[INFO] [1775482891.689588, 10.268437]: 帧 102: 检测到 11 个目标
+[WARN] [1775482891.690234, 10.273463]: 慢帧 102: 纯计算耗时 143.2ms，分段=pointcloud_to_numpy=109.4ms, inferencer_call=31.2ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     10.298596   Duration: 10.297596 / 83.600000                [RUNNING]  Bag Time:     10.348871   Duration: 10.347871 / 83.600000               [INFO] [1775482891.853764, 10.353898]: 转换得到 116248 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+[INFO] [1775482891.890896, 10.368981]: 帧 103: 检测到 9 个目标
+[WARN] [1775482891.891562, 10.374009]: 慢帧 103: 纯计算耗时 144.7ms，分段=pointcloud_to_numpy=110.2ms, inferencer_call=31.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     10.399146   Duration: 10.398146 / 83.600000                [RUNNING]  Bag Time:     10.449437   Duration: 10.448437 / 83.600000               [INFO] [1775482892.050995, 10.449437]: 转换得到 116257 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482892.082348, 10.469545]: 帧 104: 检测到 10 个目标
+[WARN] [1775482892.091958, 10.474572]: 慢帧 104: 纯计算耗时 136.1ms，分段=pointcloud_to_numpy=106.8ms, inferencer_call=26.7ms, rate_control_sleep=8.9ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     10.499703   Duration: 10.498703 / 83.600000                [RUNNING]  Bag Time:     10.550000   Duration: 10.549000 / 83.600000               [INFO] [1775482892.259903, 10.555030]: 转换得到 116145 个点
+Inference           ━━━━━━━━━━          ━━━━━━━━━━   
+[INFO] [1775482892.300482, 10.575155]: 帧 105: 检测到 10 个目标
+[WARN] [1775482892.301580, 10.575155]: 慢帧 105: 纯计算耗时 154.4ms，分段=pointcloud_to_numpy=116.3ms, inferencer_call=33.6ms, camera_projection=1.5ms, write_temp_bin=0.8ms, publish_markers=0.4ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     10.600306   Duration: 10.599306 / 83.600000                [RUNNING]  Bag Time:     10.650606   Duration: 10.649606 / 83.600000               [INFO] [1775482892.468148, 10.660688]: 转换得到 116044 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+[INFO] [1775482892.499339, 10.675773]: 帧 106: 检测到 10 个目标
+[WARN] [1775482892.500143, 10.675773]: 慢帧 106: 纯计算耗时 151.1ms，分段=pointcloud_to_numpy=122.2ms, inferencer_call=26.0ms, write_temp_bin=0.8ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     10.700912   Duration: 10.699912 / 83.600000               [INFO] [1775482892.583469, 10.715998]: 转换得到 115977 个点
+Inference ━━━━━          ━━━━━━━━━━          ━━━━━   
+[INFO] [1775482892.614245, 10.731104]: 帧 107: 检测到 10 个目标
+ [RUNNING]  Bag Time:     10.751305   Duration: 10.750305 / 83.600000                [RUNNING]  Bag Time:     10.796684   Duration: 10.795684 / 83.600000                [RUNNING]  Bag Time:     10.847269   Duration: 10.846269 / 83.600000               [INFO] [1775482892.851788, 10.847269]: 转换得到 116223 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+[INFO] [1775482892.881542, 10.867398]: 帧 108: 检测到 10 个目标
+[WARN] [1775482892.882180, 10.867398]: 慢帧 108: 纯计算耗时 133.4ms，分段=pointcloud_to_numpy=106.2ms, inferencer_call=24.6ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     10.897691   Duration: 10.896691 / 83.600000                [RUNNING]  Bag Time:     10.948169   Duration: 10.947169 / 83.600000               [INFO] [1775482893.048005, 10.948169]: 转换得到 116207 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+[INFO] [1775482893.077944, 10.963270]: 帧 109: 检测到 10 个目标
+[WARN] [1775482893.079368, 10.968298]: 慢帧 109: 纯计算耗时 131.2ms，分段=pointcloud_to_numpy=103.7ms, inferencer_call=25.0ms, rate_control_sleep=0.8ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.1ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     10.998522   Duration: 10.997522 / 83.600000                [RUNNING]  Bag Time:     11.048963   Duration: 11.047963 / 83.600000               [INFO] [1775482893.259401, 11.028844]: 转换得到 116134 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[INFO] [1775482893.301082, 11.074117]: 帧 110: 检测到 10 个目标
+[WARN] [1775482893.302019, 11.079147]: 慢帧 110: 纯计算耗时 154.4ms，分段=pointcloud_to_numpy=116.6ms, inferencer_call=34.6ms, write_temp_bin=0.8ms, camera_projection=0.8ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     11.099260   Duration: 11.098260 / 83.600000               [INFO] [1775482893.386757, 11.119383]: 转换得到 116169 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482893.417602, 11.134469]: 帧 111: 检测到 11 个目标
+ [RUNNING]  Bag Time:     11.149553   Duration: 11.148553 / 83.600000                [RUNNING]  Bag Time:     11.199830   Duration: 11.198830 / 83.600000                [RUNNING]  Bag Time:     11.250089   Duration: 11.249089 / 83.600000               [INFO] [1775482893.646798, 11.245061]: 转换得到 116152 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+[INFO] [1775482893.676528, 11.265172]: 帧 112: 检测到 10 个目标
+[WARN] [1775482893.677172, 11.265172]: 慢帧 112: 纯计算耗时 129.4ms，分段=pointcloud_to_numpy=102.2ms, inferencer_call=24.6ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     11.300448   Duration: 11.299448 / 83.600000                [RUNNING]  Bag Time:     11.350926   Duration: 11.349926 / 83.600000               [INFO] [1775482893.851040, 11.350926]: 转换得到 116125 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482893.887038, 11.371038]: 帧 113: 检测到 9 个目标
+[WARN] [1775482893.887795, 11.371038]: 慢帧 113: 纯计算耗时 139.5ms，分段=pointcloud_to_numpy=105.4ms, inferencer_call=30.4ms, camera_projection=1.2ms, write_temp_bin=0.7ms, publish_markers=0.3ms, remove_temp_bin=0.2ms, extract_detections=0.2ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     11.396174   Duration: 11.395174 / 83.600000                [RUNNING]  Bag Time:     11.446944   Duration: 11.445944 / 83.600000               [INFO] [1775482894.055887, 11.441917]: 转换得到 115984 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+[INFO] [1775482894.086285, 11.467053]: 帧 114: 检测到 11 个目标
+[WARN] [1775482894.087016, 11.472104]: 慢帧 114: 纯计算耗时 138.3ms，分段=pointcloud_to_numpy=109.8ms, inferencer_call=25.8ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, rate_control_sleep=0.1ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     11.497235   Duration: 11.496235 / 83.600000                [RUNNING]  Bag Time:     11.547502   Duration: 11.546502 / 83.600000               [INFO] [1775482894.247771, 11.547502]: 转换得到 115770 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+[INFO] [1775482894.276735, 11.562582]: 帧 115: 检测到 11 个目标
+[WARN] [1775482894.277988, 11.567608]: 慢帧 115: 纯计算耗时 130.3ms，分段=pointcloud_to_numpy=103.3ms, inferencer_call=24.4ms, write_temp_bin=0.7ms, camera_projection=0.7ms, rate_control_sleep=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     11.597800   Duration: 11.596800 / 83.600000                [RUNNING]  Bag Time:     11.648095   Duration: 11.647095 / 83.600000               [INFO] [1775482894.462215, 11.633006]: 转换得到 115475 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+[INFO] [1775482894.495131, 11.673241]: 帧 116: 检测到 11 个目标
+[WARN] [1775482894.496198, 11.673241]: 慢帧 116: 纯计算耗时 147.6ms，分段=pointcloud_to_numpy=116.9ms, inferencer_call=27.5ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     11.698383   Duration: 11.697383 / 83.600000                [RUNNING]  Bag Time:     11.748678   Duration: 11.747678 / 83.600000               [INFO] [1775482894.652896, 11.753705]: 转换得到 115334 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+[INFO] [1775482894.682119, 11.768790]: 帧 117: 检测到 11 个目标
+[WARN] [1775482894.690510, 11.773842]: 慢帧 117: 纯计算耗时 134.1ms，分段=pointcloud_to_numpy=107.3ms, inferencer_call=24.1ms, rate_control_sleep=7.6ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     11.799054   Duration: 11.798054 / 83.600000               [INFO] [1775482894.785332, 11.809179]: 转换得到 115141 个点
+Inference         ━━━━━━━━━━          ━━━━━━━━━━     
+[INFO] [1775482894.815789, 11.834380]: 帧 118: 检测到 11 个目标
+ [RUNNING]  Bag Time:     11.849481   Duration: 11.848481 / 83.600000                [RUNNING]  Bag Time:     11.899905   Duration: 11.898905 / 83.600000                [RUNNING]  Bag Time:     11.951596   Duration: 11.950596 / 83.600000               [INFO] [1775482895.058695, 11.946567]: 转换得到 114871 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+[INFO] [1775482895.095267, 11.971690]: 帧 119: 检测到 12 个目标
+[WARN] [1775482895.096117, 11.971690]: 慢帧 119: 纯计算耗时 147.7ms，分段=pointcloud_to_numpy=113.2ms, inferencer_call=31.6ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+[INFO] [1775482895.096678, 11.976719]: PointPillars计时汇总(20帧均值): 点云解析=96.2ms, 临时落盘=0.7ms, 模型推理=28.3ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.7ms, 发布Detection3DArray=0.0ms, 发布MarkerArray=0.2ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 转发点云=0.0ms, 纯计算总耗时=127.3ms, 限速休眠=15.0ms, 墙钟总耗时=142.3ms
+ [RUNNING]  Bag Time:     11.996832   Duration: 11.995832 / 83.600000                [RUNNING]  Bag Time:     12.047108   Duration: 12.046108 / 83.600000               [INFO] [1775482895.253998, 12.052134]: 转换得到 114591 个点
+Inference ━━━━━          ━━━━━━━━━━          ━━━━━   
+[INFO] [1775482895.290511, 12.072242]: 帧 120: 检测到 11 个目标
+[WARN] [1775482895.291291, 12.072242]: 慢帧 120: 纯计算耗时 143.8ms，分段=pointcloud_to_numpy=110.0ms, inferencer_call=31.1ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     12.097381   Duration: 12.096381 / 83.600000                [RUNNING]  Bag Time:     12.147822   Duration: 12.146822 / 83.600000               [INFO] [1775482895.448586, 12.137762]: 转换得到 114362 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+[INFO] [1775482895.480695, 12.167938]: 帧 121: 检测到 10 个目标
+[WARN] [1775482895.488898, 12.172967]: 慢帧 121: 纯计算耗时 134.3ms，分段=pointcloud_to_numpy=104.3ms, inferencer_call=27.0ms, rate_control_sleep=7.3ms, camera_projection=0.7ms, write_temp_bin=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     12.198114   Duration: 12.197114 / 83.600000                [RUNNING]  Bag Time:     12.248406   Duration: 12.247406 / 83.600000               [INFO] [1775482895.668743, 12.258462]: 转换得到 114153 个点
+Inference  ━━━━━━━━━━          ━━━━━━━━━━            
+[INFO] [1775482895.699798, 12.273546]: 帧 122: 检测到 10 个目标
+[WARN] [1775482895.700610, 12.278575]: 慢帧 122: 纯计算耗时 152.0ms，分段=pointcloud_to_numpy=122.8ms, inferencer_call=26.4ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.1ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     12.298685   Duration: 12.297685 / 83.600000                [RUNNING]  Bag Time:     12.349053   Duration: 12.348053 / 83.600000               [INFO] [1775482895.849802, 12.349053]: 转换得到 114100 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+[INFO] [1775482895.879206, 12.364137]: 帧 123: 检测到 10 个目标
+[WARN] [1775482895.901335, 12.379220]: 慢帧 123: 纯计算耗时 131.9ms，分段=pointcloud_to_numpy=104.9ms, inferencer_call=24.3ms, rate_control_sleep=21.3ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     12.399349   Duration: 12.398349 / 83.600000               [INFO] [1775482895.983286, 12.419526]: 转换得到 114042 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+[INFO] [1775482896.011868, 12.429583]: 帧 124: 检测到 11 个目标
+ [RUNNING]  Bag Time:     12.449705   Duration: 12.448705 / 83.600000                [RUNNING]  Bag Time:     12.499983   Duration: 12.498983 / 83.600000               [INFO] [1775482896.246056, 12.550393]: 转换得到 114182 个点
+ [RUNNING]  Bag Time:     12.550393   Duration: 12.549393 / 83.600000               Inference           ━━━━━━━━━━          ━━━━━━━━━━   
+[INFO] [1775482896.275718, 12.565478]: 帧 125: 检测到 11 个目标
+[WARN] [1775482896.276586, 12.565478]: 慢帧 125: 纯计算耗时 129.4ms，分段=pointcloud_to_numpy=102.0ms, inferencer_call=24.5ms, camera_projection=0.7ms, write_temp_bin=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     12.600721   Duration: 12.599721 / 83.600000                [RUNNING]  Bag Time:     12.651142   Duration: 12.650142 / 83.600000               [INFO] [1775482896.447244, 12.646099]: 转换得到 114045 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+[INFO] [1775482896.479464, 12.666226]: 帧 126: 检测到 10 个目标
+[WARN] [1775482896.480313, 12.666226]: 慢帧 126: 纯计算耗时 132.7ms，分段=pointcloud_to_numpy=102.5ms, inferencer_call=27.5ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     12.696398   Duration: 12.695398 / 83.600000                [RUNNING]  Bag Time:     12.747085   Duration: 12.746085 / 83.600000               [INFO] [1775482896.707592, 12.762171]: 转换得到 114263 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+[INFO] [1775482896.739055, 12.797392]: 帧 127: 检测到 11 个目标
+[WARN] [1775482896.739823, 12.797392]: 慢帧 127: 纯计算耗时 191.0ms，分段=pointcloud_to_numpy=162.0ms, inferencer_call=26.2ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     12.797392   Duration: 12.796392 / 83.600000                [RUNNING]  Bag Time:     12.847672   Duration: 12.846672 / 83.600000               [INFO] [1775482896.848517, 12.842644]: 转换得到 114193 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+[INFO] [1775482896.877512, 12.862755]: 帧 128: 检测到 11 个目标
+[WARN] [1775482896.938736, 12.897947]: 慢帧 128: 纯计算耗时 130.5ms，分段=pointcloud_to_numpy=103.5ms, rate_control_sleep=60.5ms, inferencer_call=24.3ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     12.897947   Duration: 12.896947 / 83.600000                [RUNNING]  Bag Time:     12.948229   Duration: 12.947229 / 83.600000               [INFO] [1775482897.051263, 12.953257]: 转换得到 114223 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+[INFO] [1775482897.080734, 12.968340]: 帧 129: 检测到 9 个目标
+[WARN] [1775482897.081413, 12.968340]: 慢帧 129: 纯计算耗时 132.4ms，分段=pointcloud_to_numpy=105.2ms, inferencer_call=24.7ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     12.998503   Duration: 12.997503 / 83.600000                [RUNNING]  Bag Time:     13.048770   Duration: 13.047770 / 83.600000               [INFO] [1775482897.257054, 13.053798]: 转换得到 114074 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[INFO] [1775482897.287214, 13.068881]: 帧 130: 检测到 13 个目标
+[WARN] [1775482897.287873, 13.068881]: 慢帧 130: 纯计算耗时 140.1ms，分段=pointcloud_to_numpy=112.5ms, inferencer_call=24.9ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.3ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     13.099046   Duration: 13.098046 / 83.600000               [INFO] [1775482897.383088, 13.119227]: 转换得到 114030 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482897.413907, 13.134311]: 帧 131: 检测到 10 个目标
+ [RUNNING]  Bag Time:     13.149394   Duration: 13.148394 / 83.600000                [RUNNING]  Bag Time:     13.199674   Duration: 13.198674 / 83.600000                [RUNNING]  Bag Time:     13.250097   Duration: 13.249097 / 83.600000               [INFO] [1775482897.657795, 13.250097]: 转换得到 113990 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+[INFO] [1775482897.688874, 13.270217]: 帧 132: 检测到 11 个目标
+[WARN] [1775482897.689815, 13.270217]: 慢帧 132: 纯计算耗时 142.0ms，分段=pointcloud_to_numpy=113.2ms, inferencer_call=25.7ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     13.300393   Duration: 13.299393 / 83.600000                [RUNNING]  Bag Time:     13.350875   Duration: 13.349875 / 83.600000               [INFO] [1775482897.848823, 13.345823]: 转换得到 113898 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482897.880430, 13.365960]: 帧 133: 检测到 10 个目标
+[WARN] [1775482897.884792, 13.370978]: 慢帧 133: 纯计算耗时 134.0ms，分段=pointcloud_to_numpy=104.2ms, inferencer_call=27.0ms, rate_control_sleep=3.5ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     13.396115   Duration: 13.395115 / 83.600000                [RUNNING]  Bag Time:     13.446943   Duration: 13.445943 / 83.600000               [INFO] [1775482898.052468, 13.451970]: 转换得到 113791 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+[INFO] [1775482898.084786, 13.467055]: 帧 134: 检测到 9 个目标
+[WARN] [1775482898.085557, 13.467055]: 慢帧 134: 纯计算耗时 137.6ms，分段=pointcloud_to_numpy=107.3ms, inferencer_call=27.7ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     13.497226   Duration: 13.496226 / 83.600000               [INFO] [1775482898.182671, 13.517376]: 转换得到 113766 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+[INFO] [1775482898.216615, 13.532463]: 帧 135: 检测到 10 个目标
+ [RUNNING]  Bag Time:     13.547546   Duration: 13.546546 / 83.600000                [RUNNING]  Bag Time:     13.598035   Duration: 13.597035 / 83.600000                [RUNNING]  Bag Time:     13.648555   Duration: 13.647555 / 83.600000               [INFO] [1775482898.448030, 13.648555]: 转换得到 113809 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+[INFO] [1775482898.481329, 13.668690]: 帧 136: 检测到 9 个目标
+[WARN] [1775482898.482085, 13.668690]: 慢帧 136: 纯计算耗时 134.4ms，分段=pointcloud_to_numpy=103.5ms, inferencer_call=28.2ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     13.698886   Duration: 13.697886 / 83.600000                [RUNNING]  Bag Time:     13.749307   Duration: 13.748307 / 83.600000               [INFO] [1775482898.654340, 13.754336]: 转换得到 113662 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+[INFO] [1775482898.685785, 13.769424]: 帧 137: 检测到 8 个目标
+[WARN] [1775482898.686711, 13.769424]: 慢帧 137: 纯计算耗时 139.5ms，分段=pointcloud_to_numpy=110.1ms, inferencer_call=26.4ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     13.799606   Duration: 13.798606 / 83.600000                [RUNNING]  Bag Time:     13.849895   Duration: 13.848895 / 83.600000               [INFO] [1775482898.856218, 13.844868]: 转换得到 113575 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775482898.886527, 13.870008]: 帧 138: 检测到 9 个目标
+[WARN] [1775482898.887265, 13.870008]: 慢帧 138: 纯计算耗时 139.5ms，分段=pointcloud_to_numpy=111.4ms, inferencer_call=25.5ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     13.900341   Duration: 13.899341 / 83.600000                [RUNNING]  Bag Time:     13.950802   Duration: 13.949802 / 83.600000               [INFO] [1775482899.048318, 13.945746]: 转换得到 113333 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+[INFO] [1775482899.078789, 13.965883]: 帧 139: 检测到 9 个目标
+[WARN] [1775482899.084597, 13.970911]: 慢帧 139: 纯计算耗时 132.7ms，分段=pointcloud_to_numpy=104.8ms, inferencer_call=25.2ms, rate_control_sleep=5.0ms, write_temp_bin=0.7ms, camera_projection=0.6ms, remove_temp_bin=0.2ms, publish_markers=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+[INFO] [1775482899.085083, 13.970911]: PointPillars计时汇总(20帧均值): 点云解析=100.0ms, 临时落盘=0.7ms, 模型推理=26.3ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.6ms, 发布Detection3DArray=0.0ms, 发布MarkerArray=0.2ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 转发点云=0.0ms, 纯计算总耗时=129.0ms, 限速休眠=14.3ms, 墙钟总耗时=143.3ms
+ [RUNNING]  Bag Time:     13.996050   Duration: 13.995050 / 83.600000               [INFO] [1775482899.182896, 14.016781]: 转换得到 113423 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482899.212693, 14.031866]: 帧 140: 检测到 8 个目标
+ [RUNNING]  Bag Time:     14.046980   Duration: 14.045980 / 83.600000                [RUNNING]  Bag Time:     14.097356   Duration: 14.096356 / 83.600000               [INFO] [1775482899.444734, 14.142807]: 转换得到 113155 个点
+ [RUNNING]  Bag Time:     14.147872   Duration: 14.146872 / 83.600000               Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+[INFO] [1775482899.474444, 14.162957]: 帧 141: 检测到 10 个目标
+[WARN] [1775482899.475203, 14.162957]: 慢帧 141: 纯计算耗时 128.0ms，分段=pointcloud_to_numpy=100.2ms, inferencer_call=25.2ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     14.198382   Duration: 14.197382 / 83.600000                [RUNNING]  Bag Time:     14.248790   Duration: 14.247790 / 83.600000               [INFO] [1775482899.647084, 14.243761]: 转换得到 113067 个点
+Inference  ━━━━━━━━━━          ━━━━━━━━━━            
+[INFO] [1775482899.682724, 14.268908]: 帧 142: 检测到 10 个目标
+[WARN] [1775482899.683572, 14.268908]: 慢帧 142: 纯计算耗时 136.5ms，分段=pointcloud_to_numpy=106.9ms, inferencer_call=26.2ms, write_temp_bin=1.3ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     14.299246   Duration: 14.298246 / 83.600000                [RUNNING]  Bag Time:     14.349539   Duration: 14.348539 / 83.600000               [INFO] [1775482899.863307, 14.354567]: 转换得到 112919 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+[INFO] [1775482899.900643, 14.374658]: 帧 143: 检测到 10 个目标
+[WARN] [1775482899.901275, 14.374658]: 慢帧 143: 纯计算耗时 152.8ms，分段=pointcloud_to_numpy=117.9ms, inferencer_call=32.4ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     14.399847   Duration: 14.398847 / 83.600000                [RUNNING]  Bag Time:     14.450201   Duration: 14.449201 / 83.600000               [INFO] [1775482900.048161, 14.450201]: 转换得到 112556 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482900.083709, 14.465286]: 帧 144: 检测到 10 个目标
+[WARN] [1775482900.093471, 14.475341]: 慢帧 144: 纯计算耗时 136.8ms，分段=pointcloud_to_numpy=103.0ms, inferencer_call=31.1ms, rate_control_sleep=9.1ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     14.500593   Duration: 14.499593 / 83.600000               [INFO] [1775482900.182692, 14.515740]: 转换得到 112239 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775482900.213033, 14.530843]: 帧 145: 检测到 10 个目标
+ [RUNNING]  Bag Time:     14.550951   Duration: 14.549951 / 83.600000                [RUNNING]  Bag Time:     14.596198   Duration: 14.595198 / 83.600000                [RUNNING]  Bag Time:     14.647220   Duration: 14.646220 / 83.600000               [INFO] [1775482900.446232, 14.647220]: 转换得到 112097 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+[INFO] [1775482900.476513, 14.662338]: 帧 146: 检测到 9 个目标
+[WARN] [1775482900.477212, 14.662338]: 慢帧 146: 纯计算耗时 129.5ms，分段=pointcloud_to_numpy=101.8ms, inferencer_call=25.2ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     14.697535   Duration: 14.696535 / 83.600000               [INFO] [1775482900.644732, 14.742817]: 转换得到 111976 个点
+ [RUNNING]  Bag Time:     14.747846   Duration: 14.746846 / 83.600000               Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+[INFO] [1775482900.674356, 14.762951]: 帧 147: 检测到 9 个目标
+[WARN] [1775482900.675115, 14.762951]: 慢帧 147: 纯计算耗时 128.0ms，分段=pointcloud_to_numpy=100.4ms, inferencer_call=25.0ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     14.798155   Duration: 14.797155 / 83.600000                [RUNNING]  Bag Time:     14.848482   Duration: 14.847482 / 83.600000               [INFO] [1775482900.899237, 14.873631]: 转换得到 112072 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+[INFO] [1775482900.933840, 14.893743]: 帧 148: 检测到 10 个目标
+[WARN] [1775482900.934574, 14.893743]: 慢帧 148: 纯计算耗时 185.7ms，分段=pointcloud_to_numpy=154.2ms, inferencer_call=28.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     14.898771   Duration: 14.897771 / 83.600000                [RUNNING]  Bag Time:     14.949051   Duration: 14.948051 / 83.600000               [INFO] [1775482901.048730, 14.949051]: 转换得到 112035 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+[INFO] [1775482901.085829, 14.969164]: 帧 149: 检测到 10 个目标
+[WARN] [1775482901.131520, 14.994299]: 慢帧 149: 纯计算耗时 139.3ms，分段=pointcloud_to_numpy=104.7ms, rate_control_sleep=44.9ms, inferencer_call=31.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     14.999326   Duration: 14.998326 / 83.600000                [RUNNING]  Bag Time:     15.049604   Duration: 15.048604 / 83.600000               [INFO] [1775482901.252732, 15.054632]: 转换得到 112374 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[INFO] [1775482901.287723, 15.069715]: 帧 150: 检测到 12 个目标
+[WARN] [1775482901.288435, 15.069715]: 慢帧 150: 纯计算耗时 140.7ms，分段=pointcloud_to_numpy=107.9ms, inferencer_call=30.1ms, write_temp_bin=0.7ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     15.099875   Duration: 15.098875 / 83.600000               [INFO] [1775482901.383317, 15.120089]: 转换得到 112772 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482901.416497, 15.135173]: 帧 151: 检测到 10 个目标
+ [RUNNING]  Bag Time:     15.150256   Duration: 15.149256 / 83.600000                [RUNNING]  Bag Time:     15.200535   Duration: 15.199535 / 83.600000                [RUNNING]  Bag Time:     15.250813   Duration: 15.249813 / 83.600000               [INFO] [1775482901.650252, 15.250813]: 转换得到 113308 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+[INFO] [1775482901.685702, 15.270925]: 帧 152: 检测到 10 个目标
+[WARN] [1775482901.686332, 15.270925]: 慢帧 152: 纯计算耗时 138.6ms，分段=pointcloud_to_numpy=105.6ms, inferencer_call=30.4ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     15.296064   Duration: 15.295064 / 83.600000                [RUNNING]  Bag Time:     15.347220   Duration: 15.346220 / 83.600000               [INFO] [1775482901.860646, 15.357276]: 转换得到 113670 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482901.891300, 15.372363]: 帧 153: 检测到 10 个目标
+[WARN] [1775482901.892620, 15.372363]: 慢帧 153: 纯计算耗时 144.5ms，分段=pointcloud_to_numpy=115.9ms, inferencer_call=25.2ms, write_temp_bin=0.8ms, camera_projection=0.8ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     15.397506   Duration: 15.396506 / 83.600000                [RUNNING]  Bag Time:     15.447791   Duration: 15.446791 / 83.600000               [INFO] [1775482902.058994, 15.417620]: 转换得到 114203 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+[INFO] [1775482902.093369, 15.472952]: 帧 154: 检测到 11 个目标
+[WARN] [1775482902.094132, 15.472952]: 慢帧 154: 纯计算耗时 144.3ms，分段=pointcloud_to_numpy=111.9ms, inferencer_call=29.6ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     15.498110   Duration: 15.497110 / 83.600000               [INFO] [1775482902.182632, 15.513225]: 转换得到 114860 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+[INFO] [1775482902.213609, 15.533357]: 帧 155: 检测到 11 个目标
+ [RUNNING]  Bag Time:     15.548438   Duration: 15.547438 / 83.600000                [RUNNING]  Bag Time:     15.598709   Duration: 15.597709 / 83.600000                [RUNNING]  Bag Time:     15.649031   Duration: 15.648031 / 83.600000               [INFO] [1775482902.446180, 15.644003]: 转换得到 115193 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+[INFO] [1775482902.474895, 15.664113]: 帧 156: 检测到 10 个目标
+[WARN] [1775482902.475586, 15.664113]: 慢帧 156: 纯计算耗时 128.5ms，分段=pointcloud_to_numpy=101.8ms, inferencer_call=24.2ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.1ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     15.699384   Duration: 15.698384 / 83.600000                [RUNNING]  Bag Time:     15.749662   Duration: 15.748662 / 83.600000               [INFO] [1775482902.649753, 15.749662]: 转换得到 115584 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+[INFO] [1775482902.679226, 15.764744]: 帧 157: 检测到 10 个目标
+[WARN] [1775482902.679862, 15.764744]: 慢帧 157: 纯计算耗时 131.2ms，分段=pointcloud_to_numpy=104.1ms, inferencer_call=24.6ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     15.799935   Duration: 15.798935 / 83.600000                [RUNNING]  Bag Time:     15.850248   Duration: 15.849248 / 83.600000               [INFO] [1775482902.851461, 15.850248]: 转换得到 115838 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775482902.882485, 15.865334]: 帧 158: 检测到 10 个目标
+[WARN] [1775482902.883174, 15.865334]: 慢帧 158: 纯计算耗时 135.6ms，分段=pointcloud_to_numpy=106.8ms, inferencer_call=25.9ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     15.900532   Duration: 15.899532 / 83.600000                [RUNNING]  Bag Time:     15.950822   Duration: 15.949822 / 83.600000               [INFO] [1775482903.061221, 15.945793]: 转换得到 116368 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+[INFO] [1775482903.091072, 15.970934]: 帧 159: 检测到 10 个目标
+[WARN] [1775482903.091803, 15.970934]: 慢帧 159: 纯计算耗时 143.5ms，分段=pointcloud_to_numpy=115.7ms, inferencer_call=25.1ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+[INFO] [1775482903.092357, 15.970934]: PointPillars计时汇总(20帧均值): 点云解析=95.5ms, 临时落盘=0.7ms, 模型推理=27.3ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.6ms, 发布Detection3DArray=0.0ms, 发布MarkerArray=0.2ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 转发点云=0.0ms, 纯计算总耗时=125.6ms, 限速休眠=16.5ms, 墙钟总耗时=142.1ms
+ [RUNNING]  Bag Time:     15.996072   Duration: 15.995072 / 83.600000                [RUNNING]  Bag Time:     16.047038   Duration: 16.046038 / 83.600000               [INFO] [1775482903.251824, 16.036980]: 转换得到 116756 个点
+Inference ━━━━━          ━━━━━━━━━━          ━━━━━   
+[INFO] [1775482903.281453, 16.067147]: 帧 160: 检测到 9 个目标
+[WARN] [1775482903.287125, 16.072174]: 慢帧 160: 纯计算耗时 134.2ms，分段=pointcloud_to_numpy=106.5ms, inferencer_call=25.1ms, rate_control_sleep=5.0ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     16.097309   Duration: 16.096309 / 83.600000                [RUNNING]  Bag Time:     16.147620   Duration: 16.146620 / 83.600000               [INFO] [1775482903.451615, 16.112392]: 转换得到 117109 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+[INFO] [1775482903.481008, 16.167717]: 帧 161: 检测到 9 个目标
+[WARN] [1775482903.481650, 16.167717]: 慢帧 161: 纯计算耗时 134.3ms，分段=pointcloud_to_numpy=106.9ms, inferencer_call=24.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     16.197903   Duration: 16.196903 / 83.600000               [INFO] [1775482903.584001, 16.212985]: 转换得到 117518 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+[INFO] [1775482903.614177, 16.233095]: 帧 162: 检测到 10 个目标
+ [RUNNING]  Bag Time:     16.248178   Duration: 16.247178 / 83.600000                [RUNNING]  Bag Time:     16.298449   Duration: 16.297449 / 83.600000                [RUNNING]  Bag Time:     16.348711   Duration: 16.347711 / 83.600000               [INFO] [1775482903.849225, 16.348711]: 转换得到 117916 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+[INFO] [1775482903.881366, 16.368823]: 帧 163: 检测到 9 个目标
+[WARN] [1775482903.882000, 16.368823]: 慢帧 163: 纯计算耗时 134.2ms，分段=pointcloud_to_numpy=104.7ms, inferencer_call=26.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     16.398997   Duration: 16.397997 / 83.600000                [RUNNING]  Bag Time:     16.449291   Duration: 16.448291 / 83.600000               [INFO] [1775482904.067873, 16.454320]: 转换得到 118354 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775482904.107914, 16.479467]: 帧 164: 检测到 10 个目标
+[WARN] [1775482904.108753, 16.479467]: 慢帧 164: 纯计算耗时 159.6ms，分段=pointcloud_to_numpy=122.4ms, inferencer_call=33.1ms, camera_projection=1.3ms, write_temp_bin=0.8ms, publish_markers=0.4ms, remove_temp_bin=0.3ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     16.499582   Duration: 16.498582 / 83.600000                [RUNNING]  Bag Time:     16.549860   Duration: 16.548860 / 83.600000               [INFO] [1775482904.252120, 16.549860]: 转换得到 118727 个点
+Inference           ━━━━━━━━━━          ━━━━━━━━━━   
+[INFO] [1775482904.290772, 16.569971]: 帧 165: 检测到 11 个目标
+[WARN] [1775482904.303027, 16.580027]: 慢帧 165: 纯计算耗时 144.3ms，分段=pointcloud_to_numpy=108.1ms, inferencer_call=33.3ms, rate_control_sleep=11.4ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     16.600226   Duration: 16.599226 / 83.600000                [RUNNING]  Bag Time:     16.650726   Duration: 16.649726 / 83.600000               [INFO] [1775482904.453230, 16.640625]: 转换得到 119028 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+[INFO] [1775482904.487624, 16.670838]: 帧 166: 检测到 10 个目标
+[WARN] [1775482904.488471, 16.670838]: 慢帧 166: 纯计算耗时 139.4ms，分段=pointcloud_to_numpy=107.0ms, inferencer_call=29.6ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     16.695976   Duration: 16.694976 / 83.600000                [RUNNING]  Bag Time:     16.747030   Duration: 16.746030 / 83.600000               [INFO] [1775482904.657435, 16.757085]: 转换得到 119093 个点
+Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+[INFO] [1775482904.692339, 16.772172]: 帧 167: 检测到 10 个目标
+[WARN] [1775482904.692997, 16.772172]: 慢帧 167: 纯计算耗时 143.8ms，分段=pointcloud_to_numpy=111.7ms, inferencer_call=29.4ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     16.797311   Duration: 16.796311 / 83.600000               [INFO] [1775482904.787477, 16.817423]: 转换得到 119263 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+[INFO] [1775482904.818731, 16.837532]: 帧 168: 检测到 11 个目标
+ [RUNNING]  Bag Time:     16.847586   Duration: 16.846586 / 83.600000                [RUNNING]  Bag Time:     16.897853   Duration: 16.896853 / 83.600000                [RUNNING]  Bag Time:     16.948141   Duration: 16.947141 / 83.600000               [INFO] [1775482905.058281, 16.938084]: 转换得到 119455 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+[INFO] [1775482905.090529, 16.973286]: 帧 169: 检测到 10 个目标
+[WARN] [1775482905.091340, 16.973286]: 慢帧 169: 纯计算耗时 141.7ms，分段=pointcloud_to_numpy=111.9ms, inferencer_call=26.7ms, write_temp_bin=0.8ms, camera_projection=0.7ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     16.998430   Duration: 16.997430 / 83.600000                [RUNNING]  Bag Time:     17.048857   Duration: 17.047857 / 83.600000               [INFO] [1775482905.250938, 17.048857]: 转换得到 119446 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[INFO] [1775482905.284648, 17.068986]: 帧 170: 检测到 11 个目标
+[WARN] [1775482905.291035, 17.074015]: 慢帧 170: 纯计算耗时 136.4ms，分段=pointcloud_to_numpy=105.3ms, inferencer_call=28.4ms, rate_control_sleep=5.5ms, write_temp_bin=0.8ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.1ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     17.099154   Duration: 17.098154 / 83.600000                [RUNNING]  Bag Time:     17.149549   Duration: 17.148549 / 83.600000               [INFO] [1775482905.450781, 17.144500]: 转换得到 119408 个点
+Inference         ━━━━━━━━━━          ━━━━━━━━━━     
+[INFO] [1775482905.480493, 17.164654]: 帧 171: 检测到 10 个目标
+[WARN] [1775482905.482133, 17.169682]: 慢帧 171: 纯计算耗时 132.5ms，分段=pointcloud_to_numpy=104.8ms, inferencer_call=25.0ms, rate_control_sleep=0.9ms, write_temp_bin=0.7ms, camera_projection=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.0ms, publish_lidar_tracking=0.0ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     17.199857   Duration: 17.198857 / 83.600000                [RUNNING]  Bag Time:     17.250141   Duration: 17.249141 / 83.600000               [INFO] [1775482905.652346, 17.245113]: 转换得到 119362 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+[INFO] [1775482905.732072, 17.290368]: 帧 172: 检测到 11 个目标
+[WARN] [1775482905.733256, 17.290368]: 慢帧 172: 纯计算耗时 185.4ms，分段=pointcloud_to_numpy=107.3ms, inferencer_call=73.5ms, camera_projection=1.5ms, write_temp_bin=0.7ms, publish_markers=0.5ms, remove_temp_bin=0.3ms, publish_kitti_tracking=0.1ms, extract_detections=0.1ms, publish_lidar_detections=0.1ms, publish_lidar_tracking=0.1ms, republish_pointcloud=0.0ms
+ [RUNNING]  Bag Time:     17.300424   Duration: 17.299424 / 83.600000               [INFO] [1775482905.851011, 17.340600]: 转换得到 119404 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+[INFO] [1775482905.882316, 17.340600]: 帧 173: 检测到 11 个目标
+[run] stop 2026-04-06T21:41:48+08:00
+[ERROR] [1775482908.883587, 17.340600]: 点云处理失败: ROS shutdown request
+[ERROR] [1775482908.884570, 17.340600]: 错误详情: Traceback (most recent call last):
+  File "/home/xc/Projects/ME5400/MMDET3D/local/ros/nodes/kitti_pointpillars_bag_node.py", line 336, in _pointcloud_callback
+    rospy.sleep(1.0 / self.publish_rate - dt)
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/timer.py", line 165, in sleep
+    raise rospy.exceptions.ROSInterruptException("ROS shutdown request")
+rospy.exceptions.ROSInterruptException: ROS shutdown request
+

@@ -6,6 +6,7 @@ KITTI PointPillars ROS节点 - Bag文件版本
 
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -75,10 +76,15 @@ class KittiPointPillarsBagNode:
         self.image_width = int(rospy.get_param('~image_width', 1242))
         self.image_height = int(rospy.get_param('~image_height', 375))
         self.enable_open3d_vis = rospy.get_param('~enable_open3d_vis', False)
+        self.enable_timing_log = rospy.get_param('~enable_timing_log', True)
+        self.timing_log_interval = max(1, int(rospy.get_param('~timing_log_interval', 20)))
+        self.slow_frame_threshold = float(rospy.get_param('~slow_frame_threshold', 0.1))
 
         # Marker 发布状态，用于清理残留标记
         self._last_marker_count = 0
         self._last_marker_frame = self.frame_id
+        self._timing_window_count = 0
+        self._timing_window_sum: Dict[str, float] = {}
         
         # 类别名称和颜色映射
         self.class_names = ['Car', 'Pedestrian', 'Cyclist']
@@ -239,10 +245,11 @@ class KittiPointPillarsBagNode:
     
     def _pointcloud_callback(self, msg: PointCloud2):
         """点云数据回调函数"""
-        start_time = rospy.Time.now()
+        start_time = time.perf_counter()
         try:
             self.frame_count += 1
             frame_id = max(self.frame_count - 1, 0)
+            stage_timings: Dict[str, float] = {}
             
             # 保存原始时间戳，用于后续发布
             original_stamp = msg.header.stamp
@@ -251,33 +258,43 @@ class KittiPointPillarsBagNode:
             self._publish_status(f"处理帧 {frame_id}: {original_stamp}")
             
             # 转换点云数据
+            pointcloud_start = time.perf_counter()
             points = self._pointcloud2_to_numpy(msg)
+            stage_timings['pointcloud_to_numpy'] = time.perf_counter() - pointcloud_start
             if points is None:
                 rospy.logwarn("点云转换失败")
                 return
             
             # 运行推理
-            detections = self._run_inference(points, original_stamp)
+            detections, inference_timings = self._run_inference(points, original_stamp)
+            stage_timings.update(inference_timings)
 
             det_header = Header(
                 stamp=original_stamp,  # 使用原始时间戳
                 frame_id=f"seq_{self.seq}",
             )
+            cam_info_start = time.perf_counter()
             cam_info = self._publish_detection_array(detections, det_header, frame_id)
+            stage_timings['camera_projection'] = time.perf_counter() - cam_info_start
 
             lidar_header = Header(
                 stamp=original_stamp,
                 frame_id=msg.header.frame_id if msg.header.frame_id else self.frame_id,
             )
+            lidar_array_start = time.perf_counter()
             lidar_array = self._detections_to_lidar_array(detections, lidar_header, frame_id)
             self.lidar_detection_pub.publish(lidar_array)
+            stage_timings['publish_lidar_detections'] = time.perf_counter() - lidar_array_start
             
             # 转换为MarkerArray并发布
+            marker_start = time.perf_counter()
             marker_frame_id = msg.header.frame_id if msg.header.frame_id else self.frame_id
             marker_array = self._detections_to_markerarray(detections, marker_frame_id, original_stamp)
             self.marker_pub.publish(marker_array)
+            stage_timings['publish_markers'] = time.perf_counter() - marker_start
             
             # 转换为KITTI tracking格式并发布（相机坐标系，保留用于兼容）
+            kitti_start = time.perf_counter()
             if cam_info is not None:
                 cam_centers, dims_kitti, cam_yaw, class_names, scores, bbox2d_list = cam_info
                 kitti_tracking = self._detections_to_kitti_tracking(
@@ -288,19 +305,25 @@ class KittiPointPillarsBagNode:
             kitti_msg = String()
             kitti_msg.data = kitti_tracking
             self.kitti_tracking_pub.publish(kitti_msg)
+            stage_timings['publish_kitti_tracking'] = time.perf_counter() - kitti_start
             
             # 直接发布LiDAR坐标系检测结果（无需相机标定）
+            lidar_tracking_start = time.perf_counter()
             lidar_tracking = self._detections_to_lidar_tracking(frame_id, detections)
             lidar_msg = String()
             lidar_msg.data = lidar_tracking
             self.lidar_tracking_pub.publish(lidar_msg)
+            stage_timings['publish_lidar_tracking'] = time.perf_counter() - lidar_tracking_start
             
             # 发布原始点云（可选）
+            pointcloud_pub_start = time.perf_counter()
             self.pointcloud_pub.publish(msg)
+            stage_timings['republish_pointcloud'] = time.perf_counter() - pointcloud_pub_start
             
             # 发布检测统计信息
             num_detections = int(detections['bboxes_3d'].shape[0])
             rospy.loginfo(f"帧 {frame_id}: 检测到 {num_detections} 个目标")
+            stage_timings['compute_total'] = time.perf_counter() - start_time
             
             # 频率控制
             current_time = rospy.Time.now()
@@ -309,13 +332,13 @@ class KittiPointPillarsBagNode:
                 rospy.logwarn("检测到仿真时间回退，重置发布节流器状态")
                 dt = 0.0
             if 0.0 < dt < 1.0 / self.publish_rate:
+                sleep_start = time.perf_counter()
                 rospy.sleep(1.0 / self.publish_rate - dt)
+                stage_timings['rate_control_sleep'] = time.perf_counter() - sleep_start
             self.last_time = current_time
             
-            # 频率警告：如果在 1.0 倍速下处理超过 0.1s，则提示性能不足
-            process_duration = (rospy.Time.now() - start_time).to_sec()
-            if process_duration > 0.1:
-                rospy.logwarn(f"警告: 帧 {frame_id} 处理用时 {process_duration:.3f}s > 0.1s。当前硬件在 1.0 倍速下无法保证实时性，建议降低 rosbag 播放倍速。")
+            stage_timings['wall_total'] = time.perf_counter() - start_time
+            self._record_timing(frame_id, stage_timings)
 
         except Exception as e:
             rospy.logerr(f"点云处理失败: {e}")
@@ -342,15 +365,17 @@ class KittiPointPillarsBagNode:
             rospy.logerr(f"点云转换失败: {e}")
             return None
     
-    def _run_inference(self, points: np.ndarray, timestamp) -> Dict[str, Any]:
+    def _run_inference(self, points: np.ndarray, timestamp) -> Tuple[Dict[str, Any], Dict[str, float]]:
         """运行推理"""
         temp_file = None
+        timings: Dict[str, float] = {}
         try:
-            # 保存临时点云文件
+            save_start = time.perf_counter()
             temp_file = f"/tmp/kitti_points_{timestamp.secs}_{timestamp.nsecs}.bin"
             points.astype(np.float32).tofile(temp_file)
-            
-            # 运行推理
+            timings['write_temp_bin'] = time.perf_counter() - save_start
+
+            infer_start = time.perf_counter()
             result = self.inferencer(
                 inputs=dict(points=temp_file),
                 show=self.enable_open3d_vis,
@@ -359,21 +384,24 @@ class KittiPointPillarsBagNode:
                 no_save_vis=True,
                 no_save_pred=True
             )
-            
-            # 提取检测结果
+            timings['inferencer_call'] = time.perf_counter() - infer_start
+
+            extract_start = time.perf_counter()
             detections = self._extract_detections(result)
-            return detections
+            timings['extract_detections'] = time.perf_counter() - extract_start
+            return detections, timings
             
         except Exception as e:
             rospy.logerr(f"推理失败: {e}")
-            return self._empty_detections()
+            return self._empty_detections(), timings
         finally:
-            # 确保临时文件被清理
             if temp_file and os.path.exists(temp_file):
+                cleanup_start = time.perf_counter()
                 try:
                     os.remove(temp_file)
                 except OSError:
                     pass  # 忽略删除失败的错误
+                timings['remove_temp_bin'] = time.perf_counter() - cleanup_start
 
     def _publish_detection_array(
         self,
@@ -739,6 +767,89 @@ class KittiPointPillarsBagNode:
     def _imu_callback(self, msg: Imu) -> None:
         """转发IMU数据"""
         self.imu_pub.publish(msg)
+
+    def _record_timing(self, frame_id: int, stage_timings: Dict[str, float]) -> None:
+        if not self.enable_timing_log:
+            return
+
+        compute_total = stage_timings.get('compute_total', 0.0)
+        if compute_total > self.slow_frame_threshold:
+            ordered = sorted(
+                ((name, duration) for name, duration in stage_timings.items() if name not in {'compute_total', 'wall_total'}),
+                key=lambda item: item[1],
+                reverse=True,
+            )
+            breakdown = ', '.join(
+                f"{name}={duration * 1000.0:.1f}ms" for name, duration in ordered if duration > 0.0
+            )
+            rospy.logwarn(
+                "慢帧 %d: 纯计算耗时 %.1fms，分段=%s",
+                frame_id,
+                compute_total * 1000.0,
+                breakdown,
+            )
+
+        self._timing_window_count += 1
+        for key, value in stage_timings.items():
+            self._timing_window_sum[key] = self._timing_window_sum.get(key, 0.0) + value
+
+        if self._timing_window_count < self.timing_log_interval:
+            return
+
+        count = float(self._timing_window_count)
+        ordered_keys = [
+            'pointcloud_to_numpy',
+            'write_temp_bin',
+            'inferencer_call',
+            'extract_detections',
+            'remove_temp_bin',
+            'camera_projection',
+            'publish_lidar_detections',
+            'publish_markers',
+            'publish_kitti_tracking',
+            'publish_lidar_tracking',
+            'republish_pointcloud',
+            'compute_total',
+            'rate_control_sleep',
+            'wall_total',
+        ]
+        label_map = {
+            'pointcloud_to_numpy': '点云解析',
+            'write_temp_bin': '临时落盘',
+            'inferencer_call': '模型推理',
+            'extract_detections': '结果提取',
+            'remove_temp_bin': '清理临时文件',
+            'camera_projection': '相机坐标转换',
+            'publish_lidar_detections': '发布Detection3DArray',
+            'publish_markers': '发布MarkerArray',
+            'publish_kitti_tracking': '发布KITTI串',
+            'publish_lidar_tracking': '发布LiDAR串',
+            'republish_pointcloud': '转发点云',
+            'compute_total': '纯计算总耗时',
+            'rate_control_sleep': '限速休眠',
+            'wall_total': '墙钟总耗时',
+        }
+        timing_parts = []
+        seen = set()
+        for key in ordered_keys:
+            if key not in self._timing_window_sum:
+                continue
+            timing_parts.append(
+                f"{label_map[key]}={1000.0 * self._timing_window_sum[key] / count:.1f}ms"
+            )
+            seen.add(key)
+        for key in sorted(self._timing_window_sum.keys()):
+            if key in seen:
+                continue
+            timing_parts.append(f"{key}={1000.0 * self._timing_window_sum[key] / count:.1f}ms")
+
+        rospy.loginfo(
+            "PointPillars计时汇总(%d帧均值): %s",
+            self._timing_window_count,
+            ', '.join(timing_parts),
+        )
+        self._timing_window_count = 0
+        self._timing_window_sum = {}
 
 
 def main():

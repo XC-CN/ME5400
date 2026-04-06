@@ -1,0 +1,9 @@
+[run] start 2026-04-06T21:34:03+08:00
+[run] ROS_HOME=/home/xc/Projects/ME5400/agent/logs/ros_runtime/home ROS_LOG_DIR=/home/xc/Projects/ME5400/agent/logs/ros_runtime/log MPLCONFIGDIR=/home/xc/Projects/ME5400/agent/logs/ros_runtime/mpl
+ERROR: Unable to start XML-RPC server: Operation not permitted
+[ERROR] [1775482445.870904]: 节点运行错误: init_node interrupted before it could complete
+[run] rosbag start 2026-04-06T21:34:23+08:00
+Usage: rosbag play BAGFILE1 [BAGFILE2 BAGFILE3 ...]
+
+rosbag: error: Cannot find rosbag/play executable
+[run] stop 2026-04-06T21:34:26+08:00

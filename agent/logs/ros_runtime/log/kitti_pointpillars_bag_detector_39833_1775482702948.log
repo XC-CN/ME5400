@@ -1,0 +1,39 @@
+[rospy.client][INFO] 2026-04-06 21:38:22,951: init_node, name[/kitti_pointpillars_bag_detector_39833_1775482702948], pid[39833]
+[xmlrpc][INFO] 2026-04-06 21:38:22,951: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-06 21:38:22,951: Started XML-RPC server [http://z790m:40385/]
+[rospy.init][INFO] 2026-04-06 21:38:22,951: ROS Slave URI: [http://z790m:40385/]
+[rospy.impl.masterslave][INFO] 2026-04-06 21:38:22,951: _ready: http://z790m:40385/
+[rospy.registration][INFO] 2026-04-06 21:38:22,952: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-06 21:38:22,952: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-06 21:38:23,052: registered with master
+[rospy.rosout][INFO] 2026-04-06 21:38:23,052: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-06 21:38:23,053: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-06 21:38:23,054: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-06 21:38:23,054: connected to core topic /clock
+[rosout][INFO] 2026-04-06 21:38:23,058: 加载标定文件成功: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0020.txt
+[rosout][INFO] 2026-04-06 21:38:23,058: 正在初始化PointPillars推理器...
+[rospy.internal][INFO] 2026-04-06 21:38:23,380: topic[/rosout] adding connection to [/rosout], count 0
+[rosout][INFO] 2026-04-06 21:38:23,815: 推理器初始化成功
+[rosout][INFO] 2026-04-06 21:38:23,818: KITTI PointPillars Bag ROS节点初始化完成
+[rosout][INFO] 2026-04-06 21:38:23,818: 配置文件: /home/xc/Projects/ME5400/MMDET3D/configs/pointpillars/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
+[rosout][INFO] 2026-04-06 21:38:23,819: 检查点: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+[rosout][INFO] 2026-04-06 21:38:23,819: Bag文件: /home/xc/Projects/ME5400/MMDET3D/data/kitti/seq_0019_with_det.bag
+[rosout][INFO] 2026-04-06 21:38:23,819: 数据集路径: /home/xc/Projects/ME5400/Data_Tracking/training / 序列: 0020
+[rosout][INFO] 2026-04-06 21:38:23,820: 订阅话题: /kitti/velo/pointcloud
+[rosout][INFO] 2026-04-06 21:38:23,820: 发布频率: 10.0 Hz
+[rosout][INFO] 2026-04-06 21:38:23,820: 等待点云数据...
+[rospy.internal][INFO] 2026-04-06 21:38:33,259: topic[/clock] adding connection to [http://z790m:45353/], count 0
+[rospy.internal][ERROR] 2026-04-06 21:38:33,300: Unable to initiate TCP/IP socket to z790m:38203 (http://z790m:45353/): Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/impl/tcpros_base.py", line 569, in connect
+    self.read_header()
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/impl/tcpros_base.py", line 664, in read_header
+    self._validate_header(read_ros_handshake_header(sock, self.read_buff, self.protocol.buff_size))
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/impl/tcpros_base.py", line 607, in _validate_header
+    raise TransportInitError("remote error reported: %s"%header['error'])
+rospy.exceptions.TransportInitError: remote error reported: received a connection for a nonexistent topic [/clock] from [TCPROS connection on port 38203 to [100.116.192.30:52326 on socket 13]] [/kitti_pointpillars_bag_detector_39833_1775482702948].
+
+[rospy.internal][ERROR] 2026-04-06 21:38:33,300: unable to create subscriber transport: remote error reported: received a connection for a nonexistent topic [/clock] from [TCPROS connection on port 38203 to [100.116.192.30:52326 on socket 13]] [/kitti_pointpillars_bag_detector_39833_1775482702948]..  Will try again in 0.5s
+[rospy.core][INFO] 2026-04-06 21:38:36,470: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-06 21:38:36,471: topic[/rosout] removing connection to /rosout
+[rospy.impl.masterslave][INFO] 2026-04-06 21:38:36,472: signal-15
+[rospy.core][INFO] 2026-04-06 21:38:37,074: signal_shutdown [atexit]

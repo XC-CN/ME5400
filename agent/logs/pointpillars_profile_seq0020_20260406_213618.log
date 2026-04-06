@@ -1,0 +1,24 @@
+[run] start 2026-04-06T21:36:21+08:00
+[run] ROS_HOME=/home/xc/Projects/ME5400/agent/logs/ros_runtime/home ROS_LOG_DIR=/home/xc/Projects/ME5400/agent/logs/ros_runtime/log MPLCONFIGDIR=/home/xc/Projects/ME5400/agent/logs/ros_runtime/mpl
+[INFO] [1775482583.708221, 0.000000]: 加载标定文件成功: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0016.txt
+[INFO] [1775482583.708877, 0.000000]: 正在初始化PointPillars推理器...
+/home/xc/miniconda3/envs/ME5400/lib/python3.10/site-packages/mmdet3d/models/dense_heads/anchor3d_head.py:94: UserWarning: dir_offset and dir_limit_offset will be depressed and be incorporated into box coder in the future
+  warnings.warn(
+Loads checkpoint by local backend from path: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+04/06 21:36:24 - mmengine - WARNING - Failed to search registry with scope "mmdet3d" in the "function" registry tree. As a workaround, the current "function" registry in "mmengine" is used to build instance. This may cause unexpected failure when running the built modules. Please check whether "mmdet3d" is a correct scope, or whether the registry is initialized.
+/home/xc/miniconda3/envs/ME5400/lib/python3.10/site-packages/mmengine/visualization/visualizer.py:196: UserWarning: Failed to add <class 'mmengine.visualization.vis_backend.LocalVisBackend'>, please provide the `save_dir` argument.
+  warnings.warn(f'Failed to add {vis_backend.__class__}, '
+[INFO] [1775482584.548934, 0.000000]: 推理器初始化成功
+[INFO] [1775482584.551946, 0.000000]: KITTI PointPillars Bag ROS节点初始化完成
+[INFO] [1775482584.552309, 0.000000]: 配置文件: /home/xc/Projects/ME5400/MMDET3D/configs/pointpillars/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
+[INFO] [1775482584.552632, 0.000000]: 检查点: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+[INFO] [1775482584.552931, 0.000000]: Bag文件: /home/xc/Projects/ME5400/MMDET3D/data/kitti/seq_0019_with_det.bag
+[INFO] [1775482584.553208, 0.000000]: 数据集路径: /home/xc/Projects/ME5400/Data_Tracking/training / 序列: 0016
+[INFO] [1775482584.553458, 0.000000]: 订阅话题: /kitti/velo/pointcloud
+[INFO] [1775482584.553705, 0.000000]: 发布频率: 10.0 Hz
+[INFO] [1775482584.553949, 0.000000]: 等待点云数据...
+[run] rosbag start 2026-04-06T21:36:41+08:00
+Usage: rosbag play BAGFILE1 [BAGFILE2 BAGFILE3 ...]
+
+rosbag: error: Cannot find rosbag/play executable
+[run] stop 2026-04-06T21:36:45+08:00

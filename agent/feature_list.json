@@ -65,6 +65,21 @@
       "passes": false,
       "last_verified": null,
       "notes": ""
+    },
+    {
+      "id": "pointpillars_seq_0020_compute_time_below_100ms",
+      "priority": "high",
+      "category": "performance",
+      "description": "The PointPillars online node keeps pure compute time at or below 100 ms on sequence 0020, with point cloud conversion no longer dominating the timing breakdown.",
+      "verification": "Run a short PointPillars profiling session on sequence 0020 and confirm the latest 20-frame timing summary reports `纯计算总耗时<=100ms`.",
+      "artifacts": [
+        "MMDET3D/local/ros/nodes/kitti_pointpillars_bag_node.py",
+        "agent/logs/pointpillars_profile_seq0020_20260406_214054.log",
+        "agent/progress.md"
+      ],
+      "passes": false,
+      "last_verified": null,
+      "notes": ""
     }
   ]
 }
