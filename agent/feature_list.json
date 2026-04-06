@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "last_updated": "2026-04-06",
+  "rules": [
+    "Do not delete items.",
+    "Only update passes, last_verified, and notes after running the stated verification command.",
+    "Prefer working on one failing item per session."
+  ],
+  "features": [
+    {
+      "id": "agent_initializer_available",
+      "priority": "high",
+      "category": "agent_harness",
+      "description": "A fresh agent session can validate the repo, ROS setup, dataset pointers, and activation path from one entrypoint.",
+      "verification": "bash agent/init.sh --check-only --seq 0020",
+      "artifacts": [
+        "agent/init.sh",
+        "Scripts/utils/setup_ros_env.sh"
+      ],
+      "passes": true,
+      "last_verified": "2026-04-06",
+      "notes": "Validated as part of bash agent/check_smoke.sh --seq 0020."
+    },
+    {
+      "id": "quick_smoke_regenerates_machine_readable_metrics",
+      "priority": "high",
+      "category": "evaluation",
+      "description": "The quick smoke path can regenerate metrics.txt, metrics.json, and evaluation_result.png from saved trajectories without rerunning the full pipeline.",
+      "verification": "bash agent/check_smoke.sh --seq 0020",
+      "artifacts": [
+        "Results/0020_results/trajectory.txt",
+        "Results/0020_results/trajectory_baseline.txt",
+        "Scripts/evaluation/evaluate_trajectory.py"
+      ],
+      "passes": true,
+      "last_verified": "2026-04-06",
+      "notes": "Quick smoke regenerated metrics.txt, metrics.json, and evaluation_result.png under /tmp/me5400_agent_smoke/0020_results."
+    },
+    {
+      "id": "headless_dual_run_seq_0020_generates_comparison_outputs",
+      "priority": "high",
+      "category": "integration",
+      "description": "The full headless dual pipeline for sequence 0020 completes and emits metrics.txt plus metrics.json under Results/0020_results.",
+      "verification": "bash agent/check_smoke.sh --full --seq 0020",
+      "artifacts": [
+        "Scripts/run_all.sh",
+        "Results/0020_results/metrics.txt",
+        "Results/0020_results/metrics.json"
+      ],
+      "passes": false,
+      "last_verified": null,
+      "notes": ""
+    },
+    {
+      "id": "headless_dual_run_seq_0019_generates_comparison_outputs",
+      "priority": "medium",
+      "category": "integration",
+      "description": "The full headless dual pipeline for sequence 0019 completes and emits metrics.txt plus metrics.json under Results/0019_results.",
+      "verification": "bash agent/check_smoke.sh --full --seq 0019",
+      "artifacts": [
+        "Scripts/run_all.sh",
+        "Results/0019_results/metrics.txt",
+        "Results/0019_results/metrics.json"
+      ],
+      "passes": false,
+      "last_verified": null,
+      "notes": ""
+    }
+  ]
+}

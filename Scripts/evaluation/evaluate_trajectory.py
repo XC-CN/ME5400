@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -208,9 +209,16 @@ def main():
     save_path = output_dir / "evaluation_result.png"
     plt.savefig(save_path)
     print(f"Plot saved to {save_path}")
-    
-    # Save text metrics
-    with open(output_dir / "metrics.txt", "w") as f:
+
+    improvement_value = None
+    if rmse_base is not None and rmse_base > 0:
+        improvement_value = improvement
+
+    metrics_txt_path = output_dir / "metrics.txt"
+    metrics_json_path = output_dir / "metrics.json"
+
+    # Save text metrics for human-readable summaries and README references.
+    with open(metrics_txt_path, "w") as f:
         f.write(f"Optimized RMSE: {rmse_opt}\n")
         f.write(f"Optimized Mean Error: {np.mean(error_opt)}\n")
         f.write(f"Optimized Max Error: {np.max(error_opt)}\n")
@@ -220,6 +228,38 @@ def main():
              f.write(f"Baseline Max Error: {np.max(error_base)}\n")
              if rmse_base > 0:
                 f.write(f"Improvement: {improvement:.2f}%\n")
+
+    metrics_payload = {
+        "sequence": seq_name,
+        "pred_path": str(Path(args.pred).resolve()),
+        "baseline_path": str(Path(args.baseline).resolve()) if args.baseline else None,
+        "gt_path": str(Path(args.gt).resolve()),
+        "comparison_available": rmse_base is not None,
+        "optimized": {
+            "rmse": float(rmse_opt),
+            "mean_error": float(np.mean(error_opt)),
+            "max_error": float(np.max(error_opt)),
+            "num_samples": int(len(error_opt)),
+        },
+        "baseline": None,
+        "improvement_percent": float(improvement_value) if improvement_value is not None else None,
+        "artifacts": {
+            "plot": str(save_path.resolve()),
+            "metrics_txt": str(metrics_txt_path.resolve()),
+            "metrics_json": str(metrics_json_path.resolve()),
+        },
+    }
+    if rmse_base is not None:
+        metrics_payload["baseline"] = {
+            "rmse": float(rmse_base),
+            "mean_error": float(np.mean(error_base)),
+            "max_error": float(np.max(error_base)),
+            "num_samples": int(len(error_base)),
+        }
+
+    with open(metrics_json_path, "w") as f:
+        json.dump(metrics_payload, f, ensure_ascii=True, indent=2)
+    print(f"Metrics saved to {metrics_txt_path} and {metrics_json_path}")
 
 if __name__ == "__main__":
     main()

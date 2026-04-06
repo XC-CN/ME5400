@@ -14,6 +14,7 @@
 - [🛠️ 环境与安装](#️-环境与安装)
 - [📊 数据准备](#-数据准备)
 - [🎯 使用指南](#-使用指南)
+- [🤖 Agent 开发工作流](#-agent-开发工作流)
 - [🔧 配置说明](#-配置说明)
 
 ## 📋 项目介绍
@@ -196,6 +197,7 @@ ME5400/
 │   └── run_all.sh                     # 全流程一键启动脚本
 ├── Data_Tracking/                     # KITTI Tracking 数据与示例 rosbag
 ├── Results/                           # 评估结果图表、归档轨迹与自动生成的 PCD 局部地图
+├── agent/                             # 长时 agent harness（init、progress、feature list、smoke check）
 ├── image/                             # 项目相关图片素材
 └── README.md
 ```
@@ -526,6 +528,42 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 ./Scripts/joint_backend/run_joint_backend_ego.sh \
   --config ~/ME5400/catkin_ws/src/ME5400/config/joint_backend_ego.yaml
 ```
+
+## 🤖 Agent 开发工作流
+
+为了让长时 agent 可以稳定接力，本仓库新增了一个最小可用的 harness：
+
+- `agent/init.sh`：统一检查仓库路径、ROS 环境、Conda 环境、数据集路径，并可选触发 `catkin_make`
+- `agent/check_smoke.sh`：默认对已有轨迹做快速 smoke test；使用 `--full` 时会运行 `run_all.sh --headless`
+- `agent/feature_list.json`：机器可读的验收条目，agent 每次只应推进一个 `passes=false` 的项
+- `agent/progress.md`：append-only 交接日志，记录本次修改、验证结果、风险和下一步
+
+推荐 agent session 固定按以下顺序执行：
+
+```bash
+# 1) 重新建立上下文
+bash agent/init.sh --check-only --seq 0020
+
+# 2) 阅读交接与验收状态
+cat agent/progress.md
+cat agent/feature_list.json
+git log --oneline -5
+
+# 3) 先跑快速验证，再开始改代码
+bash agent/check_smoke.sh --seq 0020
+```
+
+如果要做真正的端到端回归，再执行：
+
+```bash
+bash agent/check_smoke.sh --full --seq 0020
+```
+
+说明：
+
+- 现有 `Results/<序列号>_results/metrics.txt` 保持不变，兼容 README 和人工查看
+- 评估脚本现在会**额外**生成 `Results/<序列号>_results/metrics.json`，供 agent 程序化读取和判断
+- quick smoke 默认只重算评估结果，不会重新跑完整 bag，适合作为每次改动前后的低成本基线
 
 ### 🔧 配置说明
 
