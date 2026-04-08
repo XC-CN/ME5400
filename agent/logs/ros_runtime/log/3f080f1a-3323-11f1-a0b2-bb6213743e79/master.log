@@ -1,0 +1,11 @@
+[rosmaster.main][INFO] 2026-04-08 16:16:30,142: initialization complete, waiting for shutdown
+[rosmaster.main][INFO] 2026-04-08 16:16:30,142: Starting ROS Master Node
+[xmlrpc][INFO] 2026-04-08 16:16:30,143: XML-RPC server binding to 0.0.0.0:11311
+[xmlrpc][INFO] 2026-04-08 16:16:30,143: Started XML-RPC server [http://z790m:11311/]
+[xmlrpc][INFO] 2026-04-08 16:16:30,143: xml rpc node: starting XML-RPC server
+[rosmaster.master][INFO] 2026-04-08 16:16:30,143: Master initialized: port[11311], uri[http://z790m:11311/]
+[rosmaster.master][INFO] 2026-04-08 16:16:30,157: +PARAM [/run_id] by /roslaunch
+[rosmaster.master][INFO] 2026-04-08 16:16:30,157: +PARAM [/roslaunch/uris/host_z790m__36963] by /roslaunch
+[rosmaster.main][INFO] 2026-04-08 16:16:30,240: keyboard interrupt, will exit
+[rosmaster.main][INFO] 2026-04-08 16:16:30,241: stopping master...
+[rospy.core][INFO] 2026-04-08 16:16:30,241: signal_shutdown [atexit]

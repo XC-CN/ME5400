@@ -15,7 +15,7 @@ import rospy
 import tf.transformations as tf_trans
 import torch
 from sensor_msgs import point_cloud2
-from sensor_msgs.msg import Imu, PointCloud2
+from sensor_msgs.msg import Imu, PointCloud2, PointField
 from geometry_msgs.msg import Point
 from std_msgs.msg import Header, String
 from visualization_msgs.msg import Marker, MarkerArray
@@ -31,6 +31,19 @@ from ME5400.msg import Detection3D, Detection3DArray
 # MMDetection3D相关
 from mmdet3d.apis import LidarDet3DInferencer
 from mmdet3d.structures import Box3DMode, LiDARInstance3DBoxes
+
+POINTFIELD_NUMPY_DTYPES = {
+    PointField.INT8: 'i1',
+    PointField.UINT8: 'u1',
+    PointField.INT16: 'i2',
+    PointField.UINT16: 'u2',
+    PointField.INT32: 'i4',
+    PointField.UINT32: 'u4',
+    PointField.FLOAT32: 'f4',
+    PointField.FLOAT64: 'f8',
+}
+
+POINTCLOUD_REQUIRED_FIELDS = ('x', 'y', 'z', 'intensity')
 
 
 class KittiPointPillarsBagNode:
@@ -85,6 +98,8 @@ class KittiPointPillarsBagNode:
         self._last_marker_frame = self.frame_id
         self._timing_window_count = 0
         self._timing_window_sum: Dict[str, float] = {}
+        self._pointcloud_dtype_signature: Optional[Tuple[bool, int, Tuple[Tuple[str, int, int, int], ...]]] = None
+        self._pointcloud_dtype: Optional[np.dtype] = None
         
         # 类别名称和颜色映射
         self.class_names = ['Car', 'Pedestrian', 'Cyclist']
@@ -348,22 +363,136 @@ class KittiPointPillarsBagNode:
     def _pointcloud2_to_numpy(self, msg: PointCloud2) -> Optional[np.ndarray]:
         """将PointCloud2消息转换为numpy数组"""
         try:
-            # 解析点云数据
-            points_list = []
-            for data in point_cloud2.read_points(msg, field_names=("x", "y", "z", "intensity"), skip_nans=True):
-                points_list.append([data[0], data[1], data[2], data[3]])  # [x, y, z, intensity]
-            
-            if len(points_list) == 0:
+            points = self._pointcloud2_to_numpy_fast(msg)
+            if points is None:
+                points = self._pointcloud2_to_numpy_fallback(msg)
+
+            if points is None or points.size == 0:
                 rospy.logwarn("点云为空")
                 return None
-            
-            points = np.array(points_list, dtype=np.float32)
+
             rospy.loginfo(f"转换得到 {len(points)} 个点")
             return points
-            
+
         except Exception as e:
             rospy.logerr(f"点云转换失败: {e}")
             return None
+
+    def _pointcloud2_to_numpy_fast(self, msg: PointCloud2) -> Optional[np.ndarray]:
+        """使用numpy直接解析PointCloud2二进制buffer，避免逐点Python循环。"""
+        structured_dtype = self._get_pointcloud_structured_dtype(msg)
+        if structured_dtype is None:
+            return None
+
+        num_points = msg.width * msg.height
+        if num_points == 0:
+            return None
+
+        if msg.height == 1 or msg.row_step == msg.point_step * msg.width:
+            structured = np.frombuffer(msg.data, dtype=structured_dtype, count=num_points)
+        else:
+            structured = np.ndarray(
+                shape=(msg.height, msg.width),
+                dtype=structured_dtype,
+                buffer=msg.data,
+                strides=(msg.row_step, msg.point_step),
+            ).reshape(-1)
+
+        x = structured['x']
+        y = structured['y']
+        z = structured['z']
+        intensity = structured['intensity']
+        valid_mask = np.isfinite(x) & np.isfinite(y) & np.isfinite(z) & np.isfinite(intensity)
+        valid_count = int(np.count_nonzero(valid_mask))
+        if valid_count == 0:
+            return None
+
+        points = np.empty((valid_count, 4), dtype=np.float32)
+        if valid_count == num_points:
+            points[:, 0] = x
+            points[:, 1] = y
+            points[:, 2] = z
+            points[:, 3] = intensity
+            return points
+
+        points[:, 0] = x[valid_mask]
+        points[:, 1] = y[valid_mask]
+        points[:, 2] = z[valid_mask]
+        points[:, 3] = intensity[valid_mask]
+        return points
+
+    def _pointcloud2_to_numpy_fallback(self, msg: PointCloud2) -> Optional[np.ndarray]:
+        """字段布局不满足快速路径时，回退到兼容的逐点解析实现。"""
+        points_list = []
+        for data in point_cloud2.read_points(msg, field_names=POINTCLOUD_REQUIRED_FIELDS, skip_nans=True):
+            points_list.append([data[0], data[1], data[2], data[3]])
+
+        if not points_list:
+            return None
+
+        return np.asarray(points_list, dtype=np.float32)
+
+    def _get_pointcloud_structured_dtype(self, msg: PointCloud2) -> Optional[np.dtype]:
+        signature = (
+            msg.is_bigendian,
+            msg.point_step,
+            tuple((field.name, field.offset, field.datatype, field.count) for field in msg.fields),
+        )
+        if signature == self._pointcloud_dtype_signature:
+            return self._pointcloud_dtype
+
+        endianness = '>' if msg.is_bigendian else '<'
+        available_fields = {field.name: field for field in msg.fields}
+
+        names: List[str] = []
+        formats: List[np.dtype] = []
+        offsets: List[int] = []
+        for field_name in POINTCLOUD_REQUIRED_FIELDS:
+            field = available_fields.get(field_name)
+            if field is None:
+                self._pointcloud_dtype_signature = signature
+                self._pointcloud_dtype = None
+                rospy.logwarn_once(
+                    "PointCloud2缺少字段%s，回退到逐点解析",
+                    field_name,
+                )
+                return None
+
+            if field.count != 1:
+                self._pointcloud_dtype_signature = signature
+                self._pointcloud_dtype = None
+                rospy.logwarn_once(
+                    "PointCloud2字段%s count=%d，回退到逐点解析",
+                    field_name,
+                    field.count,
+                )
+                return None
+
+            numpy_code = POINTFIELD_NUMPY_DTYPES.get(field.datatype)
+            if numpy_code is None:
+                self._pointcloud_dtype_signature = signature
+                self._pointcloud_dtype = None
+                rospy.logwarn_once(
+                    "PointCloud2字段%s datatype=%d不支持，回退到逐点解析",
+                    field_name,
+                    field.datatype,
+                )
+                return None
+
+            names.append(field.name)
+            formats.append(np.dtype(f'{endianness}{numpy_code}'))
+            offsets.append(field.offset)
+
+        self._pointcloud_dtype_signature = signature
+        self._pointcloud_dtype = np.dtype(
+            {
+                'names': names,
+                'formats': formats,
+                'offsets': offsets,
+                'itemsize': msg.point_step,
+            }
+        )
+        return self._pointcloud_dtype
     
     def _run_inference(self, points: np.ndarray, timestamp) -> Tuple[Dict[str, Any], Dict[str, float]]:
         """运行推理"""
