@@ -431,11 +431,11 @@ ME5400/
 如果您只需要跑单一环境获取固定数据，或进行单步调试开发，可直接使用独立脚本（同样支持 `--headless`）：
 
 ```bash
-# 仅运行纯净基准测试 (不加载庞大的感知检测模块，仅执行原生基础版 FAST-LIO)
+# 仅运行纯净基准测试 (只启动原生 FAST-LIO mapping，不启动 pose_bridge / 感知链)
 ./Scripts/run_baseline.sh 0020
 ./Scripts/run_baseline.sh --save-map 0020
 
-# 仅运行深度学习优化管线 (满载运行 PointPillars + MCTrack + 动态加权机制的 FAST-LIO)
+# 仅运行深度学习优化管线 (启动 PointPillars + MCTrack + pose_bridge + 动态加权 FAST-LIO)
 ./Scripts/run_optimized.sh 0020
 ./Scripts/run_optimized.sh --headless 0020
 ./Scripts/run_optimized.sh --save-map 0020
@@ -479,11 +479,11 @@ roscore
 FAST-LIO 提供三种启动方式：
 
 ```bash
-# 启用动态权重优化（默认）
+# 启用动态权重优化，并同时启动 pose_bridge（用于优化链路 / MCTrack）
 ./Scripts/fastlio/run_fastlio.sh both
 
-# 禁用动态权重优化，使用原始方法
-./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
+# 纯净 Baseline：只启动原生 FAST-LIO mapping
+./Scripts/fastlio/run_fastlio.sh mapping use_dynamic_weights:=false
 
 # 如需在退出时额外保存全局地图
 ./Scripts/fastlio/run_fastlio.sh both pcd_save_en:=true
@@ -491,9 +491,10 @@ FAST-LIO 提供三种启动方式：
 
 > **使用说明**：
 >
-> - `both` 模式会同时启动 mapping 和 pose_bridge（mapping 在后台运行）
+> - `mapping` 模式是纯 FAST-LIO，仅启动 `laserMapping`
+> - `both` 模式会同时启动 mapping 和 pose_bridge（供优化链路 / MCTrack 订阅 FAST-LIO 位姿）
 > - 动态权重优化功能默认启用，可通过 `use_dynamic_weights` 参数控制
-> - FAST-LIO 会发布 `/Odometry_imu_predicted` 话题（IMU 预测位姿，LiDAR 更新前），用于提高 MCTrack 的实时性
+> - FAST-LIO 会同时发布 `/Odometry` 与 `/Odometry_imu_predicted`；当前优化链路默认订阅校正后的 `/Odometry`
 
 #### 6. **启动 MCTrack 在线节点（终端 D）**
 
@@ -630,11 +631,11 @@ mapping:
 **使用方法**：
 
 ```bash
-# 启用动态权重优化（默认）
+# 启用动态权重优化，并同时启动 pose_bridge
 ./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=true
 
-# 禁用动态权重优化，使用原始方法
-./Scripts/fastlio/run_fastlio.sh both use_dynamic_weights:=false
+# 纯净 Baseline：只启动原生 FAST-LIO mapping
+./Scripts/fastlio/run_fastlio.sh mapping use_dynamic_weights:=false
 ```
 
 **参数配置**：

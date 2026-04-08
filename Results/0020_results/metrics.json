@@ -11,12 +11,12 @@
     "num_samples": 823
   },
   "baseline": {
-    "rmse": 29.37141737365786,
-    "mean_error": 26.497113802827197,
-    "max_error": 39.85713579829385,
+    "rmse": 11.732269804172235,
+    "mean_error": 10.72914686917418,
+    "max_error": 17.088827622414147,
     "num_samples": 821
   },
-  "improvement_percent": 66.27898537111818,
+  "improvement_percent": 15.580359857059237,
   "artifacts": {
     "plot": "/home/xc/Projects/ME5400/Results/0020_results/evaluation_result.png",
     "metrics_txt": "/home/xc/Projects/ME5400/Results/0020_results/metrics.txt",

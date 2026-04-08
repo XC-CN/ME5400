@@ -61,9 +61,7 @@ echo "[INFO] FAST-LIO 地图保存: $SAVE_MAP"
 
 # 0. 环境清理
 echo "[步骤 0] 正在清理残留环境..."
-killall -9 rviz 2>/dev/null || true
-# 不再强制清理 roscore，允许外部(如 run_all.sh)维持其生命周期
-killall -9 python 2>/dev/null | grep "ros" || true # 谨慎清理
+bash "$PROJECT_ROOT/Scripts/utils/cleanup_ros_runtime.sh"
 sleep 1
 
 # 1. 启动 roscore (条件启动)
@@ -114,10 +112,11 @@ echo "========================================================="
 echo "   运行基准测试 (单独 FAST-LIO)                          "
 echo "========================================================="
 
-echo "[步骤 4] 正在启动 FAST-LIO (基准模式: use_dynamic_weights=false)..."
-# 注意：基准模式直接订阅 Rosbag 中的原始话题，而不通过检测节点中转
+echo "[步骤 4] 正在启动 FAST-LIO (基准模式: 纯 mapping, use_dynamic_weights=false)..."
+# 注意：基准模式只启动原生 FAST-LIO mapping，
+# 直接订阅 Rosbag 中的原始话题，不启动 pose_bridge / MCTrack / 检测中转链
 FASTLIO_ARGS=(
-    both
+    mapping
     use_dynamic_weights:=false
     lidar_topic:=/kitti/velo/pointcloud
     imu_topic:=/kitti/oxts/imu

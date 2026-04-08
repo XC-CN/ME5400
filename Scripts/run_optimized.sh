@@ -63,9 +63,7 @@ echo "[INFO] FAST-LIO 地图保存: $SAVE_MAP"
 
 # 0. 环境清理
 echo "[步骤 0] 正在清理残留环境..."
-killall -9 rviz 2>/dev/null || true
-# 不再强制清理 roscore，允许外部(如 run_all.sh)维持其生命周期
-killall -9 python 2>/dev/null | grep "ros" || true # 谨慎清理
+bash "$PROJECT_ROOT/Scripts/utils/cleanup_ros_runtime.sh"
 sleep 1
 
 # 1. 启动 roscore (条件启动)
