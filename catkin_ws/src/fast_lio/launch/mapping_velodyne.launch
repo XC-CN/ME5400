@@ -10,8 +10,8 @@
   <arg name="pcd_save_en" default="false" />
 
   <!-- 话题订阅配置 -->
-  <arg name="lidar_topic" default="/detection/pointcloud" />
-  <arg name="imu_topic" default="/detection/imu" />
+  <arg name="lidar_topic" default="/kitti/velo/pointcloud" />
+  <arg name="imu_topic" default="/kitti/oxts/imu" />
 
   <!-- 使用仿真时间（若播放 rosbag，应设置为 true） -->
   <param name="/use_sim_time" value="true" />

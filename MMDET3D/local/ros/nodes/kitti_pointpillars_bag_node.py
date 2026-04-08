@@ -92,6 +92,7 @@ class KittiPointPillarsBagNode:
         self.enable_timing_log = rospy.get_param('~enable_timing_log', True)
         self.timing_log_interval = max(1, int(rospy.get_param('~timing_log_interval', 20)))
         self.slow_frame_threshold = float(rospy.get_param('~slow_frame_threshold', 0.1))
+        self.republish_raw_topics = rospy.get_param('~republish_raw_topics', False)
 
         # Marker 发布状态，用于清理残留标记
         self._last_marker_count = 0
@@ -118,8 +119,12 @@ class KittiPointPillarsBagNode:
         self.kitti_tracking_pub = rospy.Publisher('/detection/kitti_tracking', String, queue_size=10)
         self.lidar_tracking_pub = rospy.Publisher('/detection/lidar_tracking', String, queue_size=10)  # 新增：LiDAR坐标系
         self.lidar_detection_pub = rospy.Publisher('/detection/lidar_detections', Detection3DArray, queue_size=10)
-        self.pointcloud_pub = rospy.Publisher('/detection/pointcloud', PointCloud2, queue_size=10)
-        self.imu_pub = rospy.Publisher('/detection/imu', Imu, queue_size=10)
+        self.pointcloud_pub = None
+        self.imu_pub = None
+        # 原始点云/IMU 转发仅保留为兼容开关，默认关闭。
+        if self.republish_raw_topics:
+            self.pointcloud_pub = rospy.Publisher('/detection/pointcloud', PointCloud2, queue_size=10)
+            self.imu_pub = rospy.Publisher('/detection/imu', Imu, queue_size=10)
         
         # 订阅点云话题
         self.pointcloud_sub = rospy.Subscriber('/kitti/velo/pointcloud', PointCloud2, self._pointcloud_callback, queue_size=10)
@@ -136,6 +141,7 @@ class KittiPointPillarsBagNode:
         rospy.loginfo(f"数据集路径: {self.dataset_root} / 序列: {self.seq}")
         rospy.loginfo(f"订阅话题: /kitti/velo/pointcloud")
         rospy.loginfo(f"发布频率: {self.publish_rate} Hz")
+        rospy.loginfo(f"转发原始点云/IMU: {self.republish_raw_topics}")
     
     def _init_inferencer(self):
         """初始化MMDetection3D推理器"""
@@ -331,9 +337,10 @@ class KittiPointPillarsBagNode:
             stage_timings['publish_lidar_tracking'] = time.perf_counter() - lidar_tracking_start
             
             # 发布原始点云（可选）
-            pointcloud_pub_start = time.perf_counter()
-            self.pointcloud_pub.publish(msg)
-            stage_timings['republish_pointcloud'] = time.perf_counter() - pointcloud_pub_start
+            if self.pointcloud_pub is not None:
+                pointcloud_pub_start = time.perf_counter()
+                self.pointcloud_pub.publish(msg)
+                stage_timings['republish_pointcloud'] = time.perf_counter() - pointcloud_pub_start
             
             # 发布检测统计信息
             num_detections = int(detections['bboxes_3d'].shape[0])
@@ -894,8 +901,9 @@ class KittiPointPillarsBagNode:
         self.status_pub.publish(status_msg)
 
     def _imu_callback(self, msg: Imu) -> None:
-        """转发IMU数据"""
-        self.imu_pub.publish(msg)
+        """按需转发IMU数据。"""
+        if self.imu_pub is not None:
+            self.imu_pub.publish(msg)
 
     def _record_timing(self, frame_id: int, stage_timings: Dict[str, float]) -> None:
         if not self.enable_timing_log:

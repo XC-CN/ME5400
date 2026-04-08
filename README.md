@@ -383,6 +383,7 @@ ME5400/
 ## 🎯 使用指南
 
 > 当前检测由 MMDetection3D PointPillars 推理节点发布至 `/detection/bboxes_3d` 与 `/detection/kitti_tracking`；新增 `/detection/lidar_detections`（`Detection3DArray`，带原始点云时间戳），后续如需替换，可接入其他检测器但需保持话题接口一致。
+> 默认链路下，RViz 与 FAST-LIO 直接使用 `/kitti/velo/pointcloud` 和 `/kitti/oxts/imu`。
 
 运行前请准备好 KITTI Tracking 数据目录（用于工况播放与 MCTrack 标定信息）：
 
@@ -593,13 +594,14 @@ bash agent/check_smoke.sh --full --seq 0020
 
 ```yaml
 common:
-  lid_topic: "/detection/pointcloud"   # PointPillars 转发的激光雷达话题
-  imu_topic: "/detection/imu"          # PointPillars 转发的 IMU 话题
+  lid_topic: "/kitti/velo/pointcloud"  # 原始激光雷达话题
+  imu_topic: "/kitti/oxts/imu"         # 原始 IMU 话题
 
 preprocess:
   lidar_type: 2                        # Velodyne激光雷达
   scan_line: 64                        # 扫描线数
   scan_rate: 10                        # 扫描频率
+  ignore_given_offset_time: true       # 对当前KITTI bag默认忽略估计出来的time字段
 
 mapping:
   extrinsic_T: [0, 0, 0.28]           # 外参平移

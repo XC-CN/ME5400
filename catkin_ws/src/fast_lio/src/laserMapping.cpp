@@ -1027,6 +1027,7 @@ int main(int argc, char** argv)
     nh.param<int>("preprocess/scan_line", p_pre->N_SCANS, 16);
     nh.param<int>("preprocess/timestamp_unit", p_pre->time_unit, US);
     nh.param<int>("preprocess/scan_rate", p_pre->SCAN_RATE, 10);
+    nh.param<bool>("preprocess/ignore_given_offset_time", p_pre->ignore_given_offset_time, false);
     nh.param<int>("point_filter_num", p_pre->point_filter_num, 2);
     nh.param<bool>("feature_extract_enable", p_pre->feature_enabled, false);
     nh.param<bool>("preprocess/use_dynamic_weights", p_pre->use_dynamic_weights, false);

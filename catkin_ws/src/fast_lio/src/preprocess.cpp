@@ -31,6 +31,7 @@ Preprocess::Preprocess()
   cos160 = cos(cos160/180*M_PI);
   smallp_intersect = cos(smallp_intersect/180*M_PI);
   use_dynamic_weights = false;
+  ignore_given_offset_time = false;
   dynamic_speed_ref = 10.0f;
   dynamic_acc_ref = 4.0f;
   dynamic_speed_penalty = 0.5f;
@@ -420,7 +421,7 @@ void Preprocess::velodyne_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
     std::vector<float> time_last(N_SCANS, 0.0);  // last offset time
     /*****************************************************************/
 
-    if (pl_orig.points[plsize - 1].time > 0)
+    if (!ignore_given_offset_time && pl_orig.points[plsize - 1].time > 0)
     {
       given_offset_time = true;
     }

@@ -74,8 +74,8 @@ Visualization Manager:
       Value: true
     
     # ------------------------------------------------------------
-    # KITTI 点云显示 - 来自检测模块的原始点云
-    # Topic: /detection/pointcloud
+    # KITTI 点云显示 - 直接使用 rosbag 中的原始点云
+    # Topic: /kitti/velo/pointcloud
     # ------------------------------------------------------------
     - Alpha: 1  # 不透明
       Autocompute Intensity Bounds: true
@@ -100,7 +100,7 @@ Visualization Manager:
       Size (Pixels): 3  # 点大小3像素
       Size (m): 0.05000000074505806
       Style: Points  # 点渲染模式
-      Topic: /detection/pointcloud
+      Topic: /kitti/velo/pointcloud
       Unreliable: false
       Use Fixed Frame: true  # 使用全局固定坐标系
       Use rainbow: false

@@ -129,7 +129,12 @@ echo "   运行优化测试 (带 MCTrack 优化)                        "
 echo "========================================================="
 
 echo "[步骤 6] 正在启动 FAST-LIO (优化模式: use_dynamic_weights=true)..."
-FASTLIO_ARGS=(both use_dynamic_weights:=true)
+FASTLIO_ARGS=(
+    both
+    use_dynamic_weights:=true
+    lidar_topic:=/kitti/velo/pointcloud
+    imu_topic:=/kitti/oxts/imu
+)
 if [[ "$SAVE_MAP" == "true" ]]; then
     FASTLIO_ARGS+=(pcd_save_en:=true)
 fi
