@@ -1,0 +1,21 @@
+[rospy.client][INFO] 2026-04-09 01:45:45,533: init_node, name[/gt_path_publisher_12525_1775670345529], pid[12525]
+[xmlrpc][INFO] 2026-04-09 01:45:45,533: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 01:45:45,533: Started XML-RPC server [http://z790m:35549/]
+[rospy.impl.masterslave][INFO] 2026-04-09 01:45:45,533: _ready: http://z790m:35549/
+[rospy.init][INFO] 2026-04-09 01:45:45,533: ROS Slave URI: [http://z790m:35549/]
+[rospy.registration][INFO] 2026-04-09 01:45:45,533: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 01:45:45,533: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 01:45:45,634: registered with master
+[rospy.rosout][INFO] 2026-04-09 01:45:45,634: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 01:45:45,635: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 01:45:45,636: /use_sim_time is not set, will not subscribe to simulated time [/clock] topic
+[rosout][INFO] 2026-04-09 01:45:45,637: Loading Ground Truth from: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0020.txt
+[rosout][INFO] 2026-04-09 01:45:45,664: GT path aligned into camera_init using first OXTS yaw -54.57 deg
+[rosout][INFO] 2026-04-09 01:45:45,668: Publishing 837 trace points to /gt_path
+[rospy.internal][INFO] 2026-04-09 01:45:45,852: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 01:45:46,153: topic[/gt_path] adding connection to [/rviz_1775670345567972288], count 0
+[rospy.core][INFO] 2026-04-09 01:47:34,933: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-09 01:47:34,935: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 01:47:34,935: topic[/gt_path] removing connection to /rviz_1775670345567972288
+[rospy.impl.masterslave][INFO] 2026-04-09 01:47:34,935: signal-15
+[rospy.core][INFO] 2026-04-09 01:47:35,534: signal_shutdown [atexit]

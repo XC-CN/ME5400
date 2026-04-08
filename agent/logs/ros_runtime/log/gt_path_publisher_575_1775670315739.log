@@ -1,0 +1,35 @@
+[rospy.client][INFO] 2026-04-09 01:45:15,743: init_node, name[/gt_path_publisher_575_1775670315739], pid[575]
+[xmlrpc][INFO] 2026-04-09 01:45:15,744: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][ERROR] 2026-04-09 01:45:15,744: ERROR: Unable to start XML-RPC server: Operation not permitted
+[rospy.internal][ERROR] 2026-04-09 01:45:15,745: Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 252, in run
+    self._run()
+    ~~~~~~~~~^^
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 321, in _run
+    self._run_init()
+    ~~~~~~~~~~~~~~^^
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 271, in _run_init
+    self.server = ThreadingXMLRPCServer((bind_address, port), log_requests)
+                  ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 149, in __init__
+    SimpleXMLRPCServer.__init__(self, addr, SilenceableXMLRPCRequestHandler, log_requests)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xc/miniconda3/lib/python3.13/xmlrpc/server.py", line 594, in __init__
+    socketserver.TCPServer.__init__(self, addr, requestHandler, bind_and_activate)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xc/miniconda3/lib/python3.13/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+                                self.socket_type)
+                                ^^^^^^^^^^^^^^^^^
+  File "/home/xc/miniconda3/lib/python3.13/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+[rospy.core][INFO] 2026-04-09 01:45:15,746: signal_shutdown [error in XML-RPC server: [Errno 1] Operation not permitted]
+[rospy.init][INFO] 2026-04-09 01:45:15,746: ROS Slave URI: [None]
+[rospy.init][INFO] 2026-04-09 01:45:15,746: registered with master
+[rospy.core][WARNING] 2026-04-09 01:45:15,746: add_shutdown_hook called after shutdown
+[rospy.client][WARNING] 2026-04-09 01:45:15,746: aborting node initialization as shutdown has been triggered
+[rospy.core][INFO] 2026-04-09 01:45:15,746: signal_shutdown [atexit]

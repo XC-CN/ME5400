@@ -1,0 +1,24 @@
+[rospy.client][INFO] 2026-04-09 01:50:40,540: init_node, name[/gt_path_publisher_19983_1775670640536], pid[19983]
+[xmlrpc][INFO] 2026-04-09 01:50:40,540: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 01:50:40,541: Started XML-RPC server [http://z790m:40953/]
+[rospy.init][INFO] 2026-04-09 01:50:40,541: ROS Slave URI: [http://z790m:40953/]
+[rospy.impl.masterslave][INFO] 2026-04-09 01:50:40,541: _ready: http://z790m:40953/
+[rospy.registration][INFO] 2026-04-09 01:50:40,541: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 01:50:40,541: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 01:50:40,641: registered with master
+[rospy.rosout][INFO] 2026-04-09 01:50:40,641: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 01:50:40,643: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 01:50:40,643: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 01:50:40,644: connected to core topic /clock
+[rosout][INFO] 2026-04-09 01:50:40,645: Loading Ground Truth from: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0020.txt
+[rosout][INFO] 2026-04-09 01:50:40,658: GT path aligned into camera_init using first OXTS yaw -54.57 deg
+[rosout][INFO] 2026-04-09 01:50:40,660: Publishing 837 trace points to /gt_path
+[rospy.internal][INFO] 2026-04-09 01:50:40,845: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 01:50:41,047: topic[/gt_path] adding connection to [/rviz_1775670640573880767], count 0
+[rospy.internal][INFO] 2026-04-09 01:51:03,604: topic[/clock] adding connection to [http://z790m:39399/], count 0
+[rospy.internal][INFO] 2026-04-09 01:52:27,508: topic[/clock] removing connection to http://z790m:39399/
+[rospy.core][INFO] 2026-04-09 01:52:28,943: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-09 01:52:28,944: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 01:52:28,944: topic[/gt_path] removing connection to /rviz_1775670640573880767
+[rospy.impl.masterslave][INFO] 2026-04-09 01:52:28,944: signal-15
+[rospy.core][INFO] 2026-04-09 01:52:29,543: signal_shutdown [atexit]

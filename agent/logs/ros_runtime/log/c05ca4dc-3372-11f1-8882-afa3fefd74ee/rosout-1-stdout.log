@@ -1,0 +1,3 @@
+logging to /home/xc/Projects/ME5400/agent/logs/ros_runtime/log/c05ca4dc-3372-11f1-8882-afa3fefd74ee/rosout.log
+re-publishing aggregated messages to /rosout_agg
+subscribed to /rosout

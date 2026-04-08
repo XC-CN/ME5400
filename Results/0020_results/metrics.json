@@ -5,9 +5,9 @@
   "gt_path": "/home/xc/Projects/ME5400/Data_Tracking/training/oxts/0020.txt",
   "comparison_available": true,
   "optimized": {
-    "rmse": 11.218236098352527,
-    "mean_error": 9.70999990905284,
-    "max_error": 17.600818814392074,
+    "rmse": 9.904339949281102,
+    "mean_error": 8.468319182855693,
+    "max_error": 16.474634761364563,
     "num_samples": 823
   },
   "baseline": {
@@ -16,7 +16,7 @@
     "max_error": 39.85713579829385,
     "num_samples": 821
   },
-  "improvement_percent": 61.80560183515777,
+  "improvement_percent": 66.27898537111818,
   "artifacts": {
     "plot": "/home/xc/Projects/ME5400/Results/0020_results/evaluation_result.png",
     "metrics_txt": "/home/xc/Projects/ME5400/Results/0020_results/metrics.txt",
