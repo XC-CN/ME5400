@@ -1,8 +1,0 @@
-[run] start 2026-04-06T21:33:06+08:00
-Matplotlib created a temporary config/cache directory at /tmp/matplotlib-27mzx2hr because the default path (/home/xc/.config/matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
-节点运行错误: [Errno 30] Read-only file system: '/home/xc/.ros/log/kitti_pointpillars_bag_detector_368_1775482388999.log'
-[run] rosbag start 2026-04-06T21:33:14+08:00
-Usage: rosbag play BAGFILE1 [BAGFILE2 BAGFILE3 ...]
-
-rosbag: error: Cannot find rosbag/play executable
-[run] stop 2026-04-06T21:33:17+08:00

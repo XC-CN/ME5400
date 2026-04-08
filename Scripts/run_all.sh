@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-# 获取项目根目录
+# 获取项目相关目录
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+PROJECT_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 
 # 解析参数，主要是为了帮助文档
 SEQ_ID="0020"
@@ -38,6 +39,13 @@ for arg in "$@"; do
         ;;
     esac
 done
+
+# 设置日志重定向
+# 确保结果目录存在并开始记录日志到文件
+mkdir -p "$PROJECT_ROOT/Results/${SEQ_ID}_results"
+LOG_FILE="$PROJECT_ROOT/Results/${SEQ_ID}_results/full_run.log"
+exec > >(tee -a "$LOG_FILE") 2>&1
+echo "[INFO] 本次运行的所有输出将实时保存至: $LOG_FILE"
 
 # 统一管理 roscore 的清理
 cleanup_all() {
