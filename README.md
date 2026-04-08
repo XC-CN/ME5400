@@ -377,7 +377,8 @@ ME5400/
 > **注意**：
 >
 > * `MMDET3D/data/kitti` 目录是为 MMDetection3D 准备的，通常通过软链接指向 `Data_Tracking` 或单独配置。
-> * 本项目提供的脚本默认假设数据位于 `Data_Tracking` 下。
+> 
+
 
 ## 🎯 使用指南
 
@@ -397,7 +398,14 @@ ME5400/
 ./Scripts/utils/kitti_tracking_to_rosbag.py --seq 20 --include_detections False
 ```
 
-也可以直接使用 `MMDET3D/data/kitti/seq_0019_with_det.bag` 或 `tracking/rosbags/seq_0019_with_det.bag` 作为示例数据。
+**可播放的 Rosbag 列表**
+
+| 文件名 | 场景描述 | 路径 |
+| :--- | :--- | :--- |
+| **`seq_0019_nodet.bag`** | 城市街道 | `Data_Tracking/rosbags/seq_0019_nodet.bag` |
+| **`seq_0020_nodet.bag`** | 高速公路场景 | `Data_Tracking/rosbags/seq_0020_nodet.bag` |
+| **`seq_0009_nodet.bag`** | 城市街道 | `Data_Tracking/rosbags/seq_0009_nodet.bag` |
+
 
 ### 🚀 **一键启动（推荐）**
 
