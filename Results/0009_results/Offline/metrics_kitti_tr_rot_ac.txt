@@ -10,27 +10,27 @@ Timestamp tolerance: 0.200s
 
 Name                         Matched  Segments     Tr.(%)   Rot.(deg/100m)    Tr Gain   Rot Gain
 ------------------------------------------------------------------------------------------------
-Baseline(Offline,NoWeight)         2         0        nan              nan      0.00%      0.00%
-JointOffline                     575       136     4.7884           1.4846       nan%       nan%
+Baseline(Offline,NoWeight)       575       136     2.9699           1.2028      0.00%      0.00%
+JointOffline                     621       159     4.2113           1.5119    -41.80%    -25.69%
 
 Per-length details:
   [Baseline(Offline,NoWeight)]
     length(m)   Tr.(%)   Rot.(deg/100m)   n_segments
-         100       nan              nan            0
-         200       nan              nan            0
-         300       nan              nan            0
-         400       nan              nan            0
-         500       nan              nan            0
+         100    1.9996           1.5508           42
+         200    2.5114           1.0995           35
+         300    3.1779           1.0024           28
+         400    4.1878           1.0025           21
+         500    5.5098           1.0851           10
          600       nan              nan            0
          700       nan              nan            0
          800       nan              nan            0
   [JointOffline]
     length(m)   Tr.(%)   Rot.(deg/100m)   n_segments
-         100    4.9919           2.0469           42
-         200    5.1302           1.5103           35
-         300    4.1855           1.1132           28
-         400    4.2324           1.0035           21
-         500    5.5936           1.0827           10
+         100    4.9247           2.1180           47
+         200    2.8349           1.3882           40
+         300    3.5803           1.1869           33
+         400    4.7656           1.1570           25
+         500    6.2459           1.2307           14
          600       nan              nan            0
          700       nan              nan            0
          800       nan              nan            0

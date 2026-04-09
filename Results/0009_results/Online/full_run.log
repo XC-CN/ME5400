@@ -1,0 +1,123 @@
+[INFO] 本次运行的所有输出将实时保存至: /home/xc/Projects/ME5400/Results/0009_results/Online/full_run.log
+=========================================================
+   [ALL] 开始完整验证连跑流: Baseline -> Optimized    
+=========================================================
+[INFO] FAST-LIO 地图保存: false
+[INFO] 检测到外部 roscore 已在运行，将直接复用。
+
+>>> [第 1 阶段] 正在运行纯净版基准测试 (run_baseline.sh) ...
+[INFO] 正在启动 ME5400 基准测试 (单独 FAST-LIO)...
+[INFO] 数据集序列号: 0009
+[INFO] FAST-LIO 地图保存: false
+[步骤 0] 正在清理残留环境...
+[cleanup_ros_runtime.sh] 正在清理残留 ROS 运行时进程...
+[cleanup_ros_runtime.sh] ROS master 中没有需要清理的失联节点。
+[步骤 1] 检测到 roscore 已在运行，将复用现有环境...
+[步骤 2] 正在构建/验证 catkin 工作空间...
+[  0%] Built target geometry_msgs_generate_messages_py
+[  0%] Built target std_msgs_generate_messages_py
+[  0%] Built target geometry_msgs_generate_messages_eus
+[  0%] Built target std_msgs_generate_messages_eus
+[  0%] Built target geometry_msgs_generate_messages_cpp
+[  0%] Built target geometry_msgs_generate_messages_nodejs
+[  0%] Built target std_msgs_generate_messages_cpp
+[  0%] Built target geometry_msgs_generate_messages_lisp
+[  0%] Built target std_msgs_generate_messages_lisp
+[  0%] Built target sensor_msgs_generate_messages_py
+[  0%] Built target std_msgs_generate_messages_nodejs
+[  0%] Built target roscpp_generate_messages_nodejs
+[  0%] Built target roscpp_generate_messages_cpp
+[  0%] Built target roscpp_generate_messages_py
+[  0%] Built target roscpp_generate_messages_eus
+[  0%] Built target actionlib_generate_messages_cpp
+[  0%] Built target rosgraph_msgs_generate_messages_eus
+[  0%] Built target actionlib_msgs_generate_messages_py
+[  0%] Built target sensor_msgs_generate_messages_cpp
+[  0%] Built target actionlib_msgs_generate_messages_eus
+[  0%] Built target rosgraph_msgs_generate_messages_lisp
+[  0%] Built target rosgraph_msgs_generate_messages_nodejs
+[  0%] Built target actionlib_msgs_generate_messages_cpp
+[  0%] Built target roscpp_generate_messages_lisp
+[  0%] Built target rosgraph_msgs_generate_messages_cpp
+[  0%] Built target actionlib_generate_messages_py
+[  0%] Built target sensor_msgs_generate_messages_eus
+[  0%] Built target actionlib_msgs_generate_messages_lisp
+[  0%] Built target actionlib_generate_messages_eus
+[  0%] Built target tf2_msgs_generate_messages_eus
+[  0%] Built target sensor_msgs_generate_messages_lisp
+[  0%] Built target actionlib_generate_messages_nodejs
+[  0%] Built target tf2_msgs_generate_messages_cpp
+[  0%] Built target rosgraph_msgs_generate_messages_py
+[  0%] Built target tf2_msgs_generate_messages_nodejs
+[  0%] Built target actionlib_msgs_generate_messages_nodejs
+[  0%] Built target sensor_msgs_generate_messages_nodejs
+[  0%] Built target tf2_msgs_generate_messages_lisp
+[  0%] Built target _ME5400_generate_messages_check_deps_Detection3DArray
+[  0%] Built target tf2_msgs_generate_messages_py
+[  0%] Built target _ME5400_generate_messages_check_deps_TrackedObject
+[  0%] Built target actionlib_generate_messages_lisp
+[  0%] Built target _ME5400_generate_messages_check_deps_TrackedObjectArray
+[  0%] Built target _ME5400_generate_messages_check_deps_Detection3D
+[  2%] Built target kdl_conversions
+[  7%] Built target eigen_conversions
+[  7%] Built target _tf_generate_messages_check_deps_FrameGraph
+[  7%] Built target _tf_generate_messages_check_deps_tfMessage
+[ 13%] Built target ME5400_generate_messages_nodejs
+[ 23%] Built target ME5400_generate_messages_cpp
+[ 26%] Built target ME5400_generate_messages_py
+[ 31%] Built target ME5400_generate_messages_lisp
+[ 39%] Built target ME5400_generate_messages_eus
+[ 39%] Built target _fast_lio_generate_messages_check_deps_Pose6D
+[ 44%] Built target tf_generate_messages_py
+[ 47%] Built target tf_generate_messages_cpp
+[ 50%] Built target tf_generate_messages_lisp
+[ 53%] Built target tf_generate_messages_nodejs
+[ 57%] Built target tf_generate_messages_eus
+[ 59%] Built target fast_lio_generate_messages_nodejs
+[ 63%] Built target fast_lio_generate_messages_eus
+[ 63%] Built target fast_lio_generate_messages_cpp
+[ 66%] Built target fast_lio_generate_messages_py
+[ 68%] Built target fast_lio_generate_messages_lisp
+[ 68%] Built target ME5400_generate_messages
+[ 68%] Built target tf_generate_messages
+[ 75%] Built target tf
+[ 75%] Built target fast_lio_generate_messages
+[ 78%] Built target static_transform_publisher
+[ 81%] Built target tf_monitor
+[ 84%] Built target tf_change_notifier
+[ 86%] Built target tf_echo
+[ 89%] Built target tf_empty_listener
+[ 94%] Built target tf_conversions
+[100%] Built target fastlio_mapping
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+Base path: /home/xc/Projects/ME5400/catkin_ws
+Source space: /home/xc/Projects/ME5400/catkin_ws/src
+Build space: /home/xc/Projects/ME5400/catkin_ws/build
+Devel space: /home/xc/Projects/ME5400/catkin_ws/devel
+Install space: /home/xc/Projects/ME5400/catkin_ws/install
+####
+#### Running command: "make cmake_check_build_system" in "/home/xc/Projects/ME5400/catkin_ws/build"
+####
+####
+#### Running command: "make -j28 -l28" in "/home/xc/Projects/ME5400/catkin_ws/build"
+####
+[步骤 3] 正在启动真实轨迹发布与 RViz...
+=========================================================
+   运行基准测试 (单独 FAST-LIO)                          
+=========================================================
+[步骤 4] 正在启动 FAST-LIO (基准模式: 纯 mapping, use_dynamic_weights=false)...
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+Multi thread started 
+p_pre->lidar_type 2
+~~~~/home/xc/Projects/ME5400/catkin_ws/src/fast_lio/ file opened
+[FAST-LIO] Trajectory file opened at: /home/xc/Projects/ME5400/Results/trajectory.txt
+[步骤 5] 正在播放 Rosbag (基准)...
+Waiting for Baseline Run...
+Usage: rosbag play BAGFILE1 [BAGFILE2 BAGFILE3 ...]
+
+rosbag: error: Cannot find rosbag/play executable
+
+[INFO] 异常中止，正在清理残留进程...
+[错误] 基准测试阶段失败！中止后续流程。
+
+[INFO] 正在关闭全局 roscore...
