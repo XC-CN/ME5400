@@ -17590,3 +17590,10 @@ OSError: [Errno 22] Invalid argument
 
 [rosmaster.master][INFO] 2026-04-09 03:04:25,966: +CACHEDPARAM [/rosout_disable_topics_generation] by /kitti_pointpillars_bag_detector_54267_1775675034350
 [rosmaster.master][INFO] 2026-04-09 03:04:25,967: +CACHEDPARAM [/rosout_disable_topics_generation] by /kitti_pointpillars_bag_detector_54267_1775675034350
+[rosmaster.master][INFO] 2026-04-09 03:04:45,350: -SUB [/clock] /rqt_gui_py_node_52324 http://z790m:36745/
+[rosmaster.master][INFO] 2026-04-09 03:04:45,350: -SUB [/statistics] /rqt_gui_py_node_52324 http://z790m:36745/
+[rosmaster.master][INFO] 2026-04-09 03:04:45,350: -PUB [/rosout] /rqt_gui_py_node_52324 http://z790m:36745/
+[rosmaster.master][INFO] 2026-04-09 03:04:45,350: -SERVICE [/rqt_gui_py_node_52324/get_loggers] /rqt_gui_py_node_52324 rosrpc://z790m:39931
+[rosmaster.master][INFO] 2026-04-09 03:04:45,350: -SERVICE [/rqt_gui_py_node_52324/set_logger_level] /rqt_gui_py_node_52324 rosrpc://z790m:39931
+[rosmaster.master][INFO] 2026-04-09 03:04:45,399: publisherUpdate[/rosout] -> http://z790m:38763/ ['http://z790m:42397/', 'http://z790m:46805/', 'http://z790m:42415/']
+[rosmaster.master][INFO] 2026-04-09 03:04:45,400: publisherUpdate[/rosout] -> http://z790m:38763/ ['http://z790m:42397/', 'http://z790m:46805/', 'http://z790m:42415/']: sec=0.00, result=[1, '', 0]

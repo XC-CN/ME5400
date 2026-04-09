@@ -206,7 +206,7 @@ Visualization Manager:
         # ------------------------------------------------------------
         # FAST-LIO 里程计
         # Topic: /Odometry
-        # 显示当前LiDAR位姿（坐标轴）
+        # 默认关闭：当相机已跟随 body 时，再额外显示 /Odometry 坐标轴会出现可见抖动
         # ------------------------------------------------------------
         - Angle Tolerance: 0.009999999776482582
           Class: rviz/Odometry
@@ -225,7 +225,7 @@ Visualization Manager:
               Scale: 1
               Value: false
             Value: false
-          Enabled: true
+          Enabled: false
           Keep: 1  # 仅保留最新的1个里程计姿态
           Name: FAST-LIO Odometry
           Position Tolerance: 0.0010000000474974513
@@ -242,7 +242,7 @@ Visualization Manager:
             Value: Axes  # 显示为坐标轴
           Topic: /Odometry  # 里程计话题
           Unreliable: false
-          Value: true
+          Value: false
       Enabled: true
       Name: FAST-LIO Mapping  # 组名称
     
@@ -285,6 +285,18 @@ Visualization Manager:
       Name: Coordinate Axes
       Radius: 0.5  # 坐标轴半径
       Reference Frame: <Fixed Frame>  # 使用全局固定坐标系
+      Show Trail: false
+      Value: true
+    # ------------------------------------------------------------
+    # 自车 body 坐标轴 - 直接绑定 TF body，避免 /Odometry 显示链的屏幕抖动
+    # ------------------------------------------------------------
+    - Alpha: 1
+      Class: rviz/Axes
+      Enabled: true
+      Length: 1  # 自车坐标轴长度1米
+      Name: Body Axes
+      Radius: 0.05000000074505806
+      Reference Frame: body
       Show Trail: false
       Value: true
   Enabled: true
