@@ -1,0 +1,36 @@
+==============================================================================
+KITTI Relative Odometry Metrics (Tracking OXTS + Tr_imu_velo)
+==============================================================================
+
+GT OXTS: /home/zzy/ME5400/Data_Tracking/training/data_tracking_oxts/training/oxts/0009.txt
+Calib  : /home/zzy/ME5400/Data_Tracking/training/data_tracking_calib/training/calib/0009.txt
+Lengths(m): 100, 200, 300, 400, 500, 600, 700, 800
+Step frames: 10
+Timestamp tolerance: 0.200s
+
+Name                         Matched  Segments     Tr.(%)   Rot.(deg/100m)    Tr Gain   Rot Gain
+------------------------------------------------------------------------------------------------
+Baseline(Offline,NoWeight)       787       258     2.6519           1.3420      0.00%      0.00%
+JointOffline                     787       258     3.1584           1.5859    -19.10%    -18.18%
+
+Per-length details:
+  [Baseline(Offline,NoWeight)]
+    length(m)   Tr.(%)   Rot.(deg/100m)   n_segments
+         100    2.1590           1.8737           63
+         200    2.3524           1.4237           56
+         300    2.6212           1.1780           49
+         400    3.1068           1.0572           42
+         500    3.6216           1.0209           31
+         600    2.6991           0.8726           16
+         700    2.0620           0.7254            1
+         800       nan              nan            0
+  [JointOffline]
+    length(m)   Tr.(%)   Rot.(deg/100m)   n_segments
+         100    2.8983           2.4894           63
+         200    2.8108           1.6235           56
+         300    3.1016           1.3144           49
+         400    3.6076           1.1485           42
+         500    3.9068           1.0730           31
+         600    3.0222           0.9234           16
+         700    1.8999           0.7271            1
+         800       nan              nan            0
