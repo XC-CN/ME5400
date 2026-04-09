@@ -4,9 +4,8 @@
 
 配置                          ATE_RMSE   ATE_mean    ATE_max   RPE_RMSE   RPE_mean
 --------------------------------------------------------------------------------
-Baseline(Offline,NoWeight)     0.4965     0.4125     1.7097     0.5044     0.3304
-JointOffline                  1.0479     0.8060     3.3029     0.4740     0.3116
+JointOffline                  7.1542     2.3004    59.5740     3.3733     0.3051
 
 提升幅度（相对第一条轨迹）：
-  JointOffline               ATE 改善 -111.07%
+  JointOffline               ATE 改善 +0.00%
 
