@@ -563,7 +563,7 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 ```
 
    使用 `Scripts/rviz/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
-   默认会尝试将 RViz 移到第一块非主显示器并全屏；如需改目标屏幕，可用 `RVIZ_TARGET_MONITOR=HDMI-0 ./Scripts/rviz/run_rviz.sh` 或 `RVIZ_TARGET_MONITOR=1 ./Scripts/rviz/run_rviz.sh`。
+   默认会尝试让 RViz 直接在副显示器启动并最大化，也就是活动输出里不是 `primary` 的那块屏；在当前机器上这对应 `HDMI-0` / SKYDATA。如需改目标屏幕，可用 `RVIZ_TARGET_MONITOR=secondary ./Scripts/rviz/run_rviz.sh`、`RVIZ_TARGET_MONITOR=HDMI-0 ./Scripts/rviz/run_rviz.sh`、`RVIZ_TARGET_MONITOR=1 ./Scripts/rviz/run_rviz.sh` 或 `RVIZ_TARGET_MONITOR=other ./Scripts/rviz/run_rviz.sh`。
 
 #### 10. **【可选】启动 ego-only 联合后端（终端 G）**
 
