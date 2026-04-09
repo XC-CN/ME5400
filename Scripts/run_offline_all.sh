@@ -99,7 +99,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-RESULT_DIR="$PROJECT_ROOT/Results/${SEQ_ID}_results"
+RESULT_DIR="$PROJECT_ROOT/Results/${SEQ_ID}_results/Offline"
 mkdir -p "$RESULT_DIR"
 LOG_FILE="$RESULT_DIR/full_run_offline.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
@@ -469,7 +469,7 @@ run_evaluation() {
         --gt "$GT_PATH" \
         --traj "Baseline(Offline,NoWeight):$baseline_traj" \
         --traj "JointOffline:$joint_traj" \
-        --output "$PROJECT_ROOT/Results"
+        --output "$RESULT_DIR"
 
     python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_kitti_tr_rot.py" \
         --oxts "$GT_PATH" \
@@ -506,7 +506,7 @@ SUCCESS=true
 echo
 echo "========================================================="
 echo "   [离线双轨] 全部执行完成"
-echo "   结果目录: Results/${SEQ_ID}_results/"
+echo "   结果目录: Results/${SEQ_ID}_results/Offline/"
 echo "========================================================="
 
 if [[ "$HEADLESS" == "false" ]]; then

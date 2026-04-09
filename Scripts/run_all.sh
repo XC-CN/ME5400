@@ -42,8 +42,8 @@ done
 
 # 设置日志重定向
 # 确保结果目录存在并开始记录日志到文件
-mkdir -p "$PROJECT_ROOT/Results/${SEQ_ID}_results"
-LOG_FILE="$PROJECT_ROOT/Results/${SEQ_ID}_results/full_run.log"
+mkdir -p "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online"
+LOG_FILE="$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/full_run.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 echo "[INFO] 本次运行的所有输出将实时保存至: $LOG_FILE"
 
@@ -88,6 +88,6 @@ fi
 
 echo -e "\n========================================================="
 echo "   [ALL] 完整双轨测试流全部执行完成！"
-echo "   (定量对比评估结果已在 Results/${SEQ_ID}_results/ 目录下生成)"
+echo "   (定量对比评估结果已在 Results/${SEQ_ID}_results/Online/ 目录下生成)"
 echo "========================================================="
 exit 0

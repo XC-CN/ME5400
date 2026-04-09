@@ -135,8 +135,6 @@ def main():
     args = parser.parse_args()
     
     output_dir = Path(args.output)
-    seq_name = Path(args.gt).stem
-    output_dir = output_dir / f"{seq_name}_results"
     output_dir.mkdir(parents=True, exist_ok=True)
     
     # Load Data

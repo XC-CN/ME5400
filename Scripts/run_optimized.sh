@@ -183,18 +183,18 @@ kill -TERM $FL_PID 2>/dev/null || true
 wait $FL_PID 2>/dev/null || true
 
 # 保存结果并重命名
-mkdir -p "$PROJECT_ROOT/Results/${SEQ_ID}_results"
+mkdir -p "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online"
 if [[ -f "$PROJECT_ROOT/Results/trajectory.txt" ]]; then
-    mv "$PROJECT_ROOT/Results/trajectory.txt" "$PROJECT_ROOT/Results/${SEQ_ID}_results/trajectory.txt"
-    echo "[信息] 优化轨迹已保存为 Results/${SEQ_ID}_results/trajectory.txt"
+    mv "$PROJECT_ROOT/Results/trajectory.txt" "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory.txt"
+    echo "[信息] 优化轨迹已保存为 Results/${SEQ_ID}_results/Online/trajectory.txt"
 fi
 
 # 如果本次显式开启了地图保存，则归档新生成的地图文件
 if [[ "$SAVE_MAP" == "true" && -f "$PROJECT_ROOT/PCD/scans.pcd" ]]; then
     MAP_MTIME=$(stat -c %Y "$PROJECT_ROOT/PCD/scans.pcd")
     if [[ "$MAP_MTIME" -ge "$MAP_RUN_START_TS" ]]; then
-        mv "$PROJECT_ROOT/PCD/scans.pcd" "$PROJECT_ROOT/Results/${SEQ_ID}_results/scans_optimized.pcd"
-        echo "[信息] 优化地图已保存为 Results/${SEQ_ID}_results/scans_optimized.pcd"
+        mv "$PROJECT_ROOT/PCD/scans.pcd" "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/scans_optimized.pcd"
+        echo "[信息] 优化地图已保存为 Results/${SEQ_ID}_results/Online/scans_optimized.pcd"
         # 尝试删除临时的 PCD 目录
         rmdir "$PROJECT_ROOT/PCD" 2>/dev/null || true
     else
@@ -203,16 +203,16 @@ if [[ "$SAVE_MAP" == "true" && -f "$PROJECT_ROOT/PCD/scans.pcd" ]]; then
 fi
 
 # 自动评估 (仅当 baseline 存在时运行，或者修改评估脚本)
-if [ -f "$PROJECT_ROOT/Results/${SEQ_ID}_results/trajectory_baseline.txt" ]; then
+if [ -f "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory_baseline.txt" ]; then
     echo "[步骤 9] 正在运行增强轨迹评估..."
     python "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectory.py" \
-        --pred "$PROJECT_ROOT/Results/${SEQ_ID}_results/trajectory.txt" \
-        --baseline "$PROJECT_ROOT/Results/${SEQ_ID}_results/trajectory_baseline.txt" \
+        --pred "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory.txt" \
+        --baseline "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory_baseline.txt" \
         --gt "$PROJECT_ROOT/Data_Tracking/training/oxts/$SEQ_ID.txt" \
-        --output "$PROJECT_ROOT/Results/"
+        --output "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/"
     
     echo "========================================================="
-    echo "   评估完成！结果保存在 Results/${SEQ_ID}_results/ 目录  "
+    echo "   评估完成！结果保存在 Results/${SEQ_ID}_results/Online/ 目录  "
     echo "========================================================="
 else
     echo "[信息] 未找到基准轨迹，跳过对比评估"
