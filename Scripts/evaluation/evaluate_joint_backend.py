@@ -38,6 +38,17 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from scipy.spatial.transform import Rotation as R
 
+# 优先使用可用的中文字体，避免中文标题/坐标轴显示为方框。
+plt.rcParams["font.sans-serif"] = [
+    "Noto Sans CJK SC",
+    "Noto Sans CJK JP",
+    "AR PL UKai CN",
+    "WenQuanYi Zen Hei",
+    "SimHei",
+    "DejaVu Sans",
+]
+plt.rcParams["axes.unicode_minus"] = False
+
 
 # ─────────────────────────────────────────────
 #  I/O 工具
@@ -218,7 +229,7 @@ def plot_overview(gt_c: np.ndarray, results: list[dict], out_dir: Path, title: s
       下：RPE 时序误差
     """
     fig, axes = plt.subplots(3, 1, figsize=(12, 14))
-    fig.suptitle(title or "联合后端消融实验评估", fontsize=15, fontweight="bold", y=0.98)
+    fig.suptitle(title or "Joint Backend Ablation Evaluation", fontsize=15, fontweight="bold", y=0.98)
 
     # ── 轨迹图 ──
     ax1 = axes[0]
@@ -230,7 +241,7 @@ def plot_overview(gt_c: np.ndarray, results: list[dict], out_dir: Path, title: s
             p = r["pred_aligned"]
             label = f'{r["name"]}  (ATE={r["ate_metrics"]["ATE_RMSE"]:.3f} m)'
             ax1.plot(p[:, 0], p[:, 1], color=c, linestyle=ls, linewidth=1.6, label=label)
-    ax1.set_title("轨迹对比（已 Umeyama 对齐）")
+    ax1.set_title("Trajectory Comparison (Umeyama Aligned)")
     ax1.set_xlabel("X (m)")
     ax1.set_ylabel("Y (m)")
     ax1.legend(fontsize=9)
@@ -245,8 +256,8 @@ def plot_overview(gt_c: np.ndarray, results: list[dict], out_dir: Path, title: s
         if r["ate_err"] is not None:
             ax2.plot(r["ate_err"], color=c, linestyle=ls, linewidth=1.2,
                      alpha=0.8, label=r["name"])
-    ax2.set_title("ATE（绝对轨迹误差）随帧变化")
-    ax2.set_xlabel("匹配帧序号")
+    ax2.set_title("ATE (Absolute Trajectory Error) vs Matched Frame Index")
+    ax2.set_xlabel("Matched Frame Index")
     ax2.set_ylabel("误差 (m)")
     ax2.legend(fontsize=9)
     ax2.grid(True, alpha=0.3)
@@ -260,9 +271,9 @@ def plot_overview(gt_c: np.ndarray, results: list[dict], out_dir: Path, title: s
         if r["rpe_err"] is not None and len(r["rpe_err"]) > 0:
             ax3.plot(r["rpe_err"], color=c, linestyle=ls, linewidth=1.2,
                      alpha=0.8, label=r["name"])
-    ax3.set_title("RPE（相对位移误差，delta=1 帧）随帧变化")
-    ax3.set_xlabel("帧序号")
-    ax3.set_ylabel("相对误差 (m)")
+    ax3.set_title("RPE (Relative Translation Error, delta=1 frame) vs Frame Index")
+    ax3.set_xlabel("Frame Index")
+    ax3.set_ylabel("Relative Error (m)")
     ax3.legend(fontsize=9)
     ax3.grid(True, alpha=0.3)
 
@@ -303,8 +314,8 @@ def plot_bar_comparison(results: list[dict], out_dir: Path):
 
     ax.set_xticks(x)
     ax.set_xticklabels(names, fontsize=10)
-    ax.set_ylabel("误差 (m)", fontsize=11)
-    ax.set_title("消融实验：各配置 ATE / RPE 对比", fontsize=13, fontweight="bold")
+    ax.set_ylabel("Error (m)", fontsize=11)
+    ax.set_title("Ablation: ATE / RPE Comparison Across Configurations", fontsize=13, fontweight="bold")
     ax.legend(fontsize=10)
     ax.grid(True, axis="y", alpha=0.3)
     ax.set_ylim(0, max(max(ate_vals), max(rpe_vals)) * 1.25)

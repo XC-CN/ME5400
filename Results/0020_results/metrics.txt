@@ -1,7 +1,7 @@
-Optimized RMSE: 5.32753625818928
-Optimized Mean Error: 4.072814453442873
-Optimized Max Error: 11.167197812952116
+Optimized RMSE: 11.895071339241925
+Optimized Mean Error: 10.509583492218836
+Optimized Max Error: 17.617093711003978
 Baseline RMSE: 29.37141737365786
 Baseline Mean Error: 26.497113802827197
 Baseline Max Error: 39.85713579829385
-Improvement: 81.86%
+Improvement: 59.50%

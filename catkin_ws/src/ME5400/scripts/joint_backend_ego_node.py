@@ -28,12 +28,34 @@ def quat_to_yaw(q: Quaternion) -> float:
     return math.atan2(siny_cosp, cosy_cosp)
 
 
-def yaw_to_quat(yaw: float) -> Quaternion:
+def quat_to_rpy(q: Quaternion):
+    sinr_cosp = 2.0 * (q.w * q.x + q.y * q.z)
+    cosr_cosp = 1.0 - 2.0 * (q.x * q.x + q.y * q.y)
+    roll = math.atan2(sinr_cosp, cosr_cosp)
+
+    sinp = 2.0 * (q.w * q.y - q.z * q.x)
+    if abs(sinp) >= 1.0:
+        pitch = math.copysign(math.pi / 2.0, sinp)
+    else:
+        pitch = math.asin(sinp)
+
+    yaw = quat_to_yaw(q)
+    return roll, pitch, yaw
+
+
+def rpy_to_quat(roll: float, pitch: float, yaw: float) -> Quaternion:
+    cy = math.cos(yaw * 0.5)
+    sy = math.sin(yaw * 0.5)
+    cp = math.cos(pitch * 0.5)
+    sp = math.sin(pitch * 0.5)
+    cr = math.cos(roll * 0.5)
+    sr = math.sin(roll * 0.5)
+
     q = Quaternion()
-    q.w = math.cos(yaw * 0.5)
-    q.x = 0.0
-    q.y = 0.0
-    q.z = math.sin(yaw * 0.5)
+    q.w = cr * cp * cy + sr * sp * sy
+    q.x = sr * cp * cy - cr * sp * sy
+    q.y = cr * sp * cy + sr * cp * sy
+    q.z = cr * cp * sy - sr * sp * cy
     return q
 
 
@@ -380,7 +402,10 @@ class JointBackendEgoNode:
             out.pose.pose.position.y = float(state.y + corr[1])
             yaw = wrap_angle(state.yaw + corr[2])
 
-        out.pose.pose.orientation = yaw_to_quat(float(yaw))
+        # Preserve FAST-LIO roll/pitch; only replace yaw with corrected value.
+        raw_q = state.raw.pose.pose.orientation
+        roll, pitch, _ = quat_to_rpy(raw_q)
+        out.pose.pose.orientation = rpy_to_quat(float(roll), float(pitch), float(yaw))
         out.pose.covariance = state.raw.pose.covariance
         out.twist = state.raw.twist
         return out
