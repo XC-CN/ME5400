@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import math
 import sys
-from collections import defaultdict
+import threading
+import time
+from collections import defaultdict, deque
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Deque, Dict, List, Optional, Tuple
 
 import numpy as np
 import rospy
+import tf.transformations as tf_trans
 import yaml
 from geometry_msgs.msg import PoseStamped, Pose
 from std_msgs.msg import Header, String
@@ -88,6 +91,16 @@ def pose_to_matrix(msg: PoseStamped) -> np.ndarray:
     T[0, 3] = msg.pose.position.x
     T[1, 3] = msg.pose.position.y
     T[2, 3] = msg.pose.position.z
+    return T
+
+
+def interpolate_pose_matrix(T0: np.ndarray, T1: np.ndarray, alpha: float) -> np.ndarray:
+    alpha = max(0.0, min(1.0, alpha))
+    q0 = tf_trans.quaternion_from_matrix(T0)
+    q1 = tf_trans.quaternion_from_matrix(T1)
+    q = tf_trans.quaternion_slerp(q0, q1, alpha)
+    T = tf_trans.quaternion_matrix(q)
+    T[:3, 3] = (1.0 - alpha) * T0[:3, 3] + alpha * T1[:3, 3]
     return T
 
 
@@ -174,6 +187,9 @@ class MCTrackOnlineNode:
         self.frame_rate = float(rospy.get_param("~frame_rate", 10.0))
         self.arrow_length = float(rospy.get_param("~arrow_length", 3.0))
         self.history_size = int(rospy.get_param("~history_size", 200))
+        self.pose_buffer_size = int(rospy.get_param("~pose_buffer_size", 256))
+        self.pending_detection_limit = int(rospy.get_param("~pending_detection_limit", 100))
+        self.pose_wait_timeout = float(rospy.get_param("~pose_wait_timeout", 0.25))
 
         with config_path.open("r") as f:
             self.cfg = yaml.safe_load(f)
@@ -190,6 +206,9 @@ class MCTrackOnlineNode:
         }}
 
         self.pose_matrix: Optional[np.ndarray] = None
+        self.pose_buffer: Deque[Tuple[float, np.ndarray]] = deque(maxlen=self.pose_buffer_size)
+        self.pending_detections: Deque[Tuple[Detection3DArray, float]] = deque()
+        self._drain_lock = threading.Lock()
         self.traj_history: Dict[int, List[np.ndarray]] = defaultdict(list)
 
         self.marker_pub = rospy.Publisher("/mctrack/markers", MarkerArray, queue_size=1)
@@ -209,6 +228,9 @@ class MCTrackOnlineNode:
 
     def pose_callback(self, msg: PoseStamped) -> None:
         self.pose_matrix = pose_to_matrix(msg)
+        pose_stamp = msg.header.stamp.to_sec() if msg.header.stamp != rospy.Time() else rospy.Time.now().to_sec()
+        self.pose_buffer.append((float(pose_stamp), self.pose_matrix.copy()))
+        self._drain_pending_detections()
 
     def lidar_tracking_callback(self, msg: String) -> None:
         """处理LiDAR坐标系检测结果"""
@@ -217,14 +239,72 @@ class MCTrackOnlineNode:
             self.det_callback(detection_msg)
 
     def det_callback(self, msg: Detection3DArray) -> None:
-        if self.pose_matrix is None:
-            rospy.logwarn_throttle(5.0, "尚未收到 FAST-LIO 位姿，暂时跳过检测结果")
+        if self.pose_matrix is None and not self.pose_buffer:
+            rospy.logwarn_throttle(5.0, "尚未收到 FAST-LIO 位姿，暂时缓存检测结果")
+        if len(self.pending_detections) >= self.pending_detection_limit:
+            self.pending_detections.popleft()
+            rospy.logwarn_throttle(5.0, "待处理检测结果积压过多，已丢弃最旧的一帧")
+        self.pending_detections.append((msg, time.monotonic()))
+        self._drain_pending_detections()
+
+    def _drain_pending_detections(self) -> None:
+        if not self._drain_lock.acquire(blocking=False):
             return
+        try:
+            while self.pending_detections:
+                msg, enqueue_time = self.pending_detections[0]
+                lidar2global = self._resolve_pose_for_detection(msg, enqueue_time)
+                if lidar2global is None:
+                    break
+                self.pending_detections.popleft()
+                self._process_detection(msg, lidar2global)
+        finally:
+            self._drain_lock.release()
+
+    def _resolve_pose_for_detection(
+        self,
+        msg: Detection3DArray,
+        enqueue_time: float,
+    ) -> Optional[np.ndarray]:
+        if not self.pose_buffer:
+            return None
+
+        det_stamp = msg.header.stamp.to_sec() if msg.header.stamp != rospy.Time() else float("nan")
+        if not math.isfinite(det_stamp):
+            return self.pose_buffer[-1][1]
+
+        prev_pose: Optional[Tuple[float, np.ndarray]] = None
+        next_pose: Optional[Tuple[float, np.ndarray]] = None
+        for stamp, matrix in self.pose_buffer:
+            if stamp <= det_stamp:
+                prev_pose = (stamp, matrix)
+            if stamp >= det_stamp:
+                next_pose = (stamp, matrix)
+                break
+
+        if prev_pose is not None and next_pose is not None:
+            prev_stamp, prev_matrix = prev_pose
+            next_stamp, next_matrix = next_pose
+            if next_stamp <= prev_stamp:
+                return next_matrix
+            alpha = (det_stamp - prev_stamp) / (next_stamp - prev_stamp)
+            return interpolate_pose_matrix(prev_matrix, next_matrix, alpha)
+
+        if (time.monotonic() - enqueue_time) < self.pose_wait_timeout:
+            return None
+
+        if next_pose is not None:
+            return next_pose[1]
+        if prev_pose is not None:
+            rospy.logwarn_throttle(5.0, "等待与检测时间戳对齐的位姿超时，回退使用最新 FAST-LIO 位姿")
+            return prev_pose[1]
+        return None
+
+    def _process_detection(self, msg: Detection3DArray, lidar2global: np.ndarray) -> None:
         frame_id = 0
         if msg.detections:
             frame_id = msg.detections[0].frame
         header = msg.header if msg.header.stamp != rospy.Time() else Header(stamp=rospy.Time.now())
-        lidar2global = self.pose_matrix
         global2lidar = np.linalg.inv(lidar2global)
 
         frame = Frame(frame_id=frame_id, timestamp=header.stamp.to_sec(), transform_matrix={

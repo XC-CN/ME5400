@@ -60,6 +60,15 @@ trap cleanup SIGINT EXIT
 echo "[INFO] 正在启动 ME5400 完整优化流水线..."
 echo "[INFO] 数据集序列号: $SEQ_ID"
 echo "[INFO] FAST-LIO 地图保存: $SAVE_MAP"
+if [[ -n "${PP_ALLOWED_CLASSES:-}" ]]; then
+    echo "[INFO] PointPillars 类别过滤: $PP_ALLOWED_CLASSES"
+fi
+if [[ -n "${PP_CONFIG_PATH:-}" ]]; then
+    echo "[INFO] PointPillars 配置覆盖: $PP_CONFIG_PATH"
+fi
+if [[ -n "${PP_CHECKPOINT_PATH:-}" ]]; then
+    echo "[INFO] PointPillars 权重覆盖: $PP_CHECKPOINT_PATH"
+fi
 
 # 0. 环境清理
 echo "[步骤 0] 正在清理残留环境..."
@@ -112,7 +121,17 @@ fi
 
 # 4. 启动 PointPillars 节点 (清除 BAG_FILE 防止其内部触发播放, 传递序列号以便加载正确标定)
 echo "[步骤 4] 正在启动 PointPillars 节点 (Sequence: $SEQ_ID)..."
-BAG_FILE="" "$PROJECT_ROOT/Scripts/pointpillars/run_pointpillars_node.sh" _seq:="$SEQ_ID" &
+PP_NODE_ARGS=()
+if [[ -n "${PP_ALLOWED_CLASSES:-}" ]]; then
+    PP_NODE_ARGS+=("_allowed_classes:=$PP_ALLOWED_CLASSES")
+fi
+if [[ -n "${PP_CONFIG_PATH:-}" ]]; then
+    PP_NODE_ARGS+=("_config_path:=$PP_CONFIG_PATH")
+fi
+if [[ -n "${PP_CHECKPOINT_PATH:-}" ]]; then
+    PP_NODE_ARGS+=("_checkpoint_path:=$PP_CHECKPOINT_PATH")
+fi
+BAG_FILE="" "$PROJECT_ROOT/Scripts/pointpillars/run_pointpillars_node.sh" _seq:="$SEQ_ID" "${PP_NODE_ARGS[@]}" &
 PP_PID=$!
 sleep 15 
 

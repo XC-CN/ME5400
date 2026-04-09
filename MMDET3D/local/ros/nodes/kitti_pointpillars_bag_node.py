@@ -14,6 +14,7 @@ import numpy as np
 import rospy
 import tf.transformations as tf_trans
 import torch
+from mmengine import Config
 from sensor_msgs import point_cloud2
 from sensor_msgs.msg import Imu, PointCloud2, PointField
 from geometry_msgs.msg import Point
@@ -74,6 +75,9 @@ class KittiPointPillarsBagNode:
         self.publish_rate = rospy.get_param('~publish_rate', 10.0)  # Hz
         self.confidence_threshold = rospy.get_param('~confidence_threshold', 0.05)
         self.frame_id = rospy.get_param('~frame_id', 'velodyne')
+        self.allowed_classes = self._parse_allowed_classes(
+            rospy.get_param('~allowed_classes', [])
+        )
 
         # 兼容两种参数来源：
         # 1) 私有参数（历史用法） 2) 全局后备参数（用于匿名节点时的稳定覆盖）
@@ -103,7 +107,7 @@ class KittiPointPillarsBagNode:
         self._pointcloud_dtype: Optional[np.dtype] = None
         
         # 类别名称和颜色映射
-        self.class_names = ['Car', 'Pedestrian', 'Cyclist']
+        self.class_names = self._load_class_names_from_config()
         self.wireframe_color = (0.0, 0.447, 0.741, 1.0)
         self.class_colors = {name: self.wireframe_color for name in self.class_names}
 
@@ -141,8 +145,13 @@ class KittiPointPillarsBagNode:
         rospy.loginfo(f"数据集路径: {self.dataset_root} / 序列: {self.seq}")
         rospy.loginfo(f"订阅话题: /kitti/velo/pointcloud")
         rospy.loginfo(f"发布频率: {self.publish_rate} Hz")
+        rospy.loginfo(f"模型类别: {self.class_names}")
+        if self.allowed_classes:
+            rospy.loginfo(f"类别过滤: {self.allowed_classes}")
+        else:
+            rospy.loginfo("类别过滤: 未启用")
         rospy.loginfo(f"转发原始点云/IMU: {self.republish_raw_topics}")
-    
+
     def _init_inferencer(self):
         """初始化MMDetection3D推理器"""
         try:
@@ -168,6 +177,43 @@ class KittiPointPillarsBagNode:
             'labels_3d': np.empty((0,), dtype=np.int32),
             'class_names': [],
         }
+
+    @staticmethod
+    def _parse_allowed_classes(raw_value: Any) -> List[str]:
+        """解析类别过滤参数，兼容空值、列表和逗号分隔字符串。"""
+        if raw_value is None:
+            return []
+        if isinstance(raw_value, str):
+            if not raw_value.strip():
+                return []
+            return [item.strip() for item in raw_value.split(',') if item.strip()]
+        if isinstance(raw_value, (list, tuple)):
+            return [str(item).strip() for item in raw_value if str(item).strip()]
+        return [str(raw_value).strip()] if str(raw_value).strip() else []
+
+    def _load_class_names_from_config(self) -> List[str]:
+        """从模型配置中读取类别顺序，避免本地硬编码与真实标签错位。"""
+        configured = self._parse_allowed_classes(rospy.get_param('~class_names', []))
+        if configured:
+            return configured
+
+        try:
+            cfg = Config.fromfile(self.config_path)
+        except Exception as exc:
+            rospy.logwarn(f"读取配置文件类别失败，回退到默认KITTI三类: {exc}")
+            return ['Pedestrian', 'Cyclist', 'Car']
+
+        candidates = [
+            cfg.get('class_names'),
+            cfg.get('metainfo', {}).get('classes') if isinstance(cfg.get('metainfo'), dict) else None,
+        ]
+        for candidate in candidates:
+            parsed = self._parse_allowed_classes(candidate)
+            if parsed:
+                return parsed
+
+        rospy.logwarn("配置文件中未找到类别定义，回退到默认KITTI三类")
+        return ['Pedestrian', 'Cyclist', 'Car']
 
     def _load_calibration(self) -> None:
         """读取KITTI标定文件，构造LiDAR到相机的外参与投影矩阵。"""
@@ -665,6 +711,13 @@ class KittiPointPillarsBagNode:
 
                     # 过滤低置信度检测
                     valid_indices = scores > self.confidence_threshold
+                    if self.allowed_classes:
+                        class_mask = np.array([
+                            0 <= int(label) < len(self.class_names)
+                            and self.class_names[int(label)] in self.allowed_classes
+                            for label in labels
+                        ], dtype=bool)
+                        valid_indices &= class_mask
                     if np.any(valid_indices):
                         detections['scores_3d'] = scores[valid_indices].astype(np.float32)
                         detections['bboxes_3d'] = bboxes[valid_indices]
@@ -742,7 +795,9 @@ class KittiPointPillarsBagNode:
             
             # 设置生命周期
             marker.lifetime = rospy.Duration(0.0)  # 0 表示持久，直到被覆盖或删除
-            marker.frame_locked = True
+            # 固定到消息时间戳对应的 TF，避免检测结果因推理延迟被重复
+            # 绑定到“当前”velodyne 位姿，从而在 RViz 中出现前后抽动。
+            marker.frame_locked = False
             
             # 线框的12条边
             half_l = float(length) / 2.0
