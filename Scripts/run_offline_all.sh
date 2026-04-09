@@ -5,6 +5,9 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 PROJECT_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 CATKIN_WS="$PROJECT_ROOT/catkin_ws"
 OFFLINE_FEEDER_CONFIG="$CATKIN_WS/src/ME5400/config/offline_bag_feeder.yaml"
+JOINT_GATED_POINTCLOUD_TOPIC="/offline/detection_pointcloud"
+CONDA_SH="${HOME}/miniconda3/etc/profile.d/conda.sh"
+CONDA_ENV_NAME="ME5400"
 
 SUCCESS=false
 HEADLESS=false
@@ -23,6 +26,19 @@ FL_PID=""
 JB_PID=""
 REC_PID=""
 FEEDER_PID=""
+
+source /opt/ros/noetic/setup.bash
+if [[ -f "$CONDA_SH" ]]; then
+    set +u
+    source "$CONDA_SH"
+    if [[ "${CONDA_DEFAULT_ENV:-}" != "$CONDA_ENV_NAME" ]]; then
+        conda activate "$CONDA_ENV_NAME"
+    fi
+    set -u
+    echo "[INFO] 已激活 Conda 环境: ${CONDA_DEFAULT_ENV:-unknown}"
+else
+    echo "[警告] 未找到 conda 初始化脚本: $CONDA_SH"
+fi
 
 usage() {
     cat <<EOF
@@ -115,12 +131,18 @@ cleanup_stage_processes() {
 
     stop_pid "$FL_PID"
     FL_PID=""
+    kill_matching_process "mapping_velodyne.launch"
+    kill_matching_process "fastlio_mapping"
+    kill_matching_process "laserMapping"
+    kill_matching_process "fastlio_pose_bridge.py"
 
     stop_pid "$MC_PID"
     MC_PID=""
+    kill_matching_process "mctrack_online_node.py"
 
     stop_pid "$PP_PID"
     PP_PID=""
+    kill_matching_process "kitti_pointpillars_bag_node.py"
 }
 
 cleanup() {
@@ -263,6 +285,13 @@ start_offline_feeder() {
     local require_detection="$1"
     local require_tracking="$2"
     local require_odom="${3:-false}"
+    local gated_lidar_topic="${4:-}"
+    local odom_topic="${5:-/joint_backend/odom}"
+    local stamp_tolerance="${6:-0.06}"
+    local gated_lidar_display="$gated_lidar_topic"
+    if [[ -z "$gated_lidar_display" ]]; then
+        gated_lidar_display="/kitti/velo/pointcloud"
+    fi
 
     rosparam set use_sim_time true
     rosparam load "$OFFLINE_FEEDER_CONFIG" /offline_bag_feeder
@@ -270,8 +299,11 @@ start_offline_feeder() {
     rosparam set /offline_bag_feeder/require_detection "$require_detection"
     rosparam set /offline_bag_feeder/require_tracking "$require_tracking"
     rosparam set /offline_bag_feeder/require_odom "$require_odom"
+    rosparam set /offline_bag_feeder/gated_lidar_topic "$gated_lidar_topic"
+    rosparam set /offline_bag_feeder/odom_topic "$odom_topic"
+    rosparam set /offline_bag_feeder/stamp_tolerance "$stamp_tolerance"
 
-    echo "[信息] 启动 offline_bag_feeder (require_detection=$require_detection require_tracking=$require_tracking require_odom=$require_odom)"
+    echo "[信息] 启动 offline_bag_feeder (require_detection=$require_detection require_tracking=$require_tracking require_odom=$require_odom odom_topic=$odom_topic stamp_tolerance=$stamp_tolerance gated_lidar_topic=$gated_lidar_display)"
     rosrun ME5400 offline_bag_feeder.py __name:=offline_bag_feeder &
     FEEDER_PID=$!
 }
@@ -304,18 +336,35 @@ run_baseline_offline() {
         exit 1
     fi
 
-    echo "[A-2] 启动离线 feeder (不等待检测/跟踪)..."
-    start_offline_feeder false false false
+    echo "[A-2] 录制 /Odometry -> trajectory_baseline_offline.txt ..."
+    rosrun ME5400 odom_to_tum_recorder.py \
+        --output "$RESULT_DIR/trajectory_baseline_offline.txt" \
+        _odom_topic:=/Odometry &
+    REC_PID=$!
+    sleep 2
 
-    echo "[A-3] 等待离线 baseline 阶段完成..."
+    echo "[A-3] 启动离线 feeder (等待 FAST-LIO /Odometry 完成每帧)..."
+    start_offline_feeder false false true "" "/Odometry" "0.20"
+
+    echo "[A-4] 等待离线 baseline 阶段完成..."
     wait "$FEEDER_PID"
     FEEDER_PID=""
 
-    echo "[A-4] 停止 FAST-LIO..."
+    sleep 3
+
+    echo "[A-5] 停止 baseline recorder 与 FAST-LIO..."
+    stop_pid "$REC_PID"
+    REC_PID=""
+    kill_matching_process "odom_to_tum_recorder.py"
+
     stop_pid "$FL_PID"
     FL_PID=""
+    kill_matching_process "mapping_velodyne.launch"
+    kill_matching_process "fastlio_mapping"
+    kill_matching_process "laserMapping"
+    kill_matching_process "fastlio_pose_bridge.py"
 
-    archive_trajectory_if_new "$stage_start_ts" "$RESULT_DIR/trajectory_baseline_offline.txt"
+    archive_trajectory_if_new "$stage_start_ts" "$RESULT_DIR/trajectory_baseline_fastlio.txt"
     archive_map_if_new "$stage_start_ts" "$RESULT_DIR/scans_baseline_offline.pcd"
 }
 
@@ -339,6 +388,7 @@ run_joint_offline() {
     if [[ -n "${PP_CHECKPOINT_PATH:-}" ]]; then
         PP_NODE_ARGS+=("_checkpoint_path:=$PP_CHECKPOINT_PATH")
     fi
+    PP_NODE_ARGS+=("_pointcloud_topic:=$JOINT_GATED_POINTCLOUD_TOPIC")
     BAG_FILE="" "$PROJECT_ROOT/Scripts/pointpillars/run_pointpillars_node.sh" _seq:="$SEQ_ID" "${PP_NODE_ARGS[@]}" &
     PP_PID=$!
     sleep 15
@@ -374,8 +424,8 @@ run_joint_offline() {
     REC_PID=$!
     sleep 2
 
-    echo "[C-6] 启动离线 feeder (等待 detection / tracking / joint odom)..."
-    start_offline_feeder true true true
+    echo "[C-6] 启动离线 feeder (FAST-LIO走原始流，PointPillars走gated点云；等待 detection / tracking)..."
+    start_offline_feeder true true false "$JOINT_GATED_POINTCLOUD_TOPIC" "/joint_backend/odom" "0.06"
 
     echo "[C-7] 等待离线联合阶段完成..."
     wait "$FEEDER_PID"

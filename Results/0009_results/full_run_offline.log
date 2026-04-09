@@ -1,0 +1,1212 @@
+[INFO] 本次运行的所有输出将实时保存至: /home/xc/Projects/ME5400/Results/0009_results/full_run_offline.log
+[INFO] 数据集序列号: 0009
+[INFO] 离线 bag: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0009_nodet.bag
+[INFO] FAST-LIO 地图保存: false
+[步骤 0] 正在清理残留环境...
+[cleanup_ros_runtime.sh] 正在清理残留 ROS 运行时进程...
+[cleanup_ros_runtime.sh] 发送 SIGTERM 给 MCTrack online node: 368121
+[cleanup_ros_runtime.sh] ROS master 中没有需要清理的失联节点。
+[步骤 1] 检测到 roscore 已在运行，将复用现有环境...
+[步骤 2] 正在构建/验证 catkin 工作空间...
+[  0%] Built target std_msgs_generate_messages_cpp
+[  0%] Built target geometry_msgs_generate_messages_cpp
+[  0%] Built target std_msgs_generate_messages_py
+[  0%] Built target geometry_msgs_generate_messages_eus
+[  0%] Built target std_msgs_generate_messages_lisp
+[  0%] Built target geometry_msgs_generate_messages_py
+[  0%] Built target geometry_msgs_generate_messages_lisp
+[  0%] Built target std_msgs_generate_messages_nodejs
+[  0%] Built target roscpp_generate_messages_py
+[  0%] Built target geometry_msgs_generate_messages_nodejs
+[  0%] Built target roscpp_generate_messages_nodejs
+[  0%] Built target std_msgs_generate_messages_eus
+[  0%] Built target actionlib_generate_messages_cpp
+[  0%] Built target roscpp_generate_messages_eus
+[  0%] Built target sensor_msgs_generate_messages_cpp
+[  0%] Built target rosgraph_msgs_generate_messages_nodejs
+[  0%] Built target actionlib_msgs_generate_messages_eus
+[  0%] Built target sensor_msgs_generate_messages_py
+[  0%] Built target rosgraph_msgs_generate_messages_eus
+[  0%] Built target actionlib_msgs_generate_messages_py
+[  0%] Built target rosgraph_msgs_generate_messages_lisp
+[  0%] Built target roscpp_generate_messages_cpp
+[  0%] Built target tf2_msgs_generate_messages_py
+[  0%] Built target actionlib_msgs_generate_messages_cpp
+[  0%] Built target rosgraph_msgs_generate_messages_cpp
+[  0%] Built target roscpp_generate_messages_lisp
+[  0%] Built target _ME5400_generate_messages_check_deps_Detection3DArray
+[  0%] Built target actionlib_generate_messages_py
+[  0%] Built target tf2_msgs_generate_messages_eus
+[  0%] Built target actionlib_msgs_generate_messages_lisp
+[  0%] Built target actionlib_msgs_generate_messages_nodejs
+[  0%] Built target sensor_msgs_generate_messages_eus
+[  0%] Built target sensor_msgs_generate_messages_lisp
+[  0%] Built target actionlib_generate_messages_nodejs
+[  0%] Built target rosgraph_msgs_generate_messages_py
+[  0%] Built target actionlib_generate_messages_eus
+[  0%] Built target tf2_msgs_generate_messages_lisp
+[  0%] Built target tf2_msgs_generate_messages_cpp
+[  0%] Built target tf2_msgs_generate_messages_nodejs
+[  0%] Built target _ME5400_generate_messages_check_deps_TrackedObject
+[  0%] Built target _tf_generate_messages_check_deps_FrameGraph
+[  0%] Built target _ME5400_generate_messages_check_deps_Detection3D
+[  0%] Built target actionlib_generate_messages_lisp
+[  0%] Built target sensor_msgs_generate_messages_nodejs
+[  0%] Built target _ME5400_generate_messages_check_deps_TrackedObjectArray
+[  4%] Built target eigen_conversions
+[  4%] Built target _tf_generate_messages_check_deps_tfMessage
+[  7%] Built target kdl_conversions
+[ 23%] Built target ME5400_generate_messages_cpp
+[ 24%] Built target ME5400_generate_messages_nodejs
+[ 26%] Built target ME5400_generate_messages_py
+[ 33%] Built target ME5400_generate_messages_eus
+[ 39%] Built target ME5400_generate_messages_lisp
+[ 44%] Built target tf_generate_messages_py
+[ 47%] Built target tf_generate_messages_lisp
+[ 50%] Built target tf_generate_messages_nodejs
+[ 55%] Built target tf_generate_messages_eus
+[ 55%] Built target ME5400_generate_messages
+[ 55%] Built target _fast_lio_generate_messages_check_deps_Pose6D
+[ 57%] Built target tf_generate_messages_cpp
+[ 65%] Built target fast_lio_generate_messages_lisp
+[ 65%] Built target tf_generate_messages
+[ 65%] Built target fast_lio_generate_messages_cpp
+[ 65%] Built target fast_lio_generate_messages_nodejs
+[ 68%] Built target fast_lio_generate_messages_eus
+[ 68%] Built target fast_lio_generate_messages_py
+[ 75%] Built target tf
+[ 75%] Built target fast_lio_generate_messages
+[ 89%] Built target tf_monitor
+[ 89%] Built target tf_empty_listener
+[ 89%] Built target tf_echo
+[ 89%] Built target static_transform_publisher
+[ 89%] Built target tf_change_notifier
+[ 94%] Built target tf_conversions
+Scanning dependencies of target fastlio_mapping
+[ 97%] Building CXX object fast_lio/CMakeFiles/fastlio_mapping.dir/src/laserMapping.cpp.o
+[ 97%] Building CXX object fast_lio/CMakeFiles/fastlio_mapping.dir/src/preprocess.cpp.o
+In file included from /usr/include/boost/preprocessor/tuple/elem.hpp:23,
+                 from /usr/include/boost/preprocessor/arithmetic/add.hpp:21,
+                 from /usr/include/boost/mpl/aux_/preprocessor/def_params_tail.hpp:66,
+                 from /usr/include/boost/mpl/aux_/na_spec.hpp:28,
+                 from /usr/include/boost/mpl/next_prior.hpp:18,
+                 from /usr/include/boost/mpl/next.hpp:17,
+                 from /usr/include/boost/mpl/list/aux_/push_front.hpp:18,
+                 from /usr/include/boost/mpl/list/list0.hpp:19,
+                 from /usr/include/boost/mpl/list/list10.hpp:18,
+                 from /usr/include/boost/mpl/list/list20.hpp:18,
+                 from /usr/include/boost/mpl/list.hpp:36,
+                 from /usr/include/boost/math/policies/policy.hpp:9,
+                 from /usr/include/boost/math/policies/error_handling.hpp:21,
+                 from /usr/include/boost/math/special_functions/round.hpp:14,
+                 from /opt/ros/noetic/include/ros/time.h:58,
+                 from /opt/ros/noetic/include/ros/ros.h:38,
+                 from /home/xc/Projects/ME5400/catkin_ws/src/fast_lio/src/preprocess.h:5,
+                 from /home/xc/Projects/ME5400/catkin_ws/src/fast_lio/src/preprocess.cpp:1:
+/home/xc/Projects/ME5400/catkin_ws/src/fast_lio/src/preprocess.h:77:6: warning: ‘using uint16_t = uint16_t’ is deprecated: use std::uint16_t instead of pcl::uint16_t [-Wdeprecated-declarations]
+   77 |     (uint16_t, ring, ring)
+      |      ^~~~~~~~
+In file included from /usr/include/pcl-1.10/pcl/PCLPointField.h:10,
+                 from /usr/include/pcl-1.10/pcl/conversions.h:46,
+                 from /opt/ros/noetic/include/pcl_conversions/pcl_conversions.h:44,
+                 from /home/xc/Projects/ME5400/catkin_ws/src/fast_lio/src/preprocess.h:6,
+                 from /home/xc/Projects/ME5400/catkin_ws/src/fast_lio/src/preprocess.cpp:1:
+/usr/include/pcl-1.10/pcl/pcl_macros.h:94:9: note: declared here
+   94 |   using uint16_t [[deprecated("use std::uint16_t instead of pcl::uint16_t")]] = std::uint16_t;
+      |         ^~~~~~~~
+In file included from /usr/include/boost/preprocessor/tuple/elem.hpp:23,
+                 from /usr/include/boost/preprocessor/arithmetic/add.hpp:21,
+                 from /usr/include/boost/mpl/aux_/preprocessor/def_params_tail.hpp:66,
+                 from /usr/include/boost/mpl/aux_/na_spec.hpp:28,
+                 from /usr/include/boost/mpl/next_prior.hpp:18,
+                 from /usr/include/boost/mpl/next.hpp:17,
+                 from /usr/include/boost/mpl/list/aux_/push_front.hpp:18,
+                 from /usr/include/boost/mpl/list/list0.hpp:19,
+                 from /usr/include/boost/mpl/list/list10.hpp:18,
+                 from /usr/include/boost/mpl/list/list20.hpp:18,
+                 from /usr/include/boost/mpl/list.hpp:36,
+                 from /usr/include/boost/math/policies/policy.hpp:9,
+                 from /usr/include/boost/math/policies/error_handling.hpp:21,
+                 from /usr/include/boost/math/special_functions/round.hpp:14,
+                 from /opt/ros/noetic/include/ros/time.h:58,
+                 from /opt/ros/noetic/include/ros/ros.h:38,
+                 from /home/xc/Projects/ME5400/catkin_ws/src/fast_lio/src/laserMapping.cpp:107:
+/home/xc/Projects/ME5400/catkin_ws/src/fast_lio/src/preprocess.h:77:6: warning: ‘using uint16_t = uint16_t’ is deprecated: use std::uint16_t instead of pcl::uint16_t [-Wdeprecated-declarations]
+   77 |     (uint16_t, ring, ring)
+      |      ^~~~~~~~
+In file included from /usr/include/pcl-1.10/pcl/point_types.h:42,
+                 from /home/xc/Projects/ME5400/catkin_ws/src/fast_lio/include/common_lib.h:6,
+                 from /home/xc/Projects/ME5400/catkin_ws/src/fast_lio/src/IMU_Processing.hpp:11,
+                 from /home/xc/Projects/ME5400/catkin_ws/src/fast_lio/src/laserMapping.cpp:109:
+/usr/include/pcl-1.10/pcl/pcl_macros.h:94:9: note: declared here
+   94 |   using uint16_t [[deprecated("use std::uint16_t instead of pcl::uint16_t")]] = std::uint16_t;
+      |         ^~~~~~~~
+[ 98%] Linking CXX executable /home/xc/Projects/ME5400/catkin_ws/devel/lib/fast_lio/fastlio_mapping
+[100%] Built target fastlio_mapping
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+Base path: /home/xc/Projects/ME5400/catkin_ws
+Source space: /home/xc/Projects/ME5400/catkin_ws/src
+Build space: /home/xc/Projects/ME5400/catkin_ws/build
+Devel space: /home/xc/Projects/ME5400/catkin_ws/devel
+Install space: /home/xc/Projects/ME5400/catkin_ws/install
+####
+#### Running command: "make cmake_check_build_system" in "/home/xc/Projects/ME5400/catkin_ws/build"
+####
+####
+#### Running command: "make -j28 -l28" in "/home/xc/Projects/ME5400/catkin_ws/build"
+####
+[步骤 3] Headless 模式：跳过 RViz 可视化与真实轨迹发布...
+
+=========================================================
+   [离线阶段 A] Baseline(Offline,NoWeight)
+=========================================================
+[A-1] 启动 FAST-LIO (mapping, use_dynamic_weights=false)...
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+Multi thread started 
+p_pre->lidar_type 2
+~~~~/home/xc/Projects/ME5400/catkin_ws/src/fast_lio/ file opened
+[FAST-LIO] Trajectory file opened at: /home/xc/Projects/ME5400/Results/trajectory.txt
+[A-2] 启动离线 feeder (不等待检测/跟踪)...
+[信息] 启动 offline_bag_feeder (require_detection=false require_tracking=false require_odom=false gated_lidar_topic=/kitti/velo/pointcloud)
+[A-3] 等待离线 baseline 阶段完成...
+/opt/ros/noetic/lib/python3/dist-packages/rosbag/bag.py:1568: SyntaxWarning: invalid escape sequence '\d'
+  matches = re.match("#ROS(.*) V(\d).(\d)", version_line)
+[WARN] [1775741963.945211562, 6.400999999]: No point, skip this scan!
+
+[WARN] [1775741963.954050737, 6.601000000]: No point, skip this scan!
+
+[WARN] [1775741963.958777902, 6.700999999]: No point, skip this scan!
+
+[WARN] [1775741963.961095517, 6.801000000]: No point, skip this scan!
+
+[WARN] [1775741963.961112346, 6.801000000]: No point, skip this scan!
+
+[WARN] [1775741963.961117319, 6.801000000]: No point, skip this scan!
+
+[WARN] [1775741963.961121877, 6.801000000]: No point, skip this scan!
+
+[WARN] [1775741963.966512132, 6.900999999]: No point, skip this scan!
+
+[WARN] [1775741963.969119874, 7.001000000]: No point, skip this scan!
+
+[WARN] [1775741963.976769103, 7.100999998]: No point, skip this scan!
+
+[INFO] [1775741961.994608, 0.000000]: [offline_bag_feeder] bag_path=/home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0009_nodet.bag
+[INFO] [1775741961.994864, 0.000000]: [offline_bag_feeder] lidar_topic=/kitti/velo/pointcloud gated_lidar_topic=/kitti/velo/pointcloud det_topic=/detection/lidar_detections track_topic=/mctrack/tracked_objects odom_topic=/joint_backend/odom
+[INFO] [1775741961.995092, 0.000000]: [offline_bag_feeder] require_detection=False require_tracking=False require_odom=False eps=0.060
+[INFO] [1775741961.995314, 0.000000]: [offline_bag_feeder] waiting 1.5s for downstream nodes...
+[INFO] [1775741963.641576, 0.001000]: [offline_bag_feeder] raw_frame=1 lidar stamp=0.001000
+[INFO] [1775741963.652529, 0.101000]: [offline_bag_feeder] raw_frame=2 lidar stamp=0.101000
+[INFO] [1775741963.657875, 0.201000]: [offline_bag_feeder] raw_frame=3 lidar stamp=0.201000
+[INFO] [1775741963.663367, 0.301000]: [offline_bag_feeder] raw_frame=4 lidar stamp=0.301000
+[INFO] [1775741963.668924, 0.401000]: [offline_bag_feeder] raw_frame=5 lidar stamp=0.401000
+[INFO] [1775741963.674724, 0.501000]: [offline_bag_feeder] raw_frame=6 lidar stamp=0.501000
+[INFO] [1775741963.680127, 0.601000]: [offline_bag_feeder] raw_frame=7 lidar stamp=0.601000
+[INFO] [1775741963.684033, 0.701000]: [offline_bag_feeder] raw_frame=8 lidar stamp=0.701000
+[INFO] [1775741963.687268, 0.801000]: [offline_bag_feeder] raw_frame=9 lidar stamp=0.801000
+[INFO] [1775741963.691466, 0.901000]: [offline_bag_feeder] raw_frame=10 lidar stamp=0.901000
+[INFO] [1775741963.695560, 1.001000]: [offline_bag_feeder] raw_frame=11 lidar stamp=1.001000
+[INFO] [1775741963.701256, 1.101000]: [offline_bag_feeder] raw_frame=12 lidar stamp=1.101000
+[INFO] [1775741963.705029, 1.201000]: [offline_bag_feeder] raw_frame=13 lidar stamp=1.201000
+[INFO] [1775741963.712270, 1.301000]: [offline_bag_feeder] raw_frame=14 lidar stamp=1.301000
+[INFO] [1775741963.717090, 1.401000]: [offline_bag_feeder] raw_frame=15 lidar stamp=1.401000
+[INFO] [1775741963.724629, 1.501000]: [offline_bag_feeder] raw_frame=16 lidar stamp=1.501000
+[INFO] [1775741963.729447, 1.601000]: [offline_bag_feeder] raw_frame=17 lidar stamp=1.601000
+[INFO] [1775741963.736806, 1.701000]: [offline_bag_feeder] raw_frame=18 lidar stamp=1.701000
+[INFO] [1775741963.741529, 1.801000]: [offline_bag_feeder] raw_frame=19 lidar stamp=1.801000
+[INFO] [1775741963.746259, 1.901000]: [offline_bag_feeder] raw_frame=20 lidar stamp=1.901000
+[INFO] [1775741963.750961, 2.001000]: [offline_bag_feeder] raw_frame=21 lidar stamp=2.001000
+[INFO] [1775741963.757780, 2.101000]: [offline_bag_feeder] raw_frame=22 lidar stamp=2.101000
+[INFO] [1775741963.762224, 2.201000]: [offline_bag_feeder] raw_frame=23 lidar stamp=2.201000
+[INFO] [1775741963.768418, 2.301000]: [offline_bag_feeder] raw_frame=24 lidar stamp=2.301000
+[INFO] [1775741963.772786, 2.401000]: [offline_bag_feeder] raw_frame=25 lidar stamp=2.401000
+[INFO] [1775741963.777769, 2.501000]: [offline_bag_feeder] raw_frame=26 lidar stamp=2.501000
+[INFO] [1775741963.782423, 2.601000]: [offline_bag_feeder] raw_frame=27 lidar stamp=2.601000
+[INFO] [1775741963.786897, 2.701000]: [offline_bag_feeder] raw_frame=28 lidar stamp=2.701000
+[INFO] [1775741963.792192, 2.801000]: [offline_bag_feeder] raw_frame=29 lidar stamp=2.801000
+[INFO] [1775741963.796381, 2.901000]: [offline_bag_feeder] raw_frame=30 lidar stamp=2.901000
+[INFO] [1775741963.800308, 3.001000]: [offline_bag_feeder] raw_frame=31 lidar stamp=3.001000
+[INFO] [1775741963.803571, 3.101000]: [offline_bag_feeder] raw_frame=32 lidar stamp=3.101000
+[INFO] [1775741963.808940, 3.201000]: [offline_bag_feeder] raw_frame=33 lidar stamp=3.201000
+[INFO] [1775741963.813018, 3.301000]: [offline_bag_feeder] raw_frame=34 lidar stamp=3.301000
+[INFO] [1775741963.817441, 3.401000]: [offline_bag_feeder] raw_frame=35 lidar stamp=3.401000
+[INFO] [1775741963.820939, 3.501000]: [offline_bag_feeder] raw_frame=36 lidar stamp=3.501000
+[INFO] [1775741963.826081, 3.601000]: [offline_bag_feeder] raw_frame=37 lidar stamp=3.601000
+[INFO] [1775741963.830053, 3.701000]: [offline_bag_feeder] raw_frame=38 lidar stamp=3.701000
+[INFO] [1775741963.833492, 3.801000]: [offline_bag_feeder] raw_frame=39 lidar stamp=3.801000
+[INFO] [1775741963.836618, 3.901000]: [offline_bag_feeder] raw_frame=40 lidar stamp=3.901000
+[INFO] [1775741963.840966, 4.001000]: [offline_bag_feeder] raw_frame=41 lidar stamp=4.001000
+[INFO] [1775741963.844214, 4.101000]: [offline_bag_feeder] raw_frame=42 lidar stamp=4.101000
+[INFO] [1775741963.849963, 4.201000]: [offline_bag_feeder] raw_frame=43 lidar stamp=4.201000
+[INFO] [1775741963.853736, 4.301000]: [offline_bag_feeder] raw_frame=44 lidar stamp=4.301000
+[INFO] [1775741963.857957, 4.401000]: [offline_bag_feeder] raw_frame=45 lidar stamp=4.401000
+[INFO] [1775741963.862175, 4.501000]: [offline_bag_feeder] raw_frame=46 lidar stamp=4.501000
+[INFO] [1775741963.865984, 4.601000]: [offline_bag_feeder] raw_frame=47 lidar stamp=4.601000
+[INFO] [1775741963.870702, 4.701000]: [offline_bag_feeder] raw_frame=48 lidar stamp=4.701000
+[INFO] [1775741963.874096, 4.801000]: [offline_bag_feeder] raw_frame=49 lidar stamp=4.801000
+[INFO] [1775741963.879052, 4.901000]: [offline_bag_feeder] raw_frame=50 lidar stamp=4.901000
+[INFO] [1775741963.882693, 5.001000]: [offline_bag_feeder] raw_frame=51 lidar stamp=5.001000
+[INFO] [1775741963.887675, 5.101000]: [offline_bag_feeder] raw_frame=52 lidar stamp=5.101000
+[INFO] [1775741963.890974, 5.201000]: [offline_bag_feeder] raw_frame=53 lidar stamp=5.201000
+[INFO] [1775741963.898198, 5.301000]: [offline_bag_feeder] raw_frame=54 lidar stamp=5.301000
+[INFO] [1775741963.902488, 5.401000]: [offline_bag_feeder] raw_frame=55 lidar stamp=5.401000
+[INFO] [1775741963.907746, 5.501000]: [offline_bag_feeder] raw_frame=56 lidar stamp=5.501000
+[INFO] [1775741963.911340, 5.601000]: [offline_bag_feeder] raw_frame=57 lidar stamp=5.601000
+[INFO] [1775741963.914395, 5.701000]: [offline_bag_feeder] raw_frame=58 lidar stamp=5.701000
+[INFO] [1775741963.919597, 5.801000]: [offline_bag_feeder] raw_frame=59 lidar stamp=5.801000
+[INFO] [1775741963.924513, 5.901000]: [offline_bag_feeder] raw_frame=60 lidar stamp=5.901000
+[INFO] [1775741963.928408, 6.001000]: [offline_bag_feeder] raw_frame=61 lidar stamp=6.001000
+[INFO] [1775741963.932686, 6.101000]: [offline_bag_feeder] raw_frame=62 lidar stamp=6.101000
+[INFO] [1775741963.936641, 6.201000]: [offline_bag_feeder] raw_frame=63 lidar stamp=6.201000
+[INFO] [1775741963.941030, 6.301000]: [offline_bag_feeder] raw_frame=64 lidar stamp=6.301000
+[INFO] [1775741963.945105, 6.401000]: [offline_bag_feeder] raw_frame=65 lidar stamp=6.401000
+[INFO] [1775741963.949069, 6.501000]: [offline_bag_feeder] raw_frame=66 lidar stamp=6.501000
+[INFO] [1775741963.953196, 6.601000]: [offline_bag_feeder] raw_frame=67 lidar stamp=6.601000
+[INFO] [1775741963.956983, 6.701000]: [offline_bag_feeder] raw_frame=68 lidar stamp=6.701000
+[INFO] [1775741963.960863, 6.801000]: [offline_bag_feeder] raw_frame=69 lidar stamp=6.801000
+[INFO] [1775741963.965161, 6.901000]: [offline_bag_feeder] raw_frame=70 lidar stamp=6.901000
+[INFO] [1775741963.970194, 7.001000]: [offline_bag_feeder] raw_frame=71 lidar stamp=7.001000
+[INFO] [1775741963.974249, 7.101000]: [offline_bag_feeder] raw_frame=72 lidar stamp=7.101000
+[INFO] [1775741963.980566, 7.201000]: [offline_bag_feeder] raw_frame=73 lidar stamp=7.201000
+[INFO] [1775741963.985354, 7.301000]: [offline_bag_feeder] raw_frame=74 lidar stamp=7.301000
+[INFO] [1775741963.990459, 7.401000]: [offline_bag_feeder] raw_frame=75 lidar stamp=7.401000
+[INFO] [1775741963.997195, 7.501000]: [offline_bag_feeder] raw_frame=76 lidar stamp=7.501000
+[INFO] [1775741964.002902, 7.601000]: [offline_bag_feeder] raw_frame=77 lidar stamp=7.601000
+[INFO] [1775741964.011084, 7.701000]: [offline_bag_feeder] raw_frame=78 lidar stamp=7.701000
+[INFO] [1775741964.016221, 7.801000]: [offline_bag_feeder] raw_frame=79 lidar stamp=7.801000
+[INFO] [1775741964.021527, 7.901000]: [offline_bag_feeder] raw_frame=80 lidar stamp=7.901000
+[INFO] [1775741964.026140, 8.001000]: [offline_bag_feeder] raw_frame=81 lidar stamp=8.001000
+[INFO] [1775741964.030049, 8.101000]: [offline_bag_feeder] raw_frame=82 lidar stamp=8.101000
+[INFO] [1775741964.035314, 8.201000]: [offline_bag_feeder] raw_frame=83 lidar stamp=8.201000
+[INFO] [1775741964.039555, 8.301000]: [offline_bag_feeder] raw_frame=84 lidar stamp=8.301000
+[INFO] [1775741964.044874, 8.401000]: [offline_bag_feeder] raw_frame=85 lidar stamp=8.401000
+[INFO] [1775741964.050397, 8.501000]: [offline_bag_feeder] raw_frame=86 lidar stamp=8.501000
+[INFO] [1775741964.054528, 8.601000]: [offline_bag_feeder] raw_frame=87 lidar stamp=8.601000
+[INFO] [1775741964.060258, 8.701000]: [offline_bag_feeder] raw_frame=88 lidar stamp=8.701000
+[INFO] [1775741964.065912, 8.801000]: [offline_bag_feeder] raw_frame=89 lidar stamp=8.801000
+[INFO] [1775741964.070255, 8.901000]: [offline_bag_feeder] raw_frame=90 lidar stamp=8.901000
+[INFO] [1775741964.074415, 9.001000]: [offline_bag_feeder] raw_frame=91 lidar stamp=9.001000
+[INFO] [1775741964.078927, 9.101000]: [offline_bag_feeder] raw_frame=92 lidar stamp=9.101000
+[INFO] [1775741964.083042, 9.201000]: [offline_bag_feeder] raw_frame=93 lidar stamp=9.201000
+[INFO] [1775741964.088435, 9.301000]: [offline_bag_feeder] raw_frame=94 lidar stamp=9.301000
+[INFO] [1775741964.092791, 9.401000]: [offline_bag_feeder] raw_frame=95 lidar stamp=9.401000
+[INFO] [1775741964.098317, 9.501000]: [offline_bag_feeder] raw_frame=96 lidar stamp=9.501000
+[INFO] [1775741964.103034, 9.601000]: [offline_bag_feeder] raw_frame=97 lidar stamp=9.601000
+[INFO] [1775741964.108716, 9.701000]: [offline_bag_feeder] raw_frame=98 lidar stamp=9.701000
+[INFO] [1775741964.114054, 9.801000]: [offline_bag_feeder] raw_frame=99 lidar stamp=9.801000
+[INFO] [1775741964.122162, 9.901000]: [offline_bag_feeder] raw_frame=100 lidar stamp=9.901000
+[INFO] [1775741964.127539, 10.001000]: [offline_bag_feeder] raw_frame=101 lidar stamp=10.001000
+[INFO] [1775741964.131891, 10.101000]: [offline_bag_feeder] raw_frame=102 lidar stamp=10.101000
+[INFO] [1775741964.136055, 10.201000]: [offline_bag_feeder] raw_frame=103 lidar stamp=10.201000
+[INFO] [1775741964.140354, 10.301000]: [offline_bag_feeder] raw_frame=104 lidar stamp=10.301000
+[INFO] [1775741964.144317, 10.401000]: [offline_bag_feeder] raw_frame=105 lidar stamp=10.401000
+[INFO] [1775741964.148093, 10.501000]: [offline_bag_feeder] raw_frame=106 lidar stamp=10.501000
+[INFO] [1775741964.152667, 10.601000]: [offline_bag_feeder] raw_frame=107 lidar stamp=10.601000
+[INFO] [1775741964.157236, 10.701000]: [offline_bag_feeder] raw_frame=108 lidar stamp=10.701000
+[INFO] [1775741964.161233, 10.801000]: [offline_bag_feeder] raw_frame=109 lidar stamp=10.801000
+[INFO] [1775741964.165164, 10.901000]: [offline_bag_feeder] raw_frame=110 lidar stamp=10.901000
+[INFO] [1775741964.169867, 11.001000]: [offline_bag_feeder] raw_frame=111 lidar stamp=11.001000
+[INFO] [1775741964.174857, 11.101000]: [offline_bag_feeder] raw_frame=112 lidar stamp=11.101000
+[INFO] [1775741964.179413, 11.201000]: [offline_bag_feeder] raw_frame=113 lidar stamp=11.201000
+[INFO] [1775741964.184783, 11.301000]: [offline_bag_feeder] raw_frame=114 lidar stamp=11.301000
+[INFO] [1775741964.192082, 11.401000]: [offline_bag_feeder] raw_frame=115 lidar stamp=11.401000
+[INFO] [1775741964.196286, 11.501000]: [offline_bag_feeder] raw_frame=116 lidar stamp=11.501000
+[INFO] [1775741964.200835, 11.601000]: [offline_bag_feeder] raw_frame=117 lidar stamp=11.601000
+[INFO] [1775741964.204917, 11.701000]: [offline_bag_feeder] raw_frame=118 lidar stamp=11.701000
+[INFO] [1775741964.209712, 11.801000]: [offline_bag_feeder] raw_frame=119 lidar stamp=11.801000
+[INFO] [1775741964.215095, 11.901000]: [offline_bag_feeder] raw_frame=120 lidar stamp=11.901000
+[INFO] [1775741964.220086, 12.001000]: [offline_bag_feeder] raw_frame=121 lidar stamp=12.001000
+[INFO] [1775741964.226602, 12.101000]: [offline_bag_feeder] raw_frame=122 lidar stamp=12.101000
+[INFO] [1775741964.231545, 12.101000]: [offline_bag_feeder] raw_frame=123 lidar stamp=12.201000
+[INFO] [1775741964.239240, 12.301000]: [offline_bag_feeder] raw_frame=124 lidar stamp=12.301000
+[INFO] [1775741964.244923, 12.401000]: [offline_bag_feeder] raw_frame=125 lidar stamp=12.401000
+[INFO] [1775741964.250478, 12.501000]: [offline_bag_feeder] raw_frame=126 lidar stamp=12.501000
+[INFO] [1775741964.256656, 12.601000]: [offline_bag_feeder] raw_frame=127 lidar stamp=12.601000
+[INFO] [1775741964.262035, 12.701000]: [offline_bag_feeder] raw_frame=128 lidar stamp=12.701000
+[INFO] [1775741964.268488, 12.801000]: [offline_bag_feeder] raw_frame=129 lidar stamp=12.801000
+[INFO] [1775741964.273017, 12.901000]: [offline_bag_feeder] raw_frame=130 lidar stamp=12.901000
+[INFO] [1775741964.277907, 13.001000]: [offline_bag_feeder] raw_frame=131 lidar stamp=13.001000
+[INFO] [1775741964.282832, 13.101000]: [offline_bag_feeder] raw_frame=132 lidar stamp=13.101000
+[INFO] [1775741964.287387, 13.201000]: [offline_bag_feeder] raw_frame=133 lidar stamp=13.201000
+[INFO] [1775741964.294883, 13.301000]: [offline_bag_feeder] raw_frame=134 lidar stamp=13.301000
+[INFO] [1775741964.300340, 13.401000]: [offline_bag_feeder] raw_frame=135 lidar stamp=13.401000
+[INFO] [1775741964.307184, 13.501000]: [offline_bag_feeder] raw_frame=136 lidar stamp=13.501000
+[INFO] [1775741964.313805, 13.601000]: [offline_bag_feeder] raw_frame=137 lidar stamp=13.601000
+[INFO] [1775741964.318478, 13.701000]: [offline_bag_feeder] raw_frame=138 lidar stamp=13.701000
+[INFO] [1775741964.326088, 13.801000]: [offline_bag_feeder] raw_frame=139 lidar stamp=13.801000
+[INFO] [1775741964.331334, 13.901000]: [offline_bag_feeder] raw_frame=140 lidar stamp=13.901000
+[INFO] [1775741964.338352, 14.001000]: [offline_bag_feeder] raw_frame=141 lidar stamp=14.001000
+[INFO] [1775741964.344078, 14.101000]: [offline_bag_feeder] raw_frame=142 lidar stamp=14.101000
+[INFO] [1775741964.350065, 14.201000]: [offline_bag_feeder] raw_frame=143 lidar stamp=14.201000
+[INFO] [1775741964.354201, 14.301000]: [offline_bag_feeder] raw_frame=144 lidar stamp=14.301000
+[INFO] [1775741964.357992, 14.401000]: [offline_bag_feeder] raw_frame=145 lidar stamp=14.401000
+[INFO] [1775741964.363048, 14.501000]: [offline_bag_feeder] raw_frame=146 lidar stamp=14.501000
+[INFO] [1775741964.366903, 14.601000]: [offline_bag_feeder] raw_frame=147 lidar stamp=14.601000
+[INFO] [1775741964.372955, 14.701000]: [offline_bag_feeder] raw_frame=148 lidar stamp=14.701000
+[INFO] [1775741964.377220, 14.801000]: [offline_bag_feeder] raw_frame=149 lidar stamp=14.801000
+[INFO] [1775741964.382486, 14.901000]: [offline_bag_feeder] raw_frame=150 lidar stamp=14.901000
+[INFO] [1775741964.387461, 15.001000]: [offline_bag_feeder] raw_frame=151 lidar stamp=15.001000
+[INFO] [1775741964.391485, 15.101000]: [offline_bag_feeder] raw_frame=152 lidar stamp=15.101000
+[INFO] [1775741964.397158, 15.201000]: [offline_bag_feeder] raw_frame=153 lidar stamp=15.201000
+[INFO] [1775741964.404103, 15.301000]: [offline_bag_feeder] raw_frame=154 lidar stamp=15.301000
+[INFO] [1775741964.409609, 15.401000]: [offline_bag_feeder] raw_frame=155 lidar stamp=15.401000
+[INFO] [1775741964.414884, 15.501000]: [offline_bag_feeder] raw_frame=156 lidar stamp=15.501000
+[INFO] [1775741964.419876, 15.601000]: [offline_bag_feeder] raw_frame=157 lidar stamp=15.601000
+[INFO] [1775741964.426022, 15.701000]: [offline_bag_feeder] raw_frame=158 lidar stamp=15.701000
+[INFO] [1775741964.432377, 15.801000]: [offline_bag_feeder] raw_frame=159 lidar stamp=15.801000
+[INFO] [1775741964.438180, 15.901000]: [offline_bag_feeder] raw_frame=160 lidar stamp=15.901000
+[INFO] [1775741964.444656, 16.001000]: [offline_bag_feeder] raw_frame=161 lidar stamp=16.001000
+[INFO] [1775741964.450111, 16.101000]: [offline_bag_feeder] raw_frame=162 lidar stamp=16.101000
+[INFO] [1775741964.454473, 16.201000]: [offline_bag_feeder] raw_frame=163 lidar stamp=16.201000
+[INFO] [1775741964.458449, 16.301000]: [offline_bag_feeder] raw_frame=164 lidar stamp=16.301000
+[INFO] [1775741964.463070, 16.401000]: [offline_bag_feeder] raw_frame=165 lidar stamp=16.401000
+[INFO] [1775741964.467482, 16.501000]: [offline_bag_feeder] raw_frame=166 lidar stamp=16.501000
+[INFO] [1775741964.473018, 16.601000]: [offline_bag_feeder] raw_frame=167 lidar stamp=16.601000
+[INFO] [1775741964.478381, 16.701000]: [offline_bag_feeder] raw_frame=168 lidar stamp=16.701000
+[INFO] [1775741964.482327, 16.801000]: [offline_bag_feeder] raw_frame=169 lidar stamp=16.801000
+[INFO] [1775741964.486320, 16.901000]: [offline_bag_feeder] raw_frame=170 lidar stamp=16.901000
+[INFO] [1775741964.490113, 17.001000]: [offline_bag_feeder] raw_frame=171 lidar stamp=17.001000
+[INFO] [1775741964.494282, 17.101000]: [offline_bag_feeder] raw_frame=172 lidar stamp=17.101000
+[INFO] [1775741964.497964, 17.201000]: [offline_bag_feeder] raw_frame=173 lidar stamp=17.201000
+[INFO] [1775741964.502299, 17.301000]: [offline_bag_feeder] raw_frame=174 lidar stamp=17.301000
+[INFO] [1775741964.506091, 17.401000]: [offline_bag_feeder] raw_frame=175 lidar stamp=17.401000
+[INFO] [1775741964.509789, 17.501000]: [offline_bag_feeder] raw_frame=176 lidar stamp=17.501000
+[INFO] [1775741964.513537, 17.601000]: [offline_bag_feeder] raw_frame=177 lidar stamp=17.601000
+[INFO] [1775741964.517810, 17.701000]: [offline_bag_feeder] raw_frame=178 lidar stamp=17.701000
+[INFO] [1775741964.521590, 17.801000]: [offline_bag_feeder] raw_frame=179 lidar stamp=17.801000
+[INFO] [1775741964.526061, 17.901000]: [offline_bag_feeder] raw_frame=180 lidar stamp=17.901000
+[INFO] [1775741964.530175, 18.001000]: [offline_bag_feeder] raw_frame=181 lidar stamp=18.001000
+[INFO] [1775741964.533737, 18.101000]: [offline_bag_feeder] raw_frame=182 lidar stamp=18.101000
+[INFO] [1775741964.537626, 18.201000]: [offline_bag_feeder] raw_frame=183 lidar stamp=18.201000
+[INFO] [1775741964.541177, 18.301000]: [offline_bag_feeder] raw_frame=184 lidar stamp=18.301000
+[INFO] [1775741964.545168, 18.401000]: [offline_bag_feeder] raw_frame=185 lidar stamp=18.401000
+[INFO] [1775741964.548614, 18.501000]: [offline_bag_feeder] raw_frame=186 lidar stamp=18.501000
+[INFO] [1775741964.552646, 18.601000]: [offline_bag_feeder] raw_frame=187 lidar stamp=18.601000
+[INFO] [1775741964.556149, 18.701000]: [offline_bag_feeder] raw_frame=188 lidar stamp=18.701000
+[INFO] [1775741964.560554, 18.801000]: [offline_bag_feeder] raw_frame=189 lidar stamp=18.801000
+[INFO] [1775741964.564208, 18.901000]: [offline_bag_feeder] raw_frame=190 lidar stamp=18.901000
+[INFO] [1775741964.570165, 19.001000]: [offline_bag_feeder] raw_frame=191 lidar stamp=19.001000
+[INFO] [1775741964.573832, 19.101000]: [offline_bag_feeder] raw_frame=192 lidar stamp=19.101000
+[INFO] [1775741964.578139, 19.201000]: [offline_bag_feeder] raw_frame=193 lidar stamp=19.201000
+[INFO] [1775741964.582431, 19.301000]: [offline_bag_feeder] raw_frame=194 lidar stamp=19.301000
+[INFO] [1775741964.586486, 19.401000]: [offline_bag_feeder] raw_frame=195 lidar stamp=19.401000
+[INFO] [1775741964.590118, 19.501000]: [offline_bag_feeder] raw_frame=196 lidar stamp=19.501000
+[INFO] [1775741964.593811, 19.601000]: [offline_bag_feeder] raw_frame=197 lidar stamp=19.601000
+[INFO] [1775741964.597707, 19.701000]: [offline_bag_feeder] raw_frame=198 lidar stamp=19.701000
+[INFO] [1775741964.604298, 19.801000]: [offline_bag_feeder] raw_frame=199 lidar stamp=19.801000
+[INFO] [1775741964.609396, 19.901000]: [offline_bag_feeder] raw_frame=200 lidar stamp=19.901000
+[INFO] [1775741964.614719, 20.001000]: [offline_bag_feeder] raw_frame=201 lidar stamp=20.001000
+[INFO] [1775741964.618363, 20.101000]: [offline_bag_feeder] raw_frame=202 lidar stamp=20.101000
+[INFO] [1775741964.621820, 20.201000]: [offline_bag_feeder] raw_frame=203 lidar stamp=20.201000
+[INFO] [1775741964.625365, 20.301000]: [offline_bag_feeder] raw_frame=204 lidar stamp=20.301000
+[INFO] [1775741964.628812, 20.401000]: [offline_bag_feeder] raw_frame=205 lidar stamp=20.401000
+[INFO] [1775741964.633241, 20.501000]: [offline_bag_feeder] raw_frame=206 lidar stamp=20.501000
+[INFO] [1775741964.637442, 20.601000]: [offline_bag_feeder] raw_frame=207 lidar stamp=20.601000
+[INFO] [1775741964.642903, 20.701000]: [offline_bag_feeder] raw_frame=208 lidar stamp=20.701000
+[INFO] [1775741964.647393, 20.801000]: [offline_bag_feeder] raw_frame=209 lidar stamp=20.801000
+[INFO] [1775741964.650996, 20.901000]: [offline_bag_feeder] raw_frame=210 lidar stamp=20.901000
+[INFO] [1775741964.655141, 21.001000]: [offline_bag_feeder] raw_frame=211 lidar stamp=21.001000
+[INFO] [1775741964.659468, 21.101000]: [offline_bag_feeder] raw_frame=212 lidar stamp=21.101000
+[INFO] [1775741964.664695, 21.201000]: [offline_bag_feeder] raw_frame=213 lidar stamp=21.201000
+[INFO] [1775741964.668353, 21.301000]: [offline_bag_feeder] raw_frame=214 lidar stamp=21.301000
+[INFO] [1775741964.671916, 21.401000]: [offline_bag_feeder] raw_frame=215 lidar stamp=21.401000
+[INFO] [1775741964.675588, 21.501000]: [offline_bag_feeder] raw_frame=216 lidar stamp=21.501000
+[INFO] [1775741964.679333, 21.601000]: [offline_bag_feeder] raw_frame=217 lidar stamp=21.601000
+[INFO] [1775741964.683140, 21.701000]: [offline_bag_feeder] raw_frame=218 lidar stamp=21.701000
+[INFO] [1775741964.687114, 21.801000]: [offline_bag_feeder] raw_frame=219 lidar stamp=21.801000
+[INFO] [1775741964.690992, 21.901000]: [offline_bag_feeder] raw_frame=220 lidar stamp=21.901000
+[INFO] [1775741964.694829, 22.001000]: [offline_bag_feeder] raw_frame=221 lidar stamp=22.001000
+[INFO] [1775741964.698607, 22.101000]: [offline_bag_feeder] raw_frame=222 lidar stamp=22.101000
+[INFO] [1775741964.702423, 22.201000]: [offline_bag_feeder] raw_frame=223 lidar stamp=22.201000
+[INFO] [1775741964.706711, 22.301000]: [offline_bag_feeder] raw_frame=224 lidar stamp=22.301000
+[INFO] [1775741964.710873, 22.401000]: [offline_bag_feeder] raw_frame=225 lidar stamp=22.401000
+[INFO] [1775741964.716285, 22.501000]: [offline_bag_feeder] raw_frame=226 lidar stamp=22.501000
+[INFO] [1775741964.720444, 22.601000]: [offline_bag_feeder] raw_frame=227 lidar stamp=22.601000
+[INFO] [1775741964.724791, 22.701000]: [offline_bag_feeder] raw_frame=228 lidar stamp=22.701000
+[INFO] [1775741964.728471, 22.801000]: [offline_bag_feeder] raw_frame=229 lidar stamp=22.801000
+[INFO] [1775741964.732107, 22.901000]: [offline_bag_feeder] raw_frame=230 lidar stamp=22.901000
+[INFO] [1775741964.735873, 23.001000]: [offline_bag_feeder] raw_frame=231 lidar stamp=23.001000
+[INFO] [1775741964.739732, 23.101000]: [offline_bag_feeder] raw_frame=232 lidar stamp=23.101000
+[INFO] [1775741964.743646, 23.201000]: [offline_bag_feeder] raw_frame=233 lidar stamp=23.201000
+[INFO] [1775741964.747609, 23.301000]: [offline_bag_feeder] raw_frame=234 lidar stamp=23.301000
+[INFO] [1775741964.751899, 23.401000]: [offline_bag_feeder] raw_frame=235 lidar stamp=23.401000
+[INFO] [1775741964.756257, 23.501000]: [offline_bag_feeder] raw_frame=236 lidar stamp=23.501000
+[INFO] [1775741964.760834, 23.601000]: [offline_bag_feeder] raw_frame=237 lidar stamp=23.601000
+[INFO] [1775741964.764881, 23.701000]: [offline_bag_feeder] raw_frame=238 lidar stamp=23.701000
+[INFO] [1775741964.769745, 23.801000]: [offline_bag_feeder] raw_frame=239 lidar stamp=23.801000
+[INFO] [1775741964.773572, 23.901000]: [offline_bag_feeder] raw_frame=240 lidar stamp=23.901000
+[INFO] [1775741964.777945, 24.001000]: [offline_bag_feeder] raw_frame=241 lidar stamp=24.001000
+[INFO] [1775741964.782270, 24.101000]: [offline_bag_feeder] raw_frame=242 lidar stamp=24.101000
+[INFO] [1775741964.786256, 24.201000]: [offline_bag_feeder] raw_frame=243 lidar stamp=24.201000
+[INFO] [1775741964.790372, 24.301000]: [offline_bag_feeder] raw_frame=244 lidar stamp=24.301000
+[INFO] [1775741964.794137, 24.401000]: [offline_bag_feeder] raw_frame=245 lidar stamp=24.401000
+[INFO] [1775741964.798625, 24.501000]: [offline_bag_feeder] raw_frame=246 lidar stamp=24.501000
+[INFO] [1775741964.802525, 24.601000]: [offline_bag_feeder] raw_frame=247 lidar stamp=24.601000
+[INFO] [1775741964.806193, 24.701000]: [offline_bag_feeder] raw_frame=248 lidar stamp=24.701000
+[INFO] [1775741964.809478, 24.801000]: [offline_bag_feeder] raw_frame=249 lidar stamp=24.801000
+[INFO] [1775741964.812758, 24.901000]: [offline_bag_feeder] raw_frame=250 lidar stamp=24.901000
+[INFO] [1775741964.816174, 25.001000]: [offline_bag_feeder] raw_frame=251 lidar stamp=25.001000
+[INFO] [1775741964.819639, 25.101000]: [offline_bag_feeder] raw_frame=252 lidar stamp=25.101000
+[INFO] [1775741964.823528, 25.201000]: [offline_bag_feeder] raw_frame=253 lidar stamp=25.201000
+[INFO] [1775741964.827386, 25.301000]: [offline_bag_feeder] raw_frame=254 lidar stamp=25.301000
+[INFO] [1775741963.976736219, 7.100999998]: IMU Initial Done
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003815 ave match: 0.007757 ave solve: 0.001750  ave ICP: 0.010272  map incre: 0.003801 ave total: 0.017888 icp: 0.009632 construct H: 0.000438 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003637 ave match: 0.007975 ave solve: 0.001663  ave ICP: 0.009908  map incre: 0.004124 ave total: 0.017778 icp: 0.009735 construct H: 0.000437 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003739 ave match: 0.008160 ave solve: 0.001692  ave ICP: 0.010406  map incre: 0.004213 ave total: 0.017971 icp: 0.009942 construct H: 0.000451 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003805 ave match: 0.008269 ave solve: 0.001674  ave ICP: 0.010341  map incre: 0.004410 ave total: 0.018117 icp: 0.010026 construct H: 0.000451 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003844 ave match: 0.008270 ave solve: 0.001657  ave ICP: 0.009992  map incre: 0.003512 ave total: 0.017964 icp: 0.010006 construct H: 0.000450 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003853 ave match: 0.008293 ave solve: 0.001649  ave ICP: 0.010132  map incre: 0.003906 ave total: 0.017951 icp: 0.010018 construct H: 0.000451 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003805 ave match: 0.008340 ave solve: 0.001643  ave ICP: 0.010341  map incre: 0.003221 ave total: 0.017868 icp: 0.010056 construct H: 0.000450 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003808 ave match: 0.008364 ave solve: 0.001632  ave ICP: 0.010196  map incre: 0.002778 ave total: 0.017732 icp: 0.010067 construct H: 0.000447 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003839 ave match: 0.008400 ave solve: 0.001628  ave ICP: 0.010398  map incre: 0.003591 ave total: 0.017743 icp: 0.010099 construct H: 0.000446 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003896 ave match: 0.008450 ave solve: 0.001626  ave ICP: 0.010630  map incre: 0.002893 ave total: 0.017710 icp: 0.010147 construct H: 0.000445 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003885 ave match: 0.008481 ave solve: 0.001619  ave ICP: 0.010454  map incre: 0.003035 ave total: 0.017680 icp: 0.010170 construct H: 0.000445 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003846 ave match: 0.008518 ave solve: 0.001611  ave ICP: 0.010562  map incre: 0.002873 ave total: 0.017647 icp: 0.010199 construct H: 0.000443 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003871 ave match: 0.008540 ave solve: 0.001605  ave ICP: 0.010453  map incre: 0.002522 ave total: 0.017585 icp: 0.010214 construct H: 0.000442 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003808 ave match: 0.008561 ave solve: 0.001599  ave ICP: 0.010449  map incre: 0.002643 ave total: 0.017536 icp: 0.010228 construct H: 0.000441 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003802 ave match: 0.008576 ave solve: 0.001592  ave ICP: 0.010380  map incre: 0.002525 ave total: 0.017481 icp: 0.010235 construct H: 0.000439 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003801 ave match: 0.008717 ave solve: 0.001583  ave ICP: 0.012385  map incre: 0.002439 ave total: 0.017552 icp: 0.010366 construct H: 0.000436 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003766 ave match: 0.008724 ave solve: 0.001573  ave ICP: 0.010349  map incre: 0.002426 ave total: 0.017493 icp: 0.010362 construct H: 0.000433 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003811 ave match: 0.008728 ave solve: 0.001565  ave ICP: 0.010335  map incre: 0.002556 ave total: 0.017449 icp: 0.010358 construct H: 0.000431 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003730 ave match: 0.008730 ave solve: 0.001555  ave ICP: 0.010259  map incre: 0.002285 ave total: 0.017387 icp: 0.010350 construct H: 0.000428 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003767 ave match: 0.008721 ave solve: 0.001549  ave ICP: 0.010089  map incre: 0.002385 ave total: 0.017330 icp: 0.010335 construct H: 0.000429 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003727 ave match: 0.008720 ave solve: 0.001540  ave ICP: 0.010164  map incre: 0.0022[INFO] [1775741964.832483, 25.401000]: [offline_bag_feeder] raw_frame=255 lidar stamp=25.401000
+[INFO] [1775741964.836752, 25.501000]: [offline_bag_feeder] raw_frame=256 lidar stamp=25.501000
+[INFO] [1775741964.841074, 25.601000]: [offline_bag_feeder] raw_frame=257 lidar stamp=25.601000
+[INFO] [1775741964.845173, 25.701000]: [offline_bag_feeder] raw_frame=258 lidar stamp=25.701000
+[INFO] [1775741964.849045, 25.801000]: [offline_bag_feeder] raw_frame=259 lidar stamp=25.801000
+[INFO] [1775741964.854162, 25.901000]: [offline_bag_feeder] raw_frame=260 lidar stamp=25.901000
+[INFO] [1775741964.857758, 26.001000]: [offline_bag_feeder] raw_frame=261 lidar stamp=26.001000
+[INFO] [1775741964.861721, 26.101000]: [offline_bag_feeder] raw_frame=262 lidar stamp=26.101000
+[INFO] [1775741964.865167, 26.201000]: [offline_bag_feeder] raw_frame=263 lidar stamp=26.201000
+[INFO] [1775741964.869856, 26.301000]: [offline_bag_feeder] raw_frame=264 lidar stamp=26.301000
+[INFO] [1775741964.874536, 26.401000]: [offline_bag_feeder] raw_frame=265 lidar stamp=26.401000
+[INFO] [1775741964.879106, 26.501000]: [offline_bag_feeder] raw_frame=266 lidar stamp=26.501000
+[INFO] [1775741964.882992, 26.601000]: [offline_bag_feeder] raw_frame=267 lidar stamp=26.601000
+[INFO] [1775741964.887618, 26.701000]: [offline_bag_feeder] raw_frame=268 lidar stamp=26.701000
+[INFO] [1775741964.893109, 26.801000]: [offline_bag_feeder] raw_frame=269 lidar stamp=26.801000
+[INFO] [1775741964.898126, 26.901000]: [offline_bag_feeder] raw_frame=270 lidar stamp=26.901000
+[INFO] [1775741964.903481, 27.001000]: [offline_bag_feeder] raw_frame=271 lidar stamp=27.001000
+[INFO] [1775741964.907641, 27.101000]: [offline_bag_feeder] raw_frame=272 lidar stamp=27.101000
+[INFO] [1775741964.911485, 27.201000]: [offline_bag_feeder] raw_frame=273 lidar stamp=27.201000
+[INFO] [1775741964.916277, 27.301000]: [offline_bag_feeder] raw_frame=274 lidar stamp=27.301000
+[INFO] [1775741964.920512, 27.401000]: [offline_bag_feeder] raw_frame=275 lidar stamp=27.401000
+[INFO] [1775741964.925850, 27.501000]: [offline_bag_feeder] raw_frame=276 lidar stamp=27.501000
+[INFO] [1775741964.930100, 27.601000]: [offline_bag_feeder] raw_frame=277 lidar stamp=27.601000
+[INFO] [1775741964.934875, 27.701000]: [offline_bag_feeder] raw_frame=278 lidar stamp=27.701000
+[INFO] [1775741964.940038, 27.801000]: [offline_bag_feeder] raw_frame=279 lidar stamp=27.801000
+[INFO] [1775741964.945100, 27.901000]: [offline_bag_feeder] raw_frame=280 lidar stamp=27.901000
+[INFO] [1775741964.952516, 28.001000]: [offline_bag_feeder] raw_frame=281 lidar stamp=28.001000
+[INFO] [1775741964.957452, 28.101000]: [offline_bag_feeder] raw_frame=282 lidar stamp=28.101000
+[INFO] [1775741964.963211, 28.201000]: [offline_bag_feeder] raw_frame=283 lidar stamp=28.201000
+[INFO] [1775741964.968215, 28.301000]: [offline_bag_feeder] raw_frame=284 lidar stamp=28.301000
+[INFO] [1775741964.973070, 28.401000]: [offline_bag_feeder] raw_frame=285 lidar stamp=28.401000
+[INFO] [1775741964.979359, 28.501000]: [offline_bag_feeder] raw_frame=286 lidar stamp=28.501000
+[INFO] [1775741964.984519, 28.601000]: [offline_bag_feeder] raw_frame=287 lidar stamp=28.601000
+[INFO] [1775741964.990287, 28.701000]: [offline_bag_feeder] raw_frame=288 lidar stamp=28.701000
+[INFO] [1775741964.995751, 28.801000]: [offline_bag_feeder] raw_frame=289 lidar stamp=28.801000
+[INFO] [1775741965.000956, 28.901000]: [offline_bag_feeder] raw_frame=290 lidar stamp=28.901000
+[INFO] [1775741965.009063, 29.001000]: [offline_bag_feeder] raw_frame=291 lidar stamp=29.001000
+[INFO] [1775741965.015308, 29.101000]: [offline_bag_feeder] raw_frame=292 lidar stamp=29.101000
+[INFO] [1775741965.022514, 29.201000]: [offline_bag_feeder] raw_frame=293 lidar stamp=29.201000
+[INFO] [1775741965.029579, 29.301000]: [offline_bag_feeder] raw_frame=294 lidar stamp=29.301000
+[INFO] [1775741965.036173, 29.401000]: [offline_bag_feeder] raw_frame=295 lidar stamp=29.401000
+[INFO] [1775741965.043022, 29.501000]: [offline_bag_feeder] raw_frame=296 lidar stamp=29.501000
+[INFO] [1775741965.049416, 29.601000]: [offline_bag_feeder] raw_frame=297 lidar stamp=29.601000
+[INFO] [1775741965.056782, 29.701000]: [offline_bag_feeder] raw_frame=298 lidar stamp=29.701000
+[INFO] [1775741965.063132, 29.801000]: [offline_bag_feeder] raw_frame=299 lidar stamp=29.801000
+[INFO] [1775741965.069112, 29.901000]: [offline_bag_feeder] raw_frame=300 lidar stamp=29.901000
+[INFO] [1775741965.075564, 30.001000]: [offline_bag_feeder] raw_frame=301 lidar stamp=30.001000
+[INFO] [1775741965.080678, 30.101000]: [offline_bag_feeder] raw_frame=302 lidar stamp=30.101000
+[INFO] [1775741965.085734, 30.201000]: [offline_bag_feeder] raw_frame=303 lidar stamp=30.201000
+[INFO] [1775741965.089920, 30.301000]: [offline_bag_feeder] raw_frame=304 lidar stamp=30.301000
+[INFO] [1775741965.094367, 30.401000]: [offline_bag_feeder] raw_frame=305 lidar stamp=30.401000
+[INFO] [1775741965.100219, 30.501000]: [offline_bag_feeder] raw_frame=306 lidar stamp=30.501000
+[INFO] [1775741965.104097, 30.601000]: [offline_bag_feeder] raw_frame=307 lidar stamp=30.601000
+[INFO] [1775741965.108290, 30.701000]: [offline_bag_feeder] raw_frame=308 lidar stamp=30.701000
+[INFO] [1775741965.113148, 30.801000]: [offline_bag_feeder] raw_frame=309 lidar stamp=30.801000
+[INFO] [1775741965.117418, 30.901000]: [offline_bag_feeder] raw_frame=310 lidar stamp=30.901000
+[INFO] [1775741965.122599, 31.001000]: [offline_bag_feeder] raw_frame=311 lidar stamp=31.001000
+[INFO] [1775741965.126717, 31.101000]: [offline_bag_feeder] raw_frame=312 lidar stamp=31.101000
+[INFO] [1775741965.130605, 31.201000]: [offline_bag_feeder] raw_frame=313 lidar stamp=31.201000
+[INFO] [1775741965.134500, 31.301000]: [offline_bag_feeder] raw_frame=314 lidar stamp=31.301000
+[INFO] [1775741965.138354, 31.401000]: [offline_bag_feeder] raw_frame=315 lidar stamp=31.401000
+[INFO] [1775741965.143065, 31.501000]: [offline_bag_feeder] raw_frame=316 lidar stamp=31.501000
+[INFO] [1775741965.147182, 31.601000]: [offline_bag_feeder] raw_frame=317 lidar stamp=31.601000
+[INFO] [1775741965.153349, 31.701000]: [offline_bag_feeder] raw_frame=318 lidar stamp=31.701000
+[INFO] [1775741965.157633, 31.801000]: [offline_bag_feeder] raw_frame=319 lidar stamp=31.801000
+[INFO] [1775741965.162899, 31.901000]: [offline_bag_feeder] raw_frame=320 lidar stamp=31.901000
+[INFO] [1775741965.167649, 32.001000]: [offline_bag_feeder] raw_frame=321 lidar stamp=32.001000
+[INFO] [1775741965.171919, 32.101000]: [offline_bag_feeder] raw_frame=322 lidar stamp=32.101000
+[INFO] [1775741965.176956, 32.201000]: [offline_bag_feeder] raw_frame=323 lidar stamp=32.201000
+[INFO] [1775741965.180873, 32.301000]: [offline_bag_feeder] raw_frame=324 lidar stamp=32.301000
+[INFO] [1775741965.184903, 32.401000]: [offline_bag_feeder] raw_frame=325 lidar stamp=32.401000
+[INFO] [1775741965.189454, 32.501000]: [offline_bag_feeder] raw_frame=326 lidar stamp=32.501000
+[INFO] [1775741965.193929, 32.601000]: [offline_bag_feeder] raw_frame=327 lidar stamp=32.601000
+[INFO] [1775741965.198389, 32.701000]: [offline_bag_feeder] raw_frame=328 lidar stamp=32.701000
+[INFO] [1775741965.202152, 32.801000]: [offline_bag_feeder] raw_frame=329 lidar stamp=32.801000
+[INFO] [1775741965.205835, 32.901000]: [offline_bag_feeder] raw_frame=330 lidar stamp=32.901000
+[INFO] [1775741965.211044, 33.001000]: [offline_bag_feeder] raw_frame=331 lidar stamp=33.001000
+[INFO] [1775741965.215312, 33.101000]: [offline_bag_feeder] raw_frame=332 lidar stamp=33.101000
+[INFO] [1775741965.219151, 33.201000]: [offline_bag_feeder] raw_frame=333 lidar stamp=33.201000
+[INFO] [1775741965.223262, 33.301000]: [offline_bag_feeder] raw_frame=334 lidar stamp=33.301000
+[INFO] [1775741965.227670, 33.401000]: [offline_bag_feeder] raw_frame=335 lidar stamp=33.401000
+[INFO] [1775741965.232369, 33.501000]: [offline_bag_feeder] raw_frame=336 lidar stamp=33.501000
+[INFO] [1775741965.236645, 33.601000]: [offline_bag_feeder] raw_frame=337 lidar stamp=33.601000
+[INFO] [1775741965.242567, 33.701000]: [offline_bag_feeder] raw_frame=338 lidar stamp=33.701000
+[INFO] [1775741965.246933, 33.801000]: [offline_bag_feeder] raw_frame=339 lidar stamp=33.801000
+[INFO] [1775741965.251823, 33.901000]: [offline_bag_feeder] raw_frame=340 lidar stamp=33.901000
+[INFO] [1775741965.256575, 34.001000]: [offline_bag_feeder] raw_frame=341 lidar stamp=34.001000
+[INFO] [1775741965.261211, 34.101000]: [offline_bag_feeder] raw_frame=342 lidar stamp=34.101000
+[INFO] [1775741965.267070, 34.201000]: [offline_bag_feeder] raw_frame=343 lidar stamp=34.201000
+[INFO] [1775741965.271170, 34.301000]: [offline_bag_feeder] raw_frame=344 lidar stamp=34.301000
+[INFO] [1775741965.275187, 34.401000]: [offline_bag_feeder] raw_frame=345 lidar stamp=34.401000
+[INFO] [1775741965.279542, 34.501000]: [offline_bag_feeder] raw_frame=346 lidar stamp=34.501000
+[INFO] [1775741965.283938, 34.601000]: [offline_bag_feeder] raw_frame=347 lidar stamp=34.601000
+[INFO] [1775741965.288789, 34.701000]: [offline_bag_feeder] raw_frame=348 lidar stamp=34.701000
+[INFO] [1775741965.293301, 34.801000]: [offline_bag_feeder] raw_frame=349 lidar stamp=34.801000
+[INFO] [1775741965.299115, 34.901000]: [offline_bag_feeder] raw_frame=350 lidar stamp=34.901000
+[INFO] [1775741965.303328, 35.001000]: [offline_bag_feeder] raw_frame=351 lidar stamp=35.001000
+[INFO] [1775741965.308714, 35.101000]: [offline_bag_feeder] raw_frame=352 lidar stamp=35.101000
+[INFO] [1775741965.312840, 35.201000]: [offline_bag_feeder] raw_frame=353 lidar stamp=35.201000
+[INFO] [1775741965.316815, 35.301000]: [offline_bag_feeder] raw_frame=354 lidar stamp=35.301000
+[INFO] [1775741965.321792, 35.401000]: [offline_bag_feeder] raw_frame=355 lidar stamp=35.401000
+[INFO] [1775741965.326688, 35.501000]: [offline_bag_feeder] raw_frame=356 lidar stamp=35.501000
+[INFO] [1775741965.332202, 35.601000]: [offline_bag_feeder] raw_frame=357 lidar stamp=35.601000
+[INFO] [1775741965.336912, 35.701000]: [offline_bag_feeder] raw_frame=358 lidar stamp=35.701000
+[INFO] [1775741965.342897, 35.801000]: [offline_bag_feeder] raw_frame=359 lidar stamp=35.801000
+[INFO] [1775741965.349388, 35.901000]: [offline_bag_feeder] raw_frame=360 lidar stamp=35.901000
+[INFO] [1775741965.355434, 36.001000]: [offline_bag_feeder] raw_frame=361 lidar stamp=36.001000
+[INFO] [1775741965.362330, 36.101000]: [offline_bag_feeder] raw_frame=362 lidar stamp=36.101000
+[INFO] [1775741965.367801, 36.201000]: [offline_bag_feeder] raw_frame=363 lidar stamp=36.201000
+[INFO] [1775741965.373225, 36.301000]: [offline_bag_feeder] raw_frame=364 lidar stamp=36.301000
+[INFO] [1775741965.378073, 36.401000]: [offline_bag_feeder] raw_frame=365 lidar stamp=36.401000
+[INFO] [1775741965.382789, 36.501000]: [offline_bag_feeder] raw_frame=366 lidar stamp=36.501000
+[INFO] [1775741965.387835, 36.601000]: [offline_bag_feeder] raw_frame=367 lidar stamp=36.601000
+[INFO] [1775741965.391997, 36.701000]: [offline_bag_feeder] raw_frame=368 lidar stamp=36.701000
+[INFO] [1775741965.396074, 36.801000]: [offline_bag_feeder] raw_frame=369 lidar stamp=36.801000
+[INFO] [1775741965.400174, 36.901000]: [offline_bag_feeder] raw_frame=370 lidar stamp=36.901000
+[INFO] [1775741965.404861, 37.001000]: [offline_bag_feeder] raw_frame=371 lidar stamp=37.001000
+[INFO] [1775741965.408860, 37.101000]: [offline_bag_feeder] raw_frame=372 lidar stamp=37.101000
+[INFO] [1775741965.414519, 37.201000]: [offline_bag_feeder] raw_frame=373 lidar stamp=37.201000
+[INFO] [1775741965.418816, 37.301000]: [offline_bag_feeder] raw_frame=374 lidar stamp=37.301000
+[INFO] [1775741965.424186, 37.401000]: [offline_bag_feeder] raw_frame=375 lidar stamp=37.401000
+[INFO] [1775741965.430023, 37.501000]: [offline_bag_feeder] raw_frame=376 lidar stamp=37.501000
+[INFO] [1775741965.434369, 37.601000]: [offline_bag_feeder] raw_frame=377 lidar stamp=37.601000
+[INFO] [1775741965.439691, 37.701000]: [offline_bag_feeder] raw_frame=378 lidar stamp=37.701000
+[INFO] [1775741965.443994, 37.801000]: [offline_bag_feeder] raw_frame=379 lidar stamp=37.801000
+[INFO] [1775741965.449196, 37.901000]: [offline_bag_feeder] raw_frame=380 lidar stamp=37.901000
+[INFO] [1775741965.453900, 38.001000]: [offline_bag_feeder] raw_frame=381 lidar stamp=38.001000
+[INFO] [1775741965.458370, 38.101000]: [offline_bag_feeder] raw_frame=382 lidar stamp=38.101000
+[INFO] [1775741965.463543, 38.201000]: [offline_bag_feeder] raw_frame=383 lidar stamp=38.201000
+[INFO] [1775741965.468334, 38.301000]: [offline_bag_feeder] raw_frame=384 lidar stamp=38.301000
+[INFO] [1775741965.473659, 38.401000]: [offline_bag_feeder] raw_frame=385 lidar stamp=38.401000
+[INFO] [1775741965.478067, 38.501000]: [offline_bag_feeder] raw_frame=386 lidar stamp=38.501000
+[INFO] [1775741965.483563, 38.601000]: [offline_bag_feeder] raw_frame=387 lidar stamp=38.601000
+[INFO] [1775741965.488059, 38.701000]: [offline_bag_feeder] raw_frame=388 lidar stamp=38.701000
+[INFO] [1775741965.493498, 38.801000]: [offline_bag_feeder] raw_frame=389 lidar stamp=38.801000
+[INFO] [1775741965.497934, 38.901000]: [offline_bag_feeder] raw_frame=390 lidar stamp=38.901000
+[INFO] [1775741965.503156, 39.001000]: [offline_bag_feeder] raw_frame=391 lidar stamp=39.001000
+[INFO] [1775741965.508063, 39.101000]: [offline_bag_feeder] raw_frame=392 lidar stamp=39.101000
+[INFO] [1775741965.512524, 39.201000]: [offline_bag_feeder] raw_frame=393 lidar stamp=39.201000
+[INFO] [1775741965.518540, 39.301000]: [offline_bag_feeder] raw_frame=394 lidar stamp=39.301000
+[INFO] [1775741965.522827, 39.401000]: [offline_bag_feeder] raw_frame=395 lidar stamp=39.401000
+[INFO] [1775741965.527711, 39.501000]: [offline_bag_feeder] raw_frame=396 lidar stamp=39.501000
+[INFO] [1775741965.531882, 39.601000]: [offline_bag_feeder] raw_frame=397 lidar stamp=39.601000
+[INFO] [1775741965.536297, 39.701000]: [offline_bag_feeder] raw_frame=398 lidar stamp=39.701000
+[INFO] [1775741965.540355, 39.801000]: [offline_bag_feeder] raw_frame=399 lidar stamp=39.801000
+[INFO] [1775741965.544443, 39.901000]: [offline_bag_feeder] raw_frame=400 lidar stamp=39.901000
+[INFO] [1775741965.548871, 40.001000]: [offline_bag_feeder] raw_frame=401 lidar stamp=40.001000
+[INFO] [1775741965.553836, 40.101000]: [offline_bag_feeder] raw_frame=402 lidar stamp=40.101000
+[INFO] [1775741965.557667, 40.201000]: [offline_bag_feeder] raw_frame=403 lidar stamp=40.201000
+[INFO] [1775741965.562384, 40.301000]: [offline_bag_feeder] raw_frame=404 lidar stamp=40.301000
+[INFO] [1775741965.566507, 40.401000]: [offline_bag_feeder] raw_frame=405 lidar stamp=40.401000
+[INFO] [1775741965.571137, 40.501000]: [offline_bag_feeder] raw_frame=406 lidar stamp=40.501000
+[INFO] [1775741965.575277, 40.601000]: [offline_bag_feeder] raw_frame=407 lidar stamp=40.601000
+[INFO] [1775741965.579252, 40.701000]: [offline_bag_feeder] raw_frame=408 lidar stamp=40.701000
+[INFO] [1775741965.582982, 40.801000]: [offline_bag_feeder] raw_frame=409 lidar stamp=40.801000
+[INFO] [1775741965.587052, 40.901000]: [offline_bag_feeder] raw_frame=410 lidar stamp=40.901000
+[INFO] [1775741965.591089, 41.001000]: [offline_bag_feeder] raw_frame=411 lidar stamp=41.001000
+[INFO] [1775741965.595834, 41.101000]: [offline_bag_feeder] raw_frame=412 lidar stamp=41.101000
+[INFO] [1775741965.600435, 41.201000]: [offline_bag_feeder] raw_frame=413 lidar stamp=41.201000
+[INFO] [1775741965.604567, 41.301000]: [offline_bag_feeder] raw_frame=414 lidar stamp=41.301000
+[INFO] [1775741965.610383, 41.401000]: [offline_bag_feeder] raw_frame=415 lidar stamp=41.401000
+[INFO] [1775741965.614563, 41.501000]: [offline_bag_feeder] raw_frame=416 lidar stamp=41.501000
+[INFO] [1775741965.619246, 41.601000]: [offline_bag_feeder] raw_frame=417 lidar stamp=41.601000
+[INFO] [1775741965.624519, 41.701000]: [offline_bag_feeder] raw_frame=418 lidar stamp=41.701000
+[INFO] [1775741965.628835, 41.801000]: [offline_bag_feeder] raw_frame=419 lidar stamp=41.801000
+[INFO] [1775741965.634961, 41.901000]: [offline_bag_feeder] raw_frame=420 lidar stamp=41.901000
+[INFO] [1775741965.638998, 42.001000]: [offline_bag_feeder] raw_frame=421 lidar stamp=42.001000
+[INFO] [1775741965.644201, 42.101000]: [offline_bag_feeder] raw_frame=422 lidar stamp=42.101000
+[INFO] [1775741965.649040, 42.201000]: [offline_bag_feeder] raw_frame=423 lidar stamp=42.201000
+[INFO] [1775741965.653276, 42.301000]: [offline_bag_feeder] raw_frame=424 lidar stamp=42.301000
+[INFO] [1775741965.658721, 42.401000]: [offline_bag_feeder] raw_frame=425 lidar stamp=42.401000
+[INFO] [1775741965.663699, 42.501000]: [offline_bag_feeder] raw_frame=426 lidar stamp=42.501000
+69 ave total: 0.017274 icp: 0.010324 construct H: 0.000426 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003740 ave match: 0.008717 ave solve: 0.001532  ave ICP: 0.010124  map incre: 0.003633 ave total: 0.017284 icp: 0.010313 construct H: 0.000424 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003811 ave match: 0.008706 ave solve: 0.001526  ave ICP: 0.009954  map incre: 0.002020 ave total: 0.017219 icp: 0.010295 construct H: 0.000422 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003776 ave match: 0.008708 ave solve: 0.001522  ave ICP: 0.010311  map incre: 0.002030 ave total: 0.017173 icp: 0.010293 construct H: 0.000421 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003829 ave match: 0.008885 ave solve: 0.001516  ave ICP: 0.014630  map incre: 0.002363 ave total: 0.017319 icp: 0.010465 construct H: 0.000419 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003868 ave match: 0.009060 ave solve: 0.001510  ave ICP: 0.014913  map incre: 0.002166 ave total: 0.017459 icp: 0.010634 construct H: 0.000417 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.001279 ave match: 0.009200 ave solve: 0.001505  ave ICP: 0.014351  map incre: 0.001410 ave total: 0.017443 icp: 0.010769 construct H: 0.000416 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003794 ave match: 0.009169 ave solve: 0.001497  ave ICP: 0.009730  map incre: 0.002150 ave total: 0.017380 icp: 0.010730 construct H: 0.000414 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003826 ave match: 0.009276 ave solve: 0.001489  ave ICP: 0.013617  map incre: 0.002919 ave total: 0.017483 icp: 0.010828 construct H: 0.000411 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003749 ave match: 0.009287 ave solve: 0.001483  ave ICP: 0.011038  map incre: 0.003404 ave total: 0.017506 icp: 0.010833 construct H: 0.000410 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003721 ave match: 0.009268 ave solve: 0.001475  ave ICP: 0.010009  map incre: 0.003049 ave total: 0.017483 icp: 0.010805 construct H: 0.000407 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003694 ave match: 0.009254 ave solve: 0.001466  ave ICP: 0.010115  map incre: 0.002390 ave total: 0.017443 icp: 0.010781 construct H: 0.000404 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003664 ave match: 0.009263 ave solve: 0.001457  ave ICP: 0.010844  map incre: 0.002156 ave total: 0.017419 icp: 0.010781 construct H: 0.000402 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003596 ave match: 0.009243 ave solve: 0.001449  ave ICP: 0.009880  map incre: 0.002366 ave total: 0.017373 icp: 0.010753 construct H: 0.000399 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003561 ave match: 0.009222 ave solve: 0.001441  ave ICP: 0.009746  map incre: 0.002258 ave total: 0.017321 icp: 0.010723 construct H: 0.000397 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003505 ave match: 0.009205 ave solve: 0.001432  ave ICP: 0.009860  map incre: 0.002333 ave total: 0.017276 icp: 0.010697 construct H: 0.000394 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003522 ave match: 0.009182 ave solve: 0.001424  ave ICP: 0.009560  map incre: 0.002345 ave total: 0.017226 icp: 0.010665 construct H: 0.000392 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003516 ave match: 0.009165 ave solve: 0.001417  ave ICP: 0.009796  map incre: 0.002169 ave total: 0.017180 icp: 0.010641 construct H: 0.000390 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003554 ave match: 0.009259 ave solve: 0.001410  ave ICP: 0.014061  map incre: 0.002460 ave total: 0.017254 icp: 0.010728 construct H: 0.000388 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003515 ave match: 0.009239 ave solve: 0.001403  ave ICP: 0.009708  map incre: 0.002183 ave total: 0.017208 icp: 0.010701 construct H: 0.000386 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003500 ave match: 0.009222 ave solve: 0.001395  ave ICP: 0.009692  map incre: 0.003463 ave total: 0.017195 icp: 0.010675 construct H: 0.000384 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003530 ave match: 0.009227 ave solve: 0.001390  ave ICP: 0.010791  map incre: 0.00191[INFO] [1775741965.668073, 42.601000]: [offline_bag_feeder] raw_frame=427 lidar stamp=42.601000
+[INFO] [1775741965.673395, 42.701000]: [offline_bag_feeder] raw_frame=428 lidar stamp=42.701000
+[INFO] [1775741965.678198, 42.701000]: [offline_bag_feeder] raw_frame=429 lidar stamp=42.801000
+[INFO] [1775741965.682916, 42.901000]: [offline_bag_feeder] raw_frame=430 lidar stamp=42.901000
+[INFO] [1775741965.687774, 43.001000]: [offline_bag_feeder] raw_frame=431 lidar stamp=43.001000
+[INFO] [1775741965.692305, 43.101000]: [offline_bag_feeder] raw_frame=432 lidar stamp=43.101000
+[INFO] [1775741965.697112, 43.201000]: [offline_bag_feeder] raw_frame=433 lidar stamp=43.201000
+[INFO] [1775741965.701732, 43.301000]: [offline_bag_feeder] raw_frame=434 lidar stamp=43.301000
+[INFO] [1775741965.707469, 43.401000]: [offline_bag_feeder] raw_frame=435 lidar stamp=43.401000
+[INFO] [1775741965.712617, 43.501000]: [offline_bag_feeder] raw_frame=436 lidar stamp=43.501000
+[INFO] [1775741965.716957, 43.601000]: [offline_bag_feeder] raw_frame=437 lidar stamp=43.601000
+[INFO] [1775741965.722997, 43.701000]: [offline_bag_feeder] raw_frame=438 lidar stamp=43.701000
+[INFO] [1775741965.727453, 43.801000]: [offline_bag_feeder] raw_frame=439 lidar stamp=43.801000
+[INFO] [1775741965.732541, 43.901000]: [offline_bag_feeder] raw_frame=440 lidar stamp=43.901000
+[INFO] [1775741965.736899, 44.001000]: [offline_bag_feeder] raw_frame=441 lidar stamp=44.001000
+[INFO] [1775741965.741082, 44.101000]: [offline_bag_feeder] raw_frame=442 lidar stamp=44.101000
+[INFO] [1775741965.745280, 44.201000]: [offline_bag_feeder] raw_frame=443 lidar stamp=44.201000
+[INFO] [1775741965.749730, 44.301000]: [offline_bag_feeder] raw_frame=444 lidar stamp=44.301000
+[INFO] [1775741965.755146, 44.401000]: [offline_bag_feeder] raw_frame=445 lidar stamp=44.401000
+[INFO] [1775741965.761729, 44.501000]: [offline_bag_feeder] raw_frame=446 lidar stamp=44.501000
+[INFO] [1775741965.767902, 44.601000]: [offline_bag_feeder] raw_frame=447 lidar stamp=44.601000
+[INFO] [1775741965.775701, 44.701000]: [offline_bag_feeder] raw_frame=448 lidar stamp=44.701000
+[INFO] [1775741965.781147, 44.801000]: [offline_bag_feeder] raw_frame=449 lidar stamp=44.801000
+[INFO] [1775741965.786848, 44.901000]: [offline_bag_feeder] raw_frame=450 lidar stamp=44.901000
+[INFO] [1775741965.794270, 45.001000]: [offline_bag_feeder] raw_frame=451 lidar stamp=45.001000
+[INFO] [1775741965.798742, 45.101000]: [offline_bag_feeder] raw_frame=452 lidar stamp=45.101000
+[INFO] [1775741965.804341, 45.201000]: [offline_bag_feeder] raw_frame=453 lidar stamp=45.201000
+[INFO] [1775741965.810148, 45.301000]: [offline_bag_feeder] raw_frame=454 lidar stamp=45.301000
+[INFO] [1775741965.817407, 45.401000]: [offline_bag_feeder] raw_frame=455 lidar stamp=45.401000
+[INFO] [1775741965.823303, 45.501000]: [offline_bag_feeder] raw_frame=456 lidar stamp=45.501000
+[INFO] [1775741965.830171, 45.601000]: [offline_bag_feeder] raw_frame=457 lidar stamp=45.601000
+[INFO] [1775741965.836414, 45.701000]: [offline_bag_feeder] raw_frame=458 lidar stamp=45.701000
+[INFO] [1775741965.840703, 45.801000]: [offline_bag_feeder] raw_frame=459 lidar stamp=45.801000
+[INFO] [1775741965.845757, 45.901000]: [offline_bag_feeder] raw_frame=460 lidar stamp=45.901000
+[INFO] [1775741965.849758, 46.001000]: [offline_bag_feeder] raw_frame=461 lidar stamp=46.001000
+[INFO] [1775741965.854680, 46.101000]: [offline_bag_feeder] raw_frame=462 lidar stamp=46.101000
+[INFO] [1775741965.858541, 46.201000]: [offline_bag_feeder] raw_frame=463 lidar stamp=46.201000
+[INFO] [1775741965.863917, 46.301000]: [offline_bag_feeder] raw_frame=464 lidar stamp=46.301000
+[INFO] [1775741965.868330, 46.401000]: [offline_bag_feeder] raw_frame=465 lidar stamp=46.401000
+[INFO] [1775741965.872617, 46.401000]: [offline_bag_feeder] raw_frame=466 lidar stamp=46.501000
+[INFO] [1775741965.878281, 46.601000]: [offline_bag_feeder] raw_frame=467 lidar stamp=46.601000
+[INFO] [1775741965.882718, 46.701000]: [offline_bag_feeder] raw_frame=468 lidar stamp=46.701000
+[INFO] [1775741965.887716, 46.801000]: [offline_bag_feeder] raw_frame=469 lidar stamp=46.801000
+[INFO] [1775741965.892567, 46.901000]: [offline_bag_feeder] raw_frame=470 lidar stamp=46.901000
+[INFO] [1775741965.898136, 47.001000]: [offline_bag_feeder] raw_frame=471 lidar stamp=47.001000
+[INFO] [1775741965.902993, 47.101000]: [offline_bag_feeder] raw_frame=472 lidar stamp=47.101000
+[INFO] [1775741965.908234, 47.201000]: [offline_bag_feeder] raw_frame=473 lidar stamp=47.201000
+[INFO] [1775741965.913758, 47.301000]: [offline_bag_feeder] raw_frame=474 lidar stamp=47.301000
+[INFO] [1775741965.920034, 47.401000]: [offline_bag_feeder] raw_frame=475 lidar stamp=47.401000
+[INFO] [1775741965.926162, 47.501000]: [offline_bag_feeder] raw_frame=476 lidar stamp=47.501000
+[INFO] [1775741965.933781, 47.601000]: [offline_bag_feeder] raw_frame=477 lidar stamp=47.601000
+[INFO] [1775741965.939488, 47.701000]: [offline_bag_feeder] raw_frame=478 lidar stamp=47.701000
+[INFO] [1775741965.945476, 47.801000]: [offline_bag_feeder] raw_frame=479 lidar stamp=47.801000
+[INFO] [1775741965.952214, 47.901000]: [offline_bag_feeder] raw_frame=480 lidar stamp=47.901000
+[INFO] [1775741965.956745, 48.001000]: [offline_bag_feeder] raw_frame=481 lidar stamp=48.001000
+[INFO] [1775741965.960866, 48.101000]: [offline_bag_feeder] raw_frame=482 lidar stamp=48.101000
+[INFO] [1775741965.965271, 48.201000]: [offline_bag_feeder] raw_frame=483 lidar stamp=48.201000
+[INFO] [1775741965.969628, 48.301000]: [offline_bag_feeder] raw_frame=484 lidar stamp=48.301000
+[INFO] [1775741965.973455, 48.401000]: [offline_bag_feeder] raw_frame=485 lidar stamp=48.401000
+[INFO] [1775741965.977447, 48.501000]: [offline_bag_feeder] raw_frame=486 lidar stamp=48.501000
+[INFO] [1775741965.981503, 48.601000]: [offline_bag_feeder] raw_frame=487 lidar stamp=48.601000
+[INFO] [1775741965.985358, 48.701000]: [offline_bag_feeder] raw_frame=488 lidar stamp=48.701000
+[INFO] [1775741965.989816, 48.801000]: [offline_bag_feeder] raw_frame=489 lidar stamp=48.801000
+[INFO] [1775741965.993893, 48.901000]: [offline_bag_feeder] raw_frame=490 lidar stamp=48.901000
+[INFO] [1775741965.998883, 49.001000]: [offline_bag_feeder] raw_frame=491 lidar stamp=49.001000
+[INFO] [1775741966.003542, 49.101000]: [offline_bag_feeder] raw_frame=492 lidar stamp=49.101000
+[INFO] [1775741966.008643, 49.201000]: [offline_bag_feeder] raw_frame=493 lidar stamp=49.201000
+[INFO] [1775741966.014112, 49.301000]: [offline_bag_feeder] raw_frame=494 lidar stamp=49.301000
+[INFO] [1775741966.020236, 49.401000]: [offline_bag_feeder] raw_frame=495 lidar stamp=49.401000
+[INFO] [1775741966.026490, 49.501000]: [offline_bag_feeder] raw_frame=496 lidar stamp=49.501000
+[INFO] [1775741966.032465, 49.601000]: [offline_bag_feeder] raw_frame=497 lidar stamp=49.601000
+[INFO] [1775741966.038728, 49.701000]: [offline_bag_feeder] raw_frame=498 lidar stamp=49.701000
+[INFO] [1775741966.044381, 49.801000]: [offline_bag_feeder] raw_frame=499 lidar stamp=49.801000
+[INFO] [1775741966.050679, 49.901000]: [offline_bag_feeder] raw_frame=500 lidar stamp=49.901000
+[INFO] [1775741966.055413, 50.001000]: [offline_bag_feeder] raw_frame=501 lidar stamp=50.001000
+[INFO] [1775741966.060000, 50.101000]: [offline_bag_feeder] raw_frame=502 lidar stamp=50.101000
+[INFO] [1775741966.064945, 50.201000]: [offline_bag_feeder] raw_frame=503 lidar stamp=50.201000
+[INFO] [1775741966.069705, 50.301000]: [offline_bag_feeder] raw_frame=504 lidar stamp=50.301000
+[INFO] [1775741966.074731, 50.401000]: [offline_bag_feeder] raw_frame=505 lidar stamp=50.401000
+[INFO] [1775741966.079860, 50.501000]: [offline_bag_feeder] raw_frame=506 lidar stamp=50.501000
+[INFO] [1775741966.084368, 50.601000]: [offline_bag_feeder] raw_frame=507 lidar stamp=50.601000
+[INFO] [1775741966.089603, 50.701000]: [offline_bag_feeder] raw_frame=508 lidar stamp=50.701000
+[INFO] [1775741966.094749, 50.801000]: [offline_bag_feeder] raw_frame=509 lidar stamp=50.801000
+[INFO] [1775741966.099897, 50.901000]: [offline_bag_feeder] raw_frame=510 lidar stamp=50.901000
+[INFO] [1775741966.104858, 51.001000]: [offline_bag_feeder] raw_frame=511 lidar stamp=51.001000
+[INFO] [1775741966.109362, 51.101000]: [offline_bag_feeder] raw_frame=512 lidar stamp=51.101000
+[INFO] [1775741966.113968, 51.201000]: [offline_bag_feeder] raw_frame=513 lidar stamp=51.201000
+[INFO] [1775741966.119300, 51.301000]: [offline_bag_feeder] raw_frame=514 lidar stamp=51.301000
+[INFO] [1775741966.123375, 51.401000]: [offline_bag_feeder] raw_frame=515 lidar stamp=51.401000
+[INFO] [1775741966.127738, 51.501000]: [offline_bag_feeder] raw_frame=516 lidar stamp=51.501000
+[INFO] [1775741966.131943, 51.601000]: [offline_bag_feeder] raw_frame=517 lidar stamp=51.601000
+[INFO] [1775741966.136255, 51.701000]: [offline_bag_feeder] raw_frame=518 lidar stamp=51.701000
+[INFO] [1775741966.140381, 51.801000]: [offline_bag_feeder] raw_frame=519 lidar stamp=51.801000
+[INFO] [1775741966.144245, 51.901000]: [offline_bag_feeder] raw_frame=520 lidar stamp=51.901000
+[INFO] [1775741966.150200, 52.001000]: [offline_bag_feeder] raw_frame=521 lidar stamp=52.001000
+[INFO] [1775741966.155748, 52.101000]: [offline_bag_feeder] raw_frame=522 lidar stamp=52.101000
+[INFO] [1775741966.160528, 52.201000]: [offline_bag_feeder] raw_frame=523 lidar stamp=52.201000
+[INFO] [1775741966.165229, 52.301000]: [offline_bag_feeder] raw_frame=524 lidar stamp=52.301000
+[INFO] [1775741966.170299, 52.401000]: [offline_bag_feeder] raw_frame=525 lidar stamp=52.401000
+[INFO] [1775741966.174699, 52.501000]: [offline_bag_feeder] raw_frame=526 lidar stamp=52.501000
+[INFO] [1775741966.179072, 52.601000]: [offline_bag_feeder] raw_frame=527 lidar stamp=52.601000
+[INFO] [1775741966.183291, 52.701000]: [offline_bag_feeder] raw_frame=528 lidar stamp=52.701000
+[INFO] [1775741966.189210, 52.801000]: [offline_bag_feeder] raw_frame=529 lidar stamp=52.801000
+[INFO] [1775741966.195443, 52.901000]: [offline_bag_feeder] raw_frame=530 lidar stamp=52.901000
+[INFO] [1775741966.201976, 53.001000]: [offline_bag_feeder] raw_frame=531 lidar stamp=53.001000
+[INFO] [1775741966.207716, 53.101000]: [offline_bag_feeder] raw_frame=532 lidar stamp=53.101000
+[INFO] [1775741966.212121, 53.201000]: [offline_bag_feeder] raw_frame=533 lidar stamp=53.201000
+[INFO] [1775741966.216154, 53.301000]: [offline_bag_feeder] raw_frame=534 lidar stamp=53.301000
+[INFO] [1775741966.220002, 53.401000]: [offline_bag_feeder] raw_frame=535 lidar stamp=53.401000
+[INFO] [1775741966.224224, 53.501000]: [offline_bag_feeder] raw_frame=536 lidar stamp=53.501000
+[INFO] [1775741966.228267, 53.601000]: [offline_bag_feeder] raw_frame=537 lidar stamp=53.601000
+[INFO] [1775741966.232168, 53.701000]: [offline_bag_feeder] raw_frame=538 lidar stamp=53.701000
+[INFO] [1775741966.236345, 53.801000]: [offline_bag_feeder] raw_frame=539 lidar stamp=53.801000
+[INFO] [1775741966.240326, 53.901000]: [offline_bag_feeder] raw_frame=540 lidar stamp=53.901000
+[INFO] [1775741966.244561, 54.001000]: [offline_bag_feeder] raw_frame=541 lidar stamp=54.001000
+[INFO] [1775741966.248856, 54.101000]: [offline_bag_feeder] raw_frame=542 lidar stamp=54.101000
+[INFO] [1775741966.253063, 54.201000]: [offline_bag_feeder] raw_frame=543 lidar stamp=54.201000
+[INFO] [1775741966.257408, 54.301000]: [offline_bag_feeder] raw_frame=544 lidar stamp=54.301000
+[INFO] [1775741966.262716, 54.401000]: [offline_bag_feeder] raw_frame=545 lidar stamp=54.401000
+[INFO] [1775741966.267029, 54.501000]: [offline_bag_feeder] raw_frame=546 lidar stamp=54.501000
+[INFO] [1775741966.270721, 54.601000]: [offline_bag_feeder] raw_frame=547 lidar stamp=54.601000
+[INFO] [1775741966.274630, 54.701000]: [offline_bag_feeder] raw_frame=548 lidar stamp=54.701000
+[INFO] [1775741966.279634, 54.801000]: [offline_bag_feeder] raw_frame=549 lidar stamp=54.801000
+[INFO] [1775741966.283844, 54.901000]: [offline_bag_feeder] raw_frame=550 lidar stamp=54.901000
+[INFO] [1775741966.289646, 55.001000]: [offline_bag_feeder] raw_frame=551 lidar stamp=55.001000
+[INFO] [1775741966.295025, 55.101000]: [offline_bag_feeder] raw_frame=552 lidar stamp=55.101000
+[INFO] [1775741966.299021, 55.201000]: [offline_bag_feeder] raw_frame=553 lidar stamp=55.201000
+[INFO] [1775741966.303671, 55.301000]: [offline_bag_feeder] raw_frame=554 lidar stamp=55.301000
+[INFO] [1775741966.308822, 55.401000]: [offline_bag_feeder] raw_frame=555 lidar stamp=55.401000
+[INFO] [1775741966.315021, 55.501000]: [offline_bag_feeder] raw_frame=556 lidar stamp=55.501000
+[INFO] [1775741966.319260, 55.601000]: [offline_bag_feeder] raw_frame=557 lidar stamp=55.601000
+[INFO] [1775741966.323893, 55.701000]: [offline_bag_feeder] raw_frame=558 lidar stamp=55.701000
+[INFO] [1775741966.328326, 55.801000]: [offline_bag_feeder] raw_frame=559 lidar stamp=55.801000
+[INFO] [1775741966.332678, 55.901000]: [offline_bag_feeder] raw_frame=560 lidar stamp=55.901000
+[INFO] [1775741966.336993, 56.001000]: [offline_bag_feeder] raw_frame=561 lidar stamp=56.001000
+[INFO] [1775741966.343926, 56.101000]: [offline_bag_feeder] raw_frame=562 lidar stamp=56.101000
+[INFO] [1775741966.350209, 56.201000]: [offline_bag_feeder] raw_frame=563 lidar stamp=56.201000
+[INFO] [1775741966.356024, 56.301000]: [offline_bag_feeder] raw_frame=564 lidar stamp=56.301000
+[INFO] [1775741966.361015, 56.401000]: [offline_bag_feeder] raw_frame=565 lidar stamp=56.401000
+[INFO] [1775741966.365458, 56.501000]: [offline_bag_feeder] raw_frame=566 lidar stamp=56.501000
+[INFO] [1775741966.369362, 56.601000]: [offline_bag_feeder] raw_frame=567 lidar stamp=56.601000
+[INFO] [1775741966.374111, 56.701000]: [offline_bag_feeder] raw_frame=568 lidar stamp=56.701000
+[INFO] [1775741966.379025, 56.801000]: [offline_bag_feeder] raw_frame=569 lidar stamp=56.801000
+[INFO] [1775741966.385388, 56.901000]: [offline_bag_feeder] raw_frame=570 lidar stamp=56.901000
+[INFO] [1775741966.389765, 57.001000]: [offline_bag_feeder] raw_frame=571 lidar stamp=57.001000
+[INFO] [1775741966.394895, 57.101000]: [offline_bag_feeder] raw_frame=572 lidar stamp=57.101000
+[INFO] [1775741966.399585, 57.201000]: [offline_bag_feeder] raw_frame=573 lidar stamp=57.201000
+[INFO] [1775741966.404203, 57.301000]: [offline_bag_feeder] raw_frame=574 lidar stamp=57.301000
+[INFO] [1775741966.410187, 57.401000]: [offline_bag_feeder] raw_frame=575 lidar stamp=57.401000
+[INFO] [1775741966.414688, 57.501000]: [offline_bag_feeder] raw_frame=576 lidar stamp=57.501000
+[INFO] [1775741966.419508, 57.601000]: [offline_bag_feeder] raw_frame=577 lidar stamp=57.601000
+[INFO] [1775741966.424068, 57.701000]: [offline_bag_feeder] raw_frame=578 lidar stamp=57.701000
+[INFO] [1775741966.428628, 57.801000]: [offline_bag_feeder] raw_frame=579 lidar stamp=57.801000
+[INFO] [1775741966.434342, 57.901000]: [offline_bag_feeder] raw_frame=580 lidar stamp=57.901000
+[INFO] [1775741966.438561, 58.001000]: [offline_bag_feeder] raw_frame=581 lidar stamp=58.001000
+[INFO] [1775741966.443447, 58.101000]: [offline_bag_feeder] raw_frame=582 lidar stamp=58.101000
+[INFO] [1775741966.447577, 58.201000]: [offline_bag_feeder] raw_frame=583 lidar stamp=58.201000
+[INFO] [1775741966.453002, 58.301000]: [offline_bag_feeder] raw_frame=584 lidar stamp=58.301000
+[INFO] [1775741966.460047, 58.401000]: [offline_bag_feeder] raw_frame=585 lidar stamp=58.401000
+[INFO] [1775741966.465937, 58.501000]: [offline_bag_feeder] raw_frame=586 lidar stamp=58.501000
+[INFO] [1775741966.472152, 58.601000]: [offline_bag_feeder] raw_frame=587 lidar stamp=58.601000
+[INFO] [1775741966.478582, 58.701000]: [offline_bag_feeder] raw_frame=588 lidar stamp=58.701000
+[INFO] [1775741966.482991, 58.801000]: [offline_bag_feeder] raw_frame=589 lidar stamp=58.801000
+[INFO] [1775741966.488834, 58.901000]: [offline_bag_feeder] raw_frame=590 lidar stamp=58.901000
+[INFO] [1775741966.492898, 59.001000]: [offline_bag_feeder] raw_frame=591 lidar stamp=59.001000
+[INFO] [1775741966.497946, 59.101000]: [offline_bag_feeder] raw_frame=592 lidar stamp=59.101000
+[INFO] [1775741966.502857, 59.201000]: [offline_bag_feeder] raw_frame=593 lidar stamp=59.201000
+[INFO] [1775741966.508554, 59.301000]: [offline_bag_feeder] raw_frame=594 lidar stamp=59.301000
+[INFO] [1775741966.514848, 59.401000]: [offline_bag_feeder] raw_frame=595 lidar stamp=59.401000
+[INFO] [1775741966.519285, 59.501000]: [offline_bag_feeder] raw_frame=596 lidar stamp=59.501000
+[INFO] [1775741966.524096, 59.601000]: [offline_bag_feeder] raw_frame=597 lidar stamp=59.601000
+[INFO] [1775741966.529072, 59.701000]: [offline_bag_feeder] raw_frame=598 lidar stamp=59.701000
+7 ave total: 0.017172 icp: 0.010676 construct H: 0.000383 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003542 ave match: 0.009207 ave solve: 0.001384  ave ICP: 0.009558  map incre: 0.001861 ave total: 0.017120 icp: 0.010649 construct H: 0.000381 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003556 ave match: 0.009195 ave solve: 0.001378  ave ICP: 0.009923  map incre: 0.002320 ave total: 0.017090 icp: 0.010631 construct H: 0.000379 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003609 ave match: 0.009182 ave solve: 0.001373  ave ICP: 0.009851  map incre: 0.002531 ave total: 0.017066 icp: 0.010613 construct H: 0.000377 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003665 ave match: 0.009302 ave solve: 0.001368  ave ICP: 0.015989  map incre: 0.002777 ave total: 0.017183 icp: 0.010728 construct H: 0.000376 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003678 ave match: 0.009410 ave solve: 0.001364  ave ICP: 0.015634  map incre: 0.002593 ave total: 0.017283 icp: 0.010831 construct H: 0.000374 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003594 ave match: 0.009479 ave solve: 0.001359  ave ICP: 0.013944  map incre: 0.002622 ave total: 0.017343 icp: 0.010894 construct H: 0.000373 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003514 ave match: 0.009462 ave solve: 0.001353  ave ICP: 0.009824  map incre: 0.002668 ave total: 0.017316 icp: 0.010872 construct H: 0.000371 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003470 ave match: 0.009447 ave solve: 0.001347  ave ICP: 0.009855  map incre: 0.002662 ave total: 0.017289 icp: 0.010850 construct H: 0.000369 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003519 ave match: 0.009435 ave solve: 0.001342  ave ICP: 0.010036  map incre: 0.002982 ave total: 0.017274 icp: 0.010833 construct H: 0.000368 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003547 ave match: 0.009511 ave solve: 0.001337  ave ICP: 0.014597  map incre: 0.003114 ave total: 0.017351 icp: 0.010904 construct H: 0.000366 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003570 ave match: 0.009508 ave solve: 0.001332  ave ICP: 0.010514  map incre: 0.004263 ave total: 0.017370 icp: 0.010896 construct H: 0.000365 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003549 ave match: 0.009503 ave solve: 0.001327  ave ICP: 0.010423  map incre: 0.002553 ave total: 0.017354 icp: 0.010886 construct H: 0.000363 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003485 ave match: 0.009498 ave solve: 0.001323  ave ICP: 0.010377  map incre: 0.002507 ave total: 0.017336 icp: 0.010876 construct H: 0.000362 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003531 ave match: 0.009494 ave solve: 0.001318  ave ICP: 0.010463  map incre: 0.002940 ave total: 0.017329 icp: 0.010868 construct H: 0.000361 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003589 ave match: 0.009492 ave solve: 0.001314  ave ICP: 0.010504  map incre: 0.002677 ave total: 0.017319 icp: 0.010860 construct H: 0.000360 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003592 ave match: 0.009491 ave solve: 0.001311  ave ICP: 0.010669  map incre: 0.003101 ave total: 0.017320 icp: 0.010856 construct H: 0.000359 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003605 ave match: 0.009498 ave solve: 0.001307  ave ICP: 0.011116  map incre: 0.003438 ave total: 0.017334 icp: 0.010860 construct H: 0.000358 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003665 ave match: 0.009555 ave solve: 0.001304  ave ICP: 0.014158  map incre: 0.003231 ave total: 0.017396 icp: 0.010914 construct H: 0.000357 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003711 ave match: 0.009559 ave solve: 0.001301  ave ICP: 0.011018  map incre: 0.002900 ave total: 0.017400 icp: 0.010915 construct H: 0.000356 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003716 ave match: 0.009562 ave solve: 0.001298  ave ICP: 0.010930  map incre: 0.002746 ave total: 0.017400 icp: 0.010914 construct H: 0.000355 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003689 ave match: 0.009563 ave solve: 0.001296  ave ICP: 0.010889  map incre: 0.003805[INFO] [1775741966.533153, 59.801000]: [offline_bag_feeder] raw_frame=599 lidar stamp=59.801000
+[INFO] [1775741966.538486, 59.901000]: [offline_bag_feeder] raw_frame=600 lidar stamp=59.901000
+[INFO] [1775741966.543492, 60.001000]: [offline_bag_feeder] raw_frame=601 lidar stamp=60.001000
+[INFO] [1775741966.547836, 60.101000]: [offline_bag_feeder] raw_frame=602 lidar stamp=60.101000
+[INFO] [1775741966.553609, 60.201000]: [offline_bag_feeder] raw_frame=603 lidar stamp=60.201000
+[INFO] [1775741966.557470, 60.301000]: [offline_bag_feeder] raw_frame=604 lidar stamp=60.301000
+[INFO] [1775741966.562099, 60.401000]: [offline_bag_feeder] raw_frame=605 lidar stamp=60.401000
+[INFO] [1775741966.566973, 60.501000]: [offline_bag_feeder] raw_frame=606 lidar stamp=60.501000
+[INFO] [1775741966.571015, 60.601000]: [offline_bag_feeder] raw_frame=607 lidar stamp=60.601000
+[INFO] [1775741966.576026, 60.701000]: [offline_bag_feeder] raw_frame=608 lidar stamp=60.701000
+[INFO] [1775741966.580408, 60.801000]: [offline_bag_feeder] raw_frame=609 lidar stamp=60.801000
+[INFO] [1775741966.585245, 60.901000]: [offline_bag_feeder] raw_frame=610 lidar stamp=60.901000
+[INFO] [1775741966.589403, 61.001000]: [offline_bag_feeder] raw_frame=611 lidar stamp=61.001000
+[INFO] [1775741966.593306, 61.101000]: [offline_bag_feeder] raw_frame=612 lidar stamp=61.101000
+[INFO] [1775741966.597806, 61.201000]: [offline_bag_feeder] raw_frame=613 lidar stamp=61.201000
+[INFO] [1775741966.603409, 61.301000]: [offline_bag_feeder] raw_frame=614 lidar stamp=61.301000
+[INFO] [1775741966.607806, 61.401000]: [offline_bag_feeder] raw_frame=615 lidar stamp=61.401000
+[INFO] [1775741966.612805, 61.501000]: [offline_bag_feeder] raw_frame=616 lidar stamp=61.501000
+[INFO] [1775741966.618140, 61.601000]: [offline_bag_feeder] raw_frame=617 lidar stamp=61.601000
+[INFO] [1775741966.622699, 61.701000]: [offline_bag_feeder] raw_frame=618 lidar stamp=61.701000
+[INFO] [1775741966.628711, 61.801000]: [offline_bag_feeder] raw_frame=619 lidar stamp=61.801000
+[INFO] [1775741966.634633, 61.901000]: [offline_bag_feeder] raw_frame=620 lidar stamp=61.901000
+[INFO] [1775741966.641019, 62.001000]: [offline_bag_feeder] raw_frame=621 lidar stamp=62.001000
+[INFO] [1775741966.648624, 62.101000]: [offline_bag_feeder] raw_frame=622 lidar stamp=62.101000
+[INFO] [1775741966.654572, 62.201000]: [offline_bag_feeder] raw_frame=623 lidar stamp=62.201000
+[INFO] [1775741966.659390, 62.301000]: [offline_bag_feeder] raw_frame=624 lidar stamp=62.301000
+[INFO] [1775741966.663834, 62.401000]: [offline_bag_feeder] raw_frame=625 lidar stamp=62.401000
+[INFO] [1775741966.668250, 62.501000]: [offline_bag_feeder] raw_frame=626 lidar stamp=62.501000
+[INFO] [1775741966.674078, 62.601000]: [offline_bag_feeder] raw_frame=627 lidar stamp=62.601000
+[INFO] [1775741966.679617, 62.701000]: [offline_bag_feeder] raw_frame=628 lidar stamp=62.701000
+[INFO] [1775741966.685837, 62.801000]: [offline_bag_feeder] raw_frame=629 lidar stamp=62.801000
+[INFO] [1775741966.690424, 62.901000]: [offline_bag_feeder] raw_frame=630 lidar stamp=62.901000
+[INFO] [1775741966.695639, 63.001000]: [offline_bag_feeder] raw_frame=631 lidar stamp=63.001000
+[INFO] [1775741966.699835, 63.101000]: [offline_bag_feeder] raw_frame=632 lidar stamp=63.101000
+[INFO] [1775741966.704772, 63.201000]: [offline_bag_feeder] raw_frame=633 lidar stamp=63.201000
+[INFO] [1775741966.710244, 63.301000]: [offline_bag_feeder] raw_frame=634 lidar stamp=63.301000
+[INFO] [1775741966.717088, 63.401000]: [offline_bag_feeder] raw_frame=635 lidar stamp=63.401000
+[INFO] [1775741966.723427, 63.501000]: [offline_bag_feeder] raw_frame=636 lidar stamp=63.501000
+[INFO] [1775741966.728521, 63.601000]: [offline_bag_feeder] raw_frame=637 lidar stamp=63.601000
+[INFO] [1775741966.733155, 63.701000]: [offline_bag_feeder] raw_frame=638 lidar stamp=63.701000
+[INFO] [1775741966.737862, 63.801000]: [offline_bag_feeder] raw_frame=639 lidar stamp=63.801000
+[INFO] [1775741966.742325, 63.901000]: [offline_bag_feeder] raw_frame=640 lidar stamp=63.901000
+[INFO] [1775741966.748348, 64.001000]: [offline_bag_feeder] raw_frame=641 lidar stamp=64.001000
+[INFO] [1775741966.752730, 64.101000]: [offline_bag_feeder] raw_frame=642 lidar stamp=64.101000
+[INFO] [1775741966.757708, 64.201000]: [offline_bag_feeder] raw_frame=643 lidar stamp=64.201000
+[INFO] [1775741966.762247, 64.301000]: [offline_bag_feeder] raw_frame=644 lidar stamp=64.301000
+[INFO] [1775741966.768211, 64.401000]: [offline_bag_feeder] raw_frame=645 lidar stamp=64.401000
+[INFO] [1775741966.772774, 64.501000]: [offline_bag_feeder] raw_frame=646 lidar stamp=64.501000
+[INFO] [1775741966.778234, 64.601000]: [offline_bag_feeder] raw_frame=647 lidar stamp=64.601000
+[INFO] [1775741966.782600, 64.701000]: [offline_bag_feeder] raw_frame=648 lidar stamp=64.701000
+[INFO] [1775741966.788140, 64.801000]: [offline_bag_feeder] raw_frame=649 lidar stamp=64.801000
+[INFO] [1775741966.793089, 64.901000]: [offline_bag_feeder] raw_frame=650 lidar stamp=64.901000
+[INFO] [1775741966.798467, 65.001000]: [offline_bag_feeder] raw_frame=651 lidar stamp=65.001000
+[INFO] [1775741966.802703, 65.101000]: [offline_bag_feeder] raw_frame=652 lidar stamp=65.101000
+[INFO] [1775741966.806900, 65.201000]: [offline_bag_feeder] raw_frame=653 lidar stamp=65.201000
+[INFO] [1775741966.811176, 65.301000]: [offline_bag_feeder] raw_frame=654 lidar stamp=65.301000
+[INFO] [1775741966.816276, 65.401000]: [offline_bag_feeder] raw_frame=655 lidar stamp=65.401000
+[INFO] [1775741966.821404, 65.501000]: [offline_bag_feeder] raw_frame=656 lidar stamp=65.501000
+[INFO] [1775741966.827292, 65.601000]: [offline_bag_feeder] raw_frame=657 lidar stamp=65.601000
+[INFO] [1775741966.832683, 65.701000]: [offline_bag_feeder] raw_frame=658 lidar stamp=65.701000
+[INFO] [1775741966.837034, 65.801000]: [offline_bag_feeder] raw_frame=659 lidar stamp=65.801000
+[INFO] [1775741966.842202, 65.901000]: [offline_bag_feeder] raw_frame=660 lidar stamp=65.901000
+[INFO] [1775741966.846820, 66.001000]: [offline_bag_feeder] raw_frame=661 lidar stamp=66.001000
+[INFO] [1775741966.851780, 66.101000]: [offline_bag_feeder] raw_frame=662 lidar stamp=66.101000
+[INFO] [1775741966.856038, 66.201000]: [offline_bag_feeder] raw_frame=663 lidar stamp=66.201000
+[INFO] [1775741966.860334, 66.301000]: [offline_bag_feeder] raw_frame=664 lidar stamp=66.301000
+[INFO] [1775741966.864616, 66.401000]: [offline_bag_feeder] raw_frame=665 lidar stamp=66.401000
+[INFO] [1775741966.868908, 66.501000]: [offline_bag_feeder] raw_frame=666 lidar stamp=66.501000
+[INFO] [1775741966.875087, 66.601000]: [offline_bag_feeder] raw_frame=667 lidar stamp=66.601000
+[INFO] [1775741966.879527, 66.701000]: [offline_bag_feeder] raw_frame=668 lidar stamp=66.701000
+[INFO] [1775741966.883914, 66.801000]: [offline_bag_feeder] raw_frame=669 lidar stamp=66.801000
+[INFO] [1775741966.888515, 66.901000]: [offline_bag_feeder] raw_frame=670 lidar stamp=66.901000
+[INFO] [1775741966.893568, 67.001000]: [offline_bag_feeder] raw_frame=671 lidar stamp=67.001000
+[INFO] [1775741966.898265, 67.101000]: [offline_bag_feeder] raw_frame=672 lidar stamp=67.101000
+[INFO] [1775741966.904169, 67.201000]: [offline_bag_feeder] raw_frame=673 lidar stamp=67.201000
+[INFO] [1775741966.910049, 67.301000]: [offline_bag_feeder] raw_frame=674 lidar stamp=67.301000
+[INFO] [1775741966.915256, 67.401000]: [offline_bag_feeder] raw_frame=675 lidar stamp=67.401000
+[INFO] [1775741966.919351, 67.501000]: [offline_bag_feeder] raw_frame=676 lidar stamp=67.501000
+[INFO] [1775741966.923702, 67.601000]: [offline_bag_feeder] raw_frame=677 lidar stamp=67.601000
+[INFO] [1775741966.928253, 67.701000]: [offline_bag_feeder] raw_frame=678 lidar stamp=67.701000
+[INFO] [1775741966.934053, 67.801000]: [offline_bag_feeder] raw_frame=679 lidar stamp=67.801000
+[INFO] [1775741966.938503, 67.901000]: [offline_bag_feeder] raw_frame=680 lidar stamp=67.901000
+[INFO] [1775741966.944056, 68.001000]: [offline_bag_feeder] raw_frame=681 lidar stamp=68.001000
+[INFO] [1775741966.949103, 68.101000]: [offline_bag_feeder] raw_frame=682 lidar stamp=68.101000
+[INFO] [1775741966.953880, 68.201000]: [offline_bag_feeder] raw_frame=683 lidar stamp=68.201000
+[INFO] [1775741966.960013, 68.301000]: [offline_bag_feeder] raw_frame=684 lidar stamp=68.301000
+[INFO] [1775741966.964690, 68.401000]: [offline_bag_feeder] raw_frame=685 lidar stamp=68.401000
+[INFO] [1775741966.970946, 68.501000]: [offline_bag_feeder] raw_frame=686 lidar stamp=68.501000
+[INFO] [1775741966.976977, 68.601000]: [offline_bag_feeder] raw_frame=687 lidar stamp=68.601000
+[INFO] [1775741966.983648, 68.701000]: [offline_bag_feeder] raw_frame=688 lidar stamp=68.701000
+[INFO] [1775741966.987973, 68.801000]: [offline_bag_feeder] raw_frame=689 lidar stamp=68.801000
+[INFO] [1775741966.991993, 68.901000]: [offline_bag_feeder] raw_frame=690 lidar stamp=68.901000
+[INFO] [1775741966.996124, 69.001000]: [offline_bag_feeder] raw_frame=691 lidar stamp=69.001000
+[INFO] [1775741967.000308, 69.101000]: [offline_bag_feeder] raw_frame=692 lidar stamp=69.101000
+[INFO] [1775741967.004807, 69.201000]: [offline_bag_feeder] raw_frame=693 lidar stamp=69.201000
+[INFO] [1775741967.010244, 69.301000]: [offline_bag_feeder] raw_frame=694 lidar stamp=69.301000
+[INFO] [1775741967.015828, 69.401000]: [offline_bag_feeder] raw_frame=695 lidar stamp=69.401000
+[INFO] [1775741967.022241, 69.501000]: [offline_bag_feeder] raw_frame=696 lidar stamp=69.501000
+[INFO] [1775741967.026572, 69.601000]: [offline_bag_feeder] raw_frame=697 lidar stamp=69.601000
+[INFO] [1775741967.032472, 69.701000]: [offline_bag_feeder] raw_frame=698 lidar stamp=69.701000
+[INFO] [1775741967.037143, 69.801000]: [offline_bag_feeder] raw_frame=699 lidar stamp=69.801000
+[INFO] [1775741967.041938, 69.901000]: [offline_bag_feeder] raw_frame=700 lidar stamp=69.901000
+[INFO] [1775741967.046128, 70.001000]: [offline_bag_feeder] raw_frame=701 lidar stamp=70.001000
+[INFO] [1775741967.050286, 70.101000]: [offline_bag_feeder] raw_frame=702 lidar stamp=70.101000
+[INFO] [1775741967.055975, 70.201000]: [offline_bag_feeder] raw_frame=703 lidar stamp=70.201000
+[INFO] [1775741967.060620, 70.301000]: [offline_bag_feeder] raw_frame=704 lidar stamp=70.301000
+[INFO] [1775741967.066609, 70.401000]: [offline_bag_feeder] raw_frame=705 lidar stamp=70.401000
+[INFO] [1775741967.071589, 70.501000]: [offline_bag_feeder] raw_frame=706 lidar stamp=70.501000
+[INFO] [1775741967.076162, 70.601000]: [offline_bag_feeder] raw_frame=707 lidar stamp=70.601000
+[INFO] [1775741967.080740, 70.701000]: [offline_bag_feeder] raw_frame=708 lidar stamp=70.701000
+[INFO] [1775741967.088898, 70.801000]: [offline_bag_feeder] raw_frame=709 lidar stamp=70.801000
+[INFO] [1775741967.094971, 70.901000]: [offline_bag_feeder] raw_frame=710 lidar stamp=70.901000
+[INFO] [1775741967.101628, 71.001000]: [offline_bag_feeder] raw_frame=711 lidar stamp=71.001000
+[INFO] [1775741967.109172, 71.101000]: [offline_bag_feeder] raw_frame=712 lidar stamp=71.101000
+[INFO] [1775741967.114648, 71.201000]: [offline_bag_feeder] raw_frame=713 lidar stamp=71.201000
+[INFO] [1775741967.119596, 71.301000]: [offline_bag_feeder] raw_frame=714 lidar stamp=71.301000
+[INFO] [1775741967.125361, 71.401000]: [offline_bag_feeder] raw_frame=715 lidar stamp=71.401000
+[INFO] [1775741967.131987, 71.501000]: [offline_bag_feeder] raw_frame=716 lidar stamp=71.501000
+[INFO] [1775741967.138128, 71.601000]: [offline_bag_feeder] raw_frame=717 lidar stamp=71.601000
+[INFO] [1775741967.144104, 71.701000]: [offline_bag_feeder] raw_frame=718 lidar stamp=71.701000
+[INFO] [1775741967.150253, 71.801000]: [offline_bag_feeder] raw_frame=719 lidar stamp=71.801000
+[INFO] [1775741967.157243, 71.901000]: [offline_bag_feeder] raw_frame=720 lidar stamp=71.901000
+[INFO] [1775741967.162920, 72.001000]: [offline_bag_feeder] raw_frame=721 lidar stamp=72.001000
+[INFO] [1775741967.169696, 72.001000]: [offline_bag_feeder] raw_frame=722 lidar stamp=72.101000
+[INFO] [1775741967.174415, 72.201000]: [offline_bag_feeder] raw_frame=723 lidar stamp=72.201000
+[INFO] [1775741967.179721, 72.301000]: [offline_bag_feeder] raw_frame=724 lidar stamp=72.301000
+[INFO] [1775741967.183951, 72.401000]: [offline_bag_feeder] raw_frame=725 lidar stamp=72.401000
+[INFO] [1775741967.188166, 72.501000]: [offline_bag_feeder] raw_frame=726 lidar stamp=72.501000
+[INFO] [1775741967.192808, 72.601000]: [offline_bag_feeder] raw_frame=727 lidar stamp=72.601000
+[INFO] [1775741967.197019, 72.701000]: [offline_bag_feeder] raw_frame=728 lidar stamp=72.701000
+[INFO] [1775741967.202219, 72.801000]: [offline_bag_feeder] raw_frame=729 lidar stamp=72.801000
+[INFO] [1775741967.206879, 72.901000]: [offline_bag_feeder] raw_frame=730 lidar stamp=72.901000
+[INFO] [1775741967.212501, 73.001000]: [offline_bag_feeder] raw_frame=731 lidar stamp=73.001000
+[INFO] [1775741967.217711, 73.101000]: [offline_bag_feeder] raw_frame=732 lidar stamp=73.101000
+[INFO] [1775741967.222142, 73.201000]: [offline_bag_feeder] raw_frame=733 lidar stamp=73.201000
+[INFO] [1775741967.227749, 73.301000]: [offline_bag_feeder] raw_frame=734 lidar stamp=73.301000
+[INFO] [1775741967.231978, 73.401000]: [offline_bag_feeder] raw_frame=735 lidar stamp=73.401000
+[INFO] [1775741967.237258, 73.501000]: [offline_bag_feeder] raw_frame=736 lidar stamp=73.501000
+[INFO] [1775741967.242745, 73.601000]: [offline_bag_feeder] raw_frame=737 lidar stamp=73.601000
+[INFO] [1775741967.247707, 73.701000]: [offline_bag_feeder] raw_frame=738 lidar stamp=73.701000
+[INFO] [1775741967.252811, 73.801000]: [offline_bag_feeder] raw_frame=739 lidar stamp=73.801000
+[INFO] [1775741967.257306, 73.901000]: [offline_bag_feeder] raw_frame=740 lidar stamp=73.901000
+[INFO] [1775741967.262099, 74.001000]: [offline_bag_feeder] raw_frame=741 lidar stamp=74.001000
+[INFO] [1775741967.266619, 74.101000]: [offline_bag_feeder] raw_frame=742 lidar stamp=74.101000
+[INFO] [1775741967.271026, 74.201000]: [offline_bag_feeder] raw_frame=743 lidar stamp=74.201000
+[INFO] [1775741967.275981, 74.301000]: [offline_bag_feeder] raw_frame=744 lidar stamp=74.301000
+[INFO] [1775741967.280247, 74.401000]: [offline_bag_feeder] raw_frame=745 lidar stamp=74.401000
+[INFO] [1775741967.285189, 74.501000]: [offline_bag_feeder] raw_frame=746 lidar stamp=74.501000
+[INFO] [1775741967.289313, 74.601000]: [offline_bag_feeder] raw_frame=747 lidar stamp=74.601000
+[INFO] [1775741967.294185, 74.701000]: [offline_bag_feeder] raw_frame=748 lidar stamp=74.701000
+[INFO] [1775741967.298527, 74.801000]: [offline_bag_feeder] raw_frame=749 lidar stamp=74.801000
+[INFO] [1775741967.302887, 74.901000]: [offline_bag_feeder] raw_frame=750 lidar stamp=74.901000
+[INFO] [1775741967.307055, 75.001000]: [offline_bag_feeder] raw_frame=751 lidar stamp=75.001000
+[INFO] [1775741967.311077, 75.101000]: [offline_bag_feeder] raw_frame=752 lidar stamp=75.101000
+[INFO] [1775741967.315150, 75.201000]: [offline_bag_feeder] raw_frame=753 lidar stamp=75.201000
+[INFO] [1775741967.319066, 75.301000]: [offline_bag_feeder] raw_frame=754 lidar stamp=75.301000
+[INFO] [1775741967.323113, 75.401000]: [offline_bag_feeder] raw_frame=755 lidar stamp=75.401000
+[INFO] [1775741967.327183, 75.501000]: [offline_bag_feeder] raw_frame=756 lidar stamp=75.501000
+[INFO] [1775741967.331244, 75.601000]: [offline_bag_feeder] raw_frame=757 lidar stamp=75.601000
+[INFO] [1775741967.335475, 75.701000]: [offline_bag_feeder] raw_frame=758 lidar stamp=75.701000
+[INFO] [1775741967.339756, 75.801000]: [offline_bag_feeder] raw_frame=759 lidar stamp=75.801000
+[INFO] [1775741967.343829, 75.901000]: [offline_bag_feeder] raw_frame=760 lidar stamp=75.901000
+[INFO] [1775741967.348078, 76.001000]: [offline_bag_feeder] raw_frame=761 lidar stamp=76.001000
+[INFO] [1775741967.353536, 76.101000]: [offline_bag_feeder] raw_frame=762 lidar stamp=76.101000
+[INFO] [1775741967.357820, 76.201000]: [offline_bag_feeder] raw_frame=763 lidar stamp=76.201000
+[INFO] [1775741967.361923, 76.301000]: [offline_bag_feeder] raw_frame=764 lidar stamp=76.301000
+[INFO] [1775741967.365958, 76.401000]: [offline_bag_feeder] raw_frame=765 lidar stamp=76.401000
+[INFO] [1775741967.370877, 76.501000]: [offline_bag_feeder] raw_frame=766 lidar stamp=76.501000
+[INFO] [1775741967.375289, 76.601000]: [offline_bag_feeder] raw_frame=767 lidar stamp=76.601000
+[INFO] [1775741967.381290, 76.701000]: [offline_bag_feeder] raw_frame=768 lidar stamp=76.701000
+[INFO] [1775741967.385967, 76.801000]: [offline_bag_feeder] raw_frame=769 lidar stamp=76.801000
+[INFO] [1775741967.391369, 76.901000]: [offline_bag_feeder] raw_frame=770 lidar stamp=76.901000
+[INFO] [1775741967.395846, 77.001000]: [offline_bag_feeder] raw_frame=771 lidar stamp=77.001000
+[INFO] [1775741967.400804, 77.101000]: [offline_bag_feeder] raw_frame=772 lidar stamp=77.101000
+[INFO] [1775741967.405205, 77.201000]: [offline_bag_feeder] raw_frame=773 lidar stamp=77.201000
+[INFO] [1775741967.409655, 77.301000]: [offline_bag_feeder] raw_frame=774 lidar stamp=77.301000
+[INFO] [1775741967.415200, 77.401000]: [offline_bag_feeder] raw_frame=775 lidar stamp=77.401000
+[INFO] [1775741967.419773, 77.501000]: [offline_bag_feeder] raw_frame=776 lidar stamp=77.501000
+[INFO] [1775741967.425288, 77.601000]: [offline_bag_feeder] raw_frame=777 lidar stamp=77.601000
+[INFO] [1775741967.430024, 77.701000]: [offline_bag_feeder] raw_frame=778 lidar stamp=77.701000
+[INFO] [1775741967.434319, 77.801000]: [offline_bag_feeder] raw_frame=779 lidar stamp=77.801000
+[INFO] [1775741967.438646, 77.901000]: [offline_bag_feeder] raw_frame=780 lidar stamp=77.901000
+[INFO] [1775741967.443368, 78.001000]: [offline_bag_feeder] raw_frame=781 lidar stamp=78.001000
+[INFO] [1775741967.449140, 78.101000]: [offline_bag_feeder] raw_frame=782 lidar stamp=78.101000
+[INFO] [1775741967.454842, 78.201000]: [offline_bag_feeder] raw_frame=783 lidar stamp=78.201000
+[INFO] [1775741967.459651, 78.301000]: [offline_bag_feeder] raw_frame=784 lidar stamp=78.301000
+[INFO] [1775741967.463969, 78.401000]: [offline_bag_feeder] raw_frame=785 lidar stamp=78.401000
+[INFO] [1775741967.468401, 78.501000]: [offline_bag_feeder] raw_frame=786 lidar stamp=78.501000
+[INFO] [1775741967.473060, 78.601000]: [offline_bag_feeder] raw_frame=787 lidar stamp=78.601000
+[INFO] [1775741967.478032, 78.701000]: [offline_bag_feeder] raw_frame=788 lidar stamp=78.701000
+[INFO] [1775741967.483348, 78.801000]: [offline_bag_feeder] raw_frame=789 lidar stamp=78.801000
+[INFO] [1775741967.487916, 78.901000]: [offline_bag_feeder] raw_frame=790 lidar stamp=78.901000
+[INFO] [1775741967.492341, 79.001000]: [offline_bag_feeder] raw_frame=791 lidar stamp=79.001000
+[INFO] [1775741967.496931, 79.101000]: [offline_bag_feeder] raw_frame=792 lidar stamp=79.101000
+[INFO] [1775741967.502850, 79.201000]: [offline_bag_feeder] raw_frame=793 lidar stamp=79.201000
+[INFO] [1775741967.508964, 79.301000]: [offline_bag_feeder] raw_frame=794 lidar stamp=79.301000
+[INFO] [1775741967.514771, 79.401000]: [offline_bag_feeder] raw_frame=795 lidar stamp=79.401000
+[INFO] [1775741967.520661, 79.501000]: [offline_bag_feeder] raw_frame=796 lidar stamp=79.501000
+[INFO] [1775741967.526306, 79.601000]: [offline_bag_feeder] raw_frame=797 lidar stamp=79.601000
+[INFO] [1775741967.532265, 79.701000]: [offline_bag_feeder] raw_frame=798 lidar stamp=79.701000
+[INFO] [1775741967.538287, 79.801000]: [offline_bag_feeder] raw_frame=799 lidar stamp=79.801000
+[INFO] [1775741967.544219, 79.901000]: [offline_bag_feeder] raw_frame=800 lidar stamp=79.901000
+[INFO] [1775741967.549039, 80.001000]: [offline_bag_feeder] raw_frame=801 lidar stamp=80.001000
+[INFO] [1775741967.554670, 80.101000]: [offline_bag_feeder] raw_frame=802 lidar stamp=80.101000
+[INFO] [1775741967.558039, 80.201000]: [offline_bag_feeder] raw_frame=803 lidar stamp=80.201000
+[INFO] [1775741967.558866, 80.201000]: [offline_bag_feeder] finished. lidar_frames=803
+[INFO] [1775741967.559309, 80.201000]: [offline_bag_feeder] gated_lidar_frames=0
+[INFO] [1775741967.559685, 80.201000]: [offline_bag_feeder] detection: ok=0 timeout=0
+[INFO] [1775741967.560054, 80.201000]: [offline_bag_feeder] tracking : ok=0 timeout=0
+[INFO] [1775741967.560436, 80.201000]: [offline_bag_feeder] odom     : ok=0 timeout=0
+[INFO] [1775741967.560802, 80.201000]: [offline_bag_feeder] avg_wait_per_frame=0.000s
+[A-4] 停止 FAST-LIO...
+[信息] 轨迹已保存为 Results/0009_results/trajectory_baseline_offline.txt
+
+=========================================================
+   [离线阶段 C] JointOffline
+=========================================================
+[C-1] 启动 PointPillars 节点...
+启动KITTI PointPillars Bag ROS节点...
+激活ME5400环境...
+启动KITTI PointPillars Bag节点...
+/home/xc/miniconda3/envs/ME5400/lib/python3.10/site-packages/mmdet3d/models/dense_heads/anchor3d_head.py:94: UserWarning: dir_offset and dir_limit_offset will be depressed and be incorporated into box coder in the future
+  warnings.warn(
+[INFO] [1775741972.741178, 0.000000]: 加载标定文件成功: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0009.txt
+[INFO] [1775741972.741616, 0.000000]: 正在初始化PointPillars推理器...
+Loads checkpoint by local backend from path: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+04/09 21:39:32 - mmengine - WARNING - Failed to search registry with scope "mmdet3d" in the "function" registry tree. As a workaround, the current "function" registry in "mmengine" is used to build instance. This may cause unexpected failure when running the built modules. Please check whether "mmdet3d" is a correct scope, or whether the registry is initialized.
+/home/xc/miniconda3/envs/ME5400/lib/python3.10/site-packages/mmengine/visualization/visualizer.py:196: UserWarning: Failed to add <class 'mmengine.visualization.vis_backend.LocalVisBackend'>, please provide the `save_dir` argument.
+  warnings.warn(f'Failed to add {vis_backend.__class__}, '
+
+[INFO] 异常中止，正在清理离线双轨进程...
+[INFO] [1775741973.457304, 0.000000]: 推理器初始化成功
+[INFO] [1775741973.461093, 0.000000]: KITTI PointPillars Bag ROS节点初始化完成
+[INFO] [1775741973.461389, 0.000000]: 配置文件: /home/xc/Projects/ME5400/MMDET3D/configs/pointpillars/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
+[INFO] [1775741973.461644, 0.000000]: 检查点: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+[INFO] [1775741973.461904, 0.000000]: Bag文件: /home/xc/Projects/ME5400/MMDET3D/data/kitti/seq_0019_with_det.bag
+[INFO] [1775741973.462157, 0.000000]: 数据集路径: /home/xc/Projects/ME5400/Data_Tracking/training / 序列: 0009
+[INFO] [1775741973.462409, 0.000000]: 订阅点云话题: /offline/detection_pointcloud
+[INFO] [1775741973.462650, 0.000000]: 订阅IMU话题: /kitti/oxts/imu
+[INFO] [1775741973.462913, 0.000000]: 发布频率: 10.0 Hz
+[INFO] [1775741973.463170, 0.000000]: 模型类别: ['Pedestrian', 'Cyclist', 'Car']
+[INFO] [1775741973.463415, 0.000000]: 类别过滤: 未启用
+[INFO] [1775741973.463663, 0.000000]: 转发原始点云/IMU: False
+[INFO] [1775741973.463902, 0.000000]: 等待点云数据...
+[INFO] 本次运行的所有输出将实时保存至: /home/xc/Projects/ME5400/Results/0009_results/full_run_offline.log
+[INFO] 数据集序列号: 0009
+[INFO] 离线 bag: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0009_nodet.bag
+[INFO] FAST-LIO 地图保存: false
+[步骤 0] 正在清理残留环境...
+[cleanup_ros_runtime.sh] 正在清理残留 ROS 运行时进程...
+[cleanup_ros_runtime.sh] 已清理 ROS master 中的失联节点注册。
+[步骤 1] 检测到 roscore 已在运行，将复用现有环境...
+[步骤 2] 正在构建/验证 catkin 工作空间...
+[  0%] Built target geometry_msgs_generate_messages_eus
+[  0%] Built target roscpp_generate_messages_py
+[  0%] Built target rosgraph_msgs_generate_messages_eus
+[  0%] Built target roscpp_generate_messages_nodejs
+[  0%] Built target roscpp_generate_messages_cpp
+[  0%] Built target roscpp_generate_messages_eus
+[  0%] Built target geometry_msgs_generate_messages_cpp
+[  0%] Built target geometry_msgs_generate_messages_lisp
+[  0%] Built target std_msgs_generate_messages_cpp
+[  0%] Built target std_msgs_generate_messages_eus
+[  0%] Built target std_msgs_generate_messages_lisp
+[  0%] Built target sensor_msgs_generate_messages_cpp
+[  0%] Built target std_msgs_generate_messages_nodejs
+[  0%] Built target sensor_msgs_generate_messages_py
+[  0%] Built target rosgraph_msgs_generate_messages_nodejs
+[  0%] Built target actionlib_generate_messages_cpp
+[  0%] Built target rosgraph_msgs_generate_messages_lisp
+[  0%] Built target geometry_msgs_generate_messages_py
+[  0%] Built target geometry_msgs_generate_messages_nodejs
+[  0%] Built target std_msgs_generate_messages_py
+[  0%] Built target actionlib_msgs_generate_messages_py
+[  0%] Built target _ME5400_generate_messages_check_deps_TrackedObject
+[  0%] Built target _ME5400_generate_messages_check_deps_Detection3DArray
+[  0%] Built target _tf_generate_messages_check_deps_tfMessage
+[  0%] Built target _ME5400_generate_messages_check_deps_Detection3D
+[  0%] Built target _ME5400_generate_messages_check_deps_TrackedObjectArray
+[  0%] Built target _tf_generate_messages_check_deps_FrameGraph
+[  0%] Built target actionlib_generate_messages_py
+[  0%] Built target actionlib_msgs_generate_messages_cpp
+[  0%] Built target tf2_msgs_generate_messages_eus
+[  0%] Built target rosgraph_msgs_generate_messages_cpp
+[  0%] Built target sensor_msgs_generate_messages_eus
+[  0%] Built target roscpp_generate_messages_lisp
+[  0%] Built target tf2_msgs_generate_messages_cpp
+[  0%] Built target tf2_msgs_generate_messages_nodejs
+[  0%] Built target sensor_msgs_generate_messages_lisp
+[  0%] Built target tf2_msgs_generate_messages_py
+[  0%] Built target actionlib_msgs_generate_messages_eus
+[  0%] Built target actionlib_generate_messages_eus
+[  0%] Built target actionlib_msgs_generate_messages_nodejs
+[  0%] Built target actionlib_msgs_generate_messages_lisp
+[  0%] Built target tf2_msgs_generate_messages_lisp
+[  0%] Built target actionlib_generate_messages_nodejs
+[  0%] Built target rosgraph_msgs_generate_messages_py
+[  5%] Built target ME5400_generate_messages_cpp
+[  5%] Built target sensor_msgs_generate_messages_nodejs
+[ 13%] Built target ME5400_generate_messages_py
+[ 18%] Built target ME5400_generate_messages_lisp
+[ 18%] Built target actionlib_generate_messages_lisp
+[ 24%] Built target tf_generate_messages_py
+[ 31%] Built target ME5400_generate_messages_eus
+[ 34%] Built target tf_generate_messages_cpp
+[ 40%] Built target ME5400_generate_messages_nodejs
+[ 43%] Built target kdl_conversions
+[ 46%] Built target tf_generate_messages_lisp
+[ 50%] Built target eigen_conversions
+[ 55%] Built target tf_generate_messages_eus
+[ 57%] Built target tf_generate_messages_nodejs
+[ 57%] Built target ME5400_generate_messages
+[ 57%] Built target _fast_lio_generate_messages_check_deps_Pose6D
+[ 57%] Built target tf_generate_messages
+[ 65%] Built target tf
+[ 66%] Built target fast_lio_generate_messages_nodejs
+[ 73%] Built target fast_lio_generate_messages_py
+[ 73%] Built target fast_lio_generate_messages_cpp
+[ 73%] Built target fast_lio_generate_messages_eus
+[ 75%] Built target fast_lio_generate_messages_lisp
+[ 79%] Built target static_transform_publisher
+[ 81%] Built target tf_echo
+[ 84%] Built target tf_monitor
+[ 86%] Built target tf_change_notifier
+[ 86%] Built target fast_lio_generate_messages
+[ 89%] Built target tf_empty_listener
+[ 94%] Built target tf_conversions
+[100%] Built target fastlio_mapping
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+Base path: /home/xc/Projects/ME5400/catkin_ws
+Source space: /home/xc/Projects/ME5400/catkin_ws/src
+Build space: /home/xc/Projects/ME5400/catkin_ws/build
+Devel space: /home/xc/Projects/ME5400/catkin_ws/devel
+Install space: /home/xc/Projects/ME5400/catkin_ws/install
+####
+#### Running command: "make cmake_check_build_system" in "/home/xc/Projects/ME5400/catkin_ws/build"
+####
+####
+#### Running command: "make -j28 -l28" in "/home/xc/Projects/ME5400/catkin_ws/build"
+####
+[步骤 3] Headless 模式：跳过 RViz 可视化与真实轨迹发布...
+
+=========================================================
+   [离线阶段 A] Baseline(Offline,NoWeight)
+=========================================================
+[A-1] 启动 FAST-LIO (mapping, use_dynamic_weights=false)...
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+Multi thread started 
+p_pre->lidar_type 2
+~~~~/home/xc/Projects/ME5400/catkin_ws/src/fast_lio/ file opened
+[FAST-LIO] Trajectory file opened at: /home/xc/Projects/ME5400/Results/trajectory.txt
+[A-2] 启动离线 feeder (不等待检测/跟踪)...
+[信息] 启动 offline_bag_feeder (require_detection=false require_tracking=false require_odom=false gated_lidar_topic=/kitti/velo/pointcloud)
+[A-3] 等待离线 baseline 阶段完成...

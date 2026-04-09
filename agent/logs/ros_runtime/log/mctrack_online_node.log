@@ -240,3 +240,66 @@ PermissionError: [Errno 1] Operation not permitted
 [rosout][WARNING] 2026-04-09 21:05:52,636: 尚未收到 FAST-LIO 位姿，暂时缓存检测结果
 [rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/clock] removing connection to http://z790m:36539/
 [rospy.internal][INFO] 2026-04-09 21:06:00,966: topic[/mctrack/tracked_objects] removing connection to /offline_bag_feeder
+[rospy.client][INFO] 2026-04-09 21:41:21,966: init_node, name[/mctrack_online_node], pid[383097]
+[xmlrpc][INFO] 2026-04-09 21:41:21,983: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:41:21,983: Started XML-RPC server [http://z790m:40769/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:41:21,983: _ready: http://z790m:40769/
+[rospy.init][INFO] 2026-04-09 21:41:21,983: ROS Slave URI: [http://z790m:40769/]
+[rospy.registration][INFO] 2026-04-09 21:41:21,983: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:41:21,984: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:41:22,084: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:41:22,086: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:41:22,086: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:41:22,086: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:41:22,087: connected to core topic /clock
+[rosout][INFO] 2026-04-09 21:41:22,100: MCTrackOnlineNode 初始化完成 (配置=/home/xc/Projects/ME5400/MCTrack/config/kitti_fastlio.yaml, 检测话题=/detection/lidar_detections, 旧版String=False)
+[rospy.internal][INFO] 2026-04-09 21:41:22,101: topic[/detection/lidar_detections] adding connection to [http://z790m:35233/], count 0
+[rospy.internal][INFO] 2026-04-09 21:41:22,376: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 21:41:24,679: topic[/mctrack/tracked_objects] adding connection to [/laserMapping], count 0
+[rospy.internal][INFO] 2026-04-09 21:41:24,679: topic[/mctrack/lidar_pose] adding connection to [http://z790m:33669/], count 0
+[rospy.internal][INFO] 2026-04-09 21:41:30,110: topic[/mctrack/tracked_objects] adding connection to [/joint_backend_ego], count 1
+[rospy.internal][INFO] 2026-04-09 21:41:34,808: topic[/mctrack/tracked_objects] adding connection to [/offline_bag_feeder], count 2
+[rospy.internal][INFO] 2026-04-09 21:41:34,894: topic[/clock] adding connection to [http://z790m:34315/], count 0
+[rosout][WARNING] 2026-04-09 21:41:41,647: 尚未收到 FAST-LIO 位姿，暂时缓存检测结果
+[rosout][WARNING] 2026-04-09 21:41:56,424: 尚未收到 FAST-LIO 位姿，暂时缓存检测结果
+[rosout][WARNING] 2026-04-09 21:42:11,444: 尚未收到 FAST-LIO 位姿，暂时缓存检测结果
+[rosout][WARNING] 2026-04-09 21:42:26,486: 尚未收到 FAST-LIO 位姿，暂时缓存检测结果
+[rosout][WARNING] 2026-04-09 21:42:41,535: 尚未收到 FAST-LIO 位姿，暂时缓存检测结果
+[rospy.internal][INFO] 2026-04-09 21:42:42,714: topic[/mctrack/tracked_objects] adding connection to [/rostopic_384901_1775742162575], count 3
+[rospy.internal][INFO] 2026-04-09 21:42:47,910: topic[/mctrack/tracked_objects] removing connection to /rostopic_384901_1775742162575
+[rospy.core][INFO] 2026-04-09 21:43:47,142: signal_shutdown [signal-2]
+[rospy.internal][INFO] 2026-04-09 21:43:47,148: topic[/mctrack/lidar_pose] removing connection to http://z790m:33669/
+[rospy.internal][INFO] 2026-04-09 21:43:47,149: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 21:43:47,149: topic[/clock] removing connection to http://z790m:34315/
+[rospy.internal][INFO] 2026-04-09 21:43:47,149: topic[/mctrack/tracked_objects] removing connection to /laserMapping
+[rospy.internal][INFO] 2026-04-09 21:43:47,149: topic[/detection/lidar_detections] removing connection to http://z790m:35233/
+[rospy.internal][INFO] 2026-04-09 21:43:47,149: topic[/mctrack/tracked_objects] removing connection to /joint_backend_ego
+[rospy.internal][INFO] 2026-04-09 21:43:47,149: topic[/mctrack/tracked_objects] removing connection to /offline_bag_feeder
+[rospy.impl.masterslave][INFO] 2026-04-09 21:43:47,149: signal-2
+[rospy.core][INFO] 2026-04-09 21:43:47,743: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 21:44:46,422: init_node, name[/mctrack_online_node], pid[388720]
+[xmlrpc][INFO] 2026-04-09 21:44:46,422: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:44:46,422: Started XML-RPC server [http://z790m:43199/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:44:46,422: _ready: http://z790m:43199/
+[rospy.init][INFO] 2026-04-09 21:44:46,423: ROS Slave URI: [http://z790m:43199/]
+[rospy.registration][INFO] 2026-04-09 21:44:46,438: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:44:46,438: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:44:46,523: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:44:46,525: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:44:46,525: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:44:46,526: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:44:46,527: connected to core topic /clock
+[rosout][INFO] 2026-04-09 21:44:46,543: MCTrackOnlineNode 初始化完成 (配置=/home/xc/Projects/ME5400/MCTrack/config/kitti_fastlio.yaml, 检测话题=/detection/lidar_detections, 旧版String=False)
+[rospy.internal][INFO] 2026-04-09 21:44:46,544: topic[/detection/lidar_detections] adding connection to [http://z790m:32977/], count 0
+[rospy.internal][INFO] 2026-04-09 21:44:46,747: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 21:44:49,051: topic[/mctrack/lidar_pose] adding connection to [http://z790m:36231/], count 0
+[rospy.internal][INFO] 2026-04-09 21:44:49,150: topic[/mctrack/tracked_objects] adding connection to [/laserMapping], count 0
+[rospy.internal][INFO] 2026-04-09 21:44:54,524: topic[/mctrack/tracked_objects] adding connection to [/joint_backend_ego], count 1
+[rospy.internal][INFO] 2026-04-09 21:44:59,234: topic[/mctrack/tracked_objects] adding connection to [/offline_bag_feeder], count 2
+[rospy.internal][INFO] 2026-04-09 21:44:59,268: topic[/clock] adding connection to [http://z790m:44027/], count 0
+[rospy.internal][INFO] 2026-04-09 21:46:41,825: topic[/clock] removing connection to http://z790m:44027/
+[rospy.internal][INFO] 2026-04-09 21:46:42,297: topic[/mctrack/tracked_objects] removing connection to /offline_bag_feeder
+[rospy.internal][INFO] 2026-04-09 21:46:46,080: topic[/mctrack/lidar_pose] removing connection to http://z790m:36231/
+[rospy.internal][INFO] 2026-04-09 21:46:46,298: topic[/mctrack/tracked_objects] removing connection to /laserMapping
+[rospy.internal][INFO] 2026-04-09 21:46:46,298: topic[/mctrack/tracked_objects] removing connection to /joint_backend_ego
+[rospy.internal][INFO] 2026-04-09 21:46:46,784: topic[/detection/lidar_detections] removing connection to http://z790m:32977/

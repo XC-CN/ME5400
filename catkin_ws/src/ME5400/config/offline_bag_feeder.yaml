@@ -3,6 +3,7 @@ bag_path: "Data_Tracking/rosbags/seq_0020_nodet.bag"
 
 # 输入链路主时钟（LiDAR帧）
 lidar_topic: "/kitti/velo/pointcloud"
+gated_lidar_topic: ""
 
 # 半同步等待的关键输出话题
 det_topic: "/detection/lidar_detections"

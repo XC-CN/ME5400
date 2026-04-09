@@ -1,0 +1,32 @@
+[rospy.client][INFO] 2026-04-09 21:39:32,723: init_node, name[/kitti_pointpillars_bag_detector_378979_1775741972704], pid[378979]
+[xmlrpc][INFO] 2026-04-09 21:39:32,723: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:39:32,723: Started XML-RPC server [http://z790m:32817/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:39:32,723: _ready: http://z790m:32817/
+[rospy.registration][INFO] 2026-04-09 21:39:32,723: Registering with master node http://localhost:11311
+[rospy.init][INFO] 2026-04-09 21:39:32,723: ROS Slave URI: [http://z790m:32817/]
+[xmlrpc][INFO] 2026-04-09 21:39:32,723: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:39:32,724: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:39:32,725: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:39:32,726: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:39:32,726: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:39:32,726: connected to core topic /clock
+[rosout][INFO] 2026-04-09 21:39:32,741: 加载标定文件成功: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0009.txt
+[rosout][INFO] 2026-04-09 21:39:32,741: 正在初始化PointPillars推理器...
+[rospy.internal][INFO] 2026-04-09 21:39:32,927: topic[/rosout] adding connection to [/rosout], count 0
+[rosout][INFO] 2026-04-09 21:39:33,457: 推理器初始化成功
+[rosout][INFO] 2026-04-09 21:39:33,461: KITTI PointPillars Bag ROS节点初始化完成
+[rosout][INFO] 2026-04-09 21:39:33,461: 配置文件: /home/xc/Projects/ME5400/MMDET3D/configs/pointpillars/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
+[rosout][INFO] 2026-04-09 21:39:33,461: 检查点: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+[rosout][INFO] 2026-04-09 21:39:33,461: Bag文件: /home/xc/Projects/ME5400/MMDET3D/data/kitti/seq_0019_with_det.bag
+[rosout][INFO] 2026-04-09 21:39:33,462: 数据集路径: /home/xc/Projects/ME5400/Data_Tracking/training / 序列: 0009
+[rosout][INFO] 2026-04-09 21:39:33,462: 订阅点云话题: /offline/detection_pointcloud
+[rosout][INFO] 2026-04-09 21:39:33,462: 订阅IMU话题: /kitti/oxts/imu
+[rosout][INFO] 2026-04-09 21:39:33,462: 发布频率: 10.0 Hz
+[rosout][INFO] 2026-04-09 21:39:33,463: 模型类别: ['Pedestrian', 'Cyclist', 'Car']
+[rosout][INFO] 2026-04-09 21:39:33,463: 类别过滤: 未启用
+[rosout][INFO] 2026-04-09 21:39:33,463: 转发原始点云/IMU: False
+[rosout][INFO] 2026-04-09 21:39:33,463: 等待点云数据...
+[rospy.core][INFO] 2026-04-09 21:39:40,291: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-09 21:39:40,292: topic[/rosout] removing connection to /rosout
+[rospy.impl.masterslave][INFO] 2026-04-09 21:39:40,292: signal-15
+[rospy.core][INFO] 2026-04-09 21:39:40,894: signal_shutdown [atexit]

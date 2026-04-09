@@ -39,7 +39,8 @@ flowchart TD
         PP["PointPillars\n3D 目标检测\n(MMDetection3D)"]
         FL["FAST-LIO\n激光-惯性里程计\n(IESKF 滤波器)"]
         ODOM[/"优化位姿\n/Odometry"/]
-        ODOM_IMU[/"IMU 预测位姿\n/Odometry_imu_predicted\n高频，LiDAR 更新前"/]
+        LPOSE[/"桥接 LiDAR 位姿\n/mctrack/lidar_pose\n(检测时间戳对齐)"/]
+        ODOM_IMU[/"IMU 预测位姿\n/Odometry_imu_predicted\n(LiDAR 更新前，保留扩展接口)"/]
         DET[/"检测结果\n/detection/lidar_detections\nDetection3DArray"/]
     end
 
@@ -63,8 +64,9 @@ flowchart TD
     PC --> PP --> DET --> MCT
     PC --> FL
     IMU --> FL
+    FL --> ODOM --> LPOSE --> MCT
     FL --> ODOM --> JB
-    FL --> ODOM_IMU --"运动补偿\n高频初步里程计"--> MCT
+    FL --> ODOM_IMU
     MCT --> TRACK --> DW --> FL
     TRACK --> JB
     JB --> OUT --> EVAL
@@ -93,9 +95,9 @@ flowchart TD
 
 **① FAST-LIO ➡️ MCTrack（里程计帮助跟踪）**
 
-- FAST-LIO 不仅输出优化后的位姿，还提前输出 IMU **预测位姿**（`/Odometry_imu_predicted`），其频率高于雷达帧率
-- MCTrack 利用这个高频位姿做**运动补偿**，在车辆急转弯时依然能准确预测目标下一帧的位置
-- 效果：跟踪更稳定，不容易在快速转弯时丢失目标
+- FAST-LIO 会持续输出稳定的自车位姿 `/Odometry`，并额外对外发布 LiDAR 更新前的 `/Odometry_imu_predicted`
+- 当前仓库实现中，`fastlio_pose_bridge` 会将 `/Odometry` 转成 `/mctrack/lidar_pose`，MCTrack 再按检测时间戳对位姿做插值/对齐
+- 效果：跟踪更稳定，不容易在快速转弯时丢失目标；同时保留 `/Odometry_imu_predicted` 作为高频预测位姿接口，便于后续扩展
 
 **② MCTrack ➡️ FAST-LIO（跟踪帮助建图）**
 
@@ -107,7 +109,9 @@ flowchart TD
 
 > 💡 **通俗理解**：FAST-LIO 告诉 MCTrack「我在这里，帮你算目标在哪」；MCTrack 反过来告诉 FAST-LIO「那几个点是动的车，建图时别信它们」。两者形成了一个互利闭环。
 
-**时序逻辑**（每帧执行顺序）：
+**时序逻辑**分成两层来看：先看概念闭环，再看当前仓库代码里的实现级详细时序。
+
+**概念闭环（单帧视角）**：
 
 ```mermaid
 %%{init: {'theme': 'dark'}}%%
@@ -122,6 +126,74 @@ sequenceDiagram
     MC ->> MC: 更新跟踪，输出动态目标 O_t
     MC ->> FL: 存储 O_t，用于下一帧 T+1 降权
 ```
+
+**实现级详细时序 A：在线优化链路（`Scripts/run_optimized.sh`）**
+
+```mermaid
+%%{init: {'theme': 'dark'}}%%
+sequenceDiagram
+    autonumber
+    participant BAG as rosbag
+    participant FL as FAST-LIO
+    participant BR as fastlio_pose_bridge
+    participant PP as PointPillars
+    participant MC as MCTrack
+    participant JB as joint_backend_ego
+    participant OUT as RViz / Recorder
+
+    BAG ->> FL: 发布 IMU + 原始 LiDAR(t)
+    Note over FL: preprocess() 先冻结上一拍 tracked_objects 快照<br/>对动态框内点云降权
+    FL ->> FL: IMU 传播、scan 去畸变、地图匹配、EKF 更新
+    Note right of FL: 同时发布 /Odometry_imu_predicted<br/>作为 LiDAR 更新前预测位姿接口
+    FL -->> BR: /Odometry(t)
+    BR -->> MC: /mctrack/lidar_pose(t)
+    BAG ->> PP: 同步发布 LiDAR(t)
+    PP -->> MC: /detection/lidar_detections(t)
+    MC ->> MC: 按检测时间戳查 pose_buffer<br/>必要时插值或短暂等待
+    MC ->> MC: 更新 tracker，输出目标世界系/雷达系状态
+    MC -->> FL: /mctrack/tracked_objects(t)
+    MC -->> JB: /mctrack/tracked_objects(t)
+    FL -->> JB: /Odometry(t)
+    JB ->> JB: 滑窗优化当前 ego pose
+    JB -->> OUT: /joint_backend/odom(t)
+    Note over MC,FL: tracked_objects(t) 不回改当前 scan t<br/>而是在下一帧进入动态降权链路
+```
+
+**实现级详细时序 B：离线半同步双轨（`Scripts/run_offline_all.sh` 中 `JointOffline`）**
+
+```mermaid
+%%{init: {'theme': 'dark'}}%%
+sequenceDiagram
+    autonumber
+    participant FE as offline_bag_feeder
+    participant FL as FAST-LIO(raw)
+    participant BR as pose_bridge
+    participant PP as PointPillars(gated)
+    participant MC as MCTrack
+    participant JB as joint_backend_ego
+    participant REC as trajectory recorder
+
+    FE ->> FL: 逐条转发 IMU + raw LiDAR
+    FL -->> BR: /Odometry
+    BR -->> FE: /mctrack/lidar_pose 首次出现
+    Note over FE: pose_ready=true 后<br/>才开始 gated 点云支路
+    FE ->> PP: 发布 /offline/detection_pointcloud(frame k)
+    Note over FE,PP: gated 流比 raw 流滞后一帧<br/>保证 FAST-LIO 拿到下一拍 IMU 完成去畸变
+    PP -->> MC: /detection/lidar_detections(k)
+    BR -->> MC: /mctrack/lidar_pose(k)
+    MC -->> FL: /mctrack/tracked_objects(k)
+    MC -->> JB: /mctrack/tracked_objects(k)
+    FL -->> JB: /Odometry(k)
+    JB -->> REC: /joint_backend/odom(k)
+    FE ->> FE: 等待 stamp≈k 的 detection + tracking<br/>可选再等 odom，超时则告警后继续
+    FE ->> PP: 推进下一帧 gated 点云(k+1)
+```
+
+> **实现要点**：
+>
+> - 在线链路是**异步闭环**：当前帧跟踪结果主要作用于下一帧 FAST-LIO 的动态点降权
+> - 离线链路是**半同步闭环**：`offline_bag_feeder` 按 LiDAR 帧推进，并按时间戳等待检测/跟踪完成后再放行下一帧
+> - `gated` 检测支路默认比 `raw` 点云慢一拍，这是为了给 FAST-LIO 保留足够的 IMU lookahead 完成当前 scan 去畸变
 
 ---
 
@@ -313,17 +385,17 @@ pip install numpy opencv-python matplotlib
               scikit-learn==1.7.2 pandas==2.3.3 pillow==11.3.0 pyyaml==6.0.3 tqdm terminaltables==3.1.10 \
               shapely==1.8.5.post1 pyquaternion==0.9.9 trimesh==4.8.3 plyfile==1.1.2 imageio==2.37.0 \
               fire==0.7.1 tensorboard==2.20.0 protobuf==6.32.1
-  pip install rospkg==1.6.0 catkin-pkg==1.1.0 pycryptodomex==3.23.0 python-gnupg==0.5.6
+  pip install rospkg==1.6.0 catkin-pkg==1.1.0 pycryptodomex==3.23.0 python-gnupg==0.5.6 pykitti==0.3.1
   ```
 
-  > 如果需要在 `ME5400` conda 环境里直接运行 `offline_bag_feeder.py` 或其他依赖 `rosbag` 的脚本，必须补上 `pycryptodomex` 和 `python-gnupg`。否则常见报错为 `No module named 'Cryptodome'` 或 `No module named 'gnupg'`。
+  > 如果需要在 `ME5400` conda 环境里直接运行 `offline_bag_feeder.py`、离线评估脚本或其他依赖 `rosbag` / KITTI 评估工具的脚本，必须补上 `pycryptodomex`、`python-gnupg` 和 `pykitti`。否则常见报错为 `No module named 'Cryptodome'`、`No module named 'gnupg'` 或 `No module named 'pykitti'`。
 - **安装验证**
 
   ```bash
   python -c "import torch; print('PyTorch版本:', torch.__version__); print('CUDA可用:', torch.cuda.is_available()); print('编译支持架构:', torch.cuda.get_arch_list())"
   python -c "import mmcv; print('MMCV版本:', mmcv.__version__)"
   python -c "import mmdet3d; print('MMDetection3D版本:', mmdet3d.__version__)"
-  python -c "import rosbag, gnupg; from Cryptodome.Cipher import AES; print('ROS bag依赖检查通过')"
+  python -c "import rosbag, gnupg, pykitti; from Cryptodome.Cipher import AES; print('ROS bag依赖检查通过')"
   ```
 
 ### 安装步骤
@@ -544,7 +616,7 @@ FAST-LIO 提供三种启动方式：
 > - `mapping` 模式是纯 FAST-LIO，仅启动 `laserMapping`
 > - `both` 模式会同时启动 mapping 和 pose_bridge（供优化链路 / MCTrack 订阅 FAST-LIO 位姿）
 > - 动态权重优化功能默认启用，可通过 `use_dynamic_weights` 参数控制
-> - FAST-LIO 会同时发布 `/Odometry` 与 `/Odometry_imu_predicted`；当前优化链路默认订阅校正后的 `/Odometry`
+> - FAST-LIO 会同时发布 `/Odometry` 与 `/Odometry_imu_predicted`；当前优化链路默认通过 `fastlio_pose_bridge` 转发 `/Odometry -> /mctrack/lidar_pose`
 
 #### 7. **启动 MCTrack 在线节点（终端 D）**
 

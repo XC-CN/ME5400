@@ -75,6 +75,8 @@ class KittiPointPillarsBagNode:
         self.publish_rate = rospy.get_param('~publish_rate', 10.0)  # Hz
         self.confidence_threshold = rospy.get_param('~confidence_threshold', 0.05)
         self.frame_id = rospy.get_param('~frame_id', 'velodyne')
+        self.pointcloud_topic = rospy.get_param('~pointcloud_topic', '/kitti/velo/pointcloud')
+        self.imu_topic = rospy.get_param('~imu_topic', '/kitti/oxts/imu')
         self.allowed_classes = self._parse_allowed_classes(
             rospy.get_param('~allowed_classes', [])
         )
@@ -131,8 +133,8 @@ class KittiPointPillarsBagNode:
             self.imu_pub = rospy.Publisher('/detection/imu', Imu, queue_size=10)
         
         # 订阅点云话题
-        self.pointcloud_sub = rospy.Subscriber('/kitti/velo/pointcloud', PointCloud2, self._pointcloud_callback, queue_size=10)
-        self.imu_sub = rospy.Subscriber('/kitti/oxts/imu', Imu, self._imu_callback, queue_size=1)
+        self.pointcloud_sub = rospy.Subscriber(self.pointcloud_topic, PointCloud2, self._pointcloud_callback, queue_size=10)
+        self.imu_sub = rospy.Subscriber(self.imu_topic, Imu, self._imu_callback, queue_size=1)
         
         # 统计信息
         self.frame_count = 0
@@ -143,7 +145,8 @@ class KittiPointPillarsBagNode:
         rospy.loginfo(f"检查点: {self.checkpoint_path}")
         rospy.loginfo(f"Bag文件: {self.bag_path}")
         rospy.loginfo(f"数据集路径: {self.dataset_root} / 序列: {self.seq}")
-        rospy.loginfo(f"订阅话题: /kitti/velo/pointcloud")
+        rospy.loginfo(f"订阅点云话题: {self.pointcloud_topic}")
+        rospy.loginfo(f"订阅IMU话题: {self.imu_topic}")
         rospy.loginfo(f"发布频率: {self.publish_rate} Hz")
         rospy.loginfo(f"模型类别: {self.class_names}")
         if self.allowed_classes:

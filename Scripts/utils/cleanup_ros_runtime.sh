@@ -35,6 +35,8 @@ terminate_matching_processes TERM \
     "rosbag play" "rosbag play" \
     "Offline bag feeder" "offline_bag_feeder.py" \
     "FAST-LIO roslaunch" "mapping_velodyne.launch" \
+    "FAST-LIO mapping binary" "fastlio_mapping" \
+    "FAST-LIO laserMapping node" "laserMapping" \
     "FAST-LIO pose bridge" "fastlio_pose_bridge.py" \
     "PointPillars bag node" "kitti_pointpillars_bag_node.py" \
     "MCTrack online node" "mctrack_online_node.py" \
@@ -49,6 +51,8 @@ terminate_matching_processes KILL \
     "rosbag play" "rosbag play" \
     "Offline bag feeder" "offline_bag_feeder.py" \
     "FAST-LIO roslaunch" "mapping_velodyne.launch" \
+    "FAST-LIO mapping binary" "fastlio_mapping" \
+    "FAST-LIO laserMapping node" "laserMapping" \
     "FAST-LIO pose bridge" "fastlio_pose_bridge.py" \
     "PointPillars bag node" "kitti_pointpillars_bag_node.py" \
     "MCTrack online node" "mctrack_online_node.py" \
