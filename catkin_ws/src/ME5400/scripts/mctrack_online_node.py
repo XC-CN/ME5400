@@ -455,9 +455,13 @@ class MCTrackOnlineNode:
         stamp = header.stamp if header.stamp != rospy.Time() else rospy.Time.now()
         frame_id_base = "camera_init"
         for track_id, bbox in outputs.items():
-            pos = bbox.global_xyz
-            yaw = bbox.global_yaw
-            length, width, height = bbox.lwh
+            fused_state = np.asarray(
+                getattr(bbox, "global_xyz_lwh_yaw_fusion", bbox.global_xyz_lwh_yaw),
+                dtype=np.float64,
+            )
+            pos = fused_state[:3]
+            yaw = float(getattr(bbox, "global_yaw_fusion", bbox.global_yaw))
+            length, width, height = [float(val) for val in getattr(bbox, "lwh_fusion", bbox.lwh)]
 
             history = self.traj_history[track_id]
             history.append(np.array(pos))

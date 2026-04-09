@@ -18,21 +18,13 @@ def norm_radian(radians):
         output:
             radian_norm: Normalized radian values in the range [-pi, pi], either as a scalar or array.
     """
-    radians = np.array(radians).reshape(-1)
-    radians_norm = []
-    for radian in radians:
-        n = np.floor(radian / (2 * np.pi))
-        radian = radian - n * 2 * np.pi
-        radians_norm.append(radian)
-    radians_norm = np.array(radians_norm)
-    if len(radians_norm) == 1:
-        radian_norm = radians_norm[0]
-    else:
-        radian_norm = radians_norm
-    if radian_norm > np.pi:
-        return radian_norm - np.pi
-    else:
-        return radian_norm
+    radians_arr = np.asarray(radians, dtype=np.float64)
+    radians_norm = np.arctan2(np.sin(radians_arr), np.cos(radians_arr))
+    if radians_norm.ndim == 0:
+        return float(radians_norm)
+    if radians_norm.size == 1:
+        return float(radians_norm.reshape(-1)[0])
+    return radians_norm
 
 
 def norm_realative_radian(radians_diff):
