@@ -444,37 +444,63 @@ ME5400/
 
 > 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`）以及最终生成的 ATE/RPE 对比评测图（`.png`）与指标（`metrics.txt`），系统都会自动统一存放入 `Results/<序列号>_results/`。点云地图（`.pcd`）仅在显式添加 `--save-map` 时生成并归档，默认不会导出。
 
+#### 3. 清理残留 ROS 节点/进程
+
+当上一次运行异常退出，或手动分步调试后留下残留 ROS 节点、`rosbag play`、RViz、FAST-LIO、PointPillars、MCTrack 进程时，可先执行：
+
+```bash
+./Scripts/utils/cleanup_ros_runtime.sh
+```
+
+脚本行为说明：
+
+- 先向残留进程发送 `SIGTERM`，1 秒后仍未退出的目标再发送 `SIGKILL`
+- 清理对象包括 `rviz`、`publish_gt_path.py`、`rosbag play`、FAST-LIO 相关进程、`kitti_pointpillars_bag_node.py`、`mctrack_online_node.py`
+- 若检测到可用 `roscore`，脚本还会执行 `rosnode cleanup`，移除 ROS master 中失联节点的注册信息
+
+使用建议：
+
+- 手动分步启动前，建议先执行一次，避免旧节点占用话题或残留注册影响新流程
+- `./Scripts/run_baseline.sh` 与 `./Scripts/run_optimized.sh` 在启动时都会自动调用该脚本，通常无需额外手动执行
+- 若当前还有其他不希望被停止的 ROS 任务在运行，请不要直接执行该脚本
+
 ---
 
 ### **分步启动指南**
 
 以下是手动分步启动的详细流程：
 
-#### 1. **启动 roscore（终端 A）**
+#### 1. **【建议先执行】清理残留 ROS 运行时**
+
+```bash
+./Scripts/utils/cleanup_ros_runtime.sh
+```
+
+#### 2. **启动 roscore（终端 A）**
 
 ```bash
 roscore
 ```
 
-#### 2. **【首次运行或代码更新后】编译工作空间**
+#### 3. **【首次运行或代码更新后】编译工作空间**
 
 ```bash
 ./Scripts/utils/build_catkin_ws.sh
 ```
 
-#### 3. **【可选】生成或更新默认 rosbag**
+#### 4. **【可选】生成或更新默认 rosbag**
 
 ```bash
 ./Scripts/utils/kitti_tracking_to_rosbag.py --seq 20  #制作第20号场景的rosbag
 ```
 
-#### 4. **启动 PointPillars 检测节点（终端 B）**
+#### 5. **启动 PointPillars 检测节点（终端 B）**
 
 ```bash
 ./Scripts/pointpillars/run_pointpillars_node.sh
 ```
 
-#### 5. **启动 FAST-LIO 系统（终端 C）**
+#### 6. **启动 FAST-LIO 系统（终端 C）**
 
 FAST-LIO 提供三种启动方式：
 
@@ -496,13 +522,13 @@ FAST-LIO 提供三种启动方式：
 > - 动态权重优化功能默认启用，可通过 `use_dynamic_weights` 参数控制
 > - FAST-LIO 会同时发布 `/Odometry` 与 `/Odometry_imu_predicted`；当前优化链路默认订阅校正后的 `/Odometry`
 
-#### 6. **启动 MCTrack 在线节点（终端 D）**
+#### 7. **启动 MCTrack 在线节点（终端 D）**
 
 ```bash
 ./Scripts/mctrack/run_mctrack_online_node.sh
 ```
 
-#### 7. **驱动数据源（终端 F，二选一）**
+#### 8. **驱动数据源（终端 F，二选一）**
 
 在线模式（原流程，保持不变）：
 
@@ -530,15 +556,16 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 > 离线半同步模式会按帧读取 bag：每发布一帧 LiDAR 后，等待检测与跟踪结果（超时可配置）再推进下一帧。  
 > 该模式用于解决实时播放时 PointPillars 跟不上导致的丢帧问题，不会修改原有在线模式。
 
-#### 8. **打开 RViz（终端 E，与 rosbag 同时运行）**
+#### 9. **打开 RViz（终端 E，与 rosbag 同时运行）**
 
 ```bash
 ./Scripts/rviz/run_rviz.sh
 ```
 
    使用 `Scripts/rviz/ME5400.rviz` 配置实时查看点云、PointPillars 检测与 MCTrack 结果。
+   默认会尝试将 RViz 移到第一块非主显示器并全屏；如需改目标屏幕，可用 `RVIZ_TARGET_MONITOR=HDMI-0 ./Scripts/rviz/run_rviz.sh` 或 `RVIZ_TARGET_MONITOR=1 ./Scripts/rviz/run_rviz.sh`。
 
-#### 9. **【可选】启动 ego-only 联合后端（终端 G）**
+#### 10. **【可选】启动 ego-only 联合后端（终端 G）**
 
 该模块不替代 FAST-LIO，仅额外输出一条优化后的自车里程计（`/joint_backend/odom`）：
 

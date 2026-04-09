@@ -147,10 +147,12 @@ if [[ ! -f "$BAG_FILE_PATH" ]]; then
     exit 1
 fi
 
-echo "[步骤 7] 正在播放 Rosbag (优化, 以 1.0 倍速运行)..."
+echo "[步骤 7] 正在播放 Rosbag (优化, 以 1.0 倍速运行，跳过 bag 内 /tf_static)..."
 rosparam set use_sim_time true
-# 使用 1.0 倍速播放
-rosbag play "$BAG_FILE_PATH" --clock &
+# 仅播放原始 IMU / 点云，避免 bag 内 imu->velodyne 静态 TF
+# 与 fastlio_pose_bridge 发布的 camera_init->velodyne 动态 TF 冲突，
+# 进而导致 RViz 中原始点云前后抽动。
+rosbag play "$BAG_FILE_PATH" --clock --topics /kitti/velo/pointcloud /kitti/oxts/imu &
 BAG_PID=$!
 
 echo "Waiting for Optimized Run..."
