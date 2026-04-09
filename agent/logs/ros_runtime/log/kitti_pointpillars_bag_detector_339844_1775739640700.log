@@ -1,0 +1,30 @@
+[rospy.client][INFO] 2026-04-09 21:00:40,719: init_node, name[/kitti_pointpillars_bag_detector_339844_1775739640700], pid[339844]
+[xmlrpc][INFO] 2026-04-09 21:00:40,719: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:00:40,719: Started XML-RPC server [http://z790m:42281/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:00:40,719: _ready: http://z790m:42281/
+[rospy.init][INFO] 2026-04-09 21:00:40,719: ROS Slave URI: [http://z790m:42281/]
+[rospy.registration][INFO] 2026-04-09 21:00:40,720: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:00:40,720: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:00:40,820: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:00:40,820: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:00:40,822: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:00:40,822: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:00:40,822: connected to core topic /clock
+[rosout][INFO] 2026-04-09 21:00:40,847: 加载标定文件成功: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0020.txt
+[rosout][INFO] 2026-04-09 21:00:40,847: 正在初始化PointPillars推理器...
+[rospy.internal][INFO] 2026-04-09 21:00:41,047: topic[/rosout] adding connection to [/rosout], count 0
+[rosout][INFO] 2026-04-09 21:00:41,535: 推理器初始化成功
+[rosout][INFO] 2026-04-09 21:00:41,538: KITTI PointPillars Bag ROS节点初始化完成
+[rosout][INFO] 2026-04-09 21:00:41,538: 配置文件: /home/xc/Projects/ME5400/MMDET3D/configs/pointpillars/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
+[rosout][INFO] 2026-04-09 21:00:41,538: 检查点: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+[rosout][INFO] 2026-04-09 21:00:41,539: Bag文件: /home/xc/Projects/ME5400/MMDET3D/data/kitti/seq_0019_with_det.bag
+[rosout][INFO] 2026-04-09 21:00:41,539: 数据集路径: /home/xc/Projects/ME5400/Data_Tracking/training / 序列: 0020
+[rosout][INFO] 2026-04-09 21:00:41,539: 订阅话题: /kitti/velo/pointcloud
+[rosout][INFO] 2026-04-09 21:00:41,540: 发布频率: 10.0 Hz
+[rosout][INFO] 2026-04-09 21:00:41,540: 模型类别: ['Pedestrian', 'Cyclist', 'Car']
+[rosout][INFO] 2026-04-09 21:00:41,540: 类别过滤: 未启用
+[rosout][INFO] 2026-04-09 21:00:41,541: 转发原始点云/IMU: False
+[rosout][INFO] 2026-04-09 21:00:41,541: 等待点云数据...
+[rospy.internal][INFO] 2026-04-09 21:00:41,549: topic[/detection/lidar_detections] adding connection to [/mctrack_online_node], count 0
+[rospy.internal][INFO] 2026-04-09 21:00:54,093: topic[/detection/lidar_detections] adding connection to [/mctrack_online_node], count 1
+[rospy.internal][INFO] 2026-04-09 21:00:54,093: topic[/detection/lidar_detections] removing connection to /mctrack_online_node

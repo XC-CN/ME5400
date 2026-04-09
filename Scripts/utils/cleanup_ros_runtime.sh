@@ -33,10 +33,13 @@ terminate_matching_processes TERM \
     "RViz" "rviz( |$)" \
     "GT path publisher" "publish_gt_path.py" \
     "rosbag play" "rosbag play" \
+    "Offline bag feeder" "offline_bag_feeder.py" \
     "FAST-LIO roslaunch" "mapping_velodyne.launch" \
     "FAST-LIO pose bridge" "fastlio_pose_bridge.py" \
     "PointPillars bag node" "kitti_pointpillars_bag_node.py" \
-    "MCTrack online node" "mctrack_online_node.py"
+    "MCTrack online node" "mctrack_online_node.py" \
+    "Joint backend ego node" "joint_backend_ego_node.py" \
+    "Odometry TUM recorder" "odom_to_tum_recorder.py"
 
 sleep 1
 
@@ -44,10 +47,13 @@ terminate_matching_processes KILL \
     "RViz" "rviz( |$)" \
     "GT path publisher" "publish_gt_path.py" \
     "rosbag play" "rosbag play" \
+    "Offline bag feeder" "offline_bag_feeder.py" \
     "FAST-LIO roslaunch" "mapping_velodyne.launch" \
     "FAST-LIO pose bridge" "fastlio_pose_bridge.py" \
     "PointPillars bag node" "kitti_pointpillars_bag_node.py" \
-    "MCTrack online node" "mctrack_online_node.py"
+    "MCTrack online node" "mctrack_online_node.py" \
+    "Joint backend ego node" "joint_backend_ego_node.py" \
+    "Odometry TUM recorder" "odom_to_tum_recorder.py"
 
 if rostopic list >/dev/null 2>&1; then
     cleanup_output=$(printf 'y\n' | rosnode cleanup 2>&1 || true)

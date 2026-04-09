@@ -7,10 +7,12 @@ lidar_topic: "/kitti/velo/pointcloud"
 # 半同步等待的关键输出话题
 det_topic: "/detection/lidar_detections"
 track_topic: "/mctrack/tracked_objects"
+odom_topic: "/joint_backend/odom"
 
 # 是否要求对应结果（false 可仅等待其中之一）
 require_detection: true
 require_tracking: true
+require_odom: false
 
 # 时间戳匹配窗口（秒）
 stamp_tolerance: 0.06
@@ -18,6 +20,7 @@ stamp_tolerance: 0.06
 # 每帧等待超时（秒）
 timeout_det: 4.0
 timeout_track: 5.0
+timeout_odom: 5.0
 
 # 等待轮询频率
 wait_poll_hz: 200.0

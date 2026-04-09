@@ -200,7 +200,8 @@ ME5400/
 │   ├── offline/                       # 可选：半同步离线调度模块（替代 rosbag play）
 │   ├── rviz/                          # RViz 可视化模块配置与脚本
 │   ├── utils/                         # 通用工具脚本 (编译、数据转换等)
-│   └── run_all.sh                     # 全流程一键启动脚本
+│   ├── run_all.sh                     # 在线双轨一键启动脚本
+│   └── run_offline_all.sh             # 离线双轨一键启动脚本
 ├── Data_Tracking/                     # KITTI Tracking 数据与示例 rosbag
 ├── Results/                           # 评估结果图表、归档轨迹与自动生成的 PCD 局部地图
 ├── agent/                             # 长时 agent harness（init、progress、feature list、smoke check）
@@ -312,14 +313,17 @@ pip install numpy opencv-python matplotlib
               scikit-learn==1.7.2 pandas==2.3.3 pillow==11.3.0 pyyaml==6.0.3 tqdm terminaltables==3.1.10 \
               shapely==1.8.5.post1 pyquaternion==0.9.9 trimesh==4.8.3 plyfile==1.1.2 imageio==2.37.0 \
               fire==0.7.1 tensorboard==2.20.0 protobuf==6.32.1
-  pip install rospkg==1.6.0 catkin-pkg==1.1.0
+  pip install rospkg==1.6.0 catkin-pkg==1.1.0 pycryptodomex==3.23.0 python-gnupg==0.5.6
   ```
+
+  > 如果需要在 `ME5400` conda 环境里直接运行 `offline_bag_feeder.py` 或其他依赖 `rosbag` 的脚本，必须补上 `pycryptodomex` 和 `python-gnupg`。否则常见报错为 `No module named 'Cryptodome'` 或 `No module named 'gnupg'`。
 - **安装验证**
 
   ```bash
   python -c "import torch; print('PyTorch版本:', torch.__version__); print('CUDA可用:', torch.cuda.is_available()); print('编译支持架构:', torch.cuda.get_arch_list())"
   python -c "import mmcv; print('MMCV版本:', mmcv.__version__)"
   python -c "import mmdet3d; print('MMDetection3D版本:', mmdet3d.__version__)"
+  python -c "import rosbag, gnupg; from Cryptodome.Cipher import AES; print('ROS bag依赖检查通过')"
   ```
 
 ### 安装步骤
@@ -410,7 +414,7 @@ ME5400/
 
 ### 🚀 **一键启动（推荐）**
 
-如果您已准备好环境和数据，可以直接使用项目内的自动化脚本执行测试。为了保证各司其职且不相互干扰，系统提供了三个独立的快捷启动脚本：
+如果您已准备好环境和数据，可以直接使用项目内的自动化脚本执行测试。为了保证各司其职且不相互干扰，系统提供了在线与离线两类快捷启动脚本：
 
 #### 1. 自动化全流程连跑 (双轨一键对比)
 最推荐的方式。脚本会自动先执行一遍纯净的 Baseline，结束后自动清理后台并紧接着执行带感知闭环的优化管线，最后自动输出两者的量化对比评估图表。
@@ -427,7 +431,27 @@ ME5400/
 ```
 *(注：`--headless` 或 `-n` 参数会关闭 RViz 渲染前端在后台静默高速运算。0019序列 为高速路场景，0020 为城市街道。)*
 
-#### 2. 分解独立模块执行
+#### 2. 离线双轨连跑 (半同步 feeder + 自动评估)
+
+```bash
+./Scripts/run_offline_all.sh 0020
+./Scripts/run_offline_all.sh --headless 0020
+./Scripts/run_offline_all.sh --save-map 0020
+```
+
+说明：
+
+- 该脚本会顺序运行 `Baseline(Offline,NoWeight)` 和 `JointOffline`
+- 第 1 阶段用离线 feeder 驱动 FAST-LIO，但不等待检测/跟踪
+- 第 2 阶段启动 PointPillars、MCTrack、FAST-LIO、joint backend，并使用离线 feeder 做半同步推进
+- 运行结束后会自动生成：
+  - `Results/<SEQ>_results/trajectory_baseline_offline.txt`
+  - `Results/<SEQ>_results/trajectory_weighted_offline.txt`
+  - `Results/<SEQ>_results/trajectory_joint.txt`
+  - `Results/<SEQ>_results/metrics_joint_backend.txt`
+  - `Results/<SEQ>_results/metrics_kitti_tr_rot_ac.txt`
+
+#### 3. 分解独立模块执行
 如果您只需要跑单一环境获取固定数据，或进行单步调试开发，可直接使用独立脚本（同样支持 `--headless`）：
 
 ```bash
@@ -444,7 +468,7 @@ ME5400/
 
 > 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`）以及最终生成的 ATE/RPE 对比评测图（`.png`）与指标（`metrics.txt`），系统都会自动统一存放入 `Results/<序列号>_results/`。点云地图（`.pcd`）仅在显式添加 `--save-map` 时生成并归档，默认不会导出。
 
-#### 3. 清理残留 ROS 节点/进程
+#### 4. 清理残留 ROS 节点/进程
 
 当上一次运行异常退出，或手动分步调试后留下残留 ROS 节点、`rosbag play`、RViz、FAST-LIO、PointPillars、MCTrack 进程时，可先执行：
 
@@ -455,13 +479,13 @@ ME5400/
 脚本行为说明：
 
 - 先向残留进程发送 `SIGTERM`，1 秒后仍未退出的目标再发送 `SIGKILL`
-- 清理对象包括 `rviz`、`publish_gt_path.py`、`rosbag play`、FAST-LIO 相关进程、`kitti_pointpillars_bag_node.py`、`mctrack_online_node.py`
+- 清理对象包括 `rviz`、`publish_gt_path.py`、`rosbag play`、`offline_bag_feeder.py`、FAST-LIO 相关进程、`kitti_pointpillars_bag_node.py`、`mctrack_online_node.py`、`joint_backend_ego_node.py` 与 `odom_to_tum_recorder.py`
 - 若检测到可用 `roscore`，脚本还会执行 `rosnode cleanup`，移除 ROS master 中失联节点的注册信息
 
 使用建议：
 
 - 手动分步启动前，建议先执行一次，避免旧节点占用话题或残留注册影响新流程
-- `./Scripts/run_baseline.sh` 与 `./Scripts/run_optimized.sh` 在启动时都会自动调用该脚本，通常无需额外手动执行
+- `./Scripts/run_baseline.sh`、`./Scripts/run_optimized.sh` 与 `./Scripts/run_offline_all.sh` 在启动时都会自动调用该脚本，通常无需额外手动执行
 - 若当前还有其他不希望被停止的 ROS 任务在运行，请不要直接执行该脚本
 
 ---
@@ -555,6 +579,12 @@ rosbag play Data_Tracking/rosbags/seq_0019_nodet.bag --clock
 
 > 离线半同步模式会按帧读取 bag：每发布一帧 LiDAR 后，等待检测与跟踪结果（超时可配置）再推进下一帧。  
 > 该模式用于解决实时播放时 PointPillars 跟不上导致的丢帧问题，不会修改原有在线模式。
+
+如需直接一键跑完整离线双轨实验，优先使用：
+
+```bash
+./Scripts/run_offline_all.sh --headless 0020
+```
 
 #### 9. **打开 RViz（终端 E，与 rosbag 同时运行）**
 
@@ -674,7 +704,7 @@ mapping:
 
 **保存位置**：
 
-- 自动化脚本（`run_all.sh` / `run_baseline.sh` / `run_optimized.sh`）默认**不保存** FAST-LIO 地图。
+- 自动化脚本（`run_all.sh` / `run_offline_all.sh` / `run_baseline.sh` / `run_optimized.sh`）默认**不保存** FAST-LIO 地图。
 - 只有在显式传入 `--save-map` 时，地图文件才会在 FAST-LIO 临时存储后被脚本接管并归档。
 - 最终都会被自动安全归档放入对应序列的结果库内：`Results/<序列号>_results/scans_*.pcd`
 - 默认配置下，所有扫描帧会累积保存到一个 PCD 文件中
@@ -686,6 +716,7 @@ mapping:
 ./Scripts/run_baseline.sh --save-map 0020
 ./Scripts/run_optimized.sh --save-map 0020
 ./Scripts/run_all.sh --save-map 0020
+./Scripts/run_offline_all.sh --save-map 0020
 
 # 也可以直接透传给 FAST-LIO launch
 ./Scripts/fastlio/run_fastlio.sh both pcd_save_en:=true

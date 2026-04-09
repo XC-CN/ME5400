@@ -107,3 +107,119 @@ PermissionError: [Errno 1] Operation not permitted
 [rospy.internal][INFO] 2026-04-09 01:52:27,636: topic[/Odometry_imu_predicted] removing connection to http://z790m:35285/
 [rospy.impl.masterslave][INFO] 2026-04-09 01:52:27,637: signal-15
 [rospy.core][INFO] 2026-04-09 01:52:28,235: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 20:38:44,175: init_node, name[/fastlio_pose_bridge], pid[1499]
+[xmlrpc][INFO] 2026-04-09 20:38:44,175: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][ERROR] 2026-04-09 20:38:44,175: ERROR: Unable to start XML-RPC server: Operation not permitted
+[rospy.internal][ERROR] 2026-04-09 20:38:44,176: Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 252, in run
+    self._run()
+    ~~~~~~~~~^^
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 321, in _run
+    self._run_init()
+    ~~~~~~~~~~~~~~^^
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 271, in _run_init
+    self.server = ThreadingXMLRPCServer((bind_address, port), log_requests)
+                  ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 149, in __init__
+    SimpleXMLRPCServer.__init__(self, addr, SilenceableXMLRPCRequestHandler, log_requests)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xc/miniconda3/lib/python3.13/xmlrpc/server.py", line 594, in __init__
+    socketserver.TCPServer.__init__(self, addr, requestHandler, bind_and_activate)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xc/miniconda3/lib/python3.13/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+                                self.socket_type)
+                                ^^^^^^^^^^^^^^^^^
+  File "/home/xc/miniconda3/lib/python3.13/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+[rospy.core][INFO] 2026-04-09 20:38:44,176: signal_shutdown [error in XML-RPC server: [Errno 1] Operation not permitted]
+[rospy.init][INFO] 2026-04-09 20:38:44,176: ROS Slave URI: [None]
+[rospy.init][INFO] 2026-04-09 20:38:44,176: registered with master
+[rospy.core][WARNING] 2026-04-09 20:38:44,176: add_shutdown_hook called after shutdown
+[rospy.client][WARNING] 2026-04-09 20:38:44,176: aborting node initialization as shutdown has been triggered
+[rospy.core][INFO] 2026-04-09 20:38:44,177: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 20:40:54,973: init_node, name[/fastlio_pose_bridge], pid[326440]
+[xmlrpc][INFO] 2026-04-09 20:40:54,973: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 20:40:54,973: Started XML-RPC server [http://z790m:36857/]
+[rospy.init][INFO] 2026-04-09 20:40:54,973: ROS Slave URI: [http://z790m:36857/]
+[rospy.impl.masterslave][INFO] 2026-04-09 20:40:54,973: _ready: http://z790m:36857/
+[rospy.registration][INFO] 2026-04-09 20:40:54,974: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 20:40:54,974: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 20:40:55,074: registered with master
+[rospy.rosout][INFO] 2026-04-09 20:40:55,074: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 20:40:55,075: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 20:40:55,076: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 20:40:55,076: connected to core topic /clock
+[rosout][INFO] 2026-04-09 20:40:55,079: fastlio_pose_bridge listening on /Odometry, publishing /mctrack/lidar_pose (child=velodyne, publish_tf=True)
+[rospy.internal][INFO] 2026-04-09 20:40:55,080: topic[/Odometry] adding connection to [http://z790m:34143/], count 0
+[rospy.internal][INFO] 2026-04-09 20:40:55,116: topic[/mctrack/lidar_pose] adding connection to [/mctrack_online_node], count 0
+[rospy.internal][INFO] 2026-04-09 20:40:55,315: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:05,239: topic[/clock] adding connection to [http://z790m:45143/], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:51,493: topic[/clock] removing connection to http://z790m:45143/
+[rospy.core][INFO] 2026-04-09 20:41:54,154: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-09 20:41:54,156: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 20:41:54,156: topic[/mctrack/lidar_pose] removing connection to /mctrack_online_node
+[rospy.internal][INFO] 2026-04-09 20:41:54,156: topic[/Odometry] removing connection to http://z790m:34143/
+[rospy.impl.masterslave][INFO] 2026-04-09 20:41:54,157: signal-15
+[rospy.core][INFO] 2026-04-09 20:41:54,755: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 20:42:31,644: init_node, name[/fastlio_pose_bridge], pid[331073]
+[xmlrpc][INFO] 2026-04-09 20:42:31,645: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 20:42:31,645: Started XML-RPC server [http://z790m:36463/]
+[rospy.impl.masterslave][INFO] 2026-04-09 20:42:31,645: _ready: http://z790m:36463/
+[rospy.registration][INFO] 2026-04-09 20:42:31,645: Registering with master node http://localhost:11311
+[rospy.init][INFO] 2026-04-09 20:42:31,645: ROS Slave URI: [http://z790m:36463/]
+[xmlrpc][INFO] 2026-04-09 20:42:31,645: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 20:42:31,645: registered with master
+[rospy.rosout][INFO] 2026-04-09 20:42:31,645: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 20:42:31,646: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 20:42:31,647: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 20:42:31,647: connected to core topic /clock
+[rosout][INFO] 2026-04-09 20:42:31,650: fastlio_pose_bridge listening on /Odometry, publishing /mctrack/lidar_pose (child=velodyne, publish_tf=True)
+[rospy.internal][INFO] 2026-04-09 20:42:31,650: topic[/Odometry] adding connection to [http://z790m:45655/], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:31,685: topic[/mctrack/lidar_pose] adding connection to [/mctrack_online_node], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:31,885: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:41,902: topic[/clock] adding connection to [http://z790m:46037/], count 0
+[rospy.internal][INFO] 2026-04-09 20:43:30,170: topic[/clock] removing connection to http://z790m:46037/
+[rospy.core][INFO] 2026-04-09 20:43:31,424: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-09 20:43:31,426: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 20:43:31,427: topic[/mctrack/lidar_pose] removing connection to /mctrack_online_node
+[rospy.internal][INFO] 2026-04-09 20:43:31,427: topic[/Odometry] removing connection to http://z790m:45655/
+[rospy.impl.masterslave][INFO] 2026-04-09 20:43:31,427: signal-15
+[rospy.core][INFO] 2026-04-09 20:43:32,025: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 21:00:56,458: init_node, name[/fastlio_pose_bridge], pid[340756]
+[xmlrpc][INFO] 2026-04-09 21:00:56,459: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:00:56,459: Started XML-RPC server [http://z790m:42085/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:00:56,459: _ready: http://z790m:42085/
+[rospy.registration][INFO] 2026-04-09 21:00:56,459: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:00:56,459: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:00:56,459: ROS Slave URI: [http://z790m:42085/]
+[rospy.init][INFO] 2026-04-09 21:00:56,459: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:00:56,459: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:00:56,461: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:00:56,461: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:00:56,462: connected to core topic /clock
+[rosout][INFO] 2026-04-09 21:00:56,464: fastlio_pose_bridge listening on /Odometry, publishing /mctrack/lidar_pose (child=velodyne, publish_tf=True)
+[rospy.internal][INFO] 2026-04-09 21:00:56,465: topic[/Odometry] adding connection to [http://z790m:35929/], count 0
+[rospy.internal][INFO] 2026-04-09 21:00:56,472: topic[/mctrack/lidar_pose] adding connection to [/mctrack_online_node], count 0
+[rospy.internal][INFO] 2026-04-09 21:00:56,672: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.client][INFO] 2026-04-09 21:04:20,614: init_node, name[/fastlio_pose_bridge], pid[343261]
+[xmlrpc][INFO] 2026-04-09 21:04:20,614: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:04:20,614: Started XML-RPC server [http://z790m:37407/]
+[rospy.init][INFO] 2026-04-09 21:04:20,614: ROS Slave URI: [http://z790m:37407/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:04:20,614: _ready: http://z790m:37407/
+[rospy.registration][INFO] 2026-04-09 21:04:20,614: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:04:20,614: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:04:20,714: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:04:20,714: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:04:20,716: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:04:20,716: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:04:20,717: connected to core topic /clock
+[rosout][INFO] 2026-04-09 21:04:20,719: fastlio_pose_bridge listening on /Odometry, publishing /mctrack/lidar_pose (child=velodyne, publish_tf=True)
+[rospy.internal][INFO] 2026-04-09 21:04:20,731: topic[/mctrack/lidar_pose] adding connection to [/mctrack_online_node], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:20,931: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:30,949: topic[/clock] adding connection to [http://z790m:36539/], count 0
+[rospy.internal][INFO] 2026-04-09 21:06:00,519: topic[/clock] removing connection to http://z790m:36539/

@@ -2,35 +2,35 @@
 KITTI Relative Odometry Metrics (Tracking OXTS + Tr_imu_velo)
 ==============================================================================
 
-GT OXTS: /home/zzy/ME5400/Data_Tracking/training/data_tracking_oxts/training/oxts/0020.txt
-Calib  : /home/zzy/ME5400/Data_Tracking/training/data_tracking_calib/training/calib/0020.txt
+GT OXTS: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0020.txt
+Calib  : /home/xc/Projects/ME5400/Data_Tracking/training/calib/0020.txt
 Lengths(m): 100, 200, 300, 400, 500, 600, 700, 800
 Step frames: 10
 Timestamp tolerance: 0.200s
 
 Name                         Matched  Segments     Tr.(%)   Rot.(deg/100m)    Tr Gain   Rot Gain
 ------------------------------------------------------------------------------------------------
-Baseline(Offline,NoWeight)       820       282     6.0245           0.6357      0.00%      0.00%
-JointOffline                     821       282     2.9930           0.5312     50.32%     16.44%
+Baseline(Offline,NoWeight)        59         0        nan              nan      0.00%      0.00%
+JointOffline                     821       282     2.2225           0.6558       nan%       nan%
 
 Per-length details:
   [Baseline(Offline,NoWeight)]
     length(m)   Tr.(%)   Rot.(deg/100m)   n_segments
-         100    7.1555           0.7923           68
-         200    6.1681           0.6407           61
-         300    5.5895           0.5856           51
-         400    5.2211           0.5703           44
-         500    5.3549           0.5474           34
-         600    5.7600           0.5430           21
-         700    6.0875           0.4498            3
+         100       nan              nan            0
+         200       nan              nan            0
+         300       nan              nan            0
+         400       nan              nan            0
+         500       nan              nan            0
+         600       nan              nan            0
+         700       nan              nan            0
          800       nan              nan            0
   [JointOffline]
     length(m)   Tr.(%)   Rot.(deg/100m)   n_segments
-         100    3.3231           0.7081           68
-         200    3.1347           0.5028           61
-         300    2.8340           0.4557           51
-         400    2.6903           0.4611           44
-         500    2.8127           0.4821           34
-         600    2.8520           0.4756           21
-         700    2.8022           0.3554            3
+         100    2.2309           0.9345           68
+         200    2.1207           0.5963           61
+         300    2.2041           0.5446           51
+         400    2.1382           0.5588           44
+         500    2.3407           0.5758           34
+         600    2.4801           0.5586           21
+         700    2.5127           0.4453            3
          800       nan              nan            0

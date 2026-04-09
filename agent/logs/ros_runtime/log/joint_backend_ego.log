@@ -1,0 +1,90 @@
+[rospy.client][INFO] 2026-04-09 20:41:00,370: init_node, name[/joint_backend_ego], pid[326920]
+[xmlrpc][INFO] 2026-04-09 20:41:00,381: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 20:41:00,381: Started XML-RPC server [http://z790m:40019/]
+[rospy.init][INFO] 2026-04-09 20:41:00,381: ROS Slave URI: [http://z790m:40019/]
+[rospy.impl.masterslave][INFO] 2026-04-09 20:41:00,381: _ready: http://z790m:40019/
+[rospy.registration][INFO] 2026-04-09 20:41:00,381: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 20:41:00,381: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 20:41:00,481: registered with master
+[rospy.rosout][INFO] 2026-04-09 20:41:00,481: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 20:41:00,484: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 20:41:00,484: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 20:41:00,484: connected to core topic /clock
+[rospy.internal][INFO] 2026-04-09 20:41:00,490: topic[/Odometry] adding connection to [http://z790m:34143/], count 0
+[rosout][INFO] 2026-04-09 20:41:00,490: [joint_backend_ego] started: window=8 lambda=0.120 robust=huber f_scale=0.500
+[rospy.internal][INFO] 2026-04-09 20:41:00,490: topic[/mctrack/tracked_objects] adding connection to [http://z790m:34399/], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:00,726: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:02,980: topic[/joint_backend/odom] adding connection to [/odom_to_tum_recorder], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:05,240: topic[/clock] adding connection to [http://z790m:45143/], count 0
+[rosout][WARNING] 2026-04-09 20:41:21,530: [joint_backend_ego] optimize slow: 96.0 ms (window=8)
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/clock] removing connection to http://z790m:45143/
+[rospy.internal][INFO] 2026-04-09 20:41:53,887: topic[/joint_backend/odom] removing connection to /odom_to_tum_recorder
+[rospy.core][INFO] 2026-04-09 20:41:54,154: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-09 20:41:54,156: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 20:41:54,156: topic[/Odometry] removing connection to http://z790m:34143/
+[rospy.internal][INFO] 2026-04-09 20:41:54,156: topic[/mctrack/tracked_objects] removing connection to http://z790m:34399/
+[rospy.impl.masterslave][INFO] 2026-04-09 20:41:54,156: signal-15
+[rospy.core][INFO] 2026-04-09 20:41:54,755: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 20:42:37,062: init_node, name[/joint_backend_ego], pid[331528]
+[xmlrpc][INFO] 2026-04-09 20:42:37,063: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 20:42:37,063: Started XML-RPC server [http://z790m:33799/]
+[rospy.init][INFO] 2026-04-09 20:42:37,063: ROS Slave URI: [http://z790m:33799/]
+[rospy.impl.masterslave][INFO] 2026-04-09 20:42:37,063: _ready: http://z790m:33799/
+[rospy.registration][INFO] 2026-04-09 20:42:37,069: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 20:42:37,069: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 20:42:37,163: registered with master
+[rospy.rosout][INFO] 2026-04-09 20:42:37,163: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 20:42:37,165: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 20:42:37,166: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 20:42:37,166: connected to core topic /clock
+[rosout][INFO] 2026-04-09 20:42:37,170: [joint_backend_ego] started: window=8 lambda=0.120 robust=huber f_scale=0.500
+[rospy.internal][INFO] 2026-04-09 20:42:37,170: topic[/Odometry] adding connection to [http://z790m:45655/], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:37,171: topic[/mctrack/tracked_objects] adding connection to [http://z790m:39243/], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:37,393: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:39,698: topic[/joint_backend/odom] adding connection to [/odom_to_tum_recorder], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:41,903: topic[/clock] adding connection to [http://z790m:46037/], count 0
+[rospy.internal][INFO] 2026-04-09 20:43:30,169: topic[/clock] removing connection to http://z790m:46037/
+[rospy.internal][INFO] 2026-04-09 20:43:30,912: topic[/joint_backend/odom] removing connection to /odom_to_tum_recorder
+[rospy.core][INFO] 2026-04-09 20:43:31,424: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-09 20:43:31,426: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 20:43:31,427: topic[/Odometry] removing connection to http://z790m:45655/
+[rospy.internal][INFO] 2026-04-09 20:43:31,427: topic[/mctrack/tracked_objects] removing connection to http://z790m:39243/
+[rospy.impl.masterslave][INFO] 2026-04-09 20:43:31,427: signal-15
+[rospy.core][INFO] 2026-04-09 20:43:32,025: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 21:01:01,971: init_node, name[/joint_backend_ego], pid[341530]
+[xmlrpc][INFO] 2026-04-09 21:01:01,978: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:01:01,978: Started XML-RPC server [http://z790m:44301/]
+[rospy.init][INFO] 2026-04-09 21:01:01,978: ROS Slave URI: [http://z790m:44301/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:01:01,982: _ready: http://z790m:44301/
+[rospy.registration][INFO] 2026-04-09 21:01:01,983: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:01:01,983: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:01:02,083: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:01:02,083: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:01:02,085: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:01:02,086: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:01:02,087: connected to core topic /clock
+[rosout][INFO] 2026-04-09 21:01:02,092: [joint_backend_ego] started: window=8 lambda=0.120 robust=huber f_scale=0.500
+[rospy.internal][INFO] 2026-04-09 21:01:02,093: topic[/Odometry] adding connection to [http://z790m:35929/], count 0
+[rospy.internal][INFO] 2026-04-09 21:01:02,093: topic[/mctrack/tracked_objects] adding connection to [http://z790m:34359/], count 0
+[rospy.internal][INFO] 2026-04-09 21:01:02,379: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 21:01:04,489: topic[/joint_backend/odom] adding connection to [/odom_to_tum_recorder], count 0
+[rospy.client][INFO] 2026-04-09 21:04:26,068: init_node, name[/joint_backend_ego], pid[343741]
+[xmlrpc][INFO] 2026-04-09 21:04:26,080: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:04:26,080: Started XML-RPC server [http://z790m:40651/]
+[rospy.init][INFO] 2026-04-09 21:04:26,080: ROS Slave URI: [http://z790m:40651/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:04:26,080: _ready: http://z790m:40651/
+[rospy.registration][INFO] 2026-04-09 21:04:26,080: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:04:26,081: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:04:26,180: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:04:26,181: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:04:26,183: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:04:26,183: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:04:26,183: connected to core topic /clock
+[rosout][INFO] 2026-04-09 21:04:26,188: [joint_backend_ego] started: window=8 lambda=0.120 robust=huber f_scale=0.500
+[rospy.internal][INFO] 2026-04-09 21:04:26,189: topic[/mctrack/tracked_objects] adding connection to [http://z790m:35843/], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:26,439: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:28,643: topic[/joint_backend/odom] adding connection to [/odom_to_tum_recorder], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:30,931: topic[/joint_backend/odom] adding connection to [/offline_bag_feeder], count 1
+[rospy.internal][INFO] 2026-04-09 21:04:30,949: topic[/clock] adding connection to [http://z790m:36539/], count 0
+[rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/clock] removing connection to http://z790m:36539/
+[rospy.internal][INFO] 2026-04-09 21:06:00,968: topic[/joint_backend/odom] removing connection to /offline_bag_feeder

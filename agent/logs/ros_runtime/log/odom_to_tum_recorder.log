@@ -1,0 +1,122 @@
+[rospy.client][INFO] 2026-04-09 20:38:52,084: init_node, name[/odom_to_tum_recorder], pid[1902]
+[xmlrpc][INFO] 2026-04-09 20:38:52,084: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][ERROR] 2026-04-09 20:38:52,084: ERROR: Unable to start XML-RPC server: Operation not permitted
+[rospy.internal][ERROR] 2026-04-09 20:38:52,085: Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 252, in run
+    self._run()
+    ~~~~~~~~~^^
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 321, in _run
+    self._run_init()
+    ~~~~~~~~~~~~~~^^
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 271, in _run_init
+    self.server = ThreadingXMLRPCServer((bind_address, port), log_requests)
+                  ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/noetic/lib/python3/dist-packages/rosgraph/xmlrpc.py", line 149, in __init__
+    SimpleXMLRPCServer.__init__(self, addr, SilenceableXMLRPCRequestHandler, log_requests)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xc/miniconda3/lib/python3.13/xmlrpc/server.py", line 594, in __init__
+    socketserver.TCPServer.__init__(self, addr, requestHandler, bind_and_activate)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xc/miniconda3/lib/python3.13/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+                                self.socket_type)
+                                ^^^^^^^^^^^^^^^^^
+  File "/home/xc/miniconda3/lib/python3.13/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+[rospy.core][INFO] 2026-04-09 20:38:52,085: signal_shutdown [error in XML-RPC server: [Errno 1] Operation not permitted]
+[rospy.init][INFO] 2026-04-09 20:38:52,085: ROS Slave URI: [None]
+[rospy.init][INFO] 2026-04-09 20:38:52,085: registered with master
+[rospy.core][WARNING] 2026-04-09 20:38:52,085: add_shutdown_hook called after shutdown
+[rospy.client][WARNING] 2026-04-09 20:38:52,085: aborting node initialization as shutdown has been triggered
+[rospy.core][INFO] 2026-04-09 20:38:52,085: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 20:41:02,870: init_node, name[/odom_to_tum_recorder], pid[327006]
+[xmlrpc][INFO] 2026-04-09 20:41:02,870: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 20:41:02,870: Started XML-RPC server [http://z790m:39059/]
+[rospy.init][INFO] 2026-04-09 20:41:02,870: ROS Slave URI: [http://z790m:39059/]
+[rospy.impl.masterslave][INFO] 2026-04-09 20:41:02,870: _ready: http://z790m:39059/
+[rospy.registration][INFO] 2026-04-09 20:41:02,870: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 20:41:02,870: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 20:41:02,970: registered with master
+[rospy.rosout][INFO] 2026-04-09 20:41:02,973: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 20:41:02,973: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 20:41:02,974: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 20:41:02,975: connected to core topic /clock
+[rosout][INFO] 2026-04-09 20:41:02,977: [odom_to_tum] recording topic=/joint_backend/odom -> /home/xc/Projects/ME5400/Results/0020_speedtest_results/trajectory_joint.txt (min_dt=0.0000)
+[rospy.internal][INFO] 2026-04-09 20:41:02,979: topic[/joint_backend/odom] adding connection to [http://z790m:40019/], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:03,231: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:05,240: topic[/clock] adding connection to [http://z790m:45143/], count 0
+[rosout][INFO] 2026-04-09 20:41:19,648: [odom_to_tum] recorded 100 poses
+[rosout][INFO] 2026-04-09 20:41:24,172: [odom_to_tum] recorded 200 poses
+[rosout][INFO] 2026-04-09 20:41:28,707: [odom_to_tum] recorded 300 poses
+[rosout][INFO] 2026-04-09 20:41:32,774: [odom_to_tum] recorded 400 poses
+[rosout][INFO] 2026-04-09 20:41:37,089: [odom_to_tum] recorded 500 poses
+[rosout][INFO] 2026-04-09 20:41:41,315: [odom_to_tum] recorded 600 poses
+[rosout][INFO] 2026-04-09 20:41:45,969: [odom_to_tum] recorded 700 poses
+[rosout][INFO] 2026-04-09 20:41:50,557: [odom_to_tum] recorded 800 poses
+[rospy.internal][INFO] 2026-04-09 20:41:51,493: topic[/clock] removing connection to http://z790m:45143/
+[rospy.core][INFO] 2026-04-09 20:41:53,521: signal_shutdown [signal-15]
+[rosout][INFO] 2026-04-09 20:41:53,521: [odom_to_tum] saved 821 poses to /home/xc/Projects/ME5400/Results/0020_speedtest_results/trajectory_joint.txt
+[rospy.internal][INFO] 2026-04-09 20:41:53,523: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 20:41:53,523: topic[/joint_backend/odom] removing connection to http://z790m:40019/
+[rospy.impl.masterslave][INFO] 2026-04-09 20:41:53,523: signal-15
+[rospy.core][INFO] 2026-04-09 20:41:54,122: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 20:42:39,589: init_node, name[/odom_to_tum_recorder], pid[331621]
+[xmlrpc][INFO] 2026-04-09 20:42:39,589: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 20:42:39,589: Started XML-RPC server [http://z790m:46441/]
+[rospy.init][INFO] 2026-04-09 20:42:39,589: ROS Slave URI: [http://z790m:46441/]
+[rospy.impl.masterslave][INFO] 2026-04-09 20:42:39,589: _ready: http://z790m:46441/
+[rospy.registration][INFO] 2026-04-09 20:42:39,590: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 20:42:39,590: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 20:42:39,690: registered with master
+[rospy.rosout][INFO] 2026-04-09 20:42:39,692: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 20:42:39,693: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 20:42:39,693: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 20:42:39,693: connected to core topic /clock
+[rosout][INFO] 2026-04-09 20:42:39,696: [odom_to_tum] recording topic=/joint_backend/odom -> /home/xc/Projects/ME5400/Results/0020_speedtest_strict_results/trajectory_joint.txt (min_dt=0.0000)
+[rospy.internal][INFO] 2026-04-09 20:42:39,697: topic[/joint_backend/odom] adding connection to [http://z790m:33799/], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:39,797: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:41,904: topic[/clock] adding connection to [http://z790m:46037/], count 0
+[rospy.internal][INFO] 2026-04-09 20:43:30,170: topic[/clock] removing connection to http://z790m:46037/
+[rospy.core][INFO] 2026-04-09 20:43:30,790: signal_shutdown [signal-15]
+[rosout][INFO] 2026-04-09 20:43:30,790: [odom_to_tum] saved 0 poses to /home/xc/Projects/ME5400/Results/0020_speedtest_strict_results/trajectory_joint.txt
+[rospy.internal][INFO] 2026-04-09 20:43:30,792: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 20:43:30,792: topic[/joint_backend/odom] removing connection to http://z790m:33799/
+[rospy.impl.masterslave][INFO] 2026-04-09 20:43:30,792: signal-15
+[rospy.core][INFO] 2026-04-09 20:43:31,392: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 21:01:04,382: init_node, name[/odom_to_tum_recorder], pid[341609]
+[xmlrpc][INFO] 2026-04-09 21:01:04,382: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:01:04,382: Started XML-RPC server [http://z790m:42547/]
+[rospy.init][INFO] 2026-04-09 21:01:04,382: ROS Slave URI: [http://z790m:42547/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:01:04,382: _ready: http://z790m:42547/
+[rospy.registration][INFO] 2026-04-09 21:01:04,383: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:01:04,383: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:01:04,482: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:01:04,484: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:01:04,485: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:01:04,485: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:01:04,486: connected to core topic /clock
+[rosout][INFO] 2026-04-09 21:01:04,487: [odom_to_tum] recording topic=/joint_backend/odom -> /home/xc/Projects/ME5400/Results/0020_barrier_fix_results/trajectory_joint.txt (min_dt=0.0000)
+[rospy.internal][INFO] 2026-04-09 21:01:04,488: topic[/joint_backend/odom] adding connection to [http://z790m:44301/], count 0
+[rospy.internal][INFO] 2026-04-09 21:01:04,783: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.client][INFO] 2026-04-09 21:04:28,536: init_node, name[/odom_to_tum_recorder], pid[343821]
+[xmlrpc][INFO] 2026-04-09 21:04:28,536: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:04:28,536: Started XML-RPC server [http://z790m:37885/]
+[rospy.init][INFO] 2026-04-09 21:04:28,536: ROS Slave URI: [http://z790m:37885/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:04:28,536: _ready: http://z790m:37885/
+[rospy.registration][INFO] 2026-04-09 21:04:28,537: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:04:28,537: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:04:28,637: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:04:28,638: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:04:28,639: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:04:28,639: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:04:28,639: connected to core topic /clock
+[rosout][WARNING] 2026-04-09 21:04:28,640: [odom_to_tum] overwrite existing file: /home/xc/Projects/ME5400/Results/0020_barrier_fix_results/trajectory_joint.txt
+[rosout][INFO] 2026-04-09 21:04:28,641: [odom_to_tum] recording topic=/joint_backend/odom -> /home/xc/Projects/ME5400/Results/0020_barrier_fix_results/trajectory_joint.txt (min_dt=0.0000)
+[rospy.internal][INFO] 2026-04-09 21:04:28,642: topic[/joint_backend/odom] adding connection to [http://z790m:40651/], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:28,843: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:30,949: topic[/clock] adding connection to [http://z790m:36539/], count 0
+[rospy.internal][INFO] 2026-04-09 21:06:00,519: topic[/clock] removing connection to http://z790m:36539/

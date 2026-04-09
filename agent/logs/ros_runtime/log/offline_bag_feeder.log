@@ -1,0 +1,1068 @@
+[rospy.client][INFO] 2026-04-09 20:41:05,080: init_node, name[/offline_bag_feeder], pid[327097]
+[xmlrpc][INFO] 2026-04-09 20:41:05,080: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 20:41:05,080: Started XML-RPC server [http://z790m:45143/]
+[rospy.impl.masterslave][INFO] 2026-04-09 20:41:05,080: _ready: http://z790m:45143/
+[rospy.init][INFO] 2026-04-09 20:41:05,080: ROS Slave URI: [http://z790m:45143/]
+[rospy.registration][INFO] 2026-04-09 20:41:05,081: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 20:41:05,081: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 20:41:05,181: registered with master
+[rospy.rosout][INFO] 2026-04-09 20:41:05,181: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 20:41:05,182: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 20:41:05,183: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 20:41:05,183: connected to core topic /clock
+[rosout][INFO] 2026-04-09 20:41:05,187: [offline_bag_feeder] bag_path=/home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0020_nodet.bag
+[rosout][INFO] 2026-04-09 20:41:05,187: [offline_bag_feeder] lidar_topic=/kitti/velo/pointcloud det_topic=/detection/lidar_detections track_topic=/mctrack/tracked_objects
+[rosout][INFO] 2026-04-09 20:41:05,187: [offline_bag_feeder] require_detection=True require_tracking=False eps=0.060
+[rospy.internal][INFO] 2026-04-09 20:41:05,188: topic[/detection/lidar_detections] adding connection to [http://z790m:45895/], count 0
+[rosout][INFO] 2026-04-09 20:41:05,188: [offline_bag_feeder] waiting 1.5s for downstream nodes...
+[rospy.internal][INFO] 2026-04-09 20:41:05,188: topic[/mctrack/tracked_objects] adding connection to [http://z790m:34399/], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:05,237: topic[/clock] adding connection to [/mctrack_online_node], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:05,238: topic[/clock] adding connection to [/kitti_pointpillars_bag_detector_325815_1775738439079], count 1
+[rospy.internal][INFO] 2026-04-09 20:41:05,239: topic[/clock] adding connection to [/fastlio_pose_bridge], count 2
+[rospy.internal][INFO] 2026-04-09 20:41:05,240: topic[/clock] adding connection to [/joint_backend_ego], count 3
+[rospy.internal][INFO] 2026-04-09 20:41:05,241: topic[/clock] adding connection to [/odom_to_tum_recorder], count 4
+[rospy.internal][INFO] 2026-04-09 20:41:05,241: topic[/clock] adding connection to [http://z790m:45143/], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:05,241: topic[/clock] adding connection to [/offline_bag_feeder], count 5
+[rospy.internal][INFO] 2026-04-09 20:41:05,436: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:05,438: topic[/clock] adding connection to [/laserMapping], count 6
+[rosout][INFO] 2026-04-09 20:41:06,743: [offline_bag_feeder] frame=1 lidar stamp=0.001000
+[rospy.internal][INFO] 2026-04-09 20:41:06,745: topic[/kitti/velo/pointcloud] adding connection to [/kitti_pointpillars_bag_detector_325815_1775738439079], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:06,945: topic[/kitti/velo/pointcloud] adding connection to [/laserMapping], count 1
+[rosout][WARNING] 2026-04-09 20:41:10,749: [offline_bag_feeder] frame=1 detection timeout (4.00s)
+[rosout][INFO] 2026-04-09 20:41:10,762: [offline_bag_feeder] frame=2 lidar stamp=0.101000
+[rospy.internal][INFO] 2026-04-09 20:41:10,771: topic[/kitti/oxts/imu] adding connection to [/kitti_pointpillars_bag_detector_325815_1775738439079], count 0
+[rospy.internal][INFO] 2026-04-09 20:41:10,971: topic[/kitti/oxts/imu] adding connection to [/laserMapping], count 1
+[rosout][INFO] 2026-04-09 20:41:11,032: [offline_bag_feeder] frame=3 lidar stamp=0.201000
+[rosout][INFO] 2026-04-09 20:41:11,068: [offline_bag_feeder] frame=4 lidar stamp=0.301000
+[rosout][INFO] 2026-04-09 20:41:11,347: [offline_bag_feeder] frame=5 lidar stamp=0.401000
+[rosout][INFO] 2026-04-09 20:41:11,383: [offline_bag_feeder] frame=6 lidar stamp=0.501000
+[rosout][INFO] 2026-04-09 20:41:11,654: [offline_bag_feeder] frame=7 lidar stamp=0.601000
+[rosout][INFO] 2026-04-09 20:41:11,692: [offline_bag_feeder] frame=8 lidar stamp=0.701000
+[rosout][INFO] 2026-04-09 20:41:11,969: [offline_bag_feeder] frame=9 lidar stamp=0.801000
+[rosout][INFO] 2026-04-09 20:41:12,007: [offline_bag_feeder] frame=10 lidar stamp=0.901000
+[rosout][INFO] 2026-04-09 20:41:12,284: [offline_bag_feeder] frame=11 lidar stamp=1.001000
+[rosout][INFO] 2026-04-09 20:41:12,321: [offline_bag_feeder] frame=12 lidar stamp=1.101000
+[rosout][INFO] 2026-04-09 20:41:12,603: [offline_bag_feeder] frame=13 lidar stamp=1.201000
+[rosout][INFO] 2026-04-09 20:41:12,641: [offline_bag_feeder] frame=14 lidar stamp=1.301000
+[rosout][INFO] 2026-04-09 20:41:12,912: [offline_bag_feeder] frame=15 lidar stamp=1.401000
+[rosout][INFO] 2026-04-09 20:41:12,950: [offline_bag_feeder] frame=16 lidar stamp=1.501000
+[rosout][INFO] 2026-04-09 20:41:13,222: [offline_bag_feeder] frame=17 lidar stamp=1.601000
+[rosout][INFO] 2026-04-09 20:41:13,265: [offline_bag_feeder] frame=18 lidar stamp=1.701000
+[rosout][INFO] 2026-04-09 20:41:13,537: [offline_bag_feeder] frame=19 lidar stamp=1.801000
+[rosout][INFO] 2026-04-09 20:41:13,574: [offline_bag_feeder] frame=20 lidar stamp=1.901000
+[rosout][INFO] 2026-04-09 20:41:13,851: [offline_bag_feeder] frame=21 lidar stamp=2.001000
+[rosout][INFO] 2026-04-09 20:41:13,889: [offline_bag_feeder] frame=22 lidar stamp=2.101000
+[rosout][INFO] 2026-04-09 20:41:14,162: [offline_bag_feeder] frame=23 lidar stamp=2.201000
+[rosout][INFO] 2026-04-09 20:41:14,206: [offline_bag_feeder] frame=24 lidar stamp=2.301000
+[rosout][INFO] 2026-04-09 20:41:14,479: [offline_bag_feeder] frame=25 lidar stamp=2.401000
+[rosout][INFO] 2026-04-09 20:41:14,535: [offline_bag_feeder] frame=26 lidar stamp=2.501000
+[rosout][INFO] 2026-04-09 20:41:14,792: [offline_bag_feeder] frame=27 lidar stamp=2.601000
+[rosout][INFO] 2026-04-09 20:41:14,851: [offline_bag_feeder] frame=28 lidar stamp=2.701000
+[rosout][INFO] 2026-04-09 20:41:15,108: [offline_bag_feeder] frame=29 lidar stamp=2.801000
+[rosout][INFO] 2026-04-09 20:41:15,172: [offline_bag_feeder] frame=30 lidar stamp=2.901000
+[rosout][INFO] 2026-04-09 20:41:15,423: [offline_bag_feeder] frame=31 lidar stamp=3.001000
+[rosout][INFO] 2026-04-09 20:41:15,487: [offline_bag_feeder] frame=32 lidar stamp=3.101000
+[rosout][INFO] 2026-04-09 20:41:15,737: [offline_bag_feeder] frame=33 lidar stamp=3.201000
+[rosout][INFO] 2026-04-09 20:41:15,803: [offline_bag_feeder] frame=34 lidar stamp=3.301000
+[rosout][INFO] 2026-04-09 20:41:15,933: [offline_bag_feeder] frame=35 lidar stamp=3.401000
+[rosout][INFO] 2026-04-09 20:41:15,983: [offline_bag_feeder] frame=36 lidar stamp=3.501000
+[rosout][INFO] 2026-04-09 20:41:16,027: [offline_bag_feeder] frame=37 lidar stamp=3.601000
+[rosout][INFO] 2026-04-09 20:41:16,116: [offline_bag_feeder] frame=38 lidar stamp=3.701000
+[rosout][INFO] 2026-04-09 20:41:16,169: [offline_bag_feeder] frame=39 lidar stamp=3.801000
+[rosout][INFO] 2026-04-09 20:41:16,219: [offline_bag_feeder] frame=40 lidar stamp=3.901000
+[rosout][INFO] 2026-04-09 20:41:16,263: [offline_bag_feeder] frame=41 lidar stamp=4.001000
+[rosout][INFO] 2026-04-09 20:41:16,306: [offline_bag_feeder] frame=42 lidar stamp=4.101000
+[rosout][INFO] 2026-04-09 20:41:16,357: [offline_bag_feeder] frame=43 lidar stamp=4.201000
+[rosout][INFO] 2026-04-09 20:41:16,410: [offline_bag_feeder] frame=44 lidar stamp=4.301000
+[rosout][INFO] 2026-04-09 20:41:16,454: [offline_bag_feeder] frame=45 lidar stamp=4.401000
+[rosout][INFO] 2026-04-09 20:41:16,504: [offline_bag_feeder] frame=46 lidar stamp=4.501000
+[rosout][INFO] 2026-04-09 20:41:16,547: [offline_bag_feeder] frame=47 lidar stamp=4.601000
+[rosout][INFO] 2026-04-09 20:41:16,591: [offline_bag_feeder] frame=48 lidar stamp=4.701000
+[rosout][INFO] 2026-04-09 20:41:16,635: [offline_bag_feeder] frame=49 lidar stamp=4.801000
+[rosout][INFO] 2026-04-09 20:41:16,684: [offline_bag_feeder] frame=50 lidar stamp=4.901000
+[rosout][INFO] 2026-04-09 20:41:16,728: [offline_bag_feeder] frame=51 lidar stamp=5.001000
+[rosout][INFO] 2026-04-09 20:41:16,774: [offline_bag_feeder] frame=52 lidar stamp=5.101000
+[rosout][INFO] 2026-04-09 20:41:16,826: [offline_bag_feeder] frame=53 lidar stamp=5.201000
+[rosout][INFO] 2026-04-09 20:41:16,871: [offline_bag_feeder] frame=54 lidar stamp=5.301000
+[rosout][INFO] 2026-04-09 20:41:16,923: [offline_bag_feeder] frame=55 lidar stamp=5.401000
+[rosout][INFO] 2026-04-09 20:41:16,974: [offline_bag_feeder] frame=56 lidar stamp=5.501000
+[rosout][INFO] 2026-04-09 20:41:17,018: [offline_bag_feeder] frame=57 lidar stamp=5.601000
+[rosout][INFO] 2026-04-09 20:41:17,063: [offline_bag_feeder] frame=58 lidar stamp=5.701000
+[rosout][INFO] 2026-04-09 20:41:17,113: [offline_bag_feeder] frame=59 lidar stamp=5.801000
+[rosout][INFO] 2026-04-09 20:41:17,162: [offline_bag_feeder] frame=60 lidar stamp=5.901000
+[rosout][INFO] 2026-04-09 20:41:17,207: [offline_bag_feeder] frame=61 lidar stamp=6.001000
+[rosout][INFO] 2026-04-09 20:41:17,246: [offline_bag_feeder] frame=62 lidar stamp=6.101000
+[rosout][INFO] 2026-04-09 20:41:17,289: [offline_bag_feeder] frame=63 lidar stamp=6.201000
+[rosout][INFO] 2026-04-09 20:41:17,333: [offline_bag_feeder] frame=64 lidar stamp=6.301000
+[rosout][INFO] 2026-04-09 20:41:17,379: [offline_bag_feeder] frame=65 lidar stamp=6.401000
+[rosout][INFO] 2026-04-09 20:41:17,425: [offline_bag_feeder] frame=66 lidar stamp=6.501000
+[rosout][INFO] 2026-04-09 20:41:17,473: [offline_bag_feeder] frame=67 lidar stamp=6.601000
+[rosout][INFO] 2026-04-09 20:41:17,519: [offline_bag_feeder] frame=68 lidar stamp=6.701000
+[rosout][INFO] 2026-04-09 20:41:17,565: [offline_bag_feeder] frame=69 lidar stamp=6.801000
+[rosout][INFO] 2026-04-09 20:41:17,606: [offline_bag_feeder] frame=70 lidar stamp=6.901000
+[rosout][INFO] 2026-04-09 20:41:17,649: [offline_bag_feeder] frame=71 lidar stamp=7.001000
+[rosout][INFO] 2026-04-09 20:41:17,692: [offline_bag_feeder] frame=72 lidar stamp=7.101000
+[rosout][INFO] 2026-04-09 20:41:17,747: [offline_bag_feeder] frame=73 lidar stamp=7.201000
+[rosout][INFO] 2026-04-09 20:41:17,795: [offline_bag_feeder] frame=74 lidar stamp=7.301000
+[rosout][INFO] 2026-04-09 20:41:17,837: [offline_bag_feeder] frame=75 lidar stamp=7.401000
+[rosout][INFO] 2026-04-09 20:41:17,873: [offline_bag_feeder] frame=76 lidar stamp=7.501000
+[rosout][INFO] 2026-04-09 20:41:17,909: [offline_bag_feeder] frame=77 lidar stamp=7.601000
+[rosout][INFO] 2026-04-09 20:41:17,947: [offline_bag_feeder] frame=78 lidar stamp=7.701000
+[rosout][INFO] 2026-04-09 20:41:18,012: [offline_bag_feeder] frame=79 lidar stamp=7.801000
+[rosout][INFO] 2026-04-09 20:41:18,068: [offline_bag_feeder] frame=80 lidar stamp=7.901000
+[rosout][INFO] 2026-04-09 20:41:18,111: [offline_bag_feeder] frame=81 lidar stamp=8.001000
+[rosout][INFO] 2026-04-09 20:41:18,160: [offline_bag_feeder] frame=82 lidar stamp=8.101000
+[rosout][INFO] 2026-04-09 20:41:18,202: [offline_bag_feeder] frame=83 lidar stamp=8.201000
+[rosout][INFO] 2026-04-09 20:41:18,244: [offline_bag_feeder] frame=84 lidar stamp=8.301000
+[rosout][INFO] 2026-04-09 20:41:18,280: [offline_bag_feeder] frame=85 lidar stamp=8.401000
+[rosout][INFO] 2026-04-09 20:41:18,325: [offline_bag_feeder] frame=86 lidar stamp=8.501000
+[rosout][INFO] 2026-04-09 20:41:18,369: [offline_bag_feeder] frame=87 lidar stamp=8.601000
+[rosout][INFO] 2026-04-09 20:41:18,418: [offline_bag_feeder] frame=88 lidar stamp=8.701000
+[rosout][INFO] 2026-04-09 20:41:18,461: [offline_bag_feeder] frame=89 lidar stamp=8.801000
+[rosout][INFO] 2026-04-09 20:41:18,509: [offline_bag_feeder] frame=90 lidar stamp=8.901000
+[rosout][INFO] 2026-04-09 20:41:18,554: [offline_bag_feeder] frame=91 lidar stamp=9.001000
+[rosout][INFO] 2026-04-09 20:41:18,598: [offline_bag_feeder] frame=92 lidar stamp=9.101000
+[rosout][INFO] 2026-04-09 20:41:18,640: [offline_bag_feeder] frame=93 lidar stamp=9.201000
+[rosout][INFO] 2026-04-09 20:41:18,680: [offline_bag_feeder] frame=94 lidar stamp=9.301000
+[rosout][INFO] 2026-04-09 20:41:18,724: [offline_bag_feeder] frame=95 lidar stamp=9.401000
+[rosout][INFO] 2026-04-09 20:41:18,768: [offline_bag_feeder] frame=96 lidar stamp=9.501000
+[rosout][INFO] 2026-04-09 20:41:18,817: [offline_bag_feeder] frame=97 lidar stamp=9.601000
+[rosout][INFO] 2026-04-09 20:41:18,855: [offline_bag_feeder] frame=98 lidar stamp=9.701000
+[rosout][INFO] 2026-04-09 20:41:18,908: [offline_bag_feeder] frame=99 lidar stamp=9.801000
+[rosout][INFO] 2026-04-09 20:41:18,950: [offline_bag_feeder] frame=100 lidar stamp=9.901000
+[rosout][INFO] 2026-04-09 20:41:18,988: [offline_bag_feeder] frame=101 lidar stamp=10.001000
+[rosout][INFO] 2026-04-09 20:41:19,036: [offline_bag_feeder] frame=102 lidar stamp=10.101000
+[rosout][INFO] 2026-04-09 20:41:19,089: [offline_bag_feeder] frame=103 lidar stamp=10.201000
+[rosout][INFO] 2026-04-09 20:41:19,132: [offline_bag_feeder] frame=104 lidar stamp=10.301000
+[rosout][INFO] 2026-04-09 20:41:19,175: [offline_bag_feeder] frame=105 lidar stamp=10.401000
+[rosout][INFO] 2026-04-09 20:41:19,211: [offline_bag_feeder] frame=106 lidar stamp=10.501000
+[rosout][INFO] 2026-04-09 20:41:19,254: [offline_bag_feeder] frame=107 lidar stamp=10.601000
+[rosout][INFO] 2026-04-09 20:41:19,303: [offline_bag_feeder] frame=108 lidar stamp=10.701000
+[rosout][INFO] 2026-04-09 20:41:19,341: [offline_bag_feeder] frame=109 lidar stamp=10.801000
+[rosout][INFO] 2026-04-09 20:41:19,386: [offline_bag_feeder] frame=110 lidar stamp=10.901000
+[rosout][INFO] 2026-04-09 20:41:19,428: [offline_bag_feeder] frame=111 lidar stamp=11.001000
+[rosout][INFO] 2026-04-09 20:41:19,472: [offline_bag_feeder] frame=112 lidar stamp=11.101000
+[rosout][INFO] 2026-04-09 20:41:19,509: [offline_bag_feeder] frame=113 lidar stamp=11.201000
+[rosout][INFO] 2026-04-09 20:41:19,552: [offline_bag_feeder] frame=114 lidar stamp=11.301000
+[rosout][INFO] 2026-04-09 20:41:19,588: [offline_bag_feeder] frame=115 lidar stamp=11.401000
+[rosout][INFO] 2026-04-09 20:41:19,626: [offline_bag_feeder] frame=116 lidar stamp=11.501000
+[rosout][INFO] 2026-04-09 20:41:19,669: [offline_bag_feeder] frame=117 lidar stamp=11.601000
+[rosout][INFO] 2026-04-09 20:41:19,712: [offline_bag_feeder] frame=118 lidar stamp=11.701000
+[rosout][INFO] 2026-04-09 20:41:19,760: [offline_bag_feeder] frame=119 lidar stamp=11.801000
+[rosout][INFO] 2026-04-09 20:41:19,802: [offline_bag_feeder] frame=120 lidar stamp=11.901000
+[rosout][INFO] 2026-04-09 20:41:19,849: [offline_bag_feeder] frame=121 lidar stamp=12.001000
+[rosout][INFO] 2026-04-09 20:41:19,891: [offline_bag_feeder] frame=122 lidar stamp=12.101000
+[rosout][INFO] 2026-04-09 20:41:19,938: [offline_bag_feeder] frame=123 lidar stamp=12.201000
+[rosout][INFO] 2026-04-09 20:41:19,981: [offline_bag_feeder] frame=124 lidar stamp=12.301000
+[rosout][INFO] 2026-04-09 20:41:20,024: [offline_bag_feeder] frame=125 lidar stamp=12.401000
+[rosout][INFO] 2026-04-09 20:41:20,073: [offline_bag_feeder] frame=126 lidar stamp=12.501000
+[rosout][INFO] 2026-04-09 20:41:20,116: [offline_bag_feeder] frame=127 lidar stamp=12.601000
+[rosout][INFO] 2026-04-09 20:41:20,159: [offline_bag_feeder] frame=128 lidar stamp=12.701000
+[rosout][INFO] 2026-04-09 20:41:20,202: [offline_bag_feeder] frame=129 lidar stamp=12.801000
+[rosout][INFO] 2026-04-09 20:41:20,245: [offline_bag_feeder] frame=130 lidar stamp=12.901000
+[rosout][INFO] 2026-04-09 20:41:20,288: [offline_bag_feeder] frame=131 lidar stamp=13.001000
+[rosout][INFO] 2026-04-09 20:41:20,331: [offline_bag_feeder] frame=132 lidar stamp=13.101000
+[rosout][INFO] 2026-04-09 20:41:20,368: [offline_bag_feeder] frame=133 lidar stamp=13.201000
+[rosout][INFO] 2026-04-09 20:41:20,404: [offline_bag_feeder] frame=134 lidar stamp=13.301000
+[rosout][INFO] 2026-04-09 20:41:20,440: [offline_bag_feeder] frame=135 lidar stamp=13.401000
+[rosout][INFO] 2026-04-09 20:41:20,488: [offline_bag_feeder] frame=136 lidar stamp=13.501000
+[rosout][INFO] 2026-04-09 20:41:20,538: [offline_bag_feeder] frame=137 lidar stamp=13.601000
+[rosout][INFO] 2026-04-09 20:41:20,576: [offline_bag_feeder] frame=138 lidar stamp=13.701000
+[rosout][INFO] 2026-04-09 20:41:20,619: [offline_bag_feeder] frame=139 lidar stamp=13.801000
+[rosout][INFO] 2026-04-09 20:41:20,662: [offline_bag_feeder] frame=140 lidar stamp=13.901000
+[rosout][INFO] 2026-04-09 20:41:20,705: [offline_bag_feeder] frame=141 lidar stamp=14.001000
+[rosout][INFO] 2026-04-09 20:41:20,742: [offline_bag_feeder] frame=142 lidar stamp=14.101000
+[rosout][INFO] 2026-04-09 20:41:20,778: [offline_bag_feeder] frame=143 lidar stamp=14.201000
+[rosout][INFO] 2026-04-09 20:41:20,815: [offline_bag_feeder] frame=144 lidar stamp=14.301000
+[rosout][INFO] 2026-04-09 20:41:20,863: [offline_bag_feeder] frame=145 lidar stamp=14.401000
+[rosout][INFO] 2026-04-09 20:41:20,911: [offline_bag_feeder] frame=146 lidar stamp=14.501000
+[rosout][INFO] 2026-04-09 20:41:20,960: [offline_bag_feeder] frame=147 lidar stamp=14.601000
+[rosout][INFO] 2026-04-09 20:41:21,003: [offline_bag_feeder] frame=148 lidar stamp=14.701000
+[rosout][INFO] 2026-04-09 20:41:21,051: [offline_bag_feeder] frame=149 lidar stamp=14.801000
+[rosout][INFO] 2026-04-09 20:41:21,094: [offline_bag_feeder] frame=150 lidar stamp=14.901000
+[rosout][INFO] 2026-04-09 20:41:21,137: [offline_bag_feeder] frame=151 lidar stamp=15.001000
+[rosout][INFO] 2026-04-09 20:41:21,175: [offline_bag_feeder] frame=152 lidar stamp=15.101000
+[rosout][INFO] 2026-04-09 20:41:21,219: [offline_bag_feeder] frame=153 lidar stamp=15.201000
+[rosout][INFO] 2026-04-09 20:41:21,258: [offline_bag_feeder] frame=154 lidar stamp=15.301000
+[rosout][INFO] 2026-04-09 20:41:21,302: [offline_bag_feeder] frame=155 lidar stamp=15.401000
+[rosout][INFO] 2026-04-09 20:41:21,341: [offline_bag_feeder] frame=156 lidar stamp=15.501000
+[rosout][INFO] 2026-04-09 20:41:21,384: [offline_bag_feeder] frame=157 lidar stamp=15.601000
+[rosout][INFO] 2026-04-09 20:41:21,422: [offline_bag_feeder] frame=158 lidar stamp=15.701000
+[rosout][INFO] 2026-04-09 20:41:21,462: [offline_bag_feeder] frame=159 lidar stamp=15.801000
+[rosout][INFO] 2026-04-09 20:41:21,507: [offline_bag_feeder] frame=160 lidar stamp=15.901000
+[rosout][INFO] 2026-04-09 20:41:21,551: [offline_bag_feeder] frame=161 lidar stamp=16.001000
+[rosout][INFO] 2026-04-09 20:41:21,589: [offline_bag_feeder] frame=162 lidar stamp=16.101000
+[rosout][INFO] 2026-04-09 20:41:21,627: [offline_bag_feeder] frame=163 lidar stamp=16.201000
+[rosout][INFO] 2026-04-09 20:41:21,672: [offline_bag_feeder] frame=164 lidar stamp=16.301000
+[rosout][INFO] 2026-04-09 20:41:21,716: [offline_bag_feeder] frame=165 lidar stamp=16.401000
+[rosout][INFO] 2026-04-09 20:41:21,753: [offline_bag_feeder] frame=166 lidar stamp=16.501000
+[rosout][INFO] 2026-04-09 20:41:21,797: [offline_bag_feeder] frame=167 lidar stamp=16.601000
+[rosout][INFO] 2026-04-09 20:41:21,837: [offline_bag_feeder] frame=168 lidar stamp=16.701000
+[rosout][INFO] 2026-04-09 20:41:21,883: [offline_bag_feeder] frame=169 lidar stamp=16.801000
+[rosout][INFO] 2026-04-09 20:41:21,933: [offline_bag_feeder] frame=170 lidar stamp=16.901000
+[rosout][INFO] 2026-04-09 20:41:21,985: [offline_bag_feeder] frame=171 lidar stamp=17.001000
+[rosout][INFO] 2026-04-09 20:41:22,036: [offline_bag_feeder] frame=172 lidar stamp=17.101000
+[rosout][INFO] 2026-04-09 20:41:22,084: [offline_bag_feeder] frame=173 lidar stamp=17.201000
+[rosout][INFO] 2026-04-09 20:41:22,140: [offline_bag_feeder] frame=174 lidar stamp=17.301000
+[rosout][INFO] 2026-04-09 20:41:22,193: [offline_bag_feeder] frame=175 lidar stamp=17.401000
+[rosout][INFO] 2026-04-09 20:41:22,242: [offline_bag_feeder] frame=176 lidar stamp=17.501000
+[rosout][INFO] 2026-04-09 20:41:22,289: [offline_bag_feeder] frame=177 lidar stamp=17.601000
+[rosout][INFO] 2026-04-09 20:41:22,334: [offline_bag_feeder] frame=178 lidar stamp=17.701000
+[rosout][INFO] 2026-04-09 20:41:22,382: [offline_bag_feeder] frame=179 lidar stamp=17.801000
+[rosout][INFO] 2026-04-09 20:41:22,432: [offline_bag_feeder] frame=180 lidar stamp=17.901000
+[rosout][INFO] 2026-04-09 20:41:22,486: [offline_bag_feeder] frame=181 lidar stamp=18.001000
+[rosout][INFO] 2026-04-09 20:41:22,537: [offline_bag_feeder] frame=182 lidar stamp=18.101000
+[rosout][INFO] 2026-04-09 20:41:22,588: [offline_bag_feeder] frame=183 lidar stamp=18.201000
+[rosout][INFO] 2026-04-09 20:41:22,637: [offline_bag_feeder] frame=184 lidar stamp=18.301000
+[rosout][INFO] 2026-04-09 20:41:22,681: [offline_bag_feeder] frame=185 lidar stamp=18.401000
+[rosout][INFO] 2026-04-09 20:41:22,725: [offline_bag_feeder] frame=186 lidar stamp=18.501000
+[rosout][INFO] 2026-04-09 20:41:22,764: [offline_bag_feeder] frame=187 lidar stamp=18.601000
+[rosout][INFO] 2026-04-09 20:41:22,807: [offline_bag_feeder] frame=188 lidar stamp=18.701000
+[rosout][INFO] 2026-04-09 20:41:22,845: [offline_bag_feeder] frame=189 lidar stamp=18.801000
+[rosout][INFO] 2026-04-09 20:41:22,899: [offline_bag_feeder] frame=190 lidar stamp=18.901000
+[rosout][INFO] 2026-04-09 20:41:22,948: [offline_bag_feeder] frame=191 lidar stamp=19.001000
+[rosout][INFO] 2026-04-09 20:41:22,995: [offline_bag_feeder] frame=192 lidar stamp=19.101000
+[rosout][INFO] 2026-04-09 20:41:23,039: [offline_bag_feeder] frame=193 lidar stamp=19.201000
+[rosout][INFO] 2026-04-09 20:41:23,081: [offline_bag_feeder] frame=194 lidar stamp=19.301000
+[rosout][INFO] 2026-04-09 20:41:23,124: [offline_bag_feeder] frame=195 lidar stamp=19.401000
+[rosout][INFO] 2026-04-09 20:41:23,172: [offline_bag_feeder] frame=196 lidar stamp=19.501000
+[rosout][INFO] 2026-04-09 20:41:23,215: [offline_bag_feeder] frame=197 lidar stamp=19.601000
+[rosout][INFO] 2026-04-09 20:41:23,271: [offline_bag_feeder] frame=198 lidar stamp=19.701000
+[rosout][INFO] 2026-04-09 20:41:23,308: [offline_bag_feeder] frame=199 lidar stamp=19.801000
+[rosout][INFO] 2026-04-09 20:41:23,357: [offline_bag_feeder] frame=200 lidar stamp=19.901000
+[rosout][INFO] 2026-04-09 20:41:23,405: [offline_bag_feeder] frame=201 lidar stamp=20.001000
+[rosout][INFO] 2026-04-09 20:41:23,455: [offline_bag_feeder] frame=202 lidar stamp=20.101000
+[rosout][INFO] 2026-04-09 20:41:23,499: [offline_bag_feeder] frame=203 lidar stamp=20.201000
+[rosout][INFO] 2026-04-09 20:41:23,554: [offline_bag_feeder] frame=204 lidar stamp=20.301000
+[rosout][INFO] 2026-04-09 20:41:23,603: [offline_bag_feeder] frame=205 lidar stamp=20.401000
+[rosout][INFO] 2026-04-09 20:41:23,646: [offline_bag_feeder] frame=206 lidar stamp=20.501000
+[rosout][INFO] 2026-04-09 20:41:23,702: [offline_bag_feeder] frame=207 lidar stamp=20.601000
+[rosout][INFO] 2026-04-09 20:41:23,751: [offline_bag_feeder] frame=208 lidar stamp=20.701000
+[rosout][INFO] 2026-04-09 20:41:23,795: [offline_bag_feeder] frame=209 lidar stamp=20.801000
+[rosout][INFO] 2026-04-09 20:41:23,847: [offline_bag_feeder] frame=210 lidar stamp=20.901000
+[rosout][INFO] 2026-04-09 20:41:23,909: [offline_bag_feeder] frame=211 lidar stamp=21.001000
+[rosout][INFO] 2026-04-09 20:41:23,965: [offline_bag_feeder] frame=212 lidar stamp=21.101000
+[rosout][INFO] 2026-04-09 20:41:24,012: [offline_bag_feeder] frame=213 lidar stamp=21.201000
+[rosout][INFO] 2026-04-09 20:41:24,059: [offline_bag_feeder] frame=214 lidar stamp=21.301000
+[rosout][INFO] 2026-04-09 20:41:24,107: [offline_bag_feeder] frame=215 lidar stamp=21.401000
+[rosout][INFO] 2026-04-09 20:41:24,155: [offline_bag_feeder] frame=216 lidar stamp=21.501000
+[rosout][INFO] 2026-04-09 20:41:24,197: [offline_bag_feeder] frame=217 lidar stamp=21.601000
+[rosout][INFO] 2026-04-09 20:41:24,234: [offline_bag_feeder] frame=218 lidar stamp=21.701000
+[rosout][INFO] 2026-04-09 20:41:24,277: [offline_bag_feeder] frame=219 lidar stamp=21.801000
+[rosout][INFO] 2026-04-09 20:41:24,315: [offline_bag_feeder] frame=220 lidar stamp=21.901000
+[rosout][INFO] 2026-04-09 20:41:24,369: [offline_bag_feeder] frame=221 lidar stamp=22.001000
+[rosout][INFO] 2026-04-09 20:41:24,418: [offline_bag_feeder] frame=222 lidar stamp=22.101000
+[rosout][INFO] 2026-04-09 20:41:24,466: [offline_bag_feeder] frame=223 lidar stamp=22.201000
+[rosout][INFO] 2026-04-09 20:41:24,519: [offline_bag_feeder] frame=224 lidar stamp=22.301000
+[rosout][INFO] 2026-04-09 20:41:24,566: [offline_bag_feeder] frame=225 lidar stamp=22.401000
+[rosout][INFO] 2026-04-09 20:41:24,607: [offline_bag_feeder] frame=226 lidar stamp=22.501000
+[rosout][INFO] 2026-04-09 20:41:24,649: [offline_bag_feeder] frame=227 lidar stamp=22.601000
+[rosout][INFO] 2026-04-09 20:41:24,697: [offline_bag_feeder] frame=228 lidar stamp=22.701000
+[rosout][INFO] 2026-04-09 20:41:24,751: [offline_bag_feeder] frame=229 lidar stamp=22.801000
+[rosout][INFO] 2026-04-09 20:41:24,796: [offline_bag_feeder] frame=230 lidar stamp=22.901000
+[rosout][INFO] 2026-04-09 20:41:24,840: [offline_bag_feeder] frame=231 lidar stamp=23.001000
+[rosout][INFO] 2026-04-09 20:41:24,882: [offline_bag_feeder] frame=232 lidar stamp=23.101000
+[rosout][INFO] 2026-04-09 20:41:24,924: [offline_bag_feeder] frame=233 lidar stamp=23.201000
+[rosout][INFO] 2026-04-09 20:41:24,972: [offline_bag_feeder] frame=234 lidar stamp=23.301000
+[rosout][INFO] 2026-04-09 20:41:25,018: [offline_bag_feeder] frame=235 lidar stamp=23.401000
+[rosout][INFO] 2026-04-09 20:41:25,072: [offline_bag_feeder] frame=236 lidar stamp=23.501000
+[rosout][INFO] 2026-04-09 20:41:25,114: [offline_bag_feeder] frame=237 lidar stamp=23.601000
+[rosout][INFO] 2026-04-09 20:41:25,157: [offline_bag_feeder] frame=238 lidar stamp=23.701000
+[rosout][INFO] 2026-04-09 20:41:25,199: [offline_bag_feeder] frame=239 lidar stamp=23.801000
+[rosout][INFO] 2026-04-09 20:41:25,247: [offline_bag_feeder] frame=240 lidar stamp=23.901000
+[rosout][INFO] 2026-04-09 20:41:25,287: [offline_bag_feeder] frame=241 lidar stamp=24.001000
+[rosout][INFO] 2026-04-09 20:41:25,325: [offline_bag_feeder] frame=242 lidar stamp=24.101000
+[rosout][INFO] 2026-04-09 20:41:25,363: [offline_bag_feeder] frame=243 lidar stamp=24.201000
+[rosout][INFO] 2026-04-09 20:41:25,410: [offline_bag_feeder] frame=244 lidar stamp=24.301000
+[rosout][INFO] 2026-04-09 20:41:25,453: [offline_bag_feeder] frame=245 lidar stamp=24.401000
+[rosout][INFO] 2026-04-09 20:41:25,502: [offline_bag_feeder] frame=246 lidar stamp=24.501000
+[rosout][INFO] 2026-04-09 20:41:25,546: [offline_bag_feeder] frame=247 lidar stamp=24.601000
+[rosout][INFO] 2026-04-09 20:41:25,596: [offline_bag_feeder] frame=248 lidar stamp=24.701000
+[rosout][INFO] 2026-04-09 20:41:25,643: [offline_bag_feeder] frame=249 lidar stamp=24.801000
+[rosout][INFO] 2026-04-09 20:41:25,693: [offline_bag_feeder] frame=250 lidar stamp=24.901000
+[rosout][INFO] 2026-04-09 20:41:25,741: [offline_bag_feeder] frame=251 lidar stamp=25.001000
+[rosout][INFO] 2026-04-09 20:41:25,799: [offline_bag_feeder] frame=252 lidar stamp=25.101000
+[rosout][INFO] 2026-04-09 20:41:25,848: [offline_bag_feeder] frame=253 lidar stamp=25.201000
+[rosout][INFO] 2026-04-09 20:41:25,907: [offline_bag_feeder] frame=254 lidar stamp=25.301000
+[rosout][INFO] 2026-04-09 20:41:25,960: [offline_bag_feeder] frame=255 lidar stamp=25.401000
+[rosout][INFO] 2026-04-09 20:41:26,009: [offline_bag_feeder] frame=256 lidar stamp=25.501000
+[rosout][INFO] 2026-04-09 20:41:26,055: [offline_bag_feeder] frame=257 lidar stamp=25.601000
+[rosout][INFO] 2026-04-09 20:41:26,098: [offline_bag_feeder] frame=258 lidar stamp=25.701000
+[rosout][INFO] 2026-04-09 20:41:26,152: [offline_bag_feeder] frame=259 lidar stamp=25.801000
+[rosout][INFO] 2026-04-09 20:41:26,203: [offline_bag_feeder] frame=260 lidar stamp=25.901000
+[rosout][INFO] 2026-04-09 20:41:26,248: [offline_bag_feeder] frame=261 lidar stamp=26.001000
+[rosout][INFO] 2026-04-09 20:41:26,295: [offline_bag_feeder] frame=262 lidar stamp=26.101000
+[rosout][INFO] 2026-04-09 20:41:26,338: [offline_bag_feeder] frame=263 lidar stamp=26.201000
+[rosout][INFO] 2026-04-09 20:41:26,386: [offline_bag_feeder] frame=264 lidar stamp=26.301000
+[rosout][INFO] 2026-04-09 20:41:26,429: [offline_bag_feeder] frame=265 lidar stamp=26.401000
+[rosout][INFO] 2026-04-09 20:41:26,472: [offline_bag_feeder] frame=266 lidar stamp=26.501000
+[rosout][INFO] 2026-04-09 20:41:26,520: [offline_bag_feeder] frame=267 lidar stamp=26.601000
+[rosout][INFO] 2026-04-09 20:41:26,564: [offline_bag_feeder] frame=268 lidar stamp=26.701000
+[rosout][INFO] 2026-04-09 20:41:26,606: [offline_bag_feeder] frame=269 lidar stamp=26.801000
+[rosout][INFO] 2026-04-09 20:41:26,663: [offline_bag_feeder] frame=270 lidar stamp=26.901000
+[rosout][INFO] 2026-04-09 20:41:26,717: [offline_bag_feeder] frame=271 lidar stamp=27.001000
+[rosout][INFO] 2026-04-09 20:41:26,767: [offline_bag_feeder] frame=272 lidar stamp=27.101000
+[rosout][INFO] 2026-04-09 20:41:26,805: [offline_bag_feeder] frame=273 lidar stamp=27.201000
+[rosout][INFO] 2026-04-09 20:41:26,842: [offline_bag_feeder] frame=274 lidar stamp=27.301000
+[rosout][INFO] 2026-04-09 20:41:26,881: [offline_bag_feeder] frame=275 lidar stamp=27.401000
+[rosout][INFO] 2026-04-09 20:41:26,925: [offline_bag_feeder] frame=276 lidar stamp=27.501000
+[rosout][INFO] 2026-04-09 20:41:26,969: [offline_bag_feeder] frame=277 lidar stamp=27.601000
+[rosout][INFO] 2026-04-09 20:41:27,018: [offline_bag_feeder] frame=278 lidar stamp=27.701000
+[rosout][INFO] 2026-04-09 20:41:27,072: [offline_bag_feeder] frame=279 lidar stamp=27.801000
+[rosout][INFO] 2026-04-09 20:41:27,131: [offline_bag_feeder] frame=280 lidar stamp=27.901000
+[rosout][INFO] 2026-04-09 20:41:27,174: [offline_bag_feeder] frame=281 lidar stamp=28.001000
+[rosout][INFO] 2026-04-09 20:41:27,219: [offline_bag_feeder] frame=282 lidar stamp=28.101000
+[rosout][INFO] 2026-04-09 20:41:27,262: [offline_bag_feeder] frame=283 lidar stamp=28.201000
+[rosout][INFO] 2026-04-09 20:41:27,305: [offline_bag_feeder] frame=284 lidar stamp=28.301000
+[rosout][INFO] 2026-04-09 20:41:27,342: [offline_bag_feeder] frame=285 lidar stamp=28.401000
+[rosout][INFO] 2026-04-09 20:41:27,392: [offline_bag_feeder] frame=286 lidar stamp=28.501000
+[rosout][INFO] 2026-04-09 20:41:27,446: [offline_bag_feeder] frame=287 lidar stamp=28.601000
+[rosout][INFO] 2026-04-09 20:41:27,495: [offline_bag_feeder] frame=288 lidar stamp=28.701000
+[rosout][INFO] 2026-04-09 20:41:27,551: [offline_bag_feeder] frame=289 lidar stamp=28.801000
+[rosout][INFO] 2026-04-09 20:41:27,606: [offline_bag_feeder] frame=290 lidar stamp=28.901000
+[rosout][INFO] 2026-04-09 20:41:27,654: [offline_bag_feeder] frame=291 lidar stamp=29.001000
+[rosout][INFO] 2026-04-09 20:41:27,698: [offline_bag_feeder] frame=292 lidar stamp=29.101000
+[rosout][INFO] 2026-04-09 20:41:27,749: [offline_bag_feeder] frame=293 lidar stamp=29.201000
+[rosout][INFO] 2026-04-09 20:41:27,790: [offline_bag_feeder] frame=294 lidar stamp=29.301000
+[rosout][INFO] 2026-04-09 20:41:27,830: [offline_bag_feeder] frame=295 lidar stamp=29.401000
+[rosout][INFO] 2026-04-09 20:41:27,874: [offline_bag_feeder] frame=296 lidar stamp=29.501000
+[rosout][INFO] 2026-04-09 20:41:27,918: [offline_bag_feeder] frame=297 lidar stamp=29.601000
+[rosout][INFO] 2026-04-09 20:41:27,961: [offline_bag_feeder] frame=298 lidar stamp=29.701000
+[rosout][INFO] 2026-04-09 20:41:28,009: [offline_bag_feeder] frame=299 lidar stamp=29.801000
+[rosout][INFO] 2026-04-09 20:41:28,052: [offline_bag_feeder] frame=300 lidar stamp=29.901000
+[rosout][INFO] 2026-04-09 20:41:28,096: [offline_bag_feeder] frame=301 lidar stamp=30.001000
+[rosout][INFO] 2026-04-09 20:41:28,132: [offline_bag_feeder] frame=302 lidar stamp=30.101000
+[rosout][INFO] 2026-04-09 20:41:28,168: [offline_bag_feeder] frame=303 lidar stamp=30.201000
+[rosout][INFO] 2026-04-09 20:41:28,205: [offline_bag_feeder] frame=304 lidar stamp=30.301000
+[rosout][INFO] 2026-04-09 20:41:28,243: [offline_bag_feeder] frame=305 lidar stamp=30.401000
+[rosout][INFO] 2026-04-09 20:41:28,286: [offline_bag_feeder] frame=306 lidar stamp=30.501000
+[rosout][INFO] 2026-04-09 20:41:28,323: [offline_bag_feeder] frame=307 lidar stamp=30.601000
+[rosout][INFO] 2026-04-09 20:41:28,360: [offline_bag_feeder] frame=308 lidar stamp=30.701000
+[rosout][INFO] 2026-04-09 20:41:28,408: [offline_bag_feeder] frame=309 lidar stamp=30.801000
+[rosout][INFO] 2026-04-09 20:41:28,451: [offline_bag_feeder] frame=310 lidar stamp=30.901000
+[rosout][INFO] 2026-04-09 20:41:28,489: [offline_bag_feeder] frame=311 lidar stamp=31.001000
+[rosout][INFO] 2026-04-09 20:41:28,527: [offline_bag_feeder] frame=312 lidar stamp=31.101000
+[rosout][INFO] 2026-04-09 20:41:28,575: [offline_bag_feeder] frame=313 lidar stamp=31.201000
+[rosout][INFO] 2026-04-09 20:41:28,612: [offline_bag_feeder] frame=314 lidar stamp=31.301000
+[rosout][INFO] 2026-04-09 20:41:28,648: [offline_bag_feeder] frame=315 lidar stamp=31.401000
+[rosout][INFO] 2026-04-09 20:41:28,691: [offline_bag_feeder] frame=316 lidar stamp=31.501000
+[rosout][INFO] 2026-04-09 20:41:28,733: [offline_bag_feeder] frame=317 lidar stamp=31.601000
+[rosout][INFO] 2026-04-09 20:41:28,770: [offline_bag_feeder] frame=318 lidar stamp=31.701000
+[rosout][INFO] 2026-04-09 20:41:28,806: [offline_bag_feeder] frame=319 lidar stamp=31.801000
+[rosout][INFO] 2026-04-09 20:41:28,836: [offline_bag_feeder] frame=320 lidar stamp=31.901000
+[rosout][INFO] 2026-04-09 20:41:28,873: [offline_bag_feeder] frame=321 lidar stamp=32.001000
+[rosout][INFO] 2026-04-09 20:41:28,909: [offline_bag_feeder] frame=322 lidar stamp=32.101000
+[rosout][INFO] 2026-04-09 20:41:28,963: [offline_bag_feeder] frame=323 lidar stamp=32.201000
+[rosout][INFO] 2026-04-09 20:41:29,005: [offline_bag_feeder] frame=324 lidar stamp=32.301000
+[rosout][INFO] 2026-04-09 20:41:29,042: [offline_bag_feeder] frame=325 lidar stamp=32.401000
+[rosout][INFO] 2026-04-09 20:41:29,072: [offline_bag_feeder] frame=326 lidar stamp=32.501000
+[rosout][INFO] 2026-04-09 20:41:29,103: [offline_bag_feeder] frame=327 lidar stamp=32.601000
+[rosout][INFO] 2026-04-09 20:41:29,135: [offline_bag_feeder] frame=328 lidar stamp=32.701000
+[rosout][INFO] 2026-04-09 20:41:29,172: [offline_bag_feeder] frame=329 lidar stamp=32.801000
+[rosout][INFO] 2026-04-09 20:41:29,211: [offline_bag_feeder] frame=330 lidar stamp=32.901000
+[rosout][INFO] 2026-04-09 20:41:29,243: [offline_bag_feeder] frame=331 lidar stamp=33.001000
+[rosout][INFO] 2026-04-09 20:41:29,287: [offline_bag_feeder] frame=332 lidar stamp=33.101000
+[rosout][INFO] 2026-04-09 20:41:29,324: [offline_bag_feeder] frame=333 lidar stamp=33.201000
+[rosout][INFO] 2026-04-09 20:41:29,362: [offline_bag_feeder] frame=334 lidar stamp=33.301000
+[rosout][INFO] 2026-04-09 20:41:29,400: [offline_bag_feeder] frame=335 lidar stamp=33.401000
+[rosout][INFO] 2026-04-09 20:41:29,436: [offline_bag_feeder] frame=336 lidar stamp=33.501000
+[rosout][INFO] 2026-04-09 20:41:29,476: [offline_bag_feeder] frame=337 lidar stamp=33.601000
+[rosout][INFO] 2026-04-09 20:41:29,520: [offline_bag_feeder] frame=338 lidar stamp=33.701000
+[rosout][INFO] 2026-04-09 20:41:29,563: [offline_bag_feeder] frame=339 lidar stamp=33.801000
+[rosout][INFO] 2026-04-09 20:41:29,601: [offline_bag_feeder] frame=340 lidar stamp=33.901000
+[rosout][INFO] 2026-04-09 20:41:29,644: [offline_bag_feeder] frame=341 lidar stamp=34.001000
+[rosout][INFO] 2026-04-09 20:41:29,682: [offline_bag_feeder] frame=342 lidar stamp=34.101000
+[rosout][INFO] 2026-04-09 20:41:29,720: [offline_bag_feeder] frame=343 lidar stamp=34.201000
+[rosout][INFO] 2026-04-09 20:41:29,764: [offline_bag_feeder] frame=344 lidar stamp=34.301000
+[rosout][INFO] 2026-04-09 20:41:29,824: [offline_bag_feeder] frame=345 lidar stamp=34.401000
+[rosout][INFO] 2026-04-09 20:41:29,862: [offline_bag_feeder] frame=346 lidar stamp=34.501000
+[rosout][INFO] 2026-04-09 20:41:29,904: [offline_bag_feeder] frame=347 lidar stamp=34.601000
+[rosout][INFO] 2026-04-09 20:41:29,947: [offline_bag_feeder] frame=348 lidar stamp=34.701000
+[rosout][INFO] 2026-04-09 20:41:29,985: [offline_bag_feeder] frame=349 lidar stamp=34.801000
+[rosout][INFO] 2026-04-09 20:41:30,022: [offline_bag_feeder] frame=350 lidar stamp=34.901000
+[rosout][INFO] 2026-04-09 20:41:30,060: [offline_bag_feeder] frame=351 lidar stamp=35.001000
+[rosout][INFO] 2026-04-09 20:41:30,102: [offline_bag_feeder] frame=352 lidar stamp=35.101000
+[rosout][INFO] 2026-04-09 20:41:30,140: [offline_bag_feeder] frame=353 lidar stamp=35.201000
+[rosout][INFO] 2026-04-09 20:41:30,177: [offline_bag_feeder] frame=354 lidar stamp=35.301000
+[rosout][INFO] 2026-04-09 20:41:30,214: [offline_bag_feeder] frame=355 lidar stamp=35.401000
+[rosout][INFO] 2026-04-09 20:41:30,245: [offline_bag_feeder] frame=356 lidar stamp=35.501000
+[rosout][INFO] 2026-04-09 20:41:30,293: [offline_bag_feeder] frame=357 lidar stamp=35.601000
+[rosout][INFO] 2026-04-09 20:41:30,327: [offline_bag_feeder] frame=358 lidar stamp=35.701000
+[rosout][INFO] 2026-04-09 20:41:30,358: [offline_bag_feeder] frame=359 lidar stamp=35.801000
+[rosout][INFO] 2026-04-09 20:41:30,394: [offline_bag_feeder] frame=360 lidar stamp=35.901000
+[rosout][INFO] 2026-04-09 20:41:30,441: [offline_bag_feeder] frame=361 lidar stamp=36.001000
+[rosout][INFO] 2026-04-09 20:41:30,477: [offline_bag_feeder] frame=362 lidar stamp=36.101000
+[rosout][INFO] 2026-04-09 20:41:30,520: [offline_bag_feeder] frame=363 lidar stamp=36.201000
+[rosout][INFO] 2026-04-09 20:41:30,563: [offline_bag_feeder] frame=364 lidar stamp=36.301000
+[rosout][INFO] 2026-04-09 20:41:30,607: [offline_bag_feeder] frame=365 lidar stamp=36.401000
+[rosout][INFO] 2026-04-09 20:41:30,650: [offline_bag_feeder] frame=366 lidar stamp=36.501000
+[rosout][INFO] 2026-04-09 20:41:30,691: [offline_bag_feeder] frame=367 lidar stamp=36.601000
+[rosout][INFO] 2026-04-09 20:41:30,727: [offline_bag_feeder] frame=368 lidar stamp=36.701000
+[rosout][INFO] 2026-04-09 20:41:30,764: [offline_bag_feeder] frame=369 lidar stamp=36.801000
+[rosout][INFO] 2026-04-09 20:41:30,806: [offline_bag_feeder] frame=370 lidar stamp=36.901000
+[rosout][INFO] 2026-04-09 20:41:30,844: [offline_bag_feeder] frame=371 lidar stamp=37.001000
+[rosout][INFO] 2026-04-09 20:41:30,891: [offline_bag_feeder] frame=372 lidar stamp=37.101000
+[rosout][INFO] 2026-04-09 20:41:30,941: [offline_bag_feeder] frame=373 lidar stamp=37.201000
+[rosout][INFO] 2026-04-09 20:41:30,984: [offline_bag_feeder] frame=374 lidar stamp=37.301000
+[rosout][INFO] 2026-04-09 20:41:31,021: [offline_bag_feeder] frame=375 lidar stamp=37.401000
+[rosout][INFO] 2026-04-09 20:41:31,064: [offline_bag_feeder] frame=376 lidar stamp=37.501000
+[rosout][INFO] 2026-04-09 20:41:31,100: [offline_bag_feeder] frame=377 lidar stamp=37.601000
+[rosout][INFO] 2026-04-09 20:41:31,136: [offline_bag_feeder] frame=378 lidar stamp=37.701000
+[rosout][INFO] 2026-04-09 20:41:31,179: [offline_bag_feeder] frame=379 lidar stamp=37.801000
+[rosout][INFO] 2026-04-09 20:41:31,216: [offline_bag_feeder] frame=380 lidar stamp=37.901000
+[rosout][INFO] 2026-04-09 20:41:31,253: [offline_bag_feeder] frame=381 lidar stamp=38.001000
+[rosout][INFO] 2026-04-09 20:41:31,290: [offline_bag_feeder] frame=382 lidar stamp=38.101000
+[rosout][INFO] 2026-04-09 20:41:31,328: [offline_bag_feeder] frame=383 lidar stamp=38.201000
+[rosout][INFO] 2026-04-09 20:41:31,366: [offline_bag_feeder] frame=384 lidar stamp=38.301000
+[rosout][INFO] 2026-04-09 20:41:31,415: [offline_bag_feeder] frame=385 lidar stamp=38.401000
+[rosout][INFO] 2026-04-09 20:41:31,468: [offline_bag_feeder] frame=386 lidar stamp=38.501000
+[rosout][INFO] 2026-04-09 20:41:31,516: [offline_bag_feeder] frame=387 lidar stamp=38.601000
+[rosout][INFO] 2026-04-09 20:41:31,559: [offline_bag_feeder] frame=388 lidar stamp=38.701000
+[rosout][INFO] 2026-04-09 20:41:31,603: [offline_bag_feeder] frame=389 lidar stamp=38.801000
+[rosout][INFO] 2026-04-09 20:41:31,652: [offline_bag_feeder] frame=390 lidar stamp=38.901000
+[rosout][INFO] 2026-04-09 20:41:31,691: [offline_bag_feeder] frame=391 lidar stamp=39.001000
+[rosout][INFO] 2026-04-09 20:41:31,729: [offline_bag_feeder] frame=392 lidar stamp=39.101000
+[rosout][INFO] 2026-04-09 20:41:31,772: [offline_bag_feeder] frame=393 lidar stamp=39.201000
+[rosout][INFO] 2026-04-09 20:41:31,811: [offline_bag_feeder] frame=394 lidar stamp=39.301000
+[rosout][INFO] 2026-04-09 20:41:31,859: [offline_bag_feeder] frame=395 lidar stamp=39.401000
+[rosout][INFO] 2026-04-09 20:41:31,902: [offline_bag_feeder] frame=396 lidar stamp=39.501000
+[rosout][INFO] 2026-04-09 20:41:31,944: [offline_bag_feeder] frame=397 lidar stamp=39.601000
+[rosout][INFO] 2026-04-09 20:41:31,980: [offline_bag_feeder] frame=398 lidar stamp=39.701000
+[rosout][INFO] 2026-04-09 20:41:32,023: [offline_bag_feeder] frame=399 lidar stamp=39.801000
+[rosout][INFO] 2026-04-09 20:41:32,067: [offline_bag_feeder] frame=400 lidar stamp=39.901000
+[rosout][INFO] 2026-04-09 20:41:32,110: [offline_bag_feeder] frame=401 lidar stamp=40.001000
+[rosout][INFO] 2026-04-09 20:41:32,157: [offline_bag_feeder] frame=402 lidar stamp=40.101000
+[rosout][INFO] 2026-04-09 20:41:32,199: [offline_bag_feeder] frame=403 lidar stamp=40.201000
+[rosout][INFO] 2026-04-09 20:41:32,248: [offline_bag_feeder] frame=404 lidar stamp=40.301000
+[rosout][INFO] 2026-04-09 20:41:32,284: [offline_bag_feeder] frame=405 lidar stamp=40.401000
+[rosout][INFO] 2026-04-09 20:41:32,321: [offline_bag_feeder] frame=406 lidar stamp=40.501000
+[rosout][INFO] 2026-04-09 20:41:32,364: [offline_bag_feeder] frame=407 lidar stamp=40.601000
+[rosout][INFO] 2026-04-09 20:41:32,402: [offline_bag_feeder] frame=408 lidar stamp=40.701000
+[rosout][INFO] 2026-04-09 20:41:32,439: [offline_bag_feeder] frame=409 lidar stamp=40.801000
+[rosout][INFO] 2026-04-09 20:41:32,481: [offline_bag_feeder] frame=410 lidar stamp=40.901000
+[rosout][INFO] 2026-04-09 20:41:32,530: [offline_bag_feeder] frame=411 lidar stamp=41.001000
+[rosout][INFO] 2026-04-09 20:41:32,572: [offline_bag_feeder] frame=412 lidar stamp=41.101000
+[rosout][INFO] 2026-04-09 20:41:32,615: [offline_bag_feeder] frame=413 lidar stamp=41.201000
+[rosout][INFO] 2026-04-09 20:41:32,659: [offline_bag_feeder] frame=414 lidar stamp=41.301000
+[rosout][INFO] 2026-04-09 20:41:32,708: [offline_bag_feeder] frame=415 lidar stamp=41.401000
+[rosout][INFO] 2026-04-09 20:41:32,759: [offline_bag_feeder] frame=416 lidar stamp=41.501000
+[rosout][INFO] 2026-04-09 20:41:32,808: [offline_bag_feeder] frame=417 lidar stamp=41.601000
+[rosout][INFO] 2026-04-09 20:41:32,852: [offline_bag_feeder] frame=418 lidar stamp=41.701000
+[rosout][INFO] 2026-04-09 20:41:32,896: [offline_bag_feeder] frame=419 lidar stamp=41.801000
+[rosout][INFO] 2026-04-09 20:41:32,937: [offline_bag_feeder] frame=420 lidar stamp=41.901000
+[rosout][INFO] 2026-04-09 20:41:32,979: [offline_bag_feeder] frame=421 lidar stamp=42.001000
+[rosout][INFO] 2026-04-09 20:41:33,023: [offline_bag_feeder] frame=422 lidar stamp=42.101000
+[rosout][INFO] 2026-04-09 20:41:33,079: [offline_bag_feeder] frame=423 lidar stamp=42.201000
+[rosout][INFO] 2026-04-09 20:41:33,122: [offline_bag_feeder] frame=424 lidar stamp=42.301000
+[rosout][INFO] 2026-04-09 20:41:33,170: [offline_bag_feeder] frame=425 lidar stamp=42.401000
+[rosout][INFO] 2026-04-09 20:41:33,213: [offline_bag_feeder] frame=426 lidar stamp=42.501000
+[rosout][INFO] 2026-04-09 20:41:33,256: [offline_bag_feeder] frame=427 lidar stamp=42.601000
+[rosout][INFO] 2026-04-09 20:41:33,299: [offline_bag_feeder] frame=428 lidar stamp=42.701000
+[rosout][INFO] 2026-04-09 20:41:33,336: [offline_bag_feeder] frame=429 lidar stamp=42.801000
+[rosout][INFO] 2026-04-09 20:41:33,380: [offline_bag_feeder] frame=430 lidar stamp=42.901000
+[rosout][INFO] 2026-04-09 20:41:33,424: [offline_bag_feeder] frame=431 lidar stamp=43.001000
+[rosout][INFO] 2026-04-09 20:41:33,467: [offline_bag_feeder] frame=432 lidar stamp=43.101000
+[rosout][INFO] 2026-04-09 20:41:33,509: [offline_bag_feeder] frame=433 lidar stamp=43.201000
+[rosout][INFO] 2026-04-09 20:41:33,551: [offline_bag_feeder] frame=434 lidar stamp=43.301000
+[rosout][INFO] 2026-04-09 20:41:33,590: [offline_bag_feeder] frame=435 lidar stamp=43.401000
+[rosout][INFO] 2026-04-09 20:41:33,636: [offline_bag_feeder] frame=436 lidar stamp=43.501000
+[rosout][INFO] 2026-04-09 20:41:33,678: [offline_bag_feeder] frame=437 lidar stamp=43.601000
+[rosout][INFO] 2026-04-09 20:41:33,716: [offline_bag_feeder] frame=438 lidar stamp=43.701000
+[rosout][INFO] 2026-04-09 20:41:33,759: [offline_bag_feeder] frame=439 lidar stamp=43.801000
+[rosout][INFO] 2026-04-09 20:41:33,802: [offline_bag_feeder] frame=440 lidar stamp=43.901000
+[rosout][INFO] 2026-04-09 20:41:33,845: [offline_bag_feeder] frame=441 lidar stamp=44.001000
+[rosout][INFO] 2026-04-09 20:41:33,881: [offline_bag_feeder] frame=442 lidar stamp=44.101000
+[rosout][INFO] 2026-04-09 20:41:33,925: [offline_bag_feeder] frame=443 lidar stamp=44.201000
+[rosout][INFO] 2026-04-09 20:41:33,979: [offline_bag_feeder] frame=444 lidar stamp=44.301000
+[rosout][INFO] 2026-04-09 20:41:34,022: [offline_bag_feeder] frame=445 lidar stamp=44.401000
+[rosout][INFO] 2026-04-09 20:41:34,066: [offline_bag_feeder] frame=446 lidar stamp=44.501000
+[rosout][INFO] 2026-04-09 20:41:34,110: [offline_bag_feeder] frame=447 lidar stamp=44.601000
+[rosout][INFO] 2026-04-09 20:41:34,155: [offline_bag_feeder] frame=448 lidar stamp=44.701000
+[rosout][INFO] 2026-04-09 20:41:34,198: [offline_bag_feeder] frame=449 lidar stamp=44.801000
+[rosout][INFO] 2026-04-09 20:41:34,238: [offline_bag_feeder] frame=450 lidar stamp=44.901000
+[rosout][INFO] 2026-04-09 20:41:34,282: [offline_bag_feeder] frame=451 lidar stamp=45.001000
+[rosout][INFO] 2026-04-09 20:41:34,321: [offline_bag_feeder] frame=452 lidar stamp=45.101000
+[rosout][INFO] 2026-04-09 20:41:34,364: [offline_bag_feeder] frame=453 lidar stamp=45.201000
+[rosout][INFO] 2026-04-09 20:41:34,408: [offline_bag_feeder] frame=454 lidar stamp=45.301000
+[rosout][INFO] 2026-04-09 20:41:34,445: [offline_bag_feeder] frame=455 lidar stamp=45.401000
+[rosout][INFO] 2026-04-09 20:41:34,493: [offline_bag_feeder] frame=456 lidar stamp=45.501000
+[rosout][INFO] 2026-04-09 20:41:34,535: [offline_bag_feeder] frame=457 lidar stamp=45.601000
+[rosout][INFO] 2026-04-09 20:41:34,571: [offline_bag_feeder] frame=458 lidar stamp=45.701000
+[rosout][INFO] 2026-04-09 20:41:34,608: [offline_bag_feeder] frame=459 lidar stamp=45.801000
+[rosout][INFO] 2026-04-09 20:41:34,650: [offline_bag_feeder] frame=460 lidar stamp=45.901000
+[rosout][INFO] 2026-04-09 20:41:34,687: [offline_bag_feeder] frame=461 lidar stamp=46.001000
+[rosout][INFO] 2026-04-09 20:41:34,734: [offline_bag_feeder] frame=462 lidar stamp=46.101000
+[rosout][INFO] 2026-04-09 20:41:34,783: [offline_bag_feeder] frame=463 lidar stamp=46.201000
+[rosout][INFO] 2026-04-09 20:41:34,830: [offline_bag_feeder] frame=464 lidar stamp=46.301000
+[rosout][INFO] 2026-04-09 20:41:34,873: [offline_bag_feeder] frame=465 lidar stamp=46.401000
+[rosout][INFO] 2026-04-09 20:41:34,917: [offline_bag_feeder] frame=466 lidar stamp=46.501000
+[rosout][INFO] 2026-04-09 20:41:34,961: [offline_bag_feeder] frame=467 lidar stamp=46.601000
+[rosout][INFO] 2026-04-09 20:41:35,004: [offline_bag_feeder] frame=468 lidar stamp=46.701000
+[rosout][INFO] 2026-04-09 20:41:35,047: [offline_bag_feeder] frame=469 lidar stamp=46.801000
+[rosout][INFO] 2026-04-09 20:41:35,086: [offline_bag_feeder] frame=470 lidar stamp=46.901000
+[rosout][INFO] 2026-04-09 20:41:35,135: [offline_bag_feeder] frame=471 lidar stamp=47.001000
+[rosout][INFO] 2026-04-09 20:41:35,176: [offline_bag_feeder] frame=472 lidar stamp=47.101000
+[rosout][INFO] 2026-04-09 20:41:35,225: [offline_bag_feeder] frame=473 lidar stamp=47.201000
+[rosout][INFO] 2026-04-09 20:41:35,268: [offline_bag_feeder] frame=474 lidar stamp=47.301000
+[rosout][INFO] 2026-04-09 20:41:35,311: [offline_bag_feeder] frame=475 lidar stamp=47.401000
+[rosout][INFO] 2026-04-09 20:41:35,347: [offline_bag_feeder] frame=476 lidar stamp=47.501000
+[rosout][INFO] 2026-04-09 20:41:35,385: [offline_bag_feeder] frame=477 lidar stamp=47.601000
+[rosout][INFO] 2026-04-09 20:41:35,433: [offline_bag_feeder] frame=478 lidar stamp=47.701000
+[rosout][INFO] 2026-04-09 20:41:35,476: [offline_bag_feeder] frame=479 lidar stamp=47.801000
+[rosout][INFO] 2026-04-09 20:41:35,521: [offline_bag_feeder] frame=480 lidar stamp=47.901000
+[rosout][INFO] 2026-04-09 20:41:35,570: [offline_bag_feeder] frame=481 lidar stamp=48.001000
+[rosout][INFO] 2026-04-09 20:41:35,619: [offline_bag_feeder] frame=482 lidar stamp=48.101000
+[rosout][INFO] 2026-04-09 20:41:35,657: [offline_bag_feeder] frame=483 lidar stamp=48.201000
+[rosout][INFO] 2026-04-09 20:41:35,700: [offline_bag_feeder] frame=484 lidar stamp=48.301000
+[rosout][INFO] 2026-04-09 20:41:35,740: [offline_bag_feeder] frame=485 lidar stamp=48.401000
+[rosout][INFO] 2026-04-09 20:41:35,778: [offline_bag_feeder] frame=486 lidar stamp=48.501000
+[rosout][INFO] 2026-04-09 20:41:35,816: [offline_bag_feeder] frame=487 lidar stamp=48.601000
+[rosout][INFO] 2026-04-09 20:41:35,859: [offline_bag_feeder] frame=488 lidar stamp=48.701000
+[rosout][INFO] 2026-04-09 20:41:35,903: [offline_bag_feeder] frame=489 lidar stamp=48.801000
+[rosout][INFO] 2026-04-09 20:41:35,946: [offline_bag_feeder] frame=490 lidar stamp=48.901000
+[rosout][INFO] 2026-04-09 20:41:35,982: [offline_bag_feeder] frame=491 lidar stamp=49.001000
+[rosout][INFO] 2026-04-09 20:41:36,026: [offline_bag_feeder] frame=492 lidar stamp=49.101000
+[rosout][INFO] 2026-04-09 20:41:36,064: [offline_bag_feeder] frame=493 lidar stamp=49.201000
+[rosout][INFO] 2026-04-09 20:41:36,108: [offline_bag_feeder] frame=494 lidar stamp=49.301000
+[rosout][INFO] 2026-04-09 20:41:36,144: [offline_bag_feeder] frame=495 lidar stamp=49.401000
+[rosout][INFO] 2026-04-09 20:41:36,188: [offline_bag_feeder] frame=496 lidar stamp=49.501000
+[rosout][INFO] 2026-04-09 20:41:36,231: [offline_bag_feeder] frame=497 lidar stamp=49.601000
+[rosout][INFO] 2026-04-09 20:41:36,275: [offline_bag_feeder] frame=498 lidar stamp=49.701000
+[rosout][INFO] 2026-04-09 20:41:36,320: [offline_bag_feeder] frame=499 lidar stamp=49.801000
+[rosout][INFO] 2026-04-09 20:41:36,358: [offline_bag_feeder] frame=500 lidar stamp=49.901000
+[rosout][INFO] 2026-04-09 20:41:36,401: [offline_bag_feeder] frame=501 lidar stamp=50.001000
+[rosout][INFO] 2026-04-09 20:41:36,446: [offline_bag_feeder] frame=502 lidar stamp=50.101000
+[rosout][INFO] 2026-04-09 20:41:36,490: [offline_bag_feeder] frame=503 lidar stamp=50.201000
+[rosout][INFO] 2026-04-09 20:41:36,539: [offline_bag_feeder] frame=504 lidar stamp=50.301000
+[rosout][INFO] 2026-04-09 20:41:36,583: [offline_bag_feeder] frame=505 lidar stamp=50.401000
+[rosout][INFO] 2026-04-09 20:41:36,626: [offline_bag_feeder] frame=506 lidar stamp=50.501000
+[rosout][INFO] 2026-04-09 20:41:36,669: [offline_bag_feeder] frame=507 lidar stamp=50.601000
+[rosout][INFO] 2026-04-09 20:41:36,713: [offline_bag_feeder] frame=508 lidar stamp=50.701000
+[rosout][INFO] 2026-04-09 20:41:36,760: [offline_bag_feeder] frame=509 lidar stamp=50.801000
+[rosout][INFO] 2026-04-09 20:41:36,807: [offline_bag_feeder] frame=510 lidar stamp=50.901000
+[rosout][INFO] 2026-04-09 20:41:36,844: [offline_bag_feeder] frame=511 lidar stamp=51.001000
+[rosout][INFO] 2026-04-09 20:41:36,893: [offline_bag_feeder] frame=512 lidar stamp=51.101000
+[rosout][INFO] 2026-04-09 20:41:36,935: [offline_bag_feeder] frame=513 lidar stamp=51.201000
+[rosout][INFO] 2026-04-09 20:41:36,986: [offline_bag_feeder] frame=514 lidar stamp=51.301000
+[rosout][INFO] 2026-04-09 20:41:37,028: [offline_bag_feeder] frame=515 lidar stamp=51.401000
+[rosout][INFO] 2026-04-09 20:41:37,072: [offline_bag_feeder] frame=516 lidar stamp=51.501000
+[rosout][INFO] 2026-04-09 20:41:37,113: [offline_bag_feeder] frame=517 lidar stamp=51.601000
+[rosout][INFO] 2026-04-09 20:41:37,154: [offline_bag_feeder] frame=518 lidar stamp=51.701000
+[rosout][INFO] 2026-04-09 20:41:37,196: [offline_bag_feeder] frame=519 lidar stamp=51.801000
+[rosout][INFO] 2026-04-09 20:41:37,234: [offline_bag_feeder] frame=520 lidar stamp=51.901000
+[rosout][INFO] 2026-04-09 20:41:37,278: [offline_bag_feeder] frame=521 lidar stamp=52.001000
+[rosout][INFO] 2026-04-09 20:41:37,321: [offline_bag_feeder] frame=522 lidar stamp=52.101000
+[rosout][INFO] 2026-04-09 20:41:37,365: [offline_bag_feeder] frame=523 lidar stamp=52.201000
+[rosout][INFO] 2026-04-09 20:41:37,403: [offline_bag_feeder] frame=524 lidar stamp=52.301000
+[rosout][INFO] 2026-04-09 20:41:37,448: [offline_bag_feeder] frame=525 lidar stamp=52.401000
+[rosout][INFO] 2026-04-09 20:41:37,485: [offline_bag_feeder] frame=526 lidar stamp=52.501000
+[rosout][INFO] 2026-04-09 20:41:37,529: [offline_bag_feeder] frame=527 lidar stamp=52.601000
+[rosout][INFO] 2026-04-09 20:41:37,603: [offline_bag_feeder] frame=528 lidar stamp=52.701000
+[rosout][INFO] 2026-04-09 20:41:37,647: [offline_bag_feeder] frame=529 lidar stamp=52.801000
+[rosout][INFO] 2026-04-09 20:41:37,690: [offline_bag_feeder] frame=530 lidar stamp=52.901000
+[rosout][INFO] 2026-04-09 20:41:37,739: [offline_bag_feeder] frame=531 lidar stamp=53.001000
+[rosout][INFO] 2026-04-09 20:41:37,783: [offline_bag_feeder] frame=532 lidar stamp=53.101000
+[rosout][INFO] 2026-04-09 20:41:37,822: [offline_bag_feeder] frame=533 lidar stamp=53.201000
+[rosout][INFO] 2026-04-09 20:41:37,864: [offline_bag_feeder] frame=534 lidar stamp=53.301000
+[rosout][INFO] 2026-04-09 20:41:37,908: [offline_bag_feeder] frame=535 lidar stamp=53.401000
+[rosout][INFO] 2026-04-09 20:41:37,952: [offline_bag_feeder] frame=536 lidar stamp=53.501000
+[rosout][INFO] 2026-04-09 20:41:37,995: [offline_bag_feeder] frame=537 lidar stamp=53.601000
+[rosout][INFO] 2026-04-09 20:41:38,039: [offline_bag_feeder] frame=538 lidar stamp=53.701000
+[rosout][INFO] 2026-04-09 20:41:38,082: [offline_bag_feeder] frame=539 lidar stamp=53.801000
+[rosout][INFO] 2026-04-09 20:41:38,124: [offline_bag_feeder] frame=540 lidar stamp=53.901000
+[rosout][INFO] 2026-04-09 20:41:38,161: [offline_bag_feeder] frame=541 lidar stamp=54.001000
+[rosout][INFO] 2026-04-09 20:41:38,200: [offline_bag_feeder] frame=542 lidar stamp=54.101000
+[rosout][INFO] 2026-04-09 20:41:38,244: [offline_bag_feeder] frame=543 lidar stamp=54.201000
+[rosout][INFO] 2026-04-09 20:41:38,282: [offline_bag_feeder] frame=544 lidar stamp=54.301000
+[rosout][INFO] 2026-04-09 20:41:38,321: [offline_bag_feeder] frame=545 lidar stamp=54.401000
+[rosout][INFO] 2026-04-09 20:41:38,359: [offline_bag_feeder] frame=546 lidar stamp=54.501000
+[rosout][INFO] 2026-04-09 20:41:38,396: [offline_bag_feeder] frame=547 lidar stamp=54.601000
+[rosout][INFO] 2026-04-09 20:41:38,433: [offline_bag_feeder] frame=548 lidar stamp=54.701000
+[rosout][INFO] 2026-04-09 20:41:38,472: [offline_bag_feeder] frame=549 lidar stamp=54.801000
+[rosout][INFO] 2026-04-09 20:41:38,531: [offline_bag_feeder] frame=550 lidar stamp=54.901000
+[rosout][INFO] 2026-04-09 20:41:38,573: [offline_bag_feeder] frame=551 lidar stamp=55.001000
+[rosout][INFO] 2026-04-09 20:41:38,620: [offline_bag_feeder] frame=552 lidar stamp=55.101000
+[rosout][INFO] 2026-04-09 20:41:38,663: [offline_bag_feeder] frame=553 lidar stamp=55.201000
+[rosout][INFO] 2026-04-09 20:41:38,700: [offline_bag_feeder] frame=554 lidar stamp=55.301000
+[rosout][INFO] 2026-04-09 20:41:38,737: [offline_bag_feeder] frame=555 lidar stamp=55.401000
+[rosout][INFO] 2026-04-09 20:41:38,773: [offline_bag_feeder] frame=556 lidar stamp=55.501000
+[rosout][INFO] 2026-04-09 20:41:38,808: [offline_bag_feeder] frame=557 lidar stamp=55.601000
+[rosout][INFO] 2026-04-09 20:41:38,851: [offline_bag_feeder] frame=558 lidar stamp=55.701000
+[rosout][INFO] 2026-04-09 20:41:38,887: [offline_bag_feeder] frame=559 lidar stamp=55.801000
+[rosout][INFO] 2026-04-09 20:41:38,925: [offline_bag_feeder] frame=560 lidar stamp=55.901000
+[rosout][INFO] 2026-04-09 20:41:38,968: [offline_bag_feeder] frame=561 lidar stamp=56.001000
+[rosout][INFO] 2026-04-09 20:41:39,008: [offline_bag_feeder] frame=562 lidar stamp=56.101000
+[rosout][INFO] 2026-04-09 20:41:39,051: [offline_bag_feeder] frame=563 lidar stamp=56.201000
+[rosout][INFO] 2026-04-09 20:41:39,094: [offline_bag_feeder] frame=564 lidar stamp=56.301000
+[rosout][INFO] 2026-04-09 20:41:39,138: [offline_bag_feeder] frame=565 lidar stamp=56.401000
+[rosout][INFO] 2026-04-09 20:41:39,175: [offline_bag_feeder] frame=566 lidar stamp=56.501000
+[rosout][INFO] 2026-04-09 20:41:39,221: [offline_bag_feeder] frame=567 lidar stamp=56.601000
+[rosout][INFO] 2026-04-09 20:41:39,258: [offline_bag_feeder] frame=568 lidar stamp=56.701000
+[rosout][INFO] 2026-04-09 20:41:39,301: [offline_bag_feeder] frame=569 lidar stamp=56.801000
+[rosout][INFO] 2026-04-09 20:41:39,342: [offline_bag_feeder] frame=570 lidar stamp=56.901000
+[rosout][INFO] 2026-04-09 20:41:39,391: [offline_bag_feeder] frame=571 lidar stamp=57.001000
+[rosout][INFO] 2026-04-09 20:41:39,440: [offline_bag_feeder] frame=572 lidar stamp=57.101000
+[rosout][INFO] 2026-04-09 20:41:39,489: [offline_bag_feeder] frame=573 lidar stamp=57.201000
+[rosout][INFO] 2026-04-09 20:41:39,544: [offline_bag_feeder] frame=574 lidar stamp=57.301000
+[rosout][INFO] 2026-04-09 20:41:39,587: [offline_bag_feeder] frame=575 lidar stamp=57.401000
+[rosout][INFO] 2026-04-09 20:41:39,627: [offline_bag_feeder] frame=576 lidar stamp=57.501000
+[rosout][INFO] 2026-04-09 20:41:39,666: [offline_bag_feeder] frame=577 lidar stamp=57.601000
+[rosout][INFO] 2026-04-09 20:41:39,710: [offline_bag_feeder] frame=578 lidar stamp=57.701000
+[rosout][INFO] 2026-04-09 20:41:39,757: [offline_bag_feeder] frame=579 lidar stamp=57.801000
+[rosout][INFO] 2026-04-09 20:41:39,800: [offline_bag_feeder] frame=580 lidar stamp=57.901000
+[rosout][INFO] 2026-04-09 20:41:39,843: [offline_bag_feeder] frame=581 lidar stamp=58.001000
+[rosout][INFO] 2026-04-09 20:41:39,880: [offline_bag_feeder] frame=582 lidar stamp=58.101000
+[rosout][INFO] 2026-04-09 20:41:39,923: [offline_bag_feeder] frame=583 lidar stamp=58.201000
+[rosout][INFO] 2026-04-09 20:41:39,966: [offline_bag_feeder] frame=584 lidar stamp=58.301000
+[rosout][INFO] 2026-04-09 20:41:40,008: [offline_bag_feeder] frame=585 lidar stamp=58.401000
+[rosout][INFO] 2026-04-09 20:41:40,051: [offline_bag_feeder] frame=586 lidar stamp=58.501000
+[rosout][INFO] 2026-04-09 20:41:40,088: [offline_bag_feeder] frame=587 lidar stamp=58.601000
+[rosout][INFO] 2026-04-09 20:41:40,131: [offline_bag_feeder] frame=588 lidar stamp=58.701000
+[rosout][INFO] 2026-04-09 20:41:40,180: [offline_bag_feeder] frame=589 lidar stamp=58.801000
+[rosout][INFO] 2026-04-09 20:41:40,223: [offline_bag_feeder] frame=590 lidar stamp=58.901000
+[rosout][INFO] 2026-04-09 20:41:40,266: [offline_bag_feeder] frame=591 lidar stamp=59.001000
+[rosout][INFO] 2026-04-09 20:41:40,307: [offline_bag_feeder] frame=592 lidar stamp=59.101000
+[rosout][INFO] 2026-04-09 20:41:40,351: [offline_bag_feeder] frame=593 lidar stamp=59.201000
+[rosout][INFO] 2026-04-09 20:41:40,394: [offline_bag_feeder] frame=594 lidar stamp=59.301000
+[rosout][INFO] 2026-04-09 20:41:40,438: [offline_bag_feeder] frame=595 lidar stamp=59.401000
+[rosout][INFO] 2026-04-09 20:41:40,480: [offline_bag_feeder] frame=596 lidar stamp=59.501000
+[rosout][INFO] 2026-04-09 20:41:40,522: [offline_bag_feeder] frame=597 lidar stamp=59.601000
+[rosout][INFO] 2026-04-09 20:41:40,560: [offline_bag_feeder] frame=598 lidar stamp=59.701000
+[rosout][INFO] 2026-04-09 20:41:40,598: [offline_bag_feeder] frame=599 lidar stamp=59.801000
+[rosout][INFO] 2026-04-09 20:41:40,642: [offline_bag_feeder] frame=600 lidar stamp=59.901000
+[rosout][INFO] 2026-04-09 20:41:40,684: [offline_bag_feeder] frame=601 lidar stamp=60.001000
+[rosout][INFO] 2026-04-09 20:41:40,726: [offline_bag_feeder] frame=602 lidar stamp=60.101000
+[rosout][INFO] 2026-04-09 20:41:40,764: [offline_bag_feeder] frame=603 lidar stamp=60.201000
+[rosout][INFO] 2026-04-09 20:41:40,808: [offline_bag_feeder] frame=604 lidar stamp=60.301000
+[rosout][INFO] 2026-04-09 20:41:40,846: [offline_bag_feeder] frame=605 lidar stamp=60.401000
+[rosout][INFO] 2026-04-09 20:41:40,882: [offline_bag_feeder] frame=606 lidar stamp=60.501000
+[rosout][INFO] 2026-04-09 20:41:40,927: [offline_bag_feeder] frame=607 lidar stamp=60.601000
+[rosout][INFO] 2026-04-09 20:41:40,964: [offline_bag_feeder] frame=608 lidar stamp=60.701000
+[rosout][INFO] 2026-04-09 20:41:41,013: [offline_bag_feeder] frame=609 lidar stamp=60.801000
+[rosout][INFO] 2026-04-09 20:41:41,056: [offline_bag_feeder] frame=610 lidar stamp=60.901000
+[rosout][INFO] 2026-04-09 20:41:41,099: [offline_bag_feeder] frame=611 lidar stamp=61.001000
+[rosout][INFO] 2026-04-09 20:41:41,136: [offline_bag_feeder] frame=612 lidar stamp=61.101000
+[rosout][INFO] 2026-04-09 20:41:41,179: [offline_bag_feeder] frame=613 lidar stamp=61.201000
+[rosout][INFO] 2026-04-09 20:41:41,220: [offline_bag_feeder] frame=614 lidar stamp=61.301000
+[rosout][INFO] 2026-04-09 20:41:41,263: [offline_bag_feeder] frame=615 lidar stamp=61.401000
+[rosout][INFO] 2026-04-09 20:41:41,299: [offline_bag_feeder] frame=616 lidar stamp=61.501000
+[rosout][INFO] 2026-04-09 20:41:41,342: [offline_bag_feeder] frame=617 lidar stamp=61.601000
+[rosout][INFO] 2026-04-09 20:41:41,385: [offline_bag_feeder] frame=618 lidar stamp=61.701000
+[rosout][INFO] 2026-04-09 20:41:41,429: [offline_bag_feeder] frame=619 lidar stamp=61.801000
+[rosout][INFO] 2026-04-09 20:41:41,466: [offline_bag_feeder] frame=620 lidar stamp=61.901000
+[rosout][INFO] 2026-04-09 20:41:41,522: [offline_bag_feeder] frame=621 lidar stamp=62.001000
+[rosout][INFO] 2026-04-09 20:41:41,571: [offline_bag_feeder] frame=622 lidar stamp=62.101000
+[rosout][INFO] 2026-04-09 20:41:41,610: [offline_bag_feeder] frame=623 lidar stamp=62.201000
+[rosout][INFO] 2026-04-09 20:41:41,654: [offline_bag_feeder] frame=624 lidar stamp=62.301000
+[rosout][INFO] 2026-04-09 20:41:41,696: [offline_bag_feeder] frame=625 lidar stamp=62.401000
+[rosout][INFO] 2026-04-09 20:41:41,736: [offline_bag_feeder] frame=626 lidar stamp=62.501000
+[rosout][INFO] 2026-04-09 20:41:41,779: [offline_bag_feeder] frame=627 lidar stamp=62.601000
+[rosout][INFO] 2026-04-09 20:41:41,822: [offline_bag_feeder] frame=628 lidar stamp=62.701000
+[rosout][INFO] 2026-04-09 20:41:41,860: [offline_bag_feeder] frame=629 lidar stamp=62.801000
+[rosout][INFO] 2026-04-09 20:41:41,904: [offline_bag_feeder] frame=630 lidar stamp=62.901000
+[rosout][INFO] 2026-04-09 20:41:41,941: [offline_bag_feeder] frame=631 lidar stamp=63.001000
+[rosout][INFO] 2026-04-09 20:41:41,989: [offline_bag_feeder] frame=632 lidar stamp=63.101000
+[rosout][INFO] 2026-04-09 20:41:42,033: [offline_bag_feeder] frame=633 lidar stamp=63.201000
+[rosout][INFO] 2026-04-09 20:41:42,076: [offline_bag_feeder] frame=634 lidar stamp=63.301000
+[rosout][INFO] 2026-04-09 20:41:42,121: [offline_bag_feeder] frame=635 lidar stamp=63.401000
+[rosout][INFO] 2026-04-09 20:41:42,170: [offline_bag_feeder] frame=636 lidar stamp=63.501000
+[rosout][INFO] 2026-04-09 20:41:42,219: [offline_bag_feeder] frame=637 lidar stamp=63.601000
+[rosout][INFO] 2026-04-09 20:41:42,263: [offline_bag_feeder] frame=638 lidar stamp=63.701000
+[rosout][INFO] 2026-04-09 20:41:42,312: [offline_bag_feeder] frame=639 lidar stamp=63.801000
+[rosout][INFO] 2026-04-09 20:41:42,355: [offline_bag_feeder] frame=640 lidar stamp=63.901000
+[rosout][INFO] 2026-04-09 20:41:42,394: [offline_bag_feeder] frame=641 lidar stamp=64.001000
+[rosout][INFO] 2026-04-09 20:41:42,442: [offline_bag_feeder] frame=642 lidar stamp=64.101000
+[rosout][INFO] 2026-04-09 20:41:42,480: [offline_bag_feeder] frame=643 lidar stamp=64.201000
+[rosout][INFO] 2026-04-09 20:41:42,523: [offline_bag_feeder] frame=644 lidar stamp=64.301000
+[rosout][INFO] 2026-04-09 20:41:42,564: [offline_bag_feeder] frame=645 lidar stamp=64.401000
+[rosout][INFO] 2026-04-09 20:41:42,602: [offline_bag_feeder] frame=646 lidar stamp=64.501000
+[rosout][INFO] 2026-04-09 20:41:42,645: [offline_bag_feeder] frame=647 lidar stamp=64.601000
+[rosout][INFO] 2026-04-09 20:41:42,688: [offline_bag_feeder] frame=648 lidar stamp=64.701000
+[rosout][INFO] 2026-04-09 20:41:42,731: [offline_bag_feeder] frame=649 lidar stamp=64.801000
+[rosout][INFO] 2026-04-09 20:41:42,773: [offline_bag_feeder] frame=650 lidar stamp=64.901000
+[rosout][INFO] 2026-04-09 20:41:42,817: [offline_bag_feeder] frame=651 lidar stamp=65.001000
+[rosout][INFO] 2026-04-09 20:41:42,859: [offline_bag_feeder] frame=652 lidar stamp=65.101000
+[rosout][INFO] 2026-04-09 20:41:42,904: [offline_bag_feeder] frame=653 lidar stamp=65.201000
+[rosout][INFO] 2026-04-09 20:41:42,955: [offline_bag_feeder] frame=654 lidar stamp=65.301000
+[rosout][INFO] 2026-04-09 20:41:43,020: [offline_bag_feeder] frame=655 lidar stamp=65.401000
+[rosout][INFO] 2026-04-09 20:41:43,070: [offline_bag_feeder] frame=656 lidar stamp=65.501000
+[rosout][INFO] 2026-04-09 20:41:43,115: [offline_bag_feeder] frame=657 lidar stamp=65.601000
+[rosout][INFO] 2026-04-09 20:41:43,162: [offline_bag_feeder] frame=658 lidar stamp=65.701000
+[rosout][INFO] 2026-04-09 20:41:43,213: [offline_bag_feeder] frame=659 lidar stamp=65.801000
+[rosout][INFO] 2026-04-09 20:41:43,267: [offline_bag_feeder] frame=660 lidar stamp=65.901000
+[rosout][INFO] 2026-04-09 20:41:43,320: [offline_bag_feeder] frame=661 lidar stamp=66.001000
+[rosout][INFO] 2026-04-09 20:41:43,370: [offline_bag_feeder] frame=662 lidar stamp=66.101000
+[rosout][INFO] 2026-04-09 20:41:43,415: [offline_bag_feeder] frame=663 lidar stamp=66.201000
+[rosout][INFO] 2026-04-09 20:41:43,462: [offline_bag_feeder] frame=664 lidar stamp=66.301000
+[rosout][INFO] 2026-04-09 20:41:43,517: [offline_bag_feeder] frame=665 lidar stamp=66.401000
+[rosout][INFO] 2026-04-09 20:41:43,565: [offline_bag_feeder] frame=666 lidar stamp=66.501000
+[rosout][INFO] 2026-04-09 20:41:43,618: [offline_bag_feeder] frame=667 lidar stamp=66.601000
+[rosout][INFO] 2026-04-09 20:41:43,662: [offline_bag_feeder] frame=668 lidar stamp=66.701000
+[rosout][INFO] 2026-04-09 20:41:43,705: [offline_bag_feeder] frame=669 lidar stamp=66.801000
+[rosout][INFO] 2026-04-09 20:41:43,747: [offline_bag_feeder] frame=670 lidar stamp=66.901000
+[rosout][INFO] 2026-04-09 20:41:43,795: [offline_bag_feeder] frame=671 lidar stamp=67.001000
+[rosout][INFO] 2026-04-09 20:41:43,846: [offline_bag_feeder] frame=672 lidar stamp=67.101000
+[rosout][INFO] 2026-04-09 20:41:43,898: [offline_bag_feeder] frame=673 lidar stamp=67.201000
+[rosout][INFO] 2026-04-09 20:41:43,955: [offline_bag_feeder] frame=674 lidar stamp=67.301000
+[rosout][INFO] 2026-04-09 20:41:44,002: [offline_bag_feeder] frame=675 lidar stamp=67.401000
+[rosout][INFO] 2026-04-09 20:41:44,054: [offline_bag_feeder] frame=676 lidar stamp=67.501000
+[rosout][INFO] 2026-04-09 20:41:44,108: [offline_bag_feeder] frame=677 lidar stamp=67.601000
+[rosout][INFO] 2026-04-09 20:41:44,153: [offline_bag_feeder] frame=678 lidar stamp=67.701000
+[rosout][INFO] 2026-04-09 20:41:44,196: [offline_bag_feeder] frame=679 lidar stamp=67.801000
+[rosout][INFO] 2026-04-09 20:41:44,239: [offline_bag_feeder] frame=680 lidar stamp=67.901000
+[rosout][INFO] 2026-04-09 20:41:44,288: [offline_bag_feeder] frame=681 lidar stamp=68.001000
+[rosout][INFO] 2026-04-09 20:41:44,337: [offline_bag_feeder] frame=682 lidar stamp=68.101000
+[rosout][INFO] 2026-04-09 20:41:44,388: [offline_bag_feeder] frame=683 lidar stamp=68.201000
+[rosout][INFO] 2026-04-09 20:41:44,440: [offline_bag_feeder] frame=684 lidar stamp=68.301000
+[rosout][INFO] 2026-04-09 20:41:44,483: [offline_bag_feeder] frame=685 lidar stamp=68.401000
+[rosout][INFO] 2026-04-09 20:41:44,532: [offline_bag_feeder] frame=686 lidar stamp=68.501000
+[rosout][INFO] 2026-04-09 20:41:44,582: [offline_bag_feeder] frame=687 lidar stamp=68.601000
+[rosout][INFO] 2026-04-09 20:41:44,628: [offline_bag_feeder] frame=688 lidar stamp=68.701000
+[rosout][INFO] 2026-04-09 20:41:44,678: [offline_bag_feeder] frame=689 lidar stamp=68.801000
+[rosout][INFO] 2026-04-09 20:41:44,738: [offline_bag_feeder] frame=690 lidar stamp=68.901000
+[rosout][INFO] 2026-04-09 20:41:44,792: [offline_bag_feeder] frame=691 lidar stamp=69.001000
+[rosout][INFO] 2026-04-09 20:41:44,841: [offline_bag_feeder] frame=692 lidar stamp=69.101000
+[rosout][INFO] 2026-04-09 20:41:44,882: [offline_bag_feeder] frame=693 lidar stamp=69.201000
+[rosout][INFO] 2026-04-09 20:41:44,937: [offline_bag_feeder] frame=694 lidar stamp=69.301000
+[rosout][INFO] 2026-04-09 20:41:44,978: [offline_bag_feeder] frame=695 lidar stamp=69.401000
+[rosout][INFO] 2026-04-09 20:41:45,026: [offline_bag_feeder] frame=696 lidar stamp=69.501000
+[rosout][INFO] 2026-04-09 20:41:45,074: [offline_bag_feeder] frame=697 lidar stamp=69.601000
+[rosout][INFO] 2026-04-09 20:41:45,124: [offline_bag_feeder] frame=698 lidar stamp=69.701000
+[rosout][INFO] 2026-04-09 20:41:45,172: [offline_bag_feeder] frame=699 lidar stamp=69.801000
+[rosout][INFO] 2026-04-09 20:41:45,222: [offline_bag_feeder] frame=700 lidar stamp=69.901000
+[rosout][INFO] 2026-04-09 20:41:45,275: [offline_bag_feeder] frame=701 lidar stamp=70.001000
+[rosout][INFO] 2026-04-09 20:41:45,319: [offline_bag_feeder] frame=702 lidar stamp=70.101000
+[rosout][INFO] 2026-04-09 20:41:45,364: [offline_bag_feeder] frame=703 lidar stamp=70.201000
+[rosout][INFO] 2026-04-09 20:41:45,402: [offline_bag_feeder] frame=704 lidar stamp=70.301000
+[rosout][INFO] 2026-04-09 20:41:45,440: [offline_bag_feeder] frame=705 lidar stamp=70.401000
+[rosout][INFO] 2026-04-09 20:41:45,485: [offline_bag_feeder] frame=706 lidar stamp=70.501000
+[rosout][INFO] 2026-04-09 20:41:45,533: [offline_bag_feeder] frame=707 lidar stamp=70.601000
+[rosout][INFO] 2026-04-09 20:41:45,571: [offline_bag_feeder] frame=708 lidar stamp=70.701000
+[rosout][INFO] 2026-04-09 20:41:45,615: [offline_bag_feeder] frame=709 lidar stamp=70.801000
+[rosout][INFO] 2026-04-09 20:41:45,665: [offline_bag_feeder] frame=710 lidar stamp=70.901000
+[rosout][INFO] 2026-04-09 20:41:45,719: [offline_bag_feeder] frame=711 lidar stamp=71.001000
+[rosout][INFO] 2026-04-09 20:41:45,763: [offline_bag_feeder] frame=712 lidar stamp=71.101000
+[rosout][INFO] 2026-04-09 20:41:45,807: [offline_bag_feeder] frame=713 lidar stamp=71.201000
+[rosout][INFO] 2026-04-09 20:41:45,861: [offline_bag_feeder] frame=714 lidar stamp=71.301000
+[rosout][INFO] 2026-04-09 20:41:45,900: [offline_bag_feeder] frame=715 lidar stamp=71.401000
+[rosout][INFO] 2026-04-09 20:41:45,948: [offline_bag_feeder] frame=716 lidar stamp=71.501000
+[rosout][INFO] 2026-04-09 20:41:45,992: [offline_bag_feeder] frame=717 lidar stamp=71.601000
+[rosout][INFO] 2026-04-09 20:41:46,035: [offline_bag_feeder] frame=718 lidar stamp=71.701000
+[rosout][INFO] 2026-04-09 20:41:46,078: [offline_bag_feeder] frame=719 lidar stamp=71.801000
+[rosout][INFO] 2026-04-09 20:41:46,124: [offline_bag_feeder] frame=720 lidar stamp=71.901000
+[rosout][INFO] 2026-04-09 20:41:46,166: [offline_bag_feeder] frame=721 lidar stamp=72.001000
+[rosout][INFO] 2026-04-09 20:41:46,216: [offline_bag_feeder] frame=722 lidar stamp=72.101000
+[rosout][INFO] 2026-04-09 20:41:46,261: [offline_bag_feeder] frame=723 lidar stamp=72.201000
+[rosout][INFO] 2026-04-09 20:41:46,304: [offline_bag_feeder] frame=724 lidar stamp=72.301000
+[rosout][INFO] 2026-04-09 20:41:46,349: [offline_bag_feeder] frame=725 lidar stamp=72.401000
+[rosout][INFO] 2026-04-09 20:41:46,392: [offline_bag_feeder] frame=726 lidar stamp=72.501000
+[rosout][INFO] 2026-04-09 20:41:46,436: [offline_bag_feeder] frame=727 lidar stamp=72.601000
+[rosout][INFO] 2026-04-09 20:41:46,480: [offline_bag_feeder] frame=728 lidar stamp=72.701000
+[rosout][INFO] 2026-04-09 20:41:46,539: [offline_bag_feeder] frame=729 lidar stamp=72.801000
+[rosout][INFO] 2026-04-09 20:41:46,595: [offline_bag_feeder] frame=730 lidar stamp=72.901000
+[rosout][INFO] 2026-04-09 20:41:46,655: [offline_bag_feeder] frame=731 lidar stamp=73.001000
+[rosout][INFO] 2026-04-09 20:41:46,704: [offline_bag_feeder] frame=732 lidar stamp=73.101000
+[rosout][INFO] 2026-04-09 20:41:46,748: [offline_bag_feeder] frame=733 lidar stamp=73.201000
+[rosout][INFO] 2026-04-09 20:41:46,792: [offline_bag_feeder] frame=734 lidar stamp=73.301000
+[rosout][INFO] 2026-04-09 20:41:46,838: [offline_bag_feeder] frame=735 lidar stamp=73.401000
+[rosout][INFO] 2026-04-09 20:41:46,883: [offline_bag_feeder] frame=736 lidar stamp=73.501000
+[rosout][INFO] 2026-04-09 20:41:46,928: [offline_bag_feeder] frame=737 lidar stamp=73.601000
+[rosout][INFO] 2026-04-09 20:41:46,971: [offline_bag_feeder] frame=738 lidar stamp=73.701000
+[rosout][INFO] 2026-04-09 20:41:47,021: [offline_bag_feeder] frame=739 lidar stamp=73.801000
+[rosout][INFO] 2026-04-09 20:41:47,076: [offline_bag_feeder] frame=740 lidar stamp=73.901000
+[rosout][INFO] 2026-04-09 20:41:47,126: [offline_bag_feeder] frame=741 lidar stamp=74.001000
+[rosout][INFO] 2026-04-09 20:41:47,174: [offline_bag_feeder] frame=742 lidar stamp=74.101000
+[rosout][INFO] 2026-04-09 20:41:47,230: [offline_bag_feeder] frame=743 lidar stamp=74.201000
+[rosout][INFO] 2026-04-09 20:41:47,284: [offline_bag_feeder] frame=744 lidar stamp=74.301000
+[rosout][INFO] 2026-04-09 20:41:47,329: [offline_bag_feeder] frame=745 lidar stamp=74.401000
+[rosout][INFO] 2026-04-09 20:41:47,373: [offline_bag_feeder] frame=746 lidar stamp=74.501000
+[rosout][INFO] 2026-04-09 20:41:47,418: [offline_bag_feeder] frame=747 lidar stamp=74.601000
+[rosout][INFO] 2026-04-09 20:41:47,469: [offline_bag_feeder] frame=748 lidar stamp=74.701000
+[rosout][INFO] 2026-04-09 20:41:47,513: [offline_bag_feeder] frame=749 lidar stamp=74.801000
+[rosout][INFO] 2026-04-09 20:41:47,557: [offline_bag_feeder] frame=750 lidar stamp=74.901000
+[rosout][INFO] 2026-04-09 20:41:47,605: [offline_bag_feeder] frame=751 lidar stamp=75.001000
+[rosout][INFO] 2026-04-09 20:41:47,655: [offline_bag_feeder] frame=752 lidar stamp=75.101000
+[rosout][INFO] 2026-04-09 20:41:47,697: [offline_bag_feeder] frame=753 lidar stamp=75.201000
+[rosout][INFO] 2026-04-09 20:41:47,744: [offline_bag_feeder] frame=754 lidar stamp=75.301000
+[rosout][INFO] 2026-04-09 20:41:47,787: [offline_bag_feeder] frame=755 lidar stamp=75.401000
+[rosout][INFO] 2026-04-09 20:41:47,839: [offline_bag_feeder] frame=756 lidar stamp=75.501000
+[rosout][INFO] 2026-04-09 20:41:47,886: [offline_bag_feeder] frame=757 lidar stamp=75.601000
+[rosout][INFO] 2026-04-09 20:41:47,935: [offline_bag_feeder] frame=758 lidar stamp=75.701000
+[rosout][INFO] 2026-04-09 20:41:47,978: [offline_bag_feeder] frame=759 lidar stamp=75.801000
+[rosout][INFO] 2026-04-09 20:41:48,022: [offline_bag_feeder] frame=760 lidar stamp=75.901000
+[rosout][INFO] 2026-04-09 20:41:48,065: [offline_bag_feeder] frame=761 lidar stamp=76.001000
+[rosout][INFO] 2026-04-09 20:41:48,114: [offline_bag_feeder] frame=762 lidar stamp=76.101000
+[rosout][INFO] 2026-04-09 20:41:48,163: [offline_bag_feeder] frame=763 lidar stamp=76.201000
+[rosout][INFO] 2026-04-09 20:41:48,212: [offline_bag_feeder] frame=764 lidar stamp=76.301000
+[rosout][INFO] 2026-04-09 20:41:48,254: [offline_bag_feeder] frame=765 lidar stamp=76.401000
+[rosout][INFO] 2026-04-09 20:41:48,301: [offline_bag_feeder] frame=766 lidar stamp=76.501000
+[rosout][INFO] 2026-04-09 20:41:48,349: [offline_bag_feeder] frame=767 lidar stamp=76.601000
+[rosout][INFO] 2026-04-09 20:41:48,398: [offline_bag_feeder] frame=768 lidar stamp=76.701000
+[rosout][INFO] 2026-04-09 20:41:48,446: [offline_bag_feeder] frame=769 lidar stamp=76.801000
+[rosout][INFO] 2026-04-09 20:41:48,489: [offline_bag_feeder] frame=770 lidar stamp=76.901000
+[rosout][INFO] 2026-04-09 20:41:48,537: [offline_bag_feeder] frame=771 lidar stamp=77.001000
+[rosout][INFO] 2026-04-09 20:41:48,580: [offline_bag_feeder] frame=772 lidar stamp=77.101000
+[rosout][INFO] 2026-04-09 20:41:48,622: [offline_bag_feeder] frame=773 lidar stamp=77.201000
+[rosout][INFO] 2026-04-09 20:41:48,671: [offline_bag_feeder] frame=774 lidar stamp=77.301000
+[rosout][INFO] 2026-04-09 20:41:48,721: [offline_bag_feeder] frame=775 lidar stamp=77.401000
+[rosout][INFO] 2026-04-09 20:41:48,763: [offline_bag_feeder] frame=776 lidar stamp=77.501000
+[rosout][INFO] 2026-04-09 20:41:48,806: [offline_bag_feeder] frame=777 lidar stamp=77.601000
+[rosout][INFO] 2026-04-09 20:41:48,855: [offline_bag_feeder] frame=778 lidar stamp=77.701000
+[rosout][INFO] 2026-04-09 20:41:48,902: [offline_bag_feeder] frame=779 lidar stamp=77.801000
+[rosout][INFO] 2026-04-09 20:41:48,951: [offline_bag_feeder] frame=780 lidar stamp=77.901000
+[rosout][INFO] 2026-04-09 20:41:48,994: [offline_bag_feeder] frame=781 lidar stamp=78.001000
+[rosout][INFO] 2026-04-09 20:41:49,038: [offline_bag_feeder] frame=782 lidar stamp=78.101000
+[rosout][INFO] 2026-04-09 20:41:49,082: [offline_bag_feeder] frame=783 lidar stamp=78.201000
+[rosout][INFO] 2026-04-09 20:41:49,126: [offline_bag_feeder] frame=784 lidar stamp=78.301000
+[rosout][INFO] 2026-04-09 20:41:49,175: [offline_bag_feeder] frame=785 lidar stamp=78.401000
+[rosout][INFO] 2026-04-09 20:41:49,222: [offline_bag_feeder] frame=786 lidar stamp=78.501000
+[rosout][INFO] 2026-04-09 20:41:49,270: [offline_bag_feeder] frame=787 lidar stamp=78.601000
+[rosout][INFO] 2026-04-09 20:41:49,312: [offline_bag_feeder] frame=788 lidar stamp=78.701000
+[rosout][INFO] 2026-04-09 20:41:49,356: [offline_bag_feeder] frame=789 lidar stamp=78.801000
+[rosout][INFO] 2026-04-09 20:41:49,399: [offline_bag_feeder] frame=790 lidar stamp=78.901000
+[rosout][INFO] 2026-04-09 20:41:49,446: [offline_bag_feeder] frame=791 lidar stamp=79.001000
+[rosout][INFO] 2026-04-09 20:41:49,489: [offline_bag_feeder] frame=792 lidar stamp=79.101000
+[rosout][INFO] 2026-04-09 20:41:49,539: [offline_bag_feeder] frame=793 lidar stamp=79.201000
+[rosout][INFO] 2026-04-09 20:41:49,587: [offline_bag_feeder] frame=794 lidar stamp=79.301000
+[rosout][INFO] 2026-04-09 20:41:49,635: [offline_bag_feeder] frame=795 lidar stamp=79.401000
+[rosout][INFO] 2026-04-09 20:41:49,684: [offline_bag_feeder] frame=796 lidar stamp=79.501000
+[rosout][INFO] 2026-04-09 20:41:49,732: [offline_bag_feeder] frame=797 lidar stamp=79.601000
+[rosout][INFO] 2026-04-09 20:41:49,775: [offline_bag_feeder] frame=798 lidar stamp=79.701000
+[rosout][INFO] 2026-04-09 20:41:49,819: [offline_bag_feeder] frame=799 lidar stamp=79.801000
+[rosout][INFO] 2026-04-09 20:41:49,861: [offline_bag_feeder] frame=800 lidar stamp=79.901000
+[rosout][INFO] 2026-04-09 20:41:49,899: [offline_bag_feeder] frame=801 lidar stamp=80.001000
+[rosout][INFO] 2026-04-09 20:41:49,942: [offline_bag_feeder] frame=802 lidar stamp=80.101000
+[rosout][INFO] 2026-04-09 20:41:49,984: [offline_bag_feeder] frame=803 lidar stamp=80.201000
+[rosout][INFO] 2026-04-09 20:41:50,027: [offline_bag_feeder] frame=804 lidar stamp=80.301000
+[rosout][INFO] 2026-04-09 20:41:50,067: [offline_bag_feeder] frame=805 lidar stamp=80.401000
+[rosout][INFO] 2026-04-09 20:41:50,110: [offline_bag_feeder] frame=806 lidar stamp=80.501000
+[rosout][INFO] 2026-04-09 20:41:50,147: [offline_bag_feeder] frame=807 lidar stamp=80.601000
+[rosout][INFO] 2026-04-09 20:41:50,189: [offline_bag_feeder] frame=808 lidar stamp=80.701000
+[rosout][INFO] 2026-04-09 20:41:50,227: [offline_bag_feeder] frame=809 lidar stamp=80.801000
+[rosout][INFO] 2026-04-09 20:41:50,269: [offline_bag_feeder] frame=810 lidar stamp=80.901000
+[rosout][INFO] 2026-04-09 20:41:50,312: [offline_bag_feeder] frame=811 lidar stamp=81.001000
+[rosout][INFO] 2026-04-09 20:41:50,361: [offline_bag_feeder] frame=812 lidar stamp=81.101000
+[rosout][INFO] 2026-04-09 20:41:50,403: [offline_bag_feeder] frame=813 lidar stamp=81.201000
+[rosout][INFO] 2026-04-09 20:41:50,446: [offline_bag_feeder] frame=814 lidar stamp=81.301000
+[rosout][INFO] 2026-04-09 20:41:50,489: [offline_bag_feeder] frame=815 lidar stamp=81.401000
+[rosout][INFO] 2026-04-09 20:41:50,538: [offline_bag_feeder] frame=816 lidar stamp=81.501000
+[rosout][INFO] 2026-04-09 20:41:50,576: [offline_bag_feeder] frame=817 lidar stamp=81.601000
+[rosout][INFO] 2026-04-09 20:41:50,619: [offline_bag_feeder] frame=818 lidar stamp=81.701000
+[rosout][INFO] 2026-04-09 20:41:50,656: [offline_bag_feeder] frame=819 lidar stamp=81.801000
+[rosout][INFO] 2026-04-09 20:41:50,694: [offline_bag_feeder] frame=820 lidar stamp=81.901000
+[rosout][INFO] 2026-04-09 20:41:50,737: [offline_bag_feeder] frame=821 lidar stamp=82.001000
+[rosout][INFO] 2026-04-09 20:41:50,775: [offline_bag_feeder] frame=822 lidar stamp=82.101000
+[rosout][INFO] 2026-04-09 20:41:50,818: [offline_bag_feeder] frame=823 lidar stamp=82.201000
+[rosout][INFO] 2026-04-09 20:41:50,867: [offline_bag_feeder] frame=824 lidar stamp=82.301000
+[rosout][INFO] 2026-04-09 20:41:50,910: [offline_bag_feeder] frame=825 lidar stamp=82.401000
+[rosout][INFO] 2026-04-09 20:41:50,950: [offline_bag_feeder] frame=826 lidar stamp=82.501000
+[rosout][INFO] 2026-04-09 20:41:50,987: [offline_bag_feeder] frame=827 lidar stamp=82.601000
+[rosout][INFO] 2026-04-09 20:41:51,031: [offline_bag_feeder] frame=828 lidar stamp=82.701000
+[rosout][INFO] 2026-04-09 20:41:51,079: [offline_bag_feeder] frame=829 lidar stamp=82.801000
+[rosout][INFO] 2026-04-09 20:41:51,122: [offline_bag_feeder] frame=830 lidar stamp=82.901000
+[rosout][INFO] 2026-04-09 20:41:51,166: [offline_bag_feeder] frame=831 lidar stamp=83.001000
+[rosout][INFO] 2026-04-09 20:41:51,209: [offline_bag_feeder] frame=832 lidar stamp=83.101000
+[rosout][INFO] 2026-04-09 20:41:51,250: [offline_bag_feeder] frame=833 lidar stamp=83.201000
+[rosout][INFO] 2026-04-09 20:41:51,299: [offline_bag_feeder] frame=834 lidar stamp=83.301000
+[rosout][INFO] 2026-04-09 20:41:51,357: [offline_bag_feeder] frame=835 lidar stamp=83.401000
+[rosout][INFO] 2026-04-09 20:41:51,401: [offline_bag_feeder] frame=836 lidar stamp=83.501000
+[rosout][INFO] 2026-04-09 20:41:51,444: [offline_bag_feeder] frame=837 lidar stamp=83.601000
+[rosout][INFO] 2026-04-09 20:41:51,489: [offline_bag_feeder] finished. lidar_frames=837
+[rosout][INFO] 2026-04-09 20:41:51,490: [offline_bag_feeder] detection: ok=836 timeout=1
+[rosout][INFO] 2026-04-09 20:41:51,490: [offline_bag_feeder] tracking : ok=0 timeout=0
+[rosout][INFO] 2026-04-09 20:41:51,490: [offline_bag_feeder] avg_wait_per_frame=0.049s
+[rospy.core][INFO] 2026-04-09 20:41:51,491: signal_shutdown [atexit]
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/clock] removing connection to /mctrack_online_node
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/clock] removing connection to /kitti_pointpillars_bag_detector_325815_1775738439079
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/clock] removing connection to /fastlio_pose_bridge
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/clock] removing connection to /joint_backend_ego
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/clock] removing connection to /odom_to_tum_recorder
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/clock] removing connection to /offline_bag_feeder
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/clock] removing connection to /laserMapping
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/kitti/velo/pointcloud] removing connection to /kitti_pointpillars_bag_detector_325815_1775738439079
+[rospy.internal][INFO] 2026-04-09 20:41:51,492: topic[/clock] removing connection to http://z790m:45143/
+[rospy.internal][INFO] 2026-04-09 20:41:51,493: topic[/kitti/velo/pointcloud] removing connection to /laserMapping
+[rospy.internal][INFO] 2026-04-09 20:41:51,493: topic[/kitti/oxts/imu] removing connection to /kitti_pointpillars_bag_detector_325815_1775738439079
+[rospy.internal][INFO] 2026-04-09 20:41:51,493: topic[/kitti/oxts/imu] removing connection to /laserMapping
+[rospy.internal][INFO] 2026-04-09 20:41:51,493: topic[/detection/lidar_detections] removing connection to http://z790m:45895/
+[rospy.internal][INFO] 2026-04-09 20:41:51,494: topic[/mctrack/tracked_objects] removing connection to http://z790m:34399/
+[rospy.impl.masterslave][INFO] 2026-04-09 20:41:51,494: atexit
+[rospy.client][INFO] 2026-04-09 20:42:41,776: init_node, name[/offline_bag_feeder], pid[331710]
+[xmlrpc][INFO] 2026-04-09 20:42:41,777: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 20:42:41,777: Started XML-RPC server [http://z790m:46037/]
+[rospy.init][INFO] 2026-04-09 20:42:41,777: ROS Slave URI: [http://z790m:46037/]
+[rospy.impl.masterslave][INFO] 2026-04-09 20:42:41,777: _ready: http://z790m:46037/
+[rospy.registration][INFO] 2026-04-09 20:42:41,777: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 20:42:41,777: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 20:42:41,877: registered with master
+[rospy.rosout][INFO] 2026-04-09 20:42:41,877: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 20:42:41,879: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 20:42:41,879: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 20:42:41,879: connected to core topic /clock
+[rosout][INFO] 2026-04-09 20:42:41,883: [offline_bag_feeder] bag_path=/home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0020_nodet.bag
+[rosout][INFO] 2026-04-09 20:42:41,883: [offline_bag_feeder] lidar_topic=/kitti/velo/pointcloud det_topic=/detection/lidar_detections track_topic=/mctrack/tracked_objects
+[rospy.internal][INFO] 2026-04-09 20:42:41,885: topic[/mctrack/tracked_objects] adding connection to [http://z790m:39243/], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:41,885: topic[/detection/lidar_detections] adding connection to [http://z790m:43259/], count 0
+[rosout][INFO] 2026-04-09 20:42:41,884: [offline_bag_feeder] require_detection=True require_tracking=True eps=0.060
+[rosout][INFO] 2026-04-09 20:42:41,885: [offline_bag_feeder] waiting 1.5s for downstream nodes...
+[rospy.internal][INFO] 2026-04-09 20:42:41,902: topic[/clock] adding connection to [/kitti_pointpillars_bag_detector_330517_1775738535791], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:41,902: topic[/clock] adding connection to [/mctrack_online_node], count 1
+[rospy.internal][INFO] 2026-04-09 20:42:41,903: topic[/clock] adding connection to [/fastlio_pose_bridge], count 2
+[rospy.internal][INFO] 2026-04-09 20:42:41,904: topic[/clock] adding connection to [/joint_backend_ego], count 3
+[rospy.internal][INFO] 2026-04-09 20:42:41,904: topic[/clock] adding connection to [http://z790m:46037/], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:41,904: topic[/clock] adding connection to [/odom_to_tum_recorder], count 4
+[rospy.internal][INFO] 2026-04-09 20:42:41,904: topic[/clock] adding connection to [/offline_bag_feeder], count 5
+[rospy.internal][INFO] 2026-04-09 20:42:42,101: topic[/rosout] adding connection to [/rosout], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:42,102: topic[/clock] adding connection to [/laserMapping], count 6
+[rosout][INFO] 2026-04-09 20:42:43,421: [offline_bag_feeder] frame=1 lidar stamp=0.001000
+[rospy.internal][INFO] 2026-04-09 20:42:43,507: topic[/kitti/velo/pointcloud] adding connection to [/kitti_pointpillars_bag_detector_330517_1775738535791], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:43,707: topic[/kitti/velo/pointcloud] adding connection to [/laserMapping], count 1
+[rosout][WARNING] 2026-04-09 20:42:47,426: [offline_bag_feeder] frame=1 detection timeout (4.00s)
+[rosout][WARNING] 2026-04-09 20:42:48,423: [offline_bag_feeder] frame=1 tracking timeout (5.00s)
+[rosout][INFO] 2026-04-09 20:42:48,436: [offline_bag_feeder] frame=2 lidar stamp=0.101000
+[rospy.internal][INFO] 2026-04-09 20:42:48,514: topic[/kitti/oxts/imu] adding connection to [/kitti_pointpillars_bag_detector_330517_1775738535791], count 0
+[rospy.internal][INFO] 2026-04-09 20:42:48,713: topic[/kitti/oxts/imu] adding connection to [/laserMapping], count 1
+[rosout][WARNING] 2026-04-09 20:42:53,441: [offline_bag_feeder] frame=2 tracking timeout (5.00s)
+[rosout][INFO] 2026-04-09 20:42:53,446: [offline_bag_feeder] frame=3 lidar stamp=0.201000
+[rosout][WARNING] 2026-04-09 20:42:58,451: [offline_bag_feeder] frame=3 tracking timeout (5.00s)
+[rosout][INFO] 2026-04-09 20:42:58,454: [offline_bag_feeder] frame=4 lidar stamp=0.301000
+[rosout][WARNING] 2026-04-09 20:43:03,457: [offline_bag_feeder] frame=4 tracking timeout (5.00s)
+[rosout][INFO] 2026-04-09 20:43:03,462: [offline_bag_feeder] frame=5 lidar stamp=0.401000
+[rosout][WARNING] 2026-04-09 20:43:08,465: [offline_bag_feeder] frame=5 tracking timeout (5.00s)
+[rosout][INFO] 2026-04-09 20:43:08,470: [offline_bag_feeder] frame=6 lidar stamp=0.501000
+[rosout][WARNING] 2026-04-09 20:43:13,472: [offline_bag_feeder] frame=6 tracking timeout (5.00s)
+[rosout][INFO] 2026-04-09 20:43:13,474: [offline_bag_feeder] frame=7 lidar stamp=0.601000
+[rosout][WARNING] 2026-04-09 20:43:18,480: [offline_bag_feeder] frame=7 tracking timeout (5.00s)
+[rosout][INFO] 2026-04-09 20:43:18,484: [offline_bag_feeder] frame=8 lidar stamp=0.701000
+[rosout][WARNING] 2026-04-09 20:43:23,489: [offline_bag_feeder] frame=8 tracking timeout (5.00s)
+[rosout][INFO] 2026-04-09 20:43:23,493: [offline_bag_feeder] frame=9 lidar stamp=0.801000
+[rosout][WARNING] 2026-04-09 20:43:28,495: [offline_bag_feeder] frame=9 tracking timeout (5.00s)
+[rosout][INFO] 2026-04-09 20:43:28,499: [offline_bag_feeder] frame=10 lidar stamp=0.901000
+[rospy.core][INFO] 2026-04-09 20:43:30,167: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-09 20:43:30,169: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 20:43:30,169: topic[/clock] removing connection to /kitti_pointpillars_bag_detector_330517_1775738535791
+[rospy.internal][INFO] 2026-04-09 20:43:30,169: topic[/clock] removing connection to /mctrack_online_node
+[rospy.internal][INFO] 2026-04-09 20:43:30,169: topic[/clock] removing connection to /fastlio_pose_bridge
+[rospy.internal][INFO] 2026-04-09 20:43:30,169: topic[/clock] removing connection to /joint_backend_ego
+[rospy.internal][INFO] 2026-04-09 20:43:30,169: topic[/clock] removing connection to /odom_to_tum_recorder
+[rospy.internal][INFO] 2026-04-09 20:43:30,169: topic[/clock] removing connection to /offline_bag_feeder
+[rospy.internal][INFO] 2026-04-09 20:43:30,170: topic[/clock] removing connection to /laserMapping
+[rospy.internal][INFO] 2026-04-09 20:43:30,170: topic[/clock] removing connection to http://z790m:46037/
+[rospy.internal][INFO] 2026-04-09 20:43:30,170: topic[/kitti/velo/pointcloud] removing connection to /kitti_pointpillars_bag_detector_330517_1775738535791
+[rospy.internal][INFO] 2026-04-09 20:43:30,170: topic[/kitti/velo/pointcloud] removing connection to /laserMapping
+[rospy.internal][INFO] 2026-04-09 20:43:30,170: topic[/kitti/oxts/imu] removing connection to /kitti_pointpillars_bag_detector_330517_1775738535791
+[rospy.internal][INFO] 2026-04-09 20:43:30,170: topic[/kitti/oxts/imu] removing connection to /laserMapping
+[rospy.internal][INFO] 2026-04-09 20:43:30,171: topic[/detection/lidar_detections] removing connection to http://z790m:43259/
+[rospy.internal][INFO] 2026-04-09 20:43:30,171: topic[/mctrack/tracked_objects] removing connection to http://z790m:39243/
+[rospy.impl.masterslave][INFO] 2026-04-09 20:43:30,171: signal-15
+[rosout][INFO] 2026-04-09 20:43:30,768: [offline_bag_feeder] finished. lidar_frames=10
+[rosout][INFO] 2026-04-09 20:43:30,769: [offline_bag_feeder] detection: ok=9 timeout=1
+[rosout][INFO] 2026-04-09 20:43:30,769: [offline_bag_feeder] tracking : ok=0 timeout=9
+[rosout][INFO] 2026-04-09 20:43:30,770: [offline_bag_feeder] avg_wait_per_frame=4.730s
+[rospy.core][INFO] 2026-04-09 20:43:30,771: signal_shutdown [atexit]
+[rospy.client][INFO] 2026-04-09 21:04:30,819: init_node, name[/offline_bag_feeder], pid[343917]
+[xmlrpc][INFO] 2026-04-09 21:04:30,819: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:04:30,819: Started XML-RPC server [http://z790m:36539/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:04:30,819: _ready: http://z790m:36539/
+[rospy.init][INFO] 2026-04-09 21:04:30,819: ROS Slave URI: [http://z790m:36539/]
+[rospy.registration][INFO] 2026-04-09 21:04:30,820: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:04:30,820: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:04:30,920: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:04:30,920: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:04:30,921: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:04:30,922: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:04:30,922: connected to core topic /clock
+[rospy.internal][INFO] 2026-04-09 21:04:30,929: topic[/detection/lidar_detections] adding connection to [http://z790m:46339/], count 0
+[rosout][INFO] 2026-04-09 21:04:30,929: [offline_bag_feeder] bag_path=/home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0020_nodet.bag
+[rosout][INFO] 2026-04-09 21:04:30,929: [offline_bag_feeder] lidar_topic=/kitti/velo/pointcloud det_topic=/detection/lidar_detections track_topic=/mctrack/tracked_objects odom_topic=/joint_backend/odom
+[rospy.internal][INFO] 2026-04-09 21:04:30,930: topic[/mctrack/tracked_objects] adding connection to [http://z790m:35843/], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:30,930: topic[/joint_backend/odom] adding connection to [http://z790m:40651/], count 0
+[rosout][INFO] 2026-04-09 21:04:30,930: [offline_bag_feeder] require_detection=True require_tracking=True require_odom=True eps=0.060
+[rosout][INFO] 2026-04-09 21:04:30,931: [offline_bag_feeder] waiting 1.5s for downstream nodes...
+[rospy.internal][INFO] 2026-04-09 21:04:30,948: topic[/clock] adding connection to [/mctrack_online_node], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:30,949: topic[/clock] adding connection to [/kitti_pointpillars_bag_detector_342703_1775739844721], count 1
+[rospy.internal][INFO] 2026-04-09 21:04:30,950: topic[/clock] adding connection to [/fastlio_pose_bridge], count 2
+[rospy.internal][INFO] 2026-04-09 21:04:30,950: topic[/clock] adding connection to [/odom_to_tum_recorder], count 3
+[rospy.internal][INFO] 2026-04-09 21:04:30,950: topic[/clock] adding connection to [http://z790m:36539/], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:30,950: topic[/clock] adding connection to [/joint_backend_ego], count 4
+[rospy.internal][INFO] 2026-04-09 21:04:30,951: topic[/clock] adding connection to [/offline_bag_feeder], count 5
+[rospy.internal][INFO] 2026-04-09 21:04:31,047: topic[/rosout] adding connection to [/rosout], count 0
+[rosout][INFO] 2026-04-09 21:04:32,466: [offline_bag_feeder] frame=1 lidar stamp=0.001000
+[rospy.internal][INFO] 2026-04-09 21:04:32,554: topic[/kitti/velo/pointcloud] adding connection to [/kitti_pointpillars_bag_detector_342703_1775739844721], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:32,554: topic[/kitti/oxts/imu] adding connection to [/kitti_pointpillars_bag_detector_342703_1775739844721], count 0
+[rosout][WARNING] 2026-04-09 21:04:36,476: [offline_bag_feeder] frame=1 detection timeout (4.00s)
+[rosout][WARNING] 2026-04-09 21:04:37,475: [offline_bag_feeder] frame=1 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:04:37,476: [offline_bag_feeder] frame=1 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:04:37,479: [offline_bag_feeder] frame=2 lidar stamp=0.101000
+[rosout][WARNING] 2026-04-09 21:04:42,488: [offline_bag_feeder] frame=2 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:04:42,489: [offline_bag_feeder] frame=2 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:04:42,491: [offline_bag_feeder] frame=3 lidar stamp=0.201000
+[rosout][WARNING] 2026-04-09 21:04:47,493: [offline_bag_feeder] frame=3 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:04:47,494: [offline_bag_feeder] frame=3 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:04:47,496: [offline_bag_feeder] frame=4 lidar stamp=0.301000
+[rosout][WARNING] 2026-04-09 21:04:52,502: [offline_bag_feeder] frame=4 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:04:52,503: [offline_bag_feeder] frame=4 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:04:52,506: [offline_bag_feeder] frame=5 lidar stamp=0.401000
+[rosout][WARNING] 2026-04-09 21:04:57,513: [offline_bag_feeder] frame=5 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:04:57,514: [offline_bag_feeder] frame=5 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:04:57,515: [offline_bag_feeder] frame=6 lidar stamp=0.501000
+[rosout][WARNING] 2026-04-09 21:05:02,518: [offline_bag_feeder] frame=6 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:02,519: [offline_bag_feeder] frame=6 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:02,521: [offline_bag_feeder] frame=7 lidar stamp=0.601000
+[rosout][WARNING] 2026-04-09 21:05:07,529: [offline_bag_feeder] frame=7 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:07,530: [offline_bag_feeder] frame=7 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:07,531: [offline_bag_feeder] frame=8 lidar stamp=0.701000
+[rosout][WARNING] 2026-04-09 21:05:12,535: [offline_bag_feeder] frame=8 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:12,536: [offline_bag_feeder] frame=8 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:12,539: [offline_bag_feeder] frame=9 lidar stamp=0.801000
+[rosout][WARNING] 2026-04-09 21:05:17,543: [offline_bag_feeder] frame=9 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:17,544: [offline_bag_feeder] frame=9 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:17,546: [offline_bag_feeder] frame=10 lidar stamp=0.901000
+[rosout][WARNING] 2026-04-09 21:05:22,548: [offline_bag_feeder] frame=10 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:22,549: [offline_bag_feeder] frame=10 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:22,551: [offline_bag_feeder] frame=11 lidar stamp=1.001000
+[rosout][WARNING] 2026-04-09 21:05:27,556: [offline_bag_feeder] frame=11 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:27,557: [offline_bag_feeder] frame=11 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:27,559: [offline_bag_feeder] frame=12 lidar stamp=1.101000
+[rosout][WARNING] 2026-04-09 21:05:32,566: [offline_bag_feeder] frame=12 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:32,567: [offline_bag_feeder] frame=12 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:32,569: [offline_bag_feeder] frame=13 lidar stamp=1.201000
+[rosout][WARNING] 2026-04-09 21:05:37,576: [offline_bag_feeder] frame=13 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:37,577: [offline_bag_feeder] frame=13 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:37,580: [offline_bag_feeder] frame=14 lidar stamp=1.301000
+[rosout][WARNING] 2026-04-09 21:05:42,585: [offline_bag_feeder] frame=14 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:42,586: [offline_bag_feeder] frame=14 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:42,587: [offline_bag_feeder] frame=15 lidar stamp=1.401000
+[rosout][WARNING] 2026-04-09 21:05:47,592: [offline_bag_feeder] frame=15 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:47,593: [offline_bag_feeder] frame=15 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:47,594: [offline_bag_feeder] frame=16 lidar stamp=1.501000
+[rosout][WARNING] 2026-04-09 21:05:52,599: [offline_bag_feeder] frame=16 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:52,600: [offline_bag_feeder] frame=16 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:52,602: [offline_bag_feeder] frame=17 lidar stamp=1.601000
+[rosout][WARNING] 2026-04-09 21:05:57,610: [offline_bag_feeder] frame=17 tracking timeout (5.00s)
+[rosout][WARNING] 2026-04-09 21:05:57,610: [offline_bag_feeder] frame=17 odom timeout (5.00s)
+[rosout][INFO] 2026-04-09 21:05:57,612: [offline_bag_feeder] frame=18 lidar stamp=1.701000
+[rospy.core][INFO] 2026-04-09 21:06:00,516: signal_shutdown [signal-15]
+[rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/clock] removing connection to /mctrack_online_node
+[rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/clock] removing connection to /kitti_pointpillars_bag_detector_342703_1775739844721
+[rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/clock] removing connection to /fastlio_pose_bridge
+[rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/clock] removing connection to /odom_to_tum_recorder
+[rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/clock] removing connection to /joint_backend_ego
+[rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/clock] removing connection to /offline_bag_feeder
+[rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/kitti/velo/pointcloud] removing connection to /kitti_pointpillars_bag_detector_342703_1775739844721
+[rospy.internal][INFO] 2026-04-09 21:06:00,519: topic[/kitti/oxts/imu] removing connection to /kitti_pointpillars_bag_detector_342703_1775739844721
+[rospy.internal][INFO] 2026-04-09 21:06:00,519: topic[/clock] removing connection to http://z790m:36539/
+[rospy.internal][INFO] 2026-04-09 21:06:00,519: topic[/clock] removing connection to http://z790m:36539/
+[rospy.internal][INFO] 2026-04-09 21:06:00,519: topic[/detection/lidar_detections] removing connection to http://z790m:46339/
+[rospy.internal][INFO] 2026-04-09 21:06:00,520: topic[/mctrack/tracked_objects] removing connection to http://z790m:35843/
+[rospy.internal][INFO] 2026-04-09 21:06:00,520: topic[/joint_backend/odom] removing connection to http://z790m:40651/
+[rospy.impl.masterslave][INFO] 2026-04-09 21:06:00,520: signal-15
+[rosout][INFO] 2026-04-09 21:06:01,117: [offline_bag_feeder] frame=19 lidar stamp=1.801000
+[rosout][INFO] 2026-04-09 21:06:01,118: [offline_bag_feeder] finished. lidar_frames=19
+[rosout][INFO] 2026-04-09 21:06:01,119: [offline_bag_feeder] detection: ok=17 timeout=1
+[rosout][INFO] 2026-04-09 21:06:01,120: [offline_bag_feeder] tracking : ok=0 timeout=17
+[rosout][INFO] 2026-04-09 21:06:01,120: [offline_bag_feeder] odom     : ok=0 timeout=17
+[rosout][INFO] 2026-04-09 21:06:01,120: [offline_bag_feeder] avg_wait_per_frame=4.662s
+[rospy.core][INFO] 2026-04-09 21:06:01,121: signal_shutdown [atexit]

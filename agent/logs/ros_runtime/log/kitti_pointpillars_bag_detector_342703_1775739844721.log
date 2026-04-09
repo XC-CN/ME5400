@@ -1,0 +1,71 @@
+[rospy.client][INFO] 2026-04-09 21:04:04,741: init_node, name[/kitti_pointpillars_bag_detector_342703_1775739844721], pid[342703]
+[xmlrpc][INFO] 2026-04-09 21:04:04,741: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-04-09 21:04:04,741: Started XML-RPC server [http://z790m:46339/]
+[rospy.init][INFO] 2026-04-09 21:04:04,741: ROS Slave URI: [http://z790m:46339/]
+[rospy.impl.masterslave][INFO] 2026-04-09 21:04:04,741: _ready: http://z790m:46339/
+[rospy.registration][INFO] 2026-04-09 21:04:04,741: Registering with master node http://localhost:11311
+[xmlrpc][INFO] 2026-04-09 21:04:04,741: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2026-04-09 21:04:04,841: registered with master
+[rospy.rosout][INFO] 2026-04-09 21:04:04,841: initializing /rosout core topic
+[rospy.rosout][INFO] 2026-04-09 21:04:04,843: connected to core topic /rosout
+[rospy.simtime][INFO] 2026-04-09 21:04:04,843: initializing /clock core topic
+[rospy.simtime][INFO] 2026-04-09 21:04:04,844: connected to core topic /clock
+[rosout][INFO] 2026-04-09 21:04:04,869: 加载标定文件成功: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0020.txt
+[rosout][INFO] 2026-04-09 21:04:04,869: 正在初始化PointPillars推理器...
+[rospy.internal][INFO] 2026-04-09 21:04:05,109: topic[/rosout] adding connection to [/rosout], count 0
+[rosout][INFO] 2026-04-09 21:04:05,641: 推理器初始化成功
+[rosout][INFO] 2026-04-09 21:04:05,645: KITTI PointPillars Bag ROS节点初始化完成
+[rosout][INFO] 2026-04-09 21:04:05,645: 配置文件: /home/xc/Projects/ME5400/MMDET3D/configs/pointpillars/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
+[rosout][INFO] 2026-04-09 21:04:05,646: 检查点: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+[rosout][INFO] 2026-04-09 21:04:05,646: Bag文件: /home/xc/Projects/ME5400/MMDET3D/data/kitti/seq_0019_with_det.bag
+[rosout][INFO] 2026-04-09 21:04:05,647: 数据集路径: /home/xc/Projects/ME5400/Data_Tracking/training / 序列: 0020
+[rosout][INFO] 2026-04-09 21:04:05,647: 订阅话题: /kitti/velo/pointcloud
+[rosout][INFO] 2026-04-09 21:04:05,647: 发布频率: 10.0 Hz
+[rosout][INFO] 2026-04-09 21:04:05,648: 模型类别: ['Pedestrian', 'Cyclist', 'Car']
+[rosout][INFO] 2026-04-09 21:04:05,648: 类别过滤: 未启用
+[rosout][INFO] 2026-04-09 21:04:05,649: 转发原始点云/IMU: False
+[rosout][INFO] 2026-04-09 21:04:05,649: 等待点云数据...
+[rospy.internal][INFO] 2026-04-09 21:04:18,119: topic[/detection/lidar_detections] adding connection to [/mctrack_online_node], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:30,931: topic[/detection/lidar_detections] adding connection to [/offline_bag_feeder], count 1
+[rospy.internal][INFO] 2026-04-09 21:04:30,948: topic[/clock] adding connection to [http://z790m:36539/], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:32,553: topic[/kitti/velo/pointcloud] adding connection to [http://z790m:36539/], count 0
+[rospy.internal][INFO] 2026-04-09 21:04:32,553: topic[/kitti/oxts/imu] adding connection to [http://z790m:36539/], count 0
+[rosout][INFO] 2026-04-09 21:04:37,486: 转换得到 116129 个点
+[rosout][INFO] 2026-04-09 21:04:37,785: 帧 0: 检测到 10 个目标
+[rosout][WARNING] 2026-04-09 21:04:37,786: 慢帧 0: 纯计算耗时 301.5ms，分段=inferencer_call=295.4ms, pointcloud_to_numpy=2.4ms, write_temp_bin=1.2ms, camera_projection=0.8ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_lidar_detections=0.1ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_tracking=0.0ms
+[rosout][INFO] 2026-04-09 21:04:42,495: 转换得到 116144 个点
+[rosout][INFO] 2026-04-09 21:04:42,522: 帧 1: 检测到 11 个目标
+[rosout][INFO] 2026-04-09 21:04:47,500: 转换得到 115922 个点
+[rosout][INFO] 2026-04-09 21:04:47,530: 帧 2: 检测到 12 个目标
+[rosout][INFO] 2026-04-09 21:04:52,509: 转换得到 115836 个点
+[rosout][INFO] 2026-04-09 21:04:52,536: 帧 3: 检测到 12 个目标
+[rosout][INFO] 2026-04-09 21:04:57,518: 转换得到 115710 个点
+[rosout][INFO] 2026-04-09 21:04:57,546: 帧 4: 检测到 11 个目标
+[rosout][INFO] 2026-04-09 21:05:02,525: 转换得到 115667 个点
+[rosout][INFO] 2026-04-09 21:05:02,551: 帧 5: 检测到 11 个目标
+[rosout][INFO] 2026-04-09 21:05:07,534: 转换得到 115596 个点
+[rosout][INFO] 2026-04-09 21:05:07,563: 帧 6: 检测到 11 个目标
+[rosout][INFO] 2026-04-09 21:05:12,542: 转换得到 115615 个点
+[rosout][INFO] 2026-04-09 21:05:12,571: 帧 7: 检测到 11 个目标
+[rosout][INFO] 2026-04-09 21:05:17,548: 转换得到 115439 个点
+[rosout][INFO] 2026-04-09 21:05:17,576: 帧 8: 检测到 11 个目标
+[rosout][INFO] 2026-04-09 21:05:22,554: 转换得到 115372 个点
+[rosout][INFO] 2026-04-09 21:05:22,580: 帧 9: 检测到 10 个目标
+[rosout][INFO] 2026-04-09 21:05:27,561: 转换得到 115229 个点
+[rosout][INFO] 2026-04-09 21:05:27,588: 帧 10: 检测到 11 个目标
+[rosout][INFO] 2026-04-09 21:05:32,572: 转换得到 114978 个点
+[rosout][INFO] 2026-04-09 21:05:32,600: 帧 11: 检测到 10 个目标
+[rosout][INFO] 2026-04-09 21:05:37,582: 转换得到 114999 个点
+[rosout][INFO] 2026-04-09 21:05:37,616: 帧 12: 检测到 10 个目标
+[rosout][INFO] 2026-04-09 21:05:42,590: 转换得到 114937 个点
+[rosout][INFO] 2026-04-09 21:05:42,622: 帧 13: 检测到 10 个目标
+[rosout][INFO] 2026-04-09 21:05:47,597: 转换得到 114875 个点
+[rosout][INFO] 2026-04-09 21:05:47,626: 帧 14: 检测到 10 个目标
+[rosout][INFO] 2026-04-09 21:05:52,607: 转换得到 114831 个点
+[rosout][INFO] 2026-04-09 21:05:52,636: 帧 15: 检测到 9 个目标
+[rosout][INFO] 2026-04-09 21:05:57,615: 转换得到 114706 个点
+[rosout][INFO] 2026-04-09 21:05:57,643: 帧 16: 检测到 10 个目标
+[rospy.internal][INFO] 2026-04-09 21:06:00,518: topic[/clock] removing connection to http://z790m:36539/
+[rospy.internal][INFO] 2026-04-09 21:06:00,519: topic[/kitti/velo/pointcloud] removing connection to http://z790m:36539/
+[rospy.internal][INFO] 2026-04-09 21:06:00,519: topic[/kitti/oxts/imu] removing connection to http://z790m:36539/
+[rospy.internal][INFO] 2026-04-09 21:06:00,633: topic[/detection/lidar_detections] removing connection to /offline_bag_feeder
