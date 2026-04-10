@@ -1,7 +1,8 @@
 # joint_backend_ego_node 参数（只优化 ego）
+# 该配置用于对比实验：联合后端只保留里程计约束，不引入 MCTrack 目标观测因子。
 window_size: 8
 lambda_obj: 0.12
-use_track_constraints: true
+use_track_constraints: false
 score_th: 0.6
 track_len_th: 5
 max_dt: 0.1

@@ -126,6 +126,7 @@ class JointBackendEgoNode:
         # Params
         self.window_size = int(rospy.get_param("~window_size", 10))
         self.lambda_obj = float(rospy.get_param("~lambda_obj", 0.3))
+        self.use_track_constraints = bool(rospy.get_param("~use_track_constraints", True))
         self.score_th = float(rospy.get_param("~score_th", 0.5))
         self.track_len_th = int(rospy.get_param("~track_len_th", 3))
         self.max_dt = float(rospy.get_param("~max_dt", 0.2))
@@ -152,6 +153,7 @@ class JointBackendEgoNode:
         self.odom_topic = rospy.get_param("~odom_topic", "/Odometry")
         self.tracks_topic = rospy.get_param("~tracks_topic", "/mctrack/tracked_objects")
         self.out_topic = rospy.get_param("~out_topic", "/joint_backend/odom")
+        self.object_factors_enabled = self.use_track_constraints and self.lambda_obj > 0.0
 
         self.odom_buffer = deque(maxlen=400)
         self.track_buffer = deque(maxlen=400)
@@ -164,7 +166,9 @@ class JointBackendEgoNode:
         self.latest_opt_stamp = 0.0
 
         self.sub_odom = rospy.Subscriber(self.odom_topic, Odometry, self.odom_cb, queue_size=50)
-        self.sub_tracks = rospy.Subscriber(self.tracks_topic, TrackedObjectArray, self.tracks_cb, queue_size=20)
+        self.sub_tracks = None
+        if self.object_factors_enabled:
+            self.sub_tracks = rospy.Subscriber(self.tracks_topic, TrackedObjectArray, self.tracks_cb, queue_size=20)
         self.pub_odom = rospy.Publisher(self.out_topic, Odometry, queue_size=20)
         self.optimize_timer = rospy.Timer(
             rospy.Duration(1.0 / max(1.0, self.optimize_hz)),
@@ -172,9 +176,10 @@ class JointBackendEgoNode:
         )
 
         rospy.loginfo(
-            "[joint_backend_ego] started: window=%d lambda=%.3f robust=%s f_scale=%.3f",
+            "[joint_backend_ego] started: window=%d lambda=%.3f tracks=%s robust=%s f_scale=%.3f",
             self.window_size,
             self.lambda_obj,
+            "on" if self.object_factors_enabled else "off",
             self.robust_loss,
             self.robust_f_scale,
         )
@@ -265,7 +270,7 @@ class JointBackendEgoNode:
     def optimize_timer_cb(self, _event):
         with self.buffer_lock:
             odom_copy = list(self.odom_buffer)
-            track_copy = list(self.track_buffer)
+            track_copy = list(self.track_buffer) if self.object_factors_enabled else []
 
         window = self.build_window(odom_copy)
         if window is None:
@@ -321,42 +326,43 @@ class JointBackendEgoNode:
                 residuals.extend((odom_w[i - 1] * r).tolist())
 
             # Object observation consistency factors
-            for i in range(n):
-                t_i = window[i].stamp
-                snap = self.find_nearest_snapshot(snapshots, t_i, self.max_dt)
-                if snap is None:
-                    continue
-
-                for obs in snap.objects.values():
-                    if obs.track_length < self.track_len_th:
-                        continue
-                    if obs.score < self.score_th:
-                        continue
-                    if obs.dv > self.max_dv:
+            if self.object_factors_enabled:
+                for i in range(n):
+                    t_i = window[i].stamp
+                    snap = self.find_nearest_snapshot(snapshots, t_i, self.max_dt)
+                    if snap is None:
                         continue
 
-                    # Propagate world reference by velocity to frame timestamp
-                    dt = t_i - obs.stamp
-                    ow = np.array(
-                        [
-                            obs.world_x + obs.vel_x * dt,
-                            obs.world_y + obs.vel_y * dt,
-                            obs.world_yaw,
-                        ],
-                        dtype=np.float64,
-                    )
+                    for obs in snap.objects.values():
+                        if obs.track_length < self.track_len_th:
+                            continue
+                        if obs.score < self.score_th:
+                            continue
+                        if obs.dv > self.max_dv:
+                            continue
 
-                    z_pred = world_to_local(poses[i], ow)
-                    z_meas = np.array([obs.lidar_x, obs.lidar_y, obs.lidar_yaw], dtype=np.float64)
-                    r = z_pred - z_meas
-                    r[2] = wrap_angle(r[2])
+                        # Propagate world reference by velocity to frame timestamp
+                        dt = t_i - obs.stamp
+                        ow = np.array(
+                            [
+                                obs.world_x + obs.vel_x * dt,
+                                obs.world_y + obs.vel_y * dt,
+                                obs.world_yaw,
+                            ],
+                            dtype=np.float64,
+                        )
 
-                    # Object factor weight: score + track length + global lambda
-                    score_norm = max(0.0, min(1.0, (obs.score - self.score_th) / max(1e-3, 1.0 - self.score_th)))
-                    len_norm = max(0.0, min(1.0, (obs.track_length - self.track_len_th + 1) / 6.0))
-                    w_obj = max(self.min_obj_weight, math.sqrt(self.lambda_obj) * (0.5 * score_norm + 0.5 * len_norm))
+                        z_pred = world_to_local(poses[i], ow)
+                        z_meas = np.array([obs.lidar_x, obs.lidar_y, obs.lidar_yaw], dtype=np.float64)
+                        r = z_pred - z_meas
+                        r[2] = wrap_angle(r[2])
 
-                    residuals.extend((w_obj * r).tolist())
+                        # Object factor weight: score + track length + global lambda
+                        score_norm = max(0.0, min(1.0, (obs.score - self.score_th) / max(1e-3, 1.0 - self.score_th)))
+                        len_norm = max(0.0, min(1.0, (obs.track_length - self.track_len_th + 1) / 6.0))
+                        w_obj = max(self.min_obj_weight, math.sqrt(self.lambda_obj) * (0.5 * score_norm + 0.5 * len_norm))
+
+                        residuals.extend((w_obj * r).tolist())
 
             return np.array(residuals, dtype=np.float64)
 

@@ -14,6 +14,7 @@ HEADLESS=true
 SAVE_MAP=false
 SEQ_ID="0020"
 BAG_PATH=""
+JOINT_BACKEND_CONFIG_PATH="$PROJECT_ROOT/catkin_ws/src/ME5400/config/joint_backend_ego.yaml"
 
 ROSCORE_PID=""
 INTERNAL_ROSCORE=false
@@ -35,6 +36,7 @@ usage() {
   -v, --viz        开启可视化模式 (加载 RViz)
   -m, --save-map   为离线双阶段都启用 FAST-LIO 地图保存并归档
   --bag <path>     覆盖默认 bag 路径
+  --jb-config <p>  覆盖 joint backend 配置文件路径
   -h, --help       显示帮助
 
 说明:
@@ -87,6 +89,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --bag)
             BAG_PATH="$2"
+            shift 2
+            ;;
+        --jb-config)
+            JOINT_BACKEND_CONFIG_PATH="$2"
             shift 2
             ;;
         *)
@@ -189,6 +195,12 @@ if [[ ! -f "$BAG_FILE_PATH" ]]; then
     exit 1
 fi
 
+JOINT_BACKEND_CONFIG_PATH=$(resolve_path "$JOINT_BACKEND_CONFIG_PATH")
+if [[ ! -f "$JOINT_BACKEND_CONFIG_PATH" ]]; then
+    echo "[错误] joint backend 配置未找到: $JOINT_BACKEND_CONFIG_PATH" >&2
+    exit 1
+fi
+
 GT_PATH="$PROJECT_ROOT/Data_Tracking/training/oxts/${SEQ_ID}.txt"
 CALIB_PATH="$PROJECT_ROOT/Data_Tracking/training/calib/${SEQ_ID}.txt"
 
@@ -206,6 +218,7 @@ echo "[INFO] 本次运行的所有输出将实时保存至: $LOG_FILE"
 echo "[INFO] 数据集序列号: $SEQ_ID"
 echo "[INFO] 离线 bag: $BAG_FILE_PATH"
 echo "[INFO] FAST-LIO 地图保存: $SAVE_MAP"
+echo "[INFO] Joint backend 配置: $JOINT_BACKEND_CONFIG_PATH"
 
 echo "[步骤 0] 正在清理残留环境..."
 bash "$PROJECT_ROOT/Scripts/utils/cleanup_ros_runtime.sh"
@@ -414,7 +427,7 @@ run_joint_offline() {
     sleep 5
 
     echo "[C-4] 启动联合后端..."
-    "$PROJECT_ROOT/Scripts/joint_backend/run_joint_backend_ego.sh" &
+    "$PROJECT_ROOT/Scripts/joint_backend/run_joint_backend_ego.sh" --config "$JOINT_BACKEND_CONFIG_PATH" &
     JB_PID=$!
     sleep 3
 
@@ -457,8 +470,10 @@ run_joint_offline() {
 
 run_evaluation() {
     local baseline_traj="$RESULT_DIR/trajectory_baseline_offline.txt"
+    local weighted_traj="$RESULT_DIR/trajectory_weighted_offline.txt"
     local joint_traj="$RESULT_DIR/trajectory_joint.txt"
 
+    # 检查基本轨迹是否存在
     if [[ ! -f "$baseline_traj" || ! -f "$joint_traj" ]]; then
         echo "[警告] 评估所需轨迹不完整，跳过自动评估"
         return
@@ -466,11 +481,23 @@ run_evaluation() {
 
     echo
     echo "[步骤 4] 正在运行离线统一评估..."
+    
+    local eval_args=(
+        --gt "$GT_PATH"
+        --calib "$CALIB_PATH"
+        --traj "Baseline(Offline,NoWeight):$baseline_traj"
+    )
+
+    # 如果存在权重优化的轨迹，则加入对比
+    if [[ -f "$weighted_traj" ]]; then
+        eval_args+=(--traj "FAST-LIO+MCTrack(Offline):$weighted_traj")
+    fi
+
+    # 加入联合后端轨迹
+    eval_args+=(--traj "JointOffline:$joint_traj")
+
     python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectories.py" \
-        --gt "$GT_PATH" \
-        --calib "$CALIB_PATH" \
-        --traj "Baseline(Offline,NoWeight):$baseline_traj" \
-        --traj "JointOffline:$joint_traj" \
+        "${eval_args[@]}" \
         --output-dir "$RESULT_DIR" \
         --report-name "metrics.txt" \
         --report-json-name "metrics.json" \

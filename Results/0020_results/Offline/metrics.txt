@@ -1,0 +1,62 @@
+==============================================================================
+离线轨迹评估报告
+==============================================================================
+
+一、评估概览
+序列号: 0020
+真值路径: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0020.txt
+标定路径: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0020.txt
+参与评估轨迹数: 2
+
+轨迹列表：
+  1. Baseline(Offline,NoWeight): /home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_baseline_offline.txt
+  2. JointOffline: /home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_joint.txt
+
+核心双轨结论：
+  基准轨迹: Baseline(Offline,NoWeight) (ATE RMSE=12.6685 m)
+  对比轨迹: JointOffline (ATE RMSE=7.6033 m)
+  相对基准提升: 39.98%
+
+二、ATE / RPE 对比汇总
+
+轨迹配置                         匹配帧数   ATE_RMSE      ATE均值     ATE最大值   RPE_RMSE
+-----------------------------------------------------------------------------
+Baseline(Offline,NoWeight)      669    12.6685    11.7378    18.3747     0.2499
+JointOffline                  727     7.6033     6.7120    24.7656     1.3078
+
+相对第一条有效轨迹的提升幅度：
+  JointOffline             ATE 改善 +39.98%
+
+三、KITTI 相对里程计指标（Tr / Rot）
+真值 OXTS: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0020.txt
+标定文件 : /home/xc/Projects/ME5400/Data_Tracking/training/calib/0020.txt
+评估段长 : 100, 200, 300, 400, 500, 600, 700, 800 m
+起点步长 : 10 帧
+时间戳容差: 0.200 s
+
+轨迹名称                         匹配帧数       段数     Tr.(%)   Rot.(deg/100m)      Tr 提升     Rot 提升
+--------------------------------------------------------------------------------------------
+Baseline(Offline,NoWeight)      669      189     3.1580           0.7346      0.00%      0.00%
+JointOffline                  727      223     2.3299           0.6988     26.22%      4.88%
+
+分段详情：
+  [Baseline(Offline,NoWeight)]
+    段长(m)      Tr.(%)   Rot.(deg/100m)     段数
+        100       3.3800             1.0303       53
+        200       3.1446             0.6555       46
+        300       3.0615             0.5997       36
+        400       2.9873             0.6249       29
+        500       3.0092             0.5931       19
+        600       3.1735             0.5165        6
+        700          N/A                N/A        0
+        800          N/A                N/A        0
+  [JointOffline]
+    段长(m)      Tr.(%)   Rot.(deg/100m)     段数
+        100       2.7093             1.0251       58
+        200       2.2987             0.6217       51
+        300       2.1116             0.5677       42
+        400       2.0522             0.5851       35
+        500       2.1910             0.5718       25
+        600       2.4920             0.5045       12
+        700          N/A                N/A        0
+        800          N/A                N/A        0
