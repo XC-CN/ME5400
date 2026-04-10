@@ -411,6 +411,9 @@ class KittiPointPillarsBagNode:
             stage_timings['wall_total'] = time.perf_counter() - start_time
             self._record_timing(frame_id, stage_timings)
 
+        except rospy.ROSInterruptException:
+            if not rospy.is_shutdown():
+                rospy.logwarn("点云处理在 ROS 中断前被提前打断")
         except Exception as e:
             rospy.logerr(f"点云处理失败: {e}")
             import traceback

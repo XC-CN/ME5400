@@ -10,7 +10,7 @@ CONDA_SH="${HOME}/miniconda3/etc/profile.d/conda.sh"
 CONDA_ENV_NAME="ME5400"
 
 SUCCESS=false
-HEADLESS=false
+HEADLESS=true
 SAVE_MAP=false
 SEQ_ID="0020"
 BAG_PATH=""
@@ -27,25 +27,12 @@ JB_PID=""
 REC_PID=""
 FEEDER_PID=""
 
-source /opt/ros/noetic/setup.bash
-if [[ -f "$CONDA_SH" ]]; then
-    set +u
-    source "$CONDA_SH"
-    if [[ "${CONDA_DEFAULT_ENV:-}" != "$CONDA_ENV_NAME" ]]; then
-        conda activate "$CONDA_ENV_NAME"
-    fi
-    set -u
-    echo "[INFO] 已激活 Conda 环境: ${CONDA_DEFAULT_ENV:-unknown}"
-else
-    echo "[警告] 未找到 conda 初始化脚本: $CONDA_SH"
-fi
-
 usage() {
     cat <<EOF
 用法: $0 [选项] [SEQ_ID]
 
 选项:
-  -n, --headless   无可视化模式 (跳过 GT 发布与 RViz)
+  -v, --viz        开启可视化模式 (加载 RViz)
   -m, --save-map   为离线双阶段都启用 FAST-LIO 地图保存并归档
   --bag <path>     覆盖默认 bag 路径
   -h, --help       显示帮助
@@ -64,16 +51,32 @@ usage() {
 
 示例:
   $0 0020
-  $0 --headless 0020
+  $0 --viz 0020 (开启可视化运行)
   $0 --bag Data_Tracking/rosbags/seq_0020_nodet.bag 0020
 EOF
 }
+
+# 快速检查帮助信息，避免 source ROS 环境时将 --help 传递给 setup_util
+for arg in "$@"; do
+    case "$arg" in
+        -h|--help)
+            usage
+            exit 0
+            ;;
+    esac
+done
+
+source "$PROJECT_ROOT/Scripts/utils/setup_runtime_env.sh"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -h|--help)
             usage
             exit 0
+            ;;
+        -v|--viz|--rviz)
+            HEADLESS=false
+            shift
             ;;
         -n|--headless|--no-rviz)
             HEADLESS=true
@@ -226,8 +229,7 @@ if ! "$PROJECT_ROOT/Scripts/utils/build_catkin_ws.sh"; then
     exit 1
 fi
 
-source /opt/ros/noetic/setup.bash
-source "$CATKIN_WS/devel/setup.bash"
+source "$PROJECT_ROOT/Scripts/utils/setup_runtime_env.sh"
 
 if [[ "$HEADLESS" == "false" ]]; then
     echo "[步骤 3] 正在启动真实轨迹发布与 RViz..."
@@ -464,19 +466,18 @@ run_evaluation() {
     fi
 
     echo
-    echo "[步骤 4] 正在运行离线双轨评估..."
-    python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_joint_backend.py" \
+    echo "[步骤 4] 正在运行离线统一评估..."
+    python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectories.py" \
         --gt "$GT_PATH" \
-        --traj "Baseline(Offline,NoWeight):$baseline_traj" \
-        --traj "JointOffline:$joint_traj" \
-        --output "$RESULT_DIR"
-
-    python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_kitti_tr_rot.py" \
-        --oxts "$GT_PATH" \
         --calib "$CALIB_PATH" \
         --traj "Baseline(Offline,NoWeight):$baseline_traj" \
         --traj "JointOffline:$joint_traj" \
-        --output "$RESULT_DIR/metrics_kitti_tr_rot_ac.txt"
+        --output-dir "$RESULT_DIR" \
+        --summary-name "metrics_joint_backend.txt" \
+        --summary-title "离线轨迹对比评估结果" \
+        --overview-plot-name "evaluation_joint_backend.png" \
+        --bar-plot-name "ablation_bar.png" \
+        --kitti-name "metrics_kitti_tr_rot_ac.txt"
 }
 
 run_baseline_offline

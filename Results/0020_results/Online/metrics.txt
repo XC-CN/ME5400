@@ -1,0 +1,17 @@
+双轨迹评估结果
+序列号: 0020
+真值路径: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0020.txt
+
+主轨迹名称: FAST-LIO+MCTrack
+主轨迹文件: /home/xc/Projects/ME5400/Results/0020_results/Online/trajectory.txt
+主轨迹 RMSE: 6.483991
+主轨迹平均误差: 5.685692
+主轨迹最大误差: 11.062461
+
+基准轨迹名称: Baseline
+基准轨迹文件: /home/xc/Projects/ME5400/Results/0020_results/Online/trajectory_baseline.txt
+基准轨迹 RMSE: 12.578209
+基准轨迹平均误差: 11.533575
+基准轨迹最大误差: 18.380288
+
+相对基准提升: 48.45%

@@ -4,6 +4,10 @@ set -e
 # 获取项目根目录
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 PROJECT_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
+SUCCESS=false
+CATKIN_WS="$PROJECT_ROOT/catkin_ws"
+
+source "$PROJECT_ROOT/Scripts/utils/setup_runtime_env.sh"
 
 # 退出时处理清理工作的函数
 cleanup() {
@@ -12,16 +16,20 @@ cleanup() {
         if [ ! -z "$RVIZ_PID" ] && kill -0 $RVIZ_PID 2>/dev/null; then kill -9 $RVIZ_PID 2>/dev/null || true; fi
         if [ ! -z "$PP_PID" ] && kill -0 $PP_PID 2>/dev/null; then kill -9 $PP_PID 2>/dev/null || true; fi
         if [ ! -z "$MC_PID" ] && kill -0 $MC_PID 2>/dev/null; then kill -9 $MC_PID 2>/dev/null || true; fi
+        if [ ! -z "$REC_PID" ] && kill -0 $REC_PID 2>/dev/null; then kill -9 $REC_PID 2>/dev/null || true; fi
+        if [ ! -z "$JB_PID" ] && kill -0 $JB_PID 2>/dev/null; then kill -9 $JB_PID 2>/dev/null || true; fi
         if [ ! -z "$FL_PID" ] && kill -0 $FL_PID 2>/dev/null; then kill -9 $FL_PID 2>/dev/null || true; fi
         if [ ! -z "$BAG_PID" ] && kill -0 $BAG_PID 2>/dev/null; then kill -9 $BAG_PID 2>/dev/null || true; fi
         if [ ! -z "$PUB_PID" ] && kill -0 $PUB_PID 2>/dev/null; then kill -9 $PUB_PID 2>/dev/null || true; fi
+        pkill -9 -f "odom_to_tum_recorder.py" 2>/dev/null || true
+        pkill -9 -f "joint_backend_ego_node.py" 2>/dev/null || true
         if [ "$INTERNAL_ROSCORE" = "true" ] && [ ! -z "$ROSCORE_PID" ] && kill -0 $ROSCORE_PID 2>/dev/null; then kill -9 $ROSCORE_PID 2>/dev/null || true; fi
     fi
 }
 
 # 解析参数
 SEQ_ID="0020"
-HEADLESS=false
+HEADLESS=true
 SAVE_MAP=false
 
 for arg in "$@"; do
@@ -29,16 +37,19 @@ for arg in "$@"; do
         -h|--help)
             echo "用法: $0 [选项] [SEQ_ID]"
             echo "选项:"
-            echo "  -n, --headless  无可视化模式 (跳过加载 RViz)"
+            echo "  -v, --viz       开启可视化模式 (加载 RViz)"
             echo "  -m, --save-map  启用 FAST-LIO 地图保存并归档结果"
             echo "  -h, --help      显示帮助信息"
             echo ""
-            echo "运行带 MCTrack 的优化流水线"
+            echo "运行带 MCTrack 与 joint backend 的优化流水线"
             echo "示例:"
-            echo "  $0 0020         # 运行序列0020的优化测试"
-            echo "  $0 --headless 0020 # 以 Headless 模式运行"
+            echo "  $0 0020         # 运行序列0020的优化测试 (默认无可视化)"
+            echo "  $0 --viz 0020   # 开启 RViz 可视化运行"
             echo "  $0 --save-map 0020 # 运行并额外保存全局地图"
             exit 0
+        ;;
+        -v|--viz|--rviz)
+            HEADLESS=false
         ;;
         -n|--headless|--no-rviz)
             HEADLESS=true
@@ -57,7 +68,7 @@ done
 # 捕获 SIGINT (Ctrl+C) 和 EXIT 信号
 trap cleanup SIGINT EXIT
 
-echo "[INFO] 正在启动 ME5400 完整优化流水线..."
+echo "[INFO] 正在启动 ME5400 完整优化流水线（含 joint backend）..."
 echo "[INFO] 数据集序列号: $SEQ_ID"
 echo "[INFO] FAST-LIO 地图保存: $SAVE_MAP"
 if [[ -n "${PP_ALLOWED_CLASSES:-}" ]]; then
@@ -94,8 +105,12 @@ if ! "$PROJECT_ROOT/Scripts/utils/build_catkin_ws.sh"; then
     exit 1
 fi
 
+source "$PROJECT_ROOT/Scripts/utils/setup_runtime_env.sh"
+
 # 确保 Results 目录存在
 mkdir -p "$PROJECT_ROOT/Results"
+ONLINE_RESULT_DIR="$PROJECT_ROOT/Results/${SEQ_ID}_results/Online"
+JOINT_TRAJ_PATH="$ONLINE_RESULT_DIR/trajectory_joint.txt"
 
 if [ "$HEADLESS" = "false" ]; then
     # 3. 启动 RViz 可视化与真实的轨迹
@@ -160,13 +175,26 @@ MAP_RUN_START_TS=$(date +%s)
 FL_PID=$!
 sleep 5
 
+echo "[步骤 7] 正在启动联合后端..."
+"$PROJECT_ROOT/Scripts/joint_backend/run_joint_backend_ego.sh" &
+JB_PID=$!
+sleep 3
+
+echo "[步骤 8] 正在录制 /joint_backend/odom -> Results/${SEQ_ID}_results/Online/trajectory_joint.txt ..."
+mkdir -p "$ONLINE_RESULT_DIR"
+rosrun ME5400 odom_to_tum_recorder.py \
+    --output "$JOINT_TRAJ_PATH" \
+    _odom_topic:=/joint_backend/odom &
+REC_PID=$!
+sleep 2
+
 BAG_FILE_PATH="$PROJECT_ROOT/Data_Tracking/rosbags/seq_${SEQ_ID}_nodet.bag"
 if [[ ! -f "$BAG_FILE_PATH" ]]; then
     echo "[错误] Bag 文件未找到: $BAG_FILE_PATH"
     exit 1
 fi
 
-echo "[步骤 7] 正在播放 Rosbag (优化, 以 1.0 倍速运行，跳过 bag 内 /tf_static)..."
+echo "[步骤 9] 正在播放 Rosbag (优化, 以 1.0 倍速运行，跳过 bag 内 /tf_static)..."
 rosparam set use_sim_time true
 # 仅播放原始 IMU / 点云，避免 bag 内 imu->velodyne 静态 TF
 # 与 fastlio_pose_bridge 发布的 camera_init->velodyne 动态 TF 冲突，
@@ -177,23 +205,39 @@ BAG_PID=$!
 echo "Waiting for Optimized Run..."
 wait $BAG_PID
 
+# 给 recorder 留一点时间接收最后一批消息
+sleep 2
+
+echo "[步骤 10] 优化测试结束，停止 odom recorder / 联合后端 / FastLIO..."
+kill -TERM $REC_PID 2>/dev/null || true
+wait $REC_PID 2>/dev/null || true
+pkill -TERM -f "odom_to_tum_recorder.py" 2>/dev/null || true
+
+kill -TERM $JB_PID 2>/dev/null || true
+wait $JB_PID 2>/dev/null || true
+pkill -TERM -f "joint_backend_ego_node.py" 2>/dev/null || true
+
 # 停止 FastLIO
-echo "[步骤 8] 优化测试结束，停止 FastLIO..."
 kill -TERM $FL_PID 2>/dev/null || true
 wait $FL_PID 2>/dev/null || true
 
 # 保存结果并重命名
-mkdir -p "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online"
 if [[ -f "$PROJECT_ROOT/Results/trajectory.txt" ]]; then
-    mv "$PROJECT_ROOT/Results/trajectory.txt" "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory.txt"
+    mv "$PROJECT_ROOT/Results/trajectory.txt" "$ONLINE_RESULT_DIR/trajectory.txt"
     echo "[信息] 优化轨迹已保存为 Results/${SEQ_ID}_results/Online/trajectory.txt"
+fi
+
+if [[ -s "$JOINT_TRAJ_PATH" ]]; then
+    echo "[信息] 联合后端轨迹已保存为 Results/${SEQ_ID}_results/Online/trajectory_joint.txt"
+else
+    echo "[警告] 未找到有效的联合后端轨迹文件: $JOINT_TRAJ_PATH"
 fi
 
 # 如果本次显式开启了地图保存，则归档新生成的地图文件
 if [[ "$SAVE_MAP" == "true" && -f "$PROJECT_ROOT/PCD/scans.pcd" ]]; then
     MAP_MTIME=$(stat -c %Y "$PROJECT_ROOT/PCD/scans.pcd")
     if [[ "$MAP_MTIME" -ge "$MAP_RUN_START_TS" ]]; then
-        mv "$PROJECT_ROOT/PCD/scans.pcd" "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/scans_optimized.pcd"
+        mv "$PROJECT_ROOT/PCD/scans.pcd" "$ONLINE_RESULT_DIR/scans_optimized.pcd"
         echo "[信息] 优化地图已保存为 Results/${SEQ_ID}_results/Online/scans_optimized.pcd"
         # 尝试删除临时的 PCD 目录
         rmdir "$PROJECT_ROOT/PCD" 2>/dev/null || true
@@ -203,19 +247,44 @@ if [[ "$SAVE_MAP" == "true" && -f "$PROJECT_ROOT/PCD/scans.pcd" ]]; then
 fi
 
 # 自动评估 (仅当 baseline 存在时运行，或者修改评估脚本)
-if [ -f "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory_baseline.txt" ]; then
-    echo "[步骤 9] 正在运行增强轨迹评估..."
-    python "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectory.py" \
-        --pred "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory.txt" \
-        --baseline "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory_baseline.txt" \
-        --gt "$PROJECT_ROOT/Data_Tracking/training/oxts/$SEQ_ID.txt" \
-        --output "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/"
-    
+if [ -f "$ONLINE_RESULT_DIR/trajectory_baseline.txt" ] && [ -f "$ONLINE_RESULT_DIR/trajectory.txt" ]; then
+    if [ -s "$JOINT_TRAJ_PATH" ]; then
+        echo "[步骤 11] 正在运行统一轨迹评估（含联合后端 / Tr/Rot）..."
+        python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectories.py" \
+            --gt "$PROJECT_ROOT/Data_Tracking/training/oxts/$SEQ_ID.txt" \
+            --traj "Baseline:$ONLINE_RESULT_DIR/trajectory_baseline.txt" \
+            --traj "FAST-LIO+MCTrack:$ONLINE_RESULT_DIR/trajectory.txt" \
+            --traj "Joint Backend:$JOINT_TRAJ_PATH" \
+            --calib "$PROJECT_ROOT/Data_Tracking/training/calib/$SEQ_ID.txt" \
+            --output-dir "$ONLINE_RESULT_DIR" \
+            --title "Online Joint Backend Evaluation (Seq $SEQ_ID)" \
+            --pair-summary-name "metrics.txt" \
+            --pair-json-name "metrics.json" \
+            --pair-plot-name "evaluation_result.png" \
+            --summary-name "metrics_joint_backend.txt" \
+            --summary-title "在线轨迹对比评估结果" \
+            --overview-plot-name "evaluation_joint_backend.png" \
+            --bar-plot-name "ablation_bar.png" \
+            --kitti-name "metrics_kitti_tr_rot.txt"
+    else
+        echo "[步骤 11] 未检测到有效的联合后端轨迹，运行统一双轨评估..."
+        python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectories.py" \
+            --gt "$PROJECT_ROOT/Data_Tracking/training/oxts/$SEQ_ID.txt" \
+            --traj "Baseline:$ONLINE_RESULT_DIR/trajectory_baseline.txt" \
+            --traj "FAST-LIO+MCTrack:$ONLINE_RESULT_DIR/trajectory.txt" \
+            --calib "$PROJECT_ROOT/Data_Tracking/training/calib/$SEQ_ID.txt" \
+            --output-dir "$ONLINE_RESULT_DIR" \
+            --pair-summary-name "metrics.txt" \
+            --pair-json-name "metrics.json" \
+            --pair-plot-name "evaluation_result.png" \
+            --kitti-name "metrics_kitti_tr_rot.txt"
+    fi
+
     echo "========================================================="
     echo "   评估完成！结果保存在 Results/${SEQ_ID}_results/Online/ 目录  "
     echo "========================================================="
 else
-    echo "[信息] 未找到基准轨迹，跳过对比评估"
+    echo "[信息] 未找到基准轨迹或优化轨迹，跳过对比评估"
 fi
 
 # 主动停止所有后台进程

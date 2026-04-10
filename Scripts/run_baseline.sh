@@ -4,6 +4,9 @@ set -e
 # 获取项目根目录
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 PROJECT_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
+CATKIN_WS="$PROJECT_ROOT/catkin_ws"
+
+source "$PROJECT_ROOT/Scripts/utils/setup_runtime_env.sh"
 
 # 退出时处理清理工作的函数
 cleanup() {
@@ -19,7 +22,7 @@ cleanup() {
 
 # 解析参数
 SEQ_ID="0020"
-HEADLESS=false
+HEADLESS=true
 SAVE_MAP=false
 
 for arg in "$@"; do
@@ -27,16 +30,19 @@ for arg in "$@"; do
         -h|--help)
             echo "用法: $0 [选项] [SEQ_ID]"
             echo "选项:"
-            echo "  -n, --headless  无可视化模式 (跳过加载 RViz)"
+            echo "  -v, --viz       开启可视化模式 (加载 RViz)"
             echo "  -m, --save-map  启用 FAST-LIO 地图保存并归档结果"
             echo "  -h, --help      显示帮助信息"
             echo ""
             echo "纯净的单独 FAST-LIO 基准测试"
             echo "示例:"
-            echo "  $0 0020         # 运行序列0020的基准测试"
-            echo "  $0 --headless 0020 # 以 Headless 模式运行"
+            echo "  $0 0020         # 运行序列0020的基准测试 (默认无可视化)"
+            echo "  $0 --viz 0020   # 开启 RViz 可视化运行"
             echo "  $0 --save-map 0020 # 运行并额外保存全局地图"
             exit 0
+        ;;
+        -v|--viz|--rviz)
+            HEADLESS=false
         ;;
         -n|--headless|--no-rviz)
             HEADLESS=true
@@ -82,6 +88,8 @@ if ! "$PROJECT_ROOT/Scripts/utils/build_catkin_ws.sh"; then
     echo "[错误] 构建失败，正在中止..."
     exit 1
 fi
+
+source "$PROJECT_ROOT/Scripts/utils/setup_runtime_env.sh"
 
 # 确保 Results 目录存在
 mkdir -p "$PROJECT_ROOT/Results"
@@ -181,11 +189,14 @@ echo "[INFO] 基准测试完成！"
 # 如果优化后的轨迹也存在，自动触发定量对比评估
 if [ -f "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory.txt" ] && [ -f "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory_baseline.txt" ]; then
     echo "[步骤 7] 正在运行增强轨迹评估（定量对比）..."
-    python "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectory.py" \
-        --pred "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory.txt" \
-        --baseline "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory_baseline.txt" \
+    python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectories.py" \
         --gt "$PROJECT_ROOT/Data_Tracking/training/oxts/$SEQ_ID.txt" \
-        --output "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/"
+        --traj "Baseline:$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory_baseline.txt" \
+        --traj "Optimized:$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory.txt" \
+        --output-dir "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/" \
+        --pair-summary-name "metrics.txt" \
+        --pair-json-name "metrics.json" \
+        --pair-plot-name "evaluation_result.png"
     
     echo "========================================================="
     echo "   评估完成！定量对比结果保存在 Results/${SEQ_ID}_results/Online/ 目录"

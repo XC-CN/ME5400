@@ -5,9 +5,11 @@ set -e
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 PROJECT_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 
+source "$PROJECT_ROOT/Scripts/utils/setup_runtime_env.sh"
+
 # 解析参数，主要是为了帮助文档
 SEQ_ID="0020"
-HEADLESS=false
+HEADLESS=true
 SAVE_MAP=false
 
 for arg in "$@"; do
@@ -15,16 +17,19 @@ for arg in "$@"; do
         -h|--help)
             echo "用法: $0 [选项] [SEQ_ID]"
             echo "选项:"
-            echo "  -n, --headless  无可视化模式 (跳过加载 RViz)"
+            echo "  -v, --viz       开启可视化模式 (加载 RViz)"
             echo "  -m, --save-map  为 baseline 与 optimized 两阶段都启用地图保存"
             echo "  -h, --help      显示帮助信息"
             echo ""
             echo "一键执行完整的验证流：先运行纯净 Baseline，再运行带 MCTrack 的优化管线"
             echo "示例:"
-            echo "  $0 0020         # 顺序运行序列0020的两套测试并自动生成对比"
-            echo "  $0 --headless 0020 # 以 Headless 模式一键测完并出图"
+            echo "  $0 0020         # 顺序运行并自动生成对比 (默认无可视化)"
+            echo "  $0 --viz 0020   # 开启可视化运行"
             echo "  $0 --save-map 0020 # 两阶段都额外保存全局地图"
             exit 0
+        ;;
+        -v|--viz|--rviz)
+            HEADLESS=false
         ;;
         -n|--headless|--no-rviz)
             HEADLESS=true

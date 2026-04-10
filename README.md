@@ -489,25 +489,25 @@ ME5400/
 如果您已准备好环境和数据，可以直接使用项目内的自动化脚本执行测试。为了保证各司其职且不相互干扰，系统提供了在线与离线两类快捷启动脚本：
 
 #### 1. 自动化全流程连跑 (双轨一键对比)
-最推荐的方式。脚本会自动先执行一遍纯净的 Baseline，结束后自动清理后台并紧接着执行带感知闭环的优化管线，最后自动输出两者的量化对比评估图表。
+最推荐的方式。脚本会自动先执行一遍纯净的 Baseline，结束后自动清理后台并紧接着执行带感知闭环的优化管线；在线优化阶段现在会一并启动 `joint_backend_ego`，额外保存 `/joint_backend/odom` 对应的联合后端轨迹与评估结果。
 
 ```bash
-# 完美控制变量的双轨连跑，并自动输出图表到 0020_results/ 
+# 默认静默运行（无可视化），自动输出图表到 0020_results/ 
 ./Scripts/run_all.sh 0020
 
-# 🚀 强烈推荐：无可视化模式运行，跳过一切界面与真值发布，极省资源且最高效
-./Scripts/run_all.sh --headless 0020
+# 🚀 推荐：开启可视化模式运行，加载 RViz 界面并在屏幕显示运行过程
+./Scripts/run_all.sh --viz 0020
 
 # 如需额外导出 FAST-LIO 全局地图
 ./Scripts/run_all.sh --save-map 0020
 ```
-*(注：`--headless` 或 `-n` 参数会关闭 RViz 渲染前端在后台静默高速运算。0019序列 为高速路场景，0020 为城市街道。)*
+*(注：默认行为现在是无可视化的。0019序列 为高速路场景，0020 为城市街道。)*
 
 #### 2. 离线双轨连跑 (半同步 feeder + 自动评估)
 
 ```bash
-./Scripts/run_offline_all.sh 0020
-./Scripts/run_offline_all.sh --headless 0020
+./Scripts/run_offline_all.sh 0020         # 默认无可视化
+./Scripts/run_offline_all.sh --viz 0020   # 开启 RViz 可视化
 ./Scripts/run_offline_all.sh --save-map 0020
 ```
 
@@ -524,21 +524,22 @@ ME5400/
   - `Results/<SEQ>_results/metrics_kitti_tr_rot_ac.txt`
 
 #### 3. 分解独立模块执行
-如果您只需要跑单一环境获取固定数据，或进行单步调试开发，可直接使用独立脚本（同样支持 `--headless`）：
+如果您只需要跑单一环境获取固定数据，或进行单步调试开发，可直接使用独立脚本（默认无可视化，可用 `--viz` 开启）：
 
 ```bash
-# 仅运行纯净基准测试 (只启动原生 FAST-LIO mapping，不启动 pose_bridge / 感知链)
+# 仅运行纯净基准测试 (只启动原生 FAST-LIO mapping，不启动 pose_bridge / 感知链；默认无可视化)
 ./Scripts/run_baseline.sh 0020
-./Scripts/run_baseline.sh --save-map 0020
+./Scripts/run_baseline.sh --viz 0020      # 开启运行过程可视化
 
-# 仅运行深度学习优化管线 (启动 PointPillars + MCTrack + pose_bridge + 动态加权 FAST-LIO)
+# 仅运行深度学习优化管线 (启动 PointPillars + MCTrack + pose_bridge + 动态加权 FAST-LIO + joint backend)
 ./Scripts/run_optimized.sh 0020
-./Scripts/run_optimized.sh --headless 0020
+./Scripts/run_optimized.sh --viz 0020     # 开启运行过程可视化
 ./Scripts/run_optimized.sh --save-map 0020
-
 ```
 
-> 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`）以及最终生成的 ATE/RPE 对比评测图（`.png`）与指标（`metrics.txt`），系统都会自动统一存放入 `Results/<序列号>_results/`。点云地图（`.pcd`）仅在显式添加 `--save-map` 时生成并归档，默认不会导出。
+> 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`，在线优化阶段也会额外生成 `trajectory_joint.txt`）以及最终生成的 ATE/RPE 对比评测图（`.png`）与指标（`metrics.txt` / `metrics_joint_backend.txt` / `metrics_kitti_tr_rot.txt`），系统都会自动统一存放入 `Results/<序列号>_results/`。点云地图（`.pcd`）仅在显式添加 `--save-map` 时生成并归档，默认不会导出。
+
+> 评估逻辑现已统一收敛到 `Scripts/evaluation/evaluate_trajectories.py`；原有的 `evaluate_trajectory.py`、`evaluate_joint_backend.py`、`evaluate_kitti_tr_rot.py` 仅保留为兼容旧调用方式的薄包装入口。
 
 #### 4. 清理残留 ROS 节点/进程
 
