@@ -21,20 +21,20 @@
       "baseline": {
         "name": "Baseline",
         "path": "/home/xc/Projects/ME5400/Results/0009_results/Online/trajectory_baseline.txt",
-        "rmse": 1.6830650769157858,
-        "mean_error": 1.5520387853506266,
-        "max_error": 2.7081036798176483,
+        "rmse": 1.6830650769157876,
+        "mean_error": 1.5520387853506268,
+        "max_error": 2.708103679817657,
         "num_samples": 787
       },
       "primary": {
         "name": "FAST-LIO+MCTrack",
         "path": "/home/xc/Projects/ME5400/Results/0009_results/Online/trajectory.txt",
-        "rmse": 1.6674722463077833,
-        "mean_error": 1.531662267812739,
-        "max_error": 2.865880057908129,
+        "rmse": 1.6674722463077776,
+        "mean_error": 1.5316622678127432,
+        "max_error": 2.8658800579079426,
         "num_samples": 788
       },
-      "improvement_percent": 0.9264544087966144
+      "improvement_percent": 0.926454408797062
     }
   },
   "ate_rpe": {
@@ -44,10 +44,10 @@
         "path": "/home/xc/Projects/ME5400/Results/0009_results/Online/trajectory_baseline.txt",
         "matched_frames": 787,
         "ate": {
-          "ATE_RMSE": 1.6830650769157858,
-          "ATE_mean": 1.5520387853506266,
-          "ATE_max": 2.7081036798176483,
-          "ATE_std": 0.6510634853076093
+          "ATE_RMSE": 1.6830650769157876,
+          "ATE_mean": 1.5520387853506268,
+          "ATE_max": 2.708103679817657,
+          "ATE_std": 0.6510634853076135
         },
         "rpe": {
           "RPE_RMSE": 0.17865274313672558,
@@ -61,10 +61,10 @@
         "path": "/home/xc/Projects/ME5400/Results/0009_results/Online/trajectory.txt",
         "matched_frames": 788,
         "ate": {
-          "ATE_RMSE": 1.6674722463077833,
-          "ATE_mean": 1.531662267812739,
-          "ATE_max": 2.865880057908129,
-          "ATE_std": 0.6591467132326934
+          "ATE_RMSE": 1.6674722463077776,
+          "ATE_mean": 1.5316622678127432,
+          "ATE_max": 2.8658800579079426,
+          "ATE_std": 0.6591467132326687
         },
         "rpe": {
           "RPE_RMSE": 0.16513893993200277,
@@ -78,10 +78,10 @@
         "path": "/home/xc/Projects/ME5400/Results/0009_results/Online/trajectory_joint.txt",
         "matched_frames": 788,
         "ate": {
-          "ATE_RMSE": 3.3082354847278412,
-          "ATE_mean": 1.7280224561329651,
-          "ATE_max": 40.306275569558444,
-          "ATE_std": 2.8210566129577495
+          "ATE_RMSE": 3.3082354847278403,
+          "ATE_mean": 1.7280224561329791,
+          "ATE_max": 40.306275569558466,
+          "ATE_std": 2.82105661295774
         },
         "rpe": {
           "RPE_RMSE": 1.9513754388267046,
@@ -94,37 +94,52 @@
     "improvements_relative_to_first": [
       {
         "name": "FAST-LIO+MCTrack",
-        "ate_improvement_percent": 0.9264544087966144
+        "ate_improvement_percent": 0.926454408797062
       },
       {
         "name": "Joint Backend",
-        "ate_improvement_percent": -96.56016455348106
+        "ate_improvement_percent": -96.5601645534808
       }
     ]
   },
   "kitti_tr_rot": {
     "oxts_path": "/home/xc/Projects/ME5400/Data_Tracking/training/oxts/0009.txt",
     "calib_path": "/home/xc/Projects/ME5400/Data_Tracking/training/calib/0009.txt",
-    "lengths_m": [
+    "requested_lengths_m": [
+      20,
+      40,
+      60,
+      80,
       100,
-      200,
-      300,
-      400,
-      500,
-      600,
-      700,
-      800
+      150,
+      200
+    ],
+    "lengths_m": [
+      20,
+      40,
+      60,
+      80,
+      100,
+      150,
+      200
     ],
     "step_frames": 10,
     "max_dt": 0.2,
+    "min_matched_span_m": 706.7663808107088,
+    "matched_span_by_traj_m": {
+      "Baseline": 706.7663808107088,
+      "FAST-LIO+MCTrack": 706.8345155754924,
+      "Joint Backend": 706.8345155754924
+    },
     "rows": [
       {
         "name": "Baseline",
         "traj": "/home/xc/Projects/ME5400/Results/0009_results/Online/trajectory_baseline.txt",
         "matched_frames": 787,
-        "Tr_percent": 2.891417796345255,
-        "Rot_deg_per_100m": 1.4900155163525632,
-        "n_segments": 259,
+        "matched_span_m": 706.7663808107088,
+        "Tr_percent": 2.563010437805791,
+        "Rot_deg_per_100m": 3.242453362676996,
+        "n_segments": 452,
         "Tr_gain_percent": 0.0,
         "Rot_gain_percent": 0.0
       },
@@ -132,148 +147,135 @@
         "name": "FAST-LIO+MCTrack",
         "traj": "/home/xc/Projects/ME5400/Results/0009_results/Online/trajectory.txt",
         "matched_frames": 788,
-        "Tr_percent": 2.946266516408935,
-        "Rot_deg_per_100m": 1.4881253137804433,
-        "n_segments": 259,
-        "Tr_gain_percent": -1.896948968530548,
-        "Rot_gain_percent": 0.12685791197308982
+        "matched_span_m": 706.8345155754924,
+        "Tr_percent": 2.528090025266671,
+        "Rot_deg_per_100m": 3.2294418111223977,
+        "n_segments": 452,
+        "Tr_gain_percent": 1.362476407587922,
+        "Rot_gain_percent": 0.4012872383723557
       },
       {
         "name": "Joint Backend",
         "traj": "/home/xc/Projects/ME5400/Results/0009_results/Online/trajectory_joint.txt",
         "matched_frames": 788,
-        "Tr_percent": 3.513482252315045,
-        "Rot_deg_per_100m": 1.6091460214828457,
-        "n_segments": 259,
-        "Tr_gain_percent": -21.51416708979511,
-        "Rot_gain_percent": -7.995252654945784
+        "matched_span_m": 706.8345155754924,
+        "Tr_percent": 4.219965733746933,
+        "Rot_deg_per_100m": 3.7549591973599723,
+        "n_segments": 452,
+        "Tr_gain_percent": -64.64879235371633,
+        "Rot_gain_percent": -15.806112759624938
       }
     ],
     "per_length": {
       "Baseline": {
+        "20": {
+          "Tr_percent": 3.1405711454266947,
+          "Rot_deg_per_100m": 6.934899339489468,
+          "n_segments": 71.0
+        },
+        "40": {
+          "Tr_percent": 2.5323771778931614,
+          "Rot_deg_per_100m": 3.7865426872902868,
+          "n_segments": 69.0
+        },
+        "60": {
+          "Tr_percent": 2.3626321026559305,
+          "Rot_deg_per_100m": 3.085166460090556,
+          "n_segments": 67.0
+        },
+        "80": {
+          "Tr_percent": 2.3343306519714293,
+          "Rot_deg_per_100m": 2.586955263772465,
+          "n_segments": 65.0
+        },
         "100": {
           "Tr_percent": 2.3759470272986003,
-          "Rot_deg_per_100m": 2.2434293128211666,
+          "Rot_deg_per_100m": 2.2434293128210943,
           "n_segments": 63.0
         },
+        "150": {
+          "Tr_percent": 2.5152763612927,
+          "Rot_deg_per_100m": 1.7769050985627357,
+          "n_segments": 60.0
+        },
         "200": {
-          "Tr_percent": 2.633983397102281,
-          "Rot_deg_per_100m": 1.563702172113103,
+          "Tr_percent": 2.6339833971022797,
+          "Rot_deg_per_100m": 1.5637021721131472,
           "n_segments": 57.0
-        },
-        "300": {
-          "Tr_percent": 2.889167272994299,
-          "Rot_deg_per_100m": 1.2329015393127305,
-          "n_segments": 49.0
-        },
-        "400": {
-          "Tr_percent": 3.402898481114394,
-          "Rot_deg_per_100m": 1.107297544783921,
-          "n_segments": 42.0
-        },
-        "500": {
-          "Tr_percent": 3.679897469423099,
-          "Rot_deg_per_100m": 1.0518991034095162,
-          "n_segments": 31.0
-        },
-        "600": {
-          "Tr_percent": 3.0289316383562483,
-          "Rot_deg_per_100m": 0.9476180287261797,
-          "n_segments": 16.0
-        },
-        "700": {
-          "Tr_percent": 2.0248325494381447,
-          "Rot_deg_per_100m": 0.7575152445712211,
-          "n_segments": 1.0
-        },
-        "800": {
-          "Tr_percent": NaN,
-          "Rot_deg_per_100m": NaN,
-          "n_segments": 0.0
         }
       },
       "FAST-LIO+MCTrack": {
+        "20": {
+          "Tr_percent": 3.1017071378434298,
+          "Rot_deg_per_100m": 6.858107186406056,
+          "n_segments": 71.0
+        },
+        "40": {
+          "Tr_percent": 2.468990141381076,
+          "Rot_deg_per_100m": 3.7663009862934325,
+          "n_segments": 69.0
+        },
+        "60": {
+          "Tr_percent": 2.322813870625473,
+          "Rot_deg_per_100m": 3.0714339877498693,
+          "n_segments": 67.0
+        },
+        "80": {
+          "Tr_percent": 2.299557103489754,
+          "Rot_deg_per_100m": 2.5952054189964513,
+          "n_segments": 65.0
+        },
         "100": {
-          "Tr_percent": 2.334831326662689,
-          "Rot_deg_per_100m": 2.2486875965683746,
+          "Tr_percent": 2.3348313266626883,
+          "Rot_deg_per_100m": 2.248687596568273,
           "n_segments": 63.0
         },
+        "150": {
+          "Tr_percent": 2.494709030061183,
+          "Rot_deg_per_100m": 1.786092246616247,
+          "n_segments": 60.0
+        },
         "200": {
-          "Tr_percent": 2.6357633058981897,
-          "Rot_deg_per_100m": 1.5719304832186163,
+          "Tr_percent": 2.635763305898189,
+          "Rot_deg_per_100m": 1.5719304832186034,
           "n_segments": 57.0
-        },
-        "300": {
-          "Tr_percent": 2.930508614776317,
-          "Rot_deg_per_100m": 1.2307517778066177,
-          "n_segments": 49.0
-        },
-        "400": {
-          "Tr_percent": 3.499394259732062,
-          "Rot_deg_per_100m": 1.09848391429219,
-          "n_segments": 42.0
-        },
-        "500": {
-          "Tr_percent": 3.884679293128457,
-          "Rot_deg_per_100m": 1.0385340609170954,
-          "n_segments": 31.0
-        },
-        "600": {
-          "Tr_percent": 3.260799959007593,
-          "Rot_deg_per_100m": 0.9231840866560344,
-          "n_segments": 16.0
-        },
-        "700": {
-          "Tr_percent": 2.582807270078192,
-          "Rot_deg_per_100m": 0.7484373541433061,
-          "n_segments": 1.0
-        },
-        "800": {
-          "Tr_percent": NaN,
-          "Rot_deg_per_100m": NaN,
-          "n_segments": 0.0
         }
       },
       "Joint Backend": {
+        "20": {
+          "Tr_percent": 8.770710411151907,
+          "Rot_deg_per_100m": 7.69306227888472,
+          "n_segments": 71.0
+        },
+        "40": {
+          "Tr_percent": 4.031610821768745,
+          "Rot_deg_per_100m": 5.11729171205558,
+          "n_segments": 69.0
+        },
+        "60": {
+          "Tr_percent": 3.423529663506615,
+          "Rot_deg_per_100m": 3.6429043152155924,
+          "n_segments": 67.0
+        },
+        "80": {
+          "Tr_percent": 3.187745810327765,
+          "Rot_deg_per_100m": 2.811414613037725,
+          "n_segments": 65.0
+        },
         "100": {
-          "Tr_percent": 3.101507362307615,
-          "Rot_deg_per_100m": 2.43335854678248,
+          "Tr_percent": 3.101507362307616,
+          "Rot_deg_per_100m": 2.4333585467825567,
           "n_segments": 63.0
+        },
+        "150": {
+          "Tr_percent": 3.1483202803822774,
+          "Rot_deg_per_100m": 1.9220311640740515,
+          "n_segments": 60.0
         },
         "200": {
           "Tr_percent": 3.2569961400915948,
-          "Rot_deg_per_100m": 1.798263333603772,
+          "Rot_deg_per_100m": 1.7982633336037914,
           "n_segments": 57.0
-        },
-        "300": {
-          "Tr_percent": 3.56558504658824,
-          "Rot_deg_per_100m": 1.3119990322644859,
-          "n_segments": 49.0
-        },
-        "400": {
-          "Tr_percent": 4.176941608987822,
-          "Rot_deg_per_100m": 1.1733941012687759,
-          "n_segments": 42.0
-        },
-        "500": {
-          "Tr_percent": 3.964706728339754,
-          "Rot_deg_per_100m": 1.033120112189666,
-          "n_segments": 31.0
-        },
-        "600": {
-          "Tr_percent": 3.3321371792689054,
-          "Rot_deg_per_100m": 0.9137847349492036,
-          "n_segments": 16.0
-        },
-        "700": {
-          "Tr_percent": 2.5828412318490255,
-          "Rot_deg_per_100m": 0.7484370300305039,
-          "n_segments": 1.0
-        },
-        "800": {
-          "Tr_percent": NaN,
-          "Rot_deg_per_100m": NaN,
-          "n_segments": 0.0
         }
       }
     }

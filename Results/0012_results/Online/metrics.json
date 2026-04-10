@@ -78,16 +78,16 @@
         "path": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_joint.txt",
         "matched_frames": 62,
         "ate": {
-          "ATE_RMSE": 0.05993951251978115,
-          "ATE_mean": 0.051018297772799606,
-          "ATE_max": 0.10630691371262933,
-          "ATE_std": 0.03146233388474147
+          "ATE_RMSE": 0.06055298057618267,
+          "ATE_mean": 0.05163113377092042,
+          "ATE_max": 0.1062794352657916,
+          "ATE_std": 0.03163683742394102
         },
         "rpe": {
-          "RPE_RMSE": 0.007587301231835732,
-          "RPE_mean": 0.006150545682169115,
-          "RPE_max": 0.017164439989797838,
-          "RPE_std": 0.004442738771767574
+          "RPE_RMSE": 0.0076202129532793135,
+          "RPE_mean": 0.006093305212645556,
+          "RPE_max": 0.02187026895995019,
+          "RPE_std": 0.0045759454803212364
         }
       }
     ],
@@ -98,7 +98,7 @@
       },
       {
         "name": "Joint Backend",
-        "ate_improvement_percent": -503.76161960663273
+        "ate_improvement_percent": -509.9409903045123
       }
     ]
   },

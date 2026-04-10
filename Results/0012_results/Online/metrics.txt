@@ -24,11 +24,11 @@
 -----------------------------------------------------------------------------
 Baseline                       62     0.0099     0.0092     0.0164     0.0023
 FAST-LIO+MCTrack               62     0.0092     0.0084     0.0149     0.0025
-Joint Backend                  62     0.0599     0.0510     0.1063     0.0076
+Joint Backend                  62     0.0606     0.0516     0.1063     0.0076
 
 相对第一条有效轨迹的提升幅度：
   FAST-LIO+MCTrack         ATE 改善 +7.59%
-  Joint Backend            ATE 改善 -503.76%
+  Joint Backend            ATE 改善 -509.94%
 
 三、KITTI 相对里程计指标（Tr / Rot）
 真值 OXTS: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0012.txt
