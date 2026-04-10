@@ -72,7 +72,9 @@ if [[ ! -f /opt/ros/noetic/setup.bash ]]; then
   exit 1
 fi
 
+set +u
 source "$PROJECT_ROOT/Scripts/utils/setup_ros_env.sh"
+set -u
 echo "[OK] ROS environment loaded"
 
 if [[ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]]; then

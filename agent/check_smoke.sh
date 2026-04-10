@@ -106,7 +106,7 @@ else
   export MPLCONFIGDIR="${TMPDIR:-/tmp}/me5400_mplconfig"
   mkdir -p "$MPLCONFIGDIR"
 
-  python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectory.py" \
+  python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectories.py" \
     --pred "$PRED_FILE" \
     --baseline "$BASELINE_FILE" \
     --gt "$GT_FILE" \

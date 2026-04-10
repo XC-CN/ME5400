@@ -288,32 +288,6 @@ ME5400/
 - **MCTrack/**：纯跟踪算法框架
 - **catkin_ws/**：ROS 工作空间，包含 FAST-LIO 和 MCTrack 的 ROS 适配层
 
-## 📊 实验结果
-
-在 KITTI Tracking 序列 0020 上，评估结果显示 MCTrack 的动态物体剔除机制带来了显著的精度提升：
-
-| 指标                        | 基准 (Baseline)   | 优化后 (Optimized) | 提升幅度         |
-| :-------------------------- | :---------------- | :----------------- | :--------------- |
-| **RMSE (均方根误差)** | **21.44 m** | **5.46 m**   | **74.52%** |
-| 平均误差                    | 19.02 m           | 4.25 m             | 77.65%           |
-| 最大误差                    | 32.46 m           | 10.40 m            | 67.95%           |
-
-> **结论**: MCTrack 通过剔除动态物体特征点，有效抑制了“鬼影”和轨迹漂移，使定位精度提升了 **74.52%**。
-
-### 可视化分析
-
-下图展示了三条轨迹的对比（真值、基准、优化后）以及随时间变化的位姿误差：
-
-![评估结果图表](Results/0020_results/evaluation_result.png)
-
-* **上图 (轨迹对比)**:
-  * **黑色实线**: KITTI 真值 (Ground Truth)
-  * **蓝色虚线**: 基准轨迹 (Baseline)。可以看到在动态物体干扰下发生了严重漂移。
-  * **红色实线**: 优化轨迹 (Optimized)。紧密跟随真值，鲁棒性更强。
-* **下图 (误差曲线)**:
-  * **蓝色曲线**: 基准误差，随时间迅速累积。
-  * **红色曲线**: 优化误差，保持在较低水平。
-
 ## 🛠️ 环境与安装
 
 ### 环境要求
@@ -503,7 +477,21 @@ ME5400/
 ```
 *(注：默认行为现在是无可视化的。0019序列 为高速路场景，0020 为城市街道。)*
 
-#### 2. 离线双轨连跑 (半同步 feeder + 自动评估)
+#### 2. 分解独立模块执行
+如果您只需要跑单一环境获取固定数据，或进行单步调试开发，可直接使用独立脚本（默认无可视化，可用 `--viz` 开启）：
+
+```bash
+# 仅运行纯净基准测试 (只启动原生 FAST-LIO mapping，不启动 pose_bridge / 感知链；默认无可视化)
+./Scripts/run_baseline.sh 0020
+./Scripts/run_baseline.sh --viz 0020      # 开启运行过程可视化
+
+# 仅运行深度学习优化管线 (启动 PointPillars + MCTrack + pose_bridge + 动态加权 FAST-LIO + joint backend)
+./Scripts/run_optimized.sh 0020
+./Scripts/run_optimized.sh --viz 0020     # 开启运行过程可视化
+./Scripts/run_optimized.sh --save-map 0020
+```
+
+#### 3. 离线双轨连跑 (半同步 feeder + 自动评估)
 
 ```bash
 ./Scripts/run_offline_all.sh 0020         # 默认无可视化
@@ -522,23 +510,8 @@ ME5400/
   - `Results/<SEQ>_results/trajectory_joint.txt`
   - `Results/<SEQ>_results/metrics.txt`
 
-#### 3. 分解独立模块执行
-如果您只需要跑单一环境获取固定数据，或进行单步调试开发，可直接使用独立脚本（默认无可视化，可用 `--viz` 开启）：
-
-```bash
-# 仅运行纯净基准测试 (只启动原生 FAST-LIO mapping，不启动 pose_bridge / 感知链；默认无可视化)
-./Scripts/run_baseline.sh 0020
-./Scripts/run_baseline.sh --viz 0020      # 开启运行过程可视化
-
-# 仅运行深度学习优化管线 (启动 PointPillars + MCTrack + pose_bridge + 动态加权 FAST-LIO + joint backend)
-./Scripts/run_optimized.sh 0020
-./Scripts/run_optimized.sh --viz 0020     # 开启运行过程可视化
-./Scripts/run_optimized.sh --save-map 0020
-```
 
 > 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`，在线优化阶段也会额外生成 `trajectory_joint.txt`）以及最终生成的评测图（`.png`）与汇总指标（`metrics.txt` / `metrics.json`），系统都会自动统一存放入 `Results/<序列号>_results/`。点云地图（`.pcd`）仅在显式添加 `--save-map` 时生成并归档，默认不会导出。
-
-> 评估逻辑现已统一收敛到 `Scripts/evaluation/evaluate_trajectories.py`，旧的分散评测脚本已经移除；`metrics.txt` 会在同一份报告里同时给出 ATE/RPE 汇总以及 KITTI `Tr/Rot` 指标。
 
 #### 4. 清理残留 ROS 节点/进程
 
