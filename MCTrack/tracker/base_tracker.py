@@ -140,7 +140,7 @@ class Base3DTracker:
     def get_output_trajs(self, frame_id):
         output_trajs = {}
         for track_id in list(self.all_trajs.keys()):
-            if self.all_trajs[track_id].status_flag == 1 or frame_id < 3:
+            if self.all_trajs[track_id].status_flag == 1:
                 bbox = self.all_trajs[track_id].bboxes[-1]
                 if bbox.det_score == self.all_trajs[track_id]._is_filter_predict_box:
                     continue

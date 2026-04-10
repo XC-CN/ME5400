@@ -72,9 +72,12 @@ class Trajectory:
         self._is_filter_predict_box = cfg["THRESHOLD"]["TRAJECTORY_THRE"][
             "IS_FILTER_PREDICT_BOX"
         ][self.category_num]
-        
-        self.status_flag = 1  # 0:initialization / 1: confirmed / 2: obscured / 4: dead
-        # we have tried to set the status_flag to 0, but it seems that it is not necessary
+        self._yaw_speed_threshold = {0: 0.5, 1: 0.2, 2: 0.2}.get(
+            self.category_num, 0.2
+        )
+
+        init_bbox.track_length = self.track_length
+        self.status_flag = 0  # 0: tentative / 1: confirmed / 2: obscured / 4: dead
 
         self.cv_filter_pose = EKF_CV(
             dt=1 / self.frame_rate,
@@ -152,10 +155,22 @@ class Trajectory:
         if filter_flag == "pose":
             measure = np.array([global_xyz[0], global_xyz[1], global_velocity[0], global_velocity[1]])
         elif filter_flag == "yaw":
-            vel_yaw = np.arctan2(global_velocity[1], global_velocity[0]+1e-5)
-            vel_yaw_norm = norm_radian(vel_yaw)
-            pose_yaw_norm = norm_radian(global_yaw)
-            measure = np.array([pose_yaw_norm, vel_yaw_norm])
+            reference_yaw = norm_radian(global_yaw)
+            if len(self.bboxes) > 1:
+                reference_yaw = norm_radian(self.bboxes[-2].global_yaw_fusion)
+
+            pose_yaw_norm = self._align_yaw_to_reference(global_yaw, reference_yaw)
+            velocity_for_yaw = np.asarray(
+                self._select_velocity_for_yaw(),
+                dtype=np.float64,
+            )
+            speed = float(np.linalg.norm(velocity_for_yaw))
+            if speed < self._yaw_speed_threshold:
+                measure = np.array([reference_yaw, reference_yaw])
+            else:
+                vel_yaw = np.arctan2(velocity_for_yaw[1], velocity_for_yaw[0] + 1e-5)
+                vel_yaw_norm = self._align_yaw_to_reference(vel_yaw, reference_yaw)
+                measure = np.array([pose_yaw_norm, vel_yaw_norm])
         elif filter_flag == "size":
             measure = np.array([lwh[0], lwh[1]])
         elif filter_flag == "rvbox":
@@ -164,6 +179,32 @@ class Trajectory:
             raise ValueError(f"Unexpected filter_flag value: {filter_flag}")
 
         return measure
+
+    def _align_yaw_to_reference(self, yaw, reference_yaw):
+        candidates = [yaw, yaw + np.pi, yaw - np.pi]
+        best_yaw = min(
+            candidates,
+            key=lambda candidate: abs(norm_realative_radian(candidate - reference_yaw)),
+        )
+        return norm_radian(best_yaw)
+
+    def _select_velocity_for_yaw(self):
+        if len(self.bboxes) > 1:
+            velocity_diff = np.asarray(
+                self.bboxes[-1].global_velocity_diff,
+                dtype=np.float64,
+            )
+            if np.linalg.norm(velocity_diff) > 1e-3:
+                return velocity_diff.tolist()
+
+            prev_fused_velocity = np.asarray(
+                getattr(self.bboxes[-2], "global_velocity_fusion", [0.0, 0.0]),
+                dtype=np.float64,
+            )
+            if np.linalg.norm(prev_fused_velocity) > 1e-3:
+                return prev_fused_velocity.tolist()
+
+        return [0.0, 0.0]
     
     def predict(self):
         predict_state = self.kalman_filter_pose.predict()
@@ -176,12 +217,15 @@ class Trajectory:
         global_xyz_lwh_yaw_fusion = self.bboxes[-1].global_xyz_lwh_yaw_fusion
 
         predict_xyz = predict_state[:2].tolist() + [global_xyz_lwh_yaw_fusion[2]]
-        # predict_lwh = predict_size[:2].tolist() + [global_xyz_lwh_yaw_fusion[5]]
-        predict_lwh = [global_xyz_lwh_yaw_fusion[3], global_xyz_lwh_yaw_fusion[4], global_xyz_lwh_yaw_fusion[5]]
-        self.bboxes[-1].global_xyz_lwh_yaw_predict = predict_xyz + predict_lwh + [global_xyz_lwh_yaw_fusion[6]]
+        predict_lwh = predict_size[:2].tolist() + [global_xyz_lwh_yaw_fusion[5]]
+        predict_yaw_value = float(norm_radian(predict_yaw[0]))
+        self.bboxes[-1].global_xyz_lwh_yaw_predict = (
+            predict_xyz + predict_lwh + [predict_yaw_value]
+        )
 
-        self.bboxes[-1].global_yaw_fusion = predict_yaw[0]
-        self.bboxes[-1].lwh_fusion = predict_lwh   
+        self.bboxes[-1].global_yaw_fusion = predict_yaw_value
+        self.bboxes[-1].global_xyz_lwh_yaw_fusion[6] = predict_yaw_value
+        self.bboxes[-1].lwh_fusion = predict_lwh
 
     def update(self, bbox: BBox, matched_score):
         bbox.track_id = self.track_id
@@ -207,14 +251,15 @@ class Trajectory:
             pose_mesure = pose_mesure[:2]
         update_state = self.kalman_filter_pose.update(pose_mesure)
         self.bboxes[-1].global_velocity_fusion = update_state[2:4].tolist()
-        
+
         # ======== yaw filter ==========
         yaw_mesure = self.get_measure(bbox, filter_flag="yaw")
         update_yaw = self.kalman_filter_yaw.update(yaw_mesure)
-        self.bboxes[-1].global_yaw_fusion = update_yaw[0]
-        
+        update_yaw_value = float(norm_radian(update_yaw[0]))
+        self.bboxes[-1].global_yaw_fusion = update_yaw_value
+
         # ======== size filter ==========
-        size_mesure = self.get_measure(bbox, filter_flag="size")  
+        size_mesure = self.get_measure(bbox, filter_flag="size")
         update_size = self.kalman_filter_size.update(size_mesure)
         update_lwh = update_size[:2].tolist() + [self.bboxes[-1].lwh[2]]
         self.bboxes[-1].lwh_fusion = update_lwh
@@ -225,22 +270,26 @@ class Trajectory:
         #     update_rvbox = self.kalman_filter_rvbox.update(rvbox_mesure)
         #     self.bboxes[-1].x1y1x2y2_fusion = bbox.transform_bbox_xywh2tlbr(update_rvbox[:4])
 
-        # self.bboxes[-1].global_xyz_lwh_yaw_fusion = update_xyz + update_lwh + [update_yaw[0]]
-        self.bboxes[-1].global_xyz_lwh_yaw_fusion = np.append(
-            update_state[:2], self.bboxes[-1].global_xyz_lwh_yaw[2:]
+        self.bboxes[-1].global_xyz_lwh_yaw_fusion = np.array(
+            update_state[:2].tolist()
+            + [self.bboxes[-1].global_xyz_lwh_yaw[2]]
+            + update_lwh
+            + [update_yaw_value],
+            dtype=np.float64,
         )
 
         self.bboxes[-1].matched_score = matched_score 
 
-        if self.track_length > self._confirmed_track_length or (
-            matched_score > self._confirmed_match_score
-            and self.bboxes[-1].det_score > self._confirmed_det_score
-        ):
+        if self.track_length >= self._confirmed_track_length:
             self.status_flag = 1
 
         return self.bboxes[-1]
 
     def unmatch_update(self, frame_id):
+        if self.status_flag == 0:
+            self.status_flag = 4
+            return
+
         self.unmatch_length += 1
 
         predict_state = self.kalman_filter_pose.predict()
@@ -259,12 +308,23 @@ class Trajectory:
         fake_bbox.det_score = 0
         fake_bbox.is_fake = True
         fake_bbox.frame_id = frame_id
-        
+        fake_yaw = float(norm_radian(predict_yaw[0]))
         fake_xyz = fake_update_state[:2].tolist() + [fake_bbox.global_xyz_lwh_yaw[2]]
         fake_lwh = predict_size[:2].tolist() + [fake_bbox.global_xyz_lwh_yaw[5]]
-        fake_bbox.global_xyz_lwh_yaw = fake_xyz + fake_lwh + [self.bboxes[-1].global_xyz_lwh_yaw[-1]]
-        fake_bbox.global_xyz_lwh_yaw_fusion = fake_xyz + fake_lwh + [self.bboxes[-1].global_xyz_lwh_yaw[-1]]
-        
+        fake_bbox.global_xyz = fake_xyz
+        fake_bbox.lwh = fake_lwh
+        fake_bbox.global_yaw = fake_yaw
+        fake_bbox.global_velocity = fake_update_state[2:4].tolist()
+        fake_bbox.global_velocity_fusion = fake_update_state[2:4].tolist()
+        fake_bbox.global_yaw_fusion = fake_yaw
+        fake_bbox.lwh_fusion = fake_lwh
+        fake_bbox.global_xyz_lwh_yaw = fake_xyz + fake_lwh + [fake_yaw]
+        fake_bbox.global_xyz_lwh_yaw_predict = fake_bbox.global_xyz_lwh_yaw
+        fake_bbox.global_xyz_lwh_yaw_fusion = np.array(
+            fake_bbox.global_xyz_lwh_yaw,
+            dtype=np.float64,
+        )
+
         self.bboxes.append(fake_bbox)
         self.matched_scores.append(0)
         self.bboxes[-1].matched_score = 0
@@ -277,9 +337,6 @@ class Trajectory:
 
         if len(self.bboxes) > self._cache_bbox_len:
             self.bboxes.pop(0)
-
-        if self.status_flag == 0 and self.track_length > self._confirmed_track_length: 
-            self.status_flag = 4
 
         if self.status_flag == 1 and self.unmatch_length > self._max_unmatch_len:
             self.status_flag = 2
@@ -347,9 +404,10 @@ class Trajectory:
             bbox.det_score = score
             
     def cal_diff_velocity(self):
-        if len(self.bboxes) > 1:
-            prev_bbox = self.bboxes[-2]
-            cur_bbox = self.bboxes[-1]
+        real_bboxes = [bbox for bbox in self.bboxes if not bbox.is_fake]
+        if len(real_bboxes) > 1:
+            prev_bbox = real_bboxes[-2]
+            cur_bbox = real_bboxes[-1]
             time_diff = (cur_bbox.frame_id - prev_bbox.frame_id) / self.frame_rate
             if time_diff > 0:
                 position_diff = np.array(cur_bbox.global_xyz[:2]) - np.array(prev_bbox.global_xyz[:2])
@@ -361,10 +419,12 @@ class Trajectory:
         return global_velocity_diff
     
     def cal_curve_velocity(self):
-        if len(self.bboxes) > 2:
-            x_vals = [bb.frame_id for bb in self.bboxes[-3:]]
-            y_vals_x = [bb.global_xyz[0] for bb in self.bboxes[-3:]]
-            y_vals_y = [bb.global_xyz[1] for bb in self.bboxes[-3:]]
+        real_bboxes = [bbox for bbox in self.bboxes if not bbox.is_fake]
+        if len(real_bboxes) > 2:
+            recent_real_bboxes = real_bboxes[-3:]
+            x_vals = [bb.frame_id for bb in recent_real_bboxes]
+            y_vals_x = [bb.global_xyz[0] for bb in recent_real_bboxes]
+            y_vals_y = [bb.global_xyz[1] for bb in recent_real_bboxes]
 
             try:
                 popt_x, _ = curve_fit(linear_func, x_vals, y_vals_x)

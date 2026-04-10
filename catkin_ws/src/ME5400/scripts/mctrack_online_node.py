@@ -520,6 +520,17 @@ class MCTrackOnlineNode:
         array_msg.header = Header(stamp=stamp, frame_id=frame_id)
 
         for track_id, bbox in outputs.items():
+            fused_state = np.asarray(
+                getattr(bbox, "global_xyz_lwh_yaw_fusion", bbox.global_xyz_lwh_yaw),
+                dtype=np.float64,
+            )
+            fused_yaw = float(getattr(bbox, "global_yaw_fusion", bbox.global_yaw))
+            fused_dims = [
+                float(dim)
+                for dim in getattr(bbox, "lwh_fusion", bbox.lwh)
+            ]
+            fused_quat = quaternion_from_yaw(fused_yaw)
+
             tracked = TrackedObject()
             tracked.header = Header(stamp=stamp, frame_id=frame_id)
             tracked.frame = bbox.frame_id
@@ -527,8 +538,8 @@ class MCTrackOnlineNode:
             tracked.track_length = getattr(bbox, "track_length", 0)
             tracked.cls = bbox.category
             tracked.detection_score = float(bbox.det_score)
-            tracked.yaw = float(bbox.global_yaw)
-            tracked.dimensions = [float(dim) for dim in bbox.lwh]
+            tracked.yaw = fused_yaw
+            tracked.dimensions = fused_dims
             tracked.velocity = self._vec2(bbox.global_velocity)
             tracked.velocity_fusion = self._vec2(getattr(bbox, "global_velocity_fusion", bbox.global_velocity))
             tracked.velocity_diff = self._vec2(getattr(bbox, "global_velocity_diff", [0.0, 0.0]))
@@ -536,12 +547,13 @@ class MCTrackOnlineNode:
             tracked.acceleration = self._vec2(getattr(bbox, "global_acceleration", [0.0, 0.0]))
 
             pose = tracked.pose
-            pose.position.x, pose.position.y, pose.position.z = [float(val) for val in bbox.global_xyz]
-            quat = bbox.global_orientation
-            pose.orientation.x = float(quat[1])
-            pose.orientation.y = float(quat[2])
-            pose.orientation.z = float(quat[3])
-            pose.orientation.w = float(quat[0])
+            pose.position.x, pose.position.y, pose.position.z = [
+                float(val) for val in fused_state[:3]
+            ]
+            pose.orientation.x = float(fused_quat[1])
+            pose.orientation.y = float(fused_quat[2])
+            pose.orientation.z = float(fused_quat[3])
+            pose.orientation.w = float(fused_quat[0])
 
             lidar_pose = tracked.lidar_pose
             lidar_pose.position.x, lidar_pose.position.y, lidar_pose.position.z = [float(val) for val in bbox.lidar_xyz]

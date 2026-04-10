@@ -4567,3 +4567,4 @@ Joint Backend                 784      150     2.8794           2.2466     -2.13
 =========================================================
 
 [INFO] 正在关闭全局 roscore...
+[INFO] [1775826356.261421, 0.000000]: MCTrackOnlineNode 初始化完成 (配置=/home/xc/Projects/ME5400/MCTrack/config/kitti_fastlio.yaml, 检测话题=/detection/lidar_detections, 旧版String=False)

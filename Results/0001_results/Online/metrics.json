@@ -29,12 +29,12 @@
       "primary": {
         "name": "FAST-LIO+MCTrack",
         "path": "/home/xc/Projects/ME5400/Results/0001_results/Online/trajectory.txt",
-        "rmse": 2.6404550113630507,
-        "mean_error": 2.2483269765499316,
-        "max_error": 4.325158972753807,
+        "rmse": 2.643097476076827,
+        "mean_error": 2.249812283567553,
+        "max_error": 4.329596932421422,
         "num_samples": 427
       },
-      "improvement_percent": -11.25441687218873
+      "improvement_percent": -11.365755966992976
     }
   },
   "ate_rpe": {
@@ -61,16 +61,16 @@
         "path": "/home/xc/Projects/ME5400/Results/0001_results/Online/trajectory.txt",
         "matched_frames": 427,
         "ate": {
-          "ATE_RMSE": 2.6404550113630507,
-          "ATE_mean": 2.2483269765499316,
-          "ATE_max": 4.325158972753807,
-          "ATE_std": 1.3845679736112964
+          "ATE_RMSE": 2.643097476076827,
+          "ATE_mean": 2.249812283567553,
+          "ATE_max": 4.329596932421422,
+          "ATE_std": 1.3871946354972131
         },
         "rpe": {
-          "RPE_RMSE": 0.10737246855123156,
-          "RPE_mean": 0.06931194818413255,
-          "RPE_max": 0.6050474534849789,
-          "RPE_std": 0.08200427331368369
+          "RPE_RMSE": 0.10728009683628907,
+          "RPE_mean": 0.06930021519382043,
+          "RPE_max": 0.5948864179381871,
+          "RPE_std": 0.08189321920216436
         }
       },
       {
@@ -78,27 +78,27 @@
         "path": "/home/xc/Projects/ME5400/Results/0001_results/Online/trajectory_joint.txt",
         "matched_frames": 427,
         "ate": {
-          "ATE_RMSE": 2.642798066661389,
-          "ATE_mean": 2.3030727460703724,
-          "ATE_max": 6.91226710820151,
-          "ATE_std": 1.2962397723635273
+          "ATE_RMSE": 2.508378501411419,
+          "ATE_mean": 2.202062458592521,
+          "ATE_max": 4.069455543471766,
+          "ATE_std": 1.2012009135862554
         },
         "rpe": {
-          "RPE_RMSE": 0.32819922023317805,
-          "RPE_mean": 0.09166437738713312,
-          "RPE_max": 6.057383730908947,
-          "RPE_std": 0.3151386521515495
+          "RPE_RMSE": 0.11006747712095712,
+          "RPE_mean": 0.06992488998330006,
+          "RPE_max": 0.6801595331694531,
+          "RPE_std": 0.08500211338899641
         }
       }
     ],
     "improvements_relative_to_first": [
       {
         "name": "FAST-LIO+MCTrack",
-        "ate_improvement_percent": -11.25441687218873
+        "ate_improvement_percent": -11.365755966992976
       },
       {
         "name": "Joint Backend",
-        "ate_improvement_percent": -11.353140482246124
+        "ate_improvement_percent": -5.689430900472719
       }
     ]
   },
@@ -132,21 +132,21 @@
         "name": "FAST-LIO+MCTrack",
         "traj": "/home/xc/Projects/ME5400/Results/0001_results/Online/trajectory.txt",
         "matched_frames": 427,
-        "Tr_percent": 3.3493001117087604,
-        "Rot_deg_per_100m": 1.698632529402907,
+        "Tr_percent": 3.349722060583946,
+        "Rot_deg_per_100m": 1.7018931914990436,
         "n_segments": 39,
-        "Tr_gain_percent": 1.9201304625532667,
-        "Rot_gain_percent": -2.100314073876601
+        "Tr_gain_percent": 1.9077742420745416,
+        "Rot_gain_percent": -2.2963038588016302
       },
       {
         "name": "Joint Backend",
         "traj": "/home/xc/Projects/ME5400/Results/0001_results/Online/trajectory_joint.txt",
         "matched_frames": 427,
-        "Tr_percent": 3.2377357447246906,
-        "Rot_deg_per_100m": 1.6733347499237203,
+        "Tr_percent": 3.2251267294070383,
+        "Rot_deg_per_100m": 1.7038195151986908,
         "n_segments": 39,
-        "Tr_gain_percent": 5.187146911922101,
-        "Rot_gain_percent": -0.5797313783923944
+        "Tr_gain_percent": 5.55638542029813,
+        "Rot_gain_percent": -2.412090087628335
       }
     ],
     "per_length": {
@@ -194,18 +194,18 @@
       },
       "FAST-LIO+MCTrack": {
         "100": {
-          "Tr_percent": 3.7257517902747184,
-          "Rot_deg_per_100m": 2.1967654122812443,
+          "Tr_percent": 3.725618611568568,
+          "Rot_deg_per_100m": 2.200935535124512,
           "n_segments": 26.0
         },
         "200": {
-          "Tr_percent": 2.7281725751501082,
-          "Rot_deg_per_100m": 0.773120152374351,
+          "Tr_percent": 2.7286308169290208,
+          "Rot_deg_per_100m": 0.7745263170804745,
           "n_segments": 11.0
         },
         "300": {
-          "Tr_percent": 1.8716297414239145,
-          "Rot_deg_per_100m": 0.3132231256415783,
+          "Tr_percent": 1.8790687378859583,
+          "Rot_deg_per_100m": 0.31486053367008293,
           "n_segments": 2.0
         },
         "400": {
@@ -236,18 +236,18 @@
       },
       "Joint Backend": {
         "100": {
-          "Tr_percent": 3.589249394643321,
-          "Rot_deg_per_100m": 2.1503012387753513,
+          "Tr_percent": 3.5669343892466263,
+          "Rot_deg_per_100m": 2.202001356122368,
           "n_segments": 26.0
         },
         "200": {
-          "Tr_percent": 2.623445592858063,
-          "Rot_deg_per_100m": 0.780892477372031,
+          "Tr_percent": 2.665270565784892,
+          "Rot_deg_per_100m": 0.7848276851618146,
           "n_segments": 11.0
         },
         "300": {
-          "Tr_percent": 2.046654131048955,
-          "Rot_deg_per_100m": 0.3812028938868132,
+          "Tr_percent": 1.8608360514142024,
+          "Rot_deg_per_100m": 0.28191064839371327,
           "n_segments": 2.0
         },
         "400": {
