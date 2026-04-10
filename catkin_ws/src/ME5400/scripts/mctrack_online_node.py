@@ -188,7 +188,7 @@ class MCTrackOnlineNode:
         self.arrow_length = float(rospy.get_param("~arrow_length", 3.0))
         self.history_size = int(rospy.get_param("~history_size", 200))
         self.pose_buffer_size = int(rospy.get_param("~pose_buffer_size", 256))
-        self.pending_detection_limit = int(rospy.get_param("~pending_detection_limit", 100))
+        self.pending_detection_limit = int(rospy.get_param("~pending_detection_limit", 1000))
         self.pose_wait_timeout = float(rospy.get_param("~pose_wait_timeout", 0.25))
 
         with config_path.open("r") as f:

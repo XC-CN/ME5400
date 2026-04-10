@@ -446,7 +446,7 @@ ME5400/
 可使用提供的工具脚本从 KITTI Tracking 原始数据生成所需 rosbag（默认只需点云与 IMU）：
 
 ```bash
-./Scripts/utils/kitti_tracking_to_rosbag.py --seq 20 --include_detections False
+./Scripts/utils/kitti_tracking_to_rosbag.py --seq 20 
 ```
 
 **可播放的 Rosbag 列表**

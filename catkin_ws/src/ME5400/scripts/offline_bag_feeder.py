@@ -319,11 +319,12 @@ class SemiSyncOfflineBagFeeder:
                     rospy.loginfo("[offline_bag_feeder] raw_frame=%d lidar stamp=%.6f", frame_id, msg_stamp_sec)
 
                     if split_gated_lidar:
-                        if not self.pose_ready:
-                            continue
                         queued_gated_frames.append((frame_id, msg_stamp_sec, msg))
                         if active_gated_frame is None and queued_gated_frames:
-                            rospy.loginfo("[offline_bag_feeder] pose ready, start gated lidar feed from frame=%d", frame_id)
+                            if not self.pose_ready:
+                                rospy.loginfo("[offline_bag_feeder] waiting for pose_ready... queuing gated frames from frame=%d", frame_id)
+                            else:
+                                rospy.loginfo("[offline_bag_feeder] pose ready, start gated lidar feed from frame=%d", frame_id)
                             first_frame_id, first_stamp, first_msg = queued_gated_frames.popleft()
                             self._gate_lidar_frame(first_frame_id, first_stamp, first_msg)
                             active_gated_frame = (first_frame_id, first_stamp)

@@ -8,6 +8,10 @@
       "path": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_baseline_offline.txt"
     },
     {
+      "name": "FAST-LIO+MCTrack(Offline)",
+      "path": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_weighted_offline.txt"
+    },
+    {
       "name": "JointOffline",
       "path": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_joint.txt"
     }
@@ -17,20 +21,20 @@
       "baseline": {
         "name": "Baseline(Offline,NoWeight)",
         "path": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_baseline_offline.txt",
-        "rmse": 12.668543805513819,
-        "mean_error": 11.737824136223892,
-        "max_error": 18.374683377522036,
+        "rmse": 12.479603029473461,
+        "mean_error": 11.582859898211744,
+        "max_error": 18.07151215417548,
         "num_samples": 669
       },
       "primary": {
-        "name": "JointOffline",
-        "path": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_joint.txt",
-        "rmse": 7.60325740580705,
-        "mean_error": 6.7120174622317155,
-        "max_error": 24.765596456639592,
-        "num_samples": 727
+        "name": "FAST-LIO+MCTrack(Offline)",
+        "path": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_weighted_offline.txt",
+        "rmse": 7.131324341632351,
+        "mean_error": 6.405963585413854,
+        "max_error": 11.439083663951978,
+        "num_samples": 767
       },
-      "improvement_percent": 39.983177841656655
+      "improvement_percent": 42.85616036992456
     }
   },
   "ate_rpe": {
@@ -40,40 +44,61 @@
         "path": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_baseline_offline.txt",
         "matched_frames": 669,
         "ate": {
-          "ATE_RMSE": 12.668543805513819,
-          "ATE_mean": 11.737824136223892,
-          "ATE_max": 18.374683377522036,
-          "ATE_std": 4.76607665688482
+          "ATE_RMSE": 12.479603029473461,
+          "ATE_mean": 11.582859898211744,
+          "ATE_max": 18.07151215417548,
+          "ATE_std": 4.645196266213243
         },
         "rpe": {
-          "RPE_RMSE": 0.24986758277208707,
-          "RPE_mean": 0.1486258494755206,
-          "RPE_max": 1.14009147476527,
-          "RPE_std": 0.20085857160710288
+          "RPE_RMSE": 0.24980216027083363,
+          "RPE_mean": 0.14866552412699502,
+          "RPE_max": 1.1302744178253192,
+          "RPE_std": 0.20074780499926048
+        }
+      },
+      {
+        "name": "FAST-LIO+MCTrack(Offline)",
+        "path": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_weighted_offline.txt",
+        "matched_frames": 767,
+        "ate": {
+          "ATE_RMSE": 7.131324341632351,
+          "ATE_mean": 6.405963585413854,
+          "ATE_max": 11.439083663951978,
+          "ATE_std": 3.133594965516406
+        },
+        "rpe": {
+          "RPE_RMSE": 0.23209522426410906,
+          "RPE_mean": 0.13025815863041235,
+          "RPE_max": 1.1382598920694502,
+          "RPE_std": 0.19209634363105774
         }
       },
       {
         "name": "JointOffline",
         "path": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_joint.txt",
-        "matched_frames": 727,
+        "matched_frames": 767,
         "ate": {
-          "ATE_RMSE": 7.60325740580705,
-          "ATE_mean": 6.7120174622317155,
-          "ATE_max": 24.765596456639592,
-          "ATE_std": 3.5718825240559453
+          "ATE_RMSE": 7.50238676254766,
+          "ATE_mean": 6.710204592616422,
+          "ATE_max": 17.144045997013873,
+          "ATE_std": 3.3554375959150007
         },
         "rpe": {
-          "RPE_RMSE": 1.3078356509780353,
-          "RPE_mean": 0.23038693500099822,
-          "RPE_max": 22.2925667904305,
-          "RPE_std": 1.2873833734167874
+          "RPE_RMSE": 0.8502705803577082,
+          "RPE_mean": 0.17626947575692786,
+          "RPE_max": 16.40787274151346,
+          "RPE_std": 0.83179873271015
         }
       }
     ],
     "improvements_relative_to_first": [
       {
+        "name": "FAST-LIO+MCTrack(Offline)",
+        "ate_improvement_percent": 42.85616036992456
+      },
+      {
         "name": "JointOffline",
-        "ate_improvement_percent": 39.983177841656655
+        "ate_improvement_percent": 39.8828092141309
       }
     ]
   },
@@ -97,54 +122,106 @@
         "name": "Baseline(Offline,NoWeight)",
         "traj": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_baseline_offline.txt",
         "matched_frames": 669,
-        "Tr_percent": 3.1579554252225215,
-        "Rot_deg_per_100m": 0.7346031078662939,
+        "Tr_percent": 3.1170921082161946,
+        "Rot_deg_per_100m": 0.7382618792808328,
         "n_segments": 189,
         "Tr_gain_percent": 0.0,
         "Rot_gain_percent": 0.0
       },
       {
+        "name": "FAST-LIO+MCTrack(Offline)",
+        "traj": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_weighted_offline.txt",
+        "matched_frames": 767,
+        "Tr_percent": 2.257168491798375,
+        "Rot_deg_per_100m": 0.6588909882367556,
+        "n_segments": 247,
+        "Tr_gain_percent": 27.58736625559405,
+        "Rot_gain_percent": 10.751048275903823
+      },
+      {
         "name": "JointOffline",
         "traj": "/home/xc/Projects/ME5400/Results/0020_results/Offline/trajectory_joint.txt",
-        "matched_frames": 727,
-        "Tr_percent": 2.3299094099056297,
-        "Rot_deg_per_100m": 0.6987867650187101,
-        "n_segments": 223,
-        "Tr_gain_percent": 26.22095323775967,
-        "Rot_gain_percent": 4.8756045902956915
+        "matched_frames": 767,
+        "Tr_percent": 2.344535759582605,
+        "Rot_deg_per_100m": 0.6730267375153023,
+        "n_segments": 247,
+        "Tr_gain_percent": 24.784521015508183,
+        "Rot_gain_percent": 8.836314537746192
       }
     ],
     "per_length": {
       "Baseline(Offline,NoWeight)": {
         "100": {
-          "Tr_percent": 3.3799630015504007,
-          "Rot_deg_per_100m": 1.0303306407806514,
+          "Tr_percent": 3.3495961500502687,
+          "Rot_deg_per_100m": 1.0365377850483668,
           "n_segments": 53.0
         },
         "200": {
-          "Tr_percent": 3.1446214803148957,
-          "Rot_deg_per_100m": 0.6555368627636795,
+          "Tr_percent": 3.1153672207682317,
+          "Rot_deg_per_100m": 0.6583486760754793,
           "n_segments": 46.0
         },
         "300": {
-          "Tr_percent": 3.0615121766691424,
-          "Rot_deg_per_100m": 0.5996743138119451,
+          "Tr_percent": 3.0141453191294647,
+          "Rot_deg_per_100m": 0.6025157403930859,
           "n_segments": 36.0
         },
         "400": {
-          "Tr_percent": 2.987313638993641,
-          "Rot_deg_per_100m": 0.6248792363354322,
+          "Tr_percent": 2.924134415071153,
+          "Rot_deg_per_100m": 0.6282108031084503,
           "n_segments": 29.0
         },
         "500": {
-          "Tr_percent": 3.009231332128896,
-          "Rot_deg_per_100m": 0.5930944930597861,
+          "Tr_percent": 2.9580472001451312,
+          "Rot_deg_per_100m": 0.5943617013378789,
           "n_segments": 19.0
         },
         "600": {
-          "Tr_percent": 3.173503164841071,
-          "Rot_deg_per_100m": 0.5165332031887081,
+          "Tr_percent": 3.130482336062703,
+          "Rot_deg_per_100m": 0.5182335345543407,
           "n_segments": 6.0
+        },
+        "700": {
+          "Tr_percent": NaN,
+          "Rot_deg_per_100m": NaN,
+          "n_segments": 0.0
+        },
+        "800": {
+          "Tr_percent": NaN,
+          "Rot_deg_per_100m": NaN,
+          "n_segments": 0.0
+        }
+      },
+      "FAST-LIO+MCTrack(Offline)": {
+        "100": {
+          "Tr_percent": 2.389124186991918,
+          "Rot_deg_per_100m": 0.9222032023620841,
+          "n_segments": 62.0
+        },
+        "200": {
+          "Tr_percent": 2.2695660400061235,
+          "Rot_deg_per_100m": 0.6139242125762103,
+          "n_segments": 55.0
+        },
+        "300": {
+          "Tr_percent": 2.179172977832265,
+          "Rot_deg_per_100m": 0.549936941120238,
+          "n_segments": 46.0
+        },
+        "400": {
+          "Tr_percent": 2.077379337448831,
+          "Rot_deg_per_100m": 0.556126604334238,
+          "n_segments": 39.0
+        },
+        "500": {
+          "Tr_percent": 2.2339226897144697,
+          "Rot_deg_per_100m": 0.5623587586923331,
+          "n_segments": 29.0
+        },
+        "600": {
+          "Tr_percent": 2.4078297836159193,
+          "Rot_deg_per_100m": 0.5318251871058752,
+          "n_segments": 16.0
         },
         "700": {
           "Tr_percent": NaN,
@@ -159,34 +236,34 @@
       },
       "JointOffline": {
         "100": {
-          "Tr_percent": 2.709323567646386,
-          "Rot_deg_per_100m": 1.025098592854368,
-          "n_segments": 58.0
+          "Tr_percent": 2.6099464946806163,
+          "Rot_deg_per_100m": 0.9508930422744039,
+          "n_segments": 62.0
         },
         "200": {
-          "Tr_percent": 2.298742219787794,
-          "Rot_deg_per_100m": 0.6216548988523398,
-          "n_segments": 51.0
+          "Tr_percent": 2.3686537910443923,
+          "Rot_deg_per_100m": 0.6244078030581346,
+          "n_segments": 55.0
         },
         "300": {
-          "Tr_percent": 2.111630743267403,
-          "Rot_deg_per_100m": 0.5676704152432537,
-          "n_segments": 42.0
+          "Tr_percent": 2.198764835083356,
+          "Rot_deg_per_100m": 0.5604548747445038,
+          "n_segments": 46.0
         },
         "400": {
-          "Tr_percent": 2.0522069705581214,
-          "Rot_deg_per_100m": 0.5851047916025193,
-          "n_segments": 35.0
+          "Tr_percent": 2.1040611950465506,
+          "Rot_deg_per_100m": 0.5686517191604437,
+          "n_segments": 39.0
         },
         "500": {
-          "Tr_percent": 2.1909525921113695,
-          "Rot_deg_per_100m": 0.5717897223269649,
-          "n_segments": 25.0
+          "Tr_percent": 2.2405206455533895,
+          "Rot_deg_per_100m": 0.5683365103717519,
+          "n_segments": 29.0
         },
         "600": {
-          "Tr_percent": 2.4919690238948458,
-          "Rot_deg_per_100m": 0.5044801806392257,
-          "n_segments": 12.0
+          "Tr_percent": 2.426938981097844,
+          "Rot_deg_per_100m": 0.531231643173995,
+          "n_segments": 16.0
         },
         "700": {
           "Tr_percent": NaN,
