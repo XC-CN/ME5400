@@ -46,8 +46,7 @@ usage() {
   Results/<SEQ_ID>_results/trajectory_baseline_offline.txt
   Results/<SEQ_ID>_results/trajectory_weighted_offline.txt
   Results/<SEQ_ID>_results/trajectory_joint.txt
-  Results/<SEQ_ID>_results/metrics_joint_backend.txt
-  Results/<SEQ_ID>_results/metrics_kitti_tr_rot_ac.txt
+  Results/<SEQ_ID>_results/metrics.txt
 
 示例:
   $0 0020
@@ -473,11 +472,12 @@ run_evaluation() {
         --traj "Baseline(Offline,NoWeight):$baseline_traj" \
         --traj "JointOffline:$joint_traj" \
         --output-dir "$RESULT_DIR" \
-        --summary-name "metrics_joint_backend.txt" \
-        --summary-title "离线轨迹对比评估结果" \
+        --report-name "metrics.txt" \
+        --report-json-name "metrics.json" \
+        --report-title "离线轨迹评估报告" \
+        --pair-plot-name "evaluation_result.png" \
         --overview-plot-name "evaluation_joint_backend.png" \
-        --bar-plot-name "ablation_bar.png" \
-        --kitti-name "metrics_kitti_tr_rot_ac.txt"
+        --bar-plot-name "ablation_bar.png"
 }
 
 run_baseline_offline

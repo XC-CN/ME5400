@@ -520,8 +520,7 @@ ME5400/
   - `Results/<SEQ>_results/trajectory_baseline_offline.txt`
   - `Results/<SEQ>_results/trajectory_weighted_offline.txt`
   - `Results/<SEQ>_results/trajectory_joint.txt`
-  - `Results/<SEQ>_results/metrics_joint_backend.txt`
-  - `Results/<SEQ>_results/metrics_kitti_tr_rot_ac.txt`
+  - `Results/<SEQ>_results/metrics.txt`
 
 #### 3. 分解独立模块执行
 如果您只需要跑单一环境获取固定数据，或进行单步调试开发，可直接使用独立脚本（默认无可视化，可用 `--viz` 开启）：
@@ -537,9 +536,9 @@ ME5400/
 ./Scripts/run_optimized.sh --save-map 0020
 ```
 
-> 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`，在线优化阶段也会额外生成 `trajectory_joint.txt`）以及最终生成的 ATE/RPE 对比评测图（`.png`）与指标（`metrics.txt` / `metrics_joint_backend.txt` / `metrics_kitti_tr_rot.txt`），系统都会自动统一存放入 `Results/<序列号>_results/`。点云地图（`.pcd`）仅在显式添加 `--save-map` 时生成并归档，默认不会导出。
+> 💡 **自动归档机制提示**：以上各类脚本生成的基准/优化轨迹文件（`trajectory*.txt`，在线优化阶段也会额外生成 `trajectory_joint.txt`）以及最终生成的评测图（`.png`）与汇总指标（`metrics.txt` / `metrics.json`），系统都会自动统一存放入 `Results/<序列号>_results/`。点云地图（`.pcd`）仅在显式添加 `--save-map` 时生成并归档，默认不会导出。
 
-> 评估逻辑现已统一收敛到 `Scripts/evaluation/evaluate_trajectories.py`；原有的 `evaluate_trajectory.py`、`evaluate_joint_backend.py`、`evaluate_kitti_tr_rot.py` 仅保留为兼容旧调用方式的薄包装入口。
+> 评估逻辑现已统一收敛到 `Scripts/evaluation/evaluate_trajectories.py`，旧的分散评测脚本已经移除；`metrics.txt` 会在同一份报告里同时给出 ATE/RPE 汇总以及 KITTI `Tr/Rot` 指标。
 
 #### 4. 清理残留 ROS 节点/进程
 

@@ -599,136 +599,14 @@ def save_bar_plot(results: list[dict[str, Any]], output_path: Path) -> None:
     print(f"[图表] 已保存 → {output_path}")
 
 
-def write_pair_outputs(
-    gt_path: str | Path,
-    pair_results: list[dict[str, Any]],
-    output_dir: Path,
-    pair_summary_name: str,
-    pair_json_name: str,
-    pair_plot_name: str,
-) -> None:
-    if len(pair_results) < 2:
-        print("[警告] 有效轨迹不足两条，跳过双轨摘要输出")
-        return
-
-    baseline = pair_results[0]
-    primary = pair_results[1]
-    base_rmse = baseline["ate_metrics"]["ATE_RMSE"]
-    primary_rmse = primary["ate_metrics"]["ATE_RMSE"]
-    improvement = gain_percent(base_rmse, primary_rmse)
-    seq_name = infer_sequence_name(gt_path)
-
-    if pair_plot_name:
-        save_pair_plot(baseline["gt_centered"], pair_results, output_dir / pair_plot_name)
-
-    metrics_txt_path = output_dir / pair_summary_name if pair_summary_name else None
-    metrics_json_path = output_dir / pair_json_name if pair_json_name else None
-
-    if metrics_txt_path:
-        lines = [
-            "双轨迹评估结果",
-            f"序列号: {seq_name}",
-            f"真值路径: {Path(gt_path).resolve()}",
-            "",
-            f"主轨迹名称: {primary['name']}",
-            f"主轨迹文件: {primary['path']}",
-            f"主轨迹 RMSE: {primary_rmse:.6f}",
-            f"主轨迹平均误差: {primary['ate_metrics']['ATE_mean']:.6f}",
-            f"主轨迹最大误差: {primary['ate_metrics']['ATE_max']:.6f}",
-            "",
-            f"基准轨迹名称: {baseline['name']}",
-            f"基准轨迹文件: {baseline['path']}",
-            f"基准轨迹 RMSE: {base_rmse:.6f}",
-            f"基准轨迹平均误差: {baseline['ate_metrics']['ATE_mean']:.6f}",
-            f"基准轨迹最大误差: {baseline['ate_metrics']['ATE_max']:.6f}",
-        ]
-        if improvement is not None:
-            lines.extend(["", f"相对基准提升: {improvement:.2f}%"])
-        metrics_txt_path.write_text("\n".join(lines) + "\n")
-        print(f"[指标] 已保存 → {metrics_txt_path}")
-
-    if metrics_json_path:
-        payload = {
-            "sequence": seq_name,
-            "gt_path": str(Path(gt_path).resolve()),
-            "comparison_available": True,
-            "baseline": {
-                "name": baseline["name"],
-                "path": baseline["path"],
-                "rmse": float(base_rmse),
-                "mean_error": float(baseline["ate_metrics"]["ATE_mean"]),
-                "max_error": float(baseline["ate_metrics"]["ATE_max"]),
-                "num_samples": int(len(baseline["ate_err"])),
-            },
-            "optimized": {
-                "name": primary["name"],
-                "path": primary["path"],
-                "rmse": float(primary_rmse),
-                "mean_error": float(primary["ate_metrics"]["ATE_mean"]),
-                "max_error": float(primary["ate_metrics"]["ATE_max"]),
-                "num_samples": int(len(primary["ate_err"])),
-            },
-            "improvement_percent": float(improvement) if improvement is not None else None,
-            "artifacts": {
-                "metrics_txt": str(metrics_txt_path.resolve()) if metrics_txt_path else None,
-                "metrics_json": str(metrics_json_path.resolve()),
-                "plot": str((output_dir / pair_plot_name).resolve()) if pair_plot_name else None,
-            },
-        }
-        metrics_json_path.write_text(json.dumps(payload, ensure_ascii=True, indent=2) + "\n")
-        print(f"[指标] 已保存 → {metrics_json_path}")
-
-
-def write_multi_summary(
-    results: list[dict[str, Any]],
-    output_path: Path,
-    summary_title: str,
-) -> None:
-    valid_results = [result for result in results if result["ate_metrics"] is not None]
-    if not valid_results:
-        print("[警告] 没有可用于汇总的有效轨迹")
-        return
-
-    lines = ["=" * 68, summary_title, "=" * 68, ""]
-    header = f"{'轨迹配置':<24} {'匹配帧数':>8} {'ATE_RMSE':>10} {'ATE均值':>10} {'ATE最大值':>10} {'RPE_RMSE':>10}"
-    lines.append(header)
-    lines.append("-" * len(header))
-
-    baseline_ate = valid_results[0]["ate_metrics"]["ATE_RMSE"]
-    for result in valid_results:
-        ate = result["ate_metrics"]
-        rpe = result["rpe_metrics"]
-        lines.append(
-            f"{result['name']:<24} "
-            f"{result['matched_frames']:>8d} "
-            f"{ate['ATE_RMSE']:>10.4f} "
-            f"{ate['ATE_mean']:>10.4f} "
-            f"{ate['ATE_max']:>10.4f} "
-            f"{rpe['RPE_RMSE']:>10.4f}"
-        )
-
-    lines.append("")
-    lines.append("相对第一条有效轨迹的提升幅度：")
-    for result in valid_results[1:]:
-        improvement = gain_percent(baseline_ate, result["ate_metrics"]["ATE_RMSE"])
-        if improvement is None:
-            continue
-        lines.append(f"  {result['name']:<24} ATE 改善 {improvement:+.2f}%")
-
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text("\n".join(lines) + "\n")
-    print(f"[指标] 已保存 → {output_path}")
-
-
-def write_kitti_summary(
+def build_kitti_summary(
     oxts_path: str | Path,
     calib_path: str | Path,
     traj_entries: list[dict[str, str]],
-    output_path: Path,
     lengths: list[float],
     step: int,
     max_dt: float,
-) -> None:
+) -> tuple[list[str], dict[str, Any]]:
     gt_poses = load_gt_poses_lidar(Path(oxts_path).resolve(), Path(calib_path).resolve())
     gt_times = np.arange(len(gt_poses), dtype=np.float64) * 0.1
 
@@ -763,10 +641,7 @@ def write_kitti_summary(
             row["Rot_gain_percent"] = rot_gain if rot_gain is not None else float("nan")
 
     lines = [
-        "=" * 78,
-        "KITTI 相对里程计指标（Tracking OXTS + Tr_imu_velo）",
-        "=" * 78,
-        "",
+        "三、KITTI 相对里程计指标（Tr / Rot）",
         f"真值 OXTS: {Path(oxts_path).resolve()}",
         f"标定文件 : {Path(calib_path).resolve()}",
         f"评估段长 : {', '.join(str(int(length)) for length in lengths)} m",
@@ -801,10 +676,147 @@ def write_kitti_summary(
                 f"{float_to_text(record['Rot_deg_per_100m']):>16}   {int(record['n_segments']):>6d}"
             )
 
+    payload = {
+        "oxts_path": str(Path(oxts_path).resolve()),
+        "calib_path": str(Path(calib_path).resolve()),
+        "lengths_m": [int(length) for length in lengths],
+        "step_frames": int(step),
+        "max_dt": float(max_dt),
+        "rows": rows,
+        "per_length": per_len_blocks,
+    }
+    return lines, payload
+
+
+def build_overview_section(
+    gt_path: str | Path,
+    calib_path: str | Path | None,
+    traj_entries: list[dict[str, str]],
+    valid_results: list[dict[str, Any]],
+) -> tuple[list[str], dict[str, Any]]:
+    lines = [
+        "一、评估概览",
+        f"序列号: {infer_sequence_name(gt_path)}",
+        f"真值路径: {Path(gt_path).resolve()}",
+        f"标定路径: {Path(calib_path).resolve()}" if calib_path else "标定路径: 未提供",
+        f"参与评估轨迹数: {len(traj_entries)}",
+        "",
+        "轨迹列表：",
+    ]
+
+    for idx, entry in enumerate(traj_entries, start=1):
+        lines.append(f"  {idx}. {entry['name']}: {Path(entry['path']).resolve()}")
+
+    pair_payload = None
+    if len(valid_results) >= 2:
+        baseline = valid_results[0]
+        primary = valid_results[1]
+        base_rmse = baseline["ate_metrics"]["ATE_RMSE"]
+        primary_rmse = primary["ate_metrics"]["ATE_RMSE"]
+        improvement = gain_percent(base_rmse, primary_rmse)
+        lines.extend(
+            [
+                "",
+                "核心双轨结论：",
+                f"  基准轨迹: {baseline['name']} (ATE RMSE={base_rmse:.4f} m)",
+                f"  对比轨迹: {primary['name']} (ATE RMSE={primary_rmse:.4f} m)",
+                f"  相对基准提升: {percent_to_text(improvement)}",
+            ]
+        )
+        pair_payload = {
+            "baseline": {
+                "name": baseline["name"],
+                "path": baseline["path"],
+                "rmse": float(base_rmse),
+                "mean_error": float(baseline["ate_metrics"]["ATE_mean"]),
+                "max_error": float(baseline["ate_metrics"]["ATE_max"]),
+                "num_samples": int(len(baseline["ate_err"])),
+            },
+            "primary": {
+                "name": primary["name"],
+                "path": primary["path"],
+                "rmse": float(primary_rmse),
+                "mean_error": float(primary["ate_metrics"]["ATE_mean"]),
+                "max_error": float(primary["ate_metrics"]["ATE_max"]),
+                "num_samples": int(len(primary["ate_err"])),
+            },
+            "improvement_percent": float(improvement) if improvement is not None else None,
+        }
+    else:
+        lines.extend(["", "核心双轨结论：有效轨迹不足两条，跳过。"])
+
+    return lines, {"pair_comparison": pair_payload}
+
+
+def build_multi_section(valid_results: list[dict[str, Any]]) -> tuple[list[str], dict[str, Any]]:
+    lines = ["二、ATE / RPE 对比汇总"]
+    if not valid_results:
+        lines.append("无可用轨迹结果。")
+        return lines, {"trajectories": [], "improvements_relative_to_first": []}
+
+    lines.append("")
+    header = f"{'轨迹配置':<24} {'匹配帧数':>8} {'ATE_RMSE':>10} {'ATE均值':>10} {'ATE最大值':>10} {'RPE_RMSE':>10}"
+    lines.append(header)
+    lines.append("-" * len(header))
+
+    payload_rows = []
+    baseline_ate = valid_results[0]["ate_metrics"]["ATE_RMSE"]
+    improvements = []
+    for result in valid_results:
+        ate = result["ate_metrics"]
+        rpe = result["rpe_metrics"]
+        lines.append(
+            f"{result['name']:<24} "
+            f"{result['matched_frames']:>8d} "
+            f"{ate['ATE_RMSE']:>10.4f} "
+            f"{ate['ATE_mean']:>10.4f} "
+            f"{ate['ATE_max']:>10.4f} "
+            f"{rpe['RPE_RMSE']:>10.4f}"
+        )
+        payload_rows.append(
+            {
+                "name": result["name"],
+                "path": result["path"],
+                "matched_frames": int(result["matched_frames"]),
+                "ate": result["ate_metrics"],
+                "rpe": result["rpe_metrics"],
+            }
+        )
+
+    lines.append("")
+    lines.append("相对第一条有效轨迹的提升幅度：")
+    for result in valid_results[1:]:
+        improvement = gain_percent(baseline_ate, result["ate_metrics"]["ATE_RMSE"])
+        if improvement is None:
+            continue
+        lines.append(f"  {result['name']:<24} ATE 改善 {improvement:+.2f}%")
+        improvements.append({"name": result["name"], "ate_improvement_percent": float(improvement)})
+
+    return lines, {"trajectories": payload_rows, "improvements_relative_to_first": improvements}
+
+
+def write_combined_report(
+    output_path: Path,
+    report_title: str,
+    sections: list[list[str]],
+) -> None:
+    lines = ["=" * 78, report_title, "=" * 78, ""]
+    for idx, section in enumerate(sections):
+        if not section:
+            continue
+        lines.extend(section)
+        if idx != len(sections) - 1:
+            lines.append("")
     text = "\n".join(lines)
-    print(text)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(text + "\n")
+    print(text)
+    print(f"\n[指标] 已保存 → {output_path}")
+
+
+def write_report_json(output_path: Path, payload: dict[str, Any]) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, ensure_ascii=True, indent=2) + "\n")
     print(f"[指标] 已保存 → {output_path}")
 
 
@@ -817,14 +829,12 @@ def run_unified_evaluation(
     max_dt: float = 0.2,
     rpe_delta: int = 1,
     title: str = "",
-    pair_summary_name: str = "",
-    pair_json_name: str = "",
+    report_name: str = "metrics.txt",
+    report_json_name: str = "metrics.json",
+    report_title: str = "统一轨迹评估报告",
     pair_plot_name: str = "",
-    summary_name: str = "",
-    summary_title: str = "轨迹对比评估结果",
     overview_plot_name: str = "",
     bar_plot_name: str = "",
-    kitti_name: str = "",
     lengths: list[float] | None = None,
     step: int = 10,
 ) -> int:
@@ -835,58 +845,87 @@ def run_unified_evaluation(
     out_dir = Path(output_dir).expanduser().resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    legacy_reports = [
+        "metrics_joint_backend.txt",
+        "metrics_kitti_tr_rot.txt",
+        "metrics_kitti_tr_rot_ac.txt",
+    ]
+    for legacy_name in legacy_reports:
+        legacy_path = out_dir / legacy_name
+        if legacy_path.name != report_name and legacy_path.exists():
+            legacy_path.unlink()
+            print(f"[信息] 已移除旧版分散评测报告: {legacy_path}")
+
     _, _, results, gt_c_ref = evaluate_common(gt_path, traj_entries, max_dt, rpe_delta)
+    valid_results = [result for result in results if result["ate_metrics"] is not None]
+    pair_results = valid_results[:2]
 
-    if pair_summary_name or pair_json_name or pair_plot_name:
-        write_pair_outputs(gt_path, select_pair_results(results), out_dir, pair_summary_name, pair_json_name, pair_plot_name)
+    if pair_plot_name and len(pair_results) >= 2:
+        save_pair_plot(pair_results[0]["gt_centered"], pair_results, out_dir / pair_plot_name)
 
-    if summary_name:
-        write_multi_summary(results, out_dir / summary_name, summary_title)
-
-    if overview_plot_name and gt_c_ref is not None:
+    if overview_plot_name and gt_c_ref is not None and len(valid_results) >= 2:
         save_overview_plot(gt_c_ref, results, out_dir / overview_plot_name, title)
 
-    if bar_plot_name:
+    if bar_plot_name and len(valid_results) >= 1:
         save_bar_plot(results, out_dir / bar_plot_name)
 
-    if kitti_name:
-        if calib_path is None:
-            print("[错误] 需要提供 --calib 才能计算 KITTI Tr/Rot 指标", file=sys.stderr)
-            return 1
-        write_kitti_summary(
+    overview_lines, overview_payload = build_overview_section(gt_path, calib_path, traj_entries, valid_results)
+    multi_lines, multi_payload = build_multi_section(valid_results)
+
+    sections = [overview_lines, multi_lines]
+    kitti_payload = None
+    if calib_path:
+        kitti_lines, kitti_payload = build_kitti_summary(
             gt_path,
             calib_path,
             traj_entries,
-            out_dir / kitti_name,
             lengths=lengths or [100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0],
             step=step,
             max_dt=max_dt,
         )
+        sections.append(kitti_lines)
+
+    report_path = out_dir / report_name
+    write_combined_report(report_path, report_title, sections)
+
+    if report_json_name:
+        json_payload = {
+            "sequence": infer_sequence_name(gt_path),
+            "gt_path": str(Path(gt_path).resolve()),
+            "calib_path": str(Path(calib_path).resolve()) if calib_path else None,
+            "trajectories": traj_entries,
+            "overview": overview_payload,
+            "ate_rpe": multi_payload,
+            "kitti_tr_rot": kitti_payload,
+            "artifacts": {
+                "report_txt": str(report_path.resolve()),
+                "report_json": str((out_dir / report_json_name).resolve()),
+                "pair_plot": str((out_dir / pair_plot_name).resolve()) if pair_plot_name else None,
+                "overview_plot": str((out_dir / overview_plot_name).resolve()) if overview_plot_name else None,
+                "bar_plot": str((out_dir / bar_plot_name).resolve()) if bar_plot_name else None,
+            },
+        }
+        write_report_json(out_dir / report_json_name, json_payload)
 
     print(f"\n[完成] 评估结果已保存至: {out_dir}")
     return 0
 
 
 def build_main_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="统一轨迹评估脚本：ATE / RPE / 双轨摘要 / KITTI Tr/Rot")
+    parser = argparse.ArgumentParser(description="统一轨迹评估脚本：ATE / RPE / KITTI Tr/Rot")
     parser.add_argument("--gt", required=True, help="KITTI OXTS 真值路径")
-    parser.add_argument("--calib", default="", help="KITTI 标定文件路径，用于 Tr/Rot 评估")
+    parser.add_argument("--calib", default="", help="KITTI 标定文件路径；提供后自动计算 Tr/Rot")
     parser.add_argument("--traj", action="append", default=[], metavar="NAME:PATH", help="轨迹参数，格式为 名称:路径，可重复传入")
     parser.add_argument("--output-dir", required=True, help="输出目录")
     parser.add_argument("--max-dt", type=float, default=0.2, help="时间戳匹配最大容差（秒）")
     parser.add_argument("--rpe-delta", type=int, default=1, help="RPE 计算的帧间隔")
     parser.add_argument("--title", default="", help="总览图标题")
-
-    parser.add_argument("--pair-summary-name", default="", help="双轨摘要文本文件名，例如 metrics.txt")
-    parser.add_argument("--pair-json-name", default="", help="双轨摘要 JSON 文件名，例如 metrics.json")
+    parser.add_argument("--report-name", default="metrics.txt", help="合并后的文本报告文件名")
+    parser.add_argument("--report-json-name", default="metrics.json", help="程序读取用 JSON 文件名")
+    parser.add_argument("--report-title", default="统一轨迹评估报告", help="文本报告标题")
     parser.add_argument("--pair-plot-name", default="", help="双轨评估图文件名，例如 evaluation_result.png")
-
-    parser.add_argument("--summary-name", default="", help="多轨汇总文本文件名，例如 metrics_joint_backend.txt")
-    parser.add_argument("--summary-title", default="轨迹对比评估结果", help="多轨汇总标题")
     parser.add_argument("--overview-plot-name", default="", help="多轨总览图文件名，例如 evaluation_joint_backend.png")
     parser.add_argument("--bar-plot-name", default="", help="柱状图文件名，例如 ablation_bar.png")
-
-    parser.add_argument("--kitti-name", default="", help="KITTI Tr/Rot 文本文件名，例如 metrics_kitti_tr_rot.txt")
     parser.add_argument("--lengths", default="100,200,300,400,500,600,700,800", help="KITTI Tr/Rot 段长列表")
     parser.add_argument("--step", type=int, default=10, help="KITTI Tr/Rot 起点步长（帧）")
     return parser
@@ -911,100 +950,15 @@ def main(argv: list[str] | None = None) -> int:
         max_dt=args.max_dt,
         rpe_delta=args.rpe_delta,
         title=args.title,
-        pair_summary_name=args.pair_summary_name,
-        pair_json_name=args.pair_json_name,
+        report_name=args.report_name,
+        report_json_name=args.report_json_name,
+        report_title=args.report_title,
         pair_plot_name=args.pair_plot_name,
-        summary_name=args.summary_name,
-        summary_title=args.summary_title,
         overview_plot_name=args.overview_plot_name,
         bar_plot_name=args.bar_plot_name,
-        kitti_name=args.kitti_name,
         lengths=lengths,
         step=args.step,
     )
-
-
-def main_legacy_pair(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="兼容旧版双轨评估入口")
-    parser.add_argument("--pred", required=True, help="主轨迹文件（TUM）")
-    parser.add_argument("--baseline", help="基准轨迹文件（TUM）")
-    parser.add_argument("--gt", required=True, help="KITTI OXTS 真值路径")
-    parser.add_argument("--output", required=True, help="输出目录")
-    args = parser.parse_args(argv)
-
-    traj_entries = []
-    if args.baseline:
-        traj_entries.append({"name": "Baseline", "path": str(Path(args.baseline).expanduser().resolve())})
-    traj_entries.append({"name": "Optimized", "path": str(Path(args.pred).expanduser().resolve())})
-
-    return run_unified_evaluation(
-        args.gt,
-        traj_entries,
-        args.output,
-        pair_summary_name="metrics.txt",
-        pair_json_name="metrics.json",
-        pair_plot_name="evaluation_result.png",
-    )
-
-
-def main_legacy_joint(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="兼容旧版多轨 ATE/RPE 评估入口")
-    parser.add_argument("--gt", required=True, help="KITTI OXTS 真值路径")
-    parser.add_argument("--traj", action="append", default=[], metavar="NAME:PATH", help="轨迹参数，格式 名称:路径")
-    parser.add_argument("--output", default="Results/", help="输出目录")
-    parser.add_argument("--max-dt", type=float, default=0.2, help="时间戳匹配最大容差（秒）")
-    parser.add_argument("--rpe-delta", type=int, default=1, help="RPE 帧间隔")
-    parser.add_argument("--title", default="", help="图标题")
-    args = parser.parse_args(argv)
-
-    try:
-        traj_entries = parse_traj_entries(args.traj)
-    except ValueError as exc:
-        print(f"[错误] {exc}", file=sys.stderr)
-        return 1
-
-    return run_unified_evaluation(
-        args.gt,
-        traj_entries,
-        args.output,
-        max_dt=args.max_dt,
-        rpe_delta=args.rpe_delta,
-        title=args.title,
-        summary_name="metrics_joint_backend.txt",
-        summary_title="轨迹对比评估结果",
-        overview_plot_name="evaluation_joint_backend.png",
-        bar_plot_name="ablation_bar.png",
-    )
-
-
-def main_legacy_kitti(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="兼容旧版 KITTI Tr/Rot 评估入口")
-    parser.add_argument("--oxts", required=True, help="KITTI OXTS 真值路径")
-    parser.add_argument("--calib", required=True, help="KITTI 标定文件路径")
-    parser.add_argument("--traj", action="append", default=[], metavar="NAME:PATH", help="轨迹参数，格式 名称:路径")
-    parser.add_argument("--lengths", default="100,200,300,400,500,600,700,800", help="评估段长列表")
-    parser.add_argument("--step", type=int, default=10, help="起点步长（帧）")
-    parser.add_argument("--max_dt", type=float, default=0.2, help="时间戳匹配最大容差（秒）")
-    parser.add_argument("--output", required=True, help="输出文本文件路径")
-    args = parser.parse_args(argv)
-
-    try:
-        traj_entries = parse_traj_entries(args.traj)
-    except ValueError as exc:
-        print(f"[错误] {exc}", file=sys.stderr)
-        return 1
-
-    lengths = [float(item.strip()) for item in args.lengths.split(",") if item.strip()]
-    write_kitti_summary(
-        args.oxts,
-        args.calib,
-        traj_entries,
-        Path(args.output).expanduser().resolve(),
-        lengths=lengths,
-        step=args.step,
-        max_dt=args.max_dt,
-    )
-    return 0
 
 
 if __name__ == "__main__":

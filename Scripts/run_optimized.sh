@@ -258,14 +258,12 @@ if [ -f "$ONLINE_RESULT_DIR/trajectory_baseline.txt" ] && [ -f "$ONLINE_RESULT_D
             --calib "$PROJECT_ROOT/Data_Tracking/training/calib/$SEQ_ID.txt" \
             --output-dir "$ONLINE_RESULT_DIR" \
             --title "Online Joint Backend Evaluation (Seq $SEQ_ID)" \
-            --pair-summary-name "metrics.txt" \
-            --pair-json-name "metrics.json" \
+            --report-name "metrics.txt" \
+            --report-json-name "metrics.json" \
+            --report-title "在线轨迹评估报告" \
             --pair-plot-name "evaluation_result.png" \
-            --summary-name "metrics_joint_backend.txt" \
-            --summary-title "在线轨迹对比评估结果" \
             --overview-plot-name "evaluation_joint_backend.png" \
-            --bar-plot-name "ablation_bar.png" \
-            --kitti-name "metrics_kitti_tr_rot.txt"
+            --bar-plot-name "ablation_bar.png"
     else
         echo "[步骤 11] 未检测到有效的联合后端轨迹，运行统一双轨评估..."
         python3 "$PROJECT_ROOT/Scripts/evaluation/evaluate_trajectories.py" \
@@ -274,10 +272,10 @@ if [ -f "$ONLINE_RESULT_DIR/trajectory_baseline.txt" ] && [ -f "$ONLINE_RESULT_D
             --traj "FAST-LIO+MCTrack:$ONLINE_RESULT_DIR/trajectory.txt" \
             --calib "$PROJECT_ROOT/Data_Tracking/training/calib/$SEQ_ID.txt" \
             --output-dir "$ONLINE_RESULT_DIR" \
-            --pair-summary-name "metrics.txt" \
-            --pair-json-name "metrics.json" \
-            --pair-plot-name "evaluation_result.png" \
-            --kitti-name "metrics_kitti_tr_rot.txt"
+            --report-name "metrics.txt" \
+            --report-json-name "metrics.json" \
+            --report-title "在线轨迹评估报告" \
+            --pair-plot-name "evaluation_result.png"
     fi
 
     echo "========================================================="

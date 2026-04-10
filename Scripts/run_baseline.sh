@@ -194,8 +194,9 @@ if [ -f "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory.txt" ] && [ -
         --traj "Baseline:$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory_baseline.txt" \
         --traj "Optimized:$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/trajectory.txt" \
         --output-dir "$PROJECT_ROOT/Results/${SEQ_ID}_results/Online/" \
-        --pair-summary-name "metrics.txt" \
-        --pair-json-name "metrics.json" \
+        --report-name "metrics.txt" \
+        --report-json-name "metrics.json" \
+        --report-title "在线轨迹评估报告" \
         --pair-plot-name "evaluation_result.png"
     
     echo "========================================================="
