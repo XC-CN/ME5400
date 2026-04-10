@@ -2,9 +2,37 @@
 """Convert KITTI Tracking velodyne + OXTS (+ detections) to ROS bag."""
 import argparse
 import math
+import os
+import shlex
 import sys
 from collections import defaultdict
 from pathlib import Path
+
+THIS_DIR = Path(__file__).resolve().parent
+REPO_ROOT = THIS_DIR.parent.parent
+RUNTIME_ENV_SCRIPT = REPO_ROOT / "Scripts" / "utils" / "setup_runtime_env.sh"
+
+
+def ensure_runtime_environment() -> None:
+    if os.environ.get("ME5400_RUNTIME_ENV_READY") == "1":
+        return
+
+    quoted_args = " ".join(shlex.quote(arg) for arg in sys.argv[1:])
+    command = (
+        f"source {shlex.quote(str(RUNTIME_ENV_SCRIPT))} && "
+        "export ME5400_RUNTIME_ENV_READY=1 && "
+        f"exec python3 {shlex.quote(str(Path(__file__).resolve()))}"
+    )
+    if quoted_args:
+        command = f"{command} {quoted_args}"
+    os.execvpe(
+        "bash",
+        ["bash", "-lc", command],
+        os.environ.copy(),
+    )
+
+
+ensure_runtime_environment()
 
 import numpy as np
 import rosbag
@@ -15,8 +43,6 @@ import sensor_msgs.point_cloud2 as pc2
 from std_msgs.msg import Header
 from tf2_msgs.msg import TFMessage
 
-THIS_DIR = Path(__file__).resolve().parent
-REPO_ROOT = THIS_DIR.parent
 if str(THIS_DIR) not in sys.path:
     sys.path.append(str(THIS_DIR))
 
@@ -274,13 +300,13 @@ def detection_array_message(dets, stamp: rospy.Time, seq: str) -> Detection3DArr
 
 def main():
     parser = argparse.ArgumentParser(description="KITTI Tracking to rosbag")
-    parser.add_argument("--dataset_root", type=Path, default=Path("tracking/training"))
+    parser.add_argument("--dataset_root", type=Path, default=Path("Data_Tracking/training"))
     parser.add_argument("--seq", type=str, default="0019", help="sequence id, e.g., 0000")
     parser.add_argument(
         "--output",
         type=Path,
         default=None,
-        help="output bag path (defaults to tracking/rosbags/seq_<seq>_<with|no>det.bag)",
+        help="output bag path (defaults to Data_Tracking/rosbags/seq_<seq>_<with|no>det.bag)",
     )
     parser.add_argument("--frame_id", type=str, default="velodyne")
     parser.add_argument("--imu_frame", type=str, default="imu")
@@ -306,7 +332,7 @@ def main():
     output_path = args.output
     if output_path is None:
         suffix = "with_det" if args.include_detections else "nodet"
-        output_path = Path(f"tracking/rosbags/seq_{seq}_{suffix}.bag")
+        output_path = Path(f"Data_Tracking/rosbags/seq_{seq}_{suffix}.bag")
     if not output_path.is_absolute():
         output_path = (REPO_ROOT / output_path).resolve()
 

@@ -438,10 +438,11 @@ ME5400/
 运行前请准备好 KITTI Tracking 数据目录（用于工况播放与 MCTrack 标定信息）：
 
 - `Data_Tracking/training/`：需包含 `calib/`、`oxts/`、`velodyne/` 等子目录。
-- `tracking/det_tracking_lsvm/`：仅在评估历史检测时使用；实时检测场景可忽略。
-- 将点云+IMU 数据转换为 rosbag 并放在 `tracking/rosbags/`，或者直接使用仓库提供的示例 bag。
+- `Data_Tracking/det_tracking_lsvm/`：仅在评估历史检测时使用；实时检测场景可忽略。
+- 将点云+IMU 数据转换为 rosbag 并放在 `Data_Tracking/rosbags/`，或者直接使用仓库提供的示例 bag。
 
 > 当前流程仍通过播放 KITTI Tracking 序列的 rosbag 来驱动，暂未直接接入实时传感器。
+> `kitti_tracking_to_rosbag.py` 现在会自动加载 `Scripts/utils/setup_runtime_env.sh`，通常不需要手动 `source` 环境。
 
 可使用提供的工具脚本从 KITTI Tracking 原始数据生成所需 rosbag（默认只需点云与 IMU）：
 
