@@ -1,0 +1,174 @@
+{
+  "sequence": "0012",
+  "gt_path": "/home/xc/Projects/ME5400/Data_Tracking/training/oxts/0012.txt",
+  "calib_path": "/home/xc/Projects/ME5400/Data_Tracking/training/calib/0012.txt",
+  "trajectories": [
+    {
+      "name": "Baseline",
+      "path": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_baseline.txt"
+    },
+    {
+      "name": "FAST-LIO+MCTrack",
+      "path": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory.txt"
+    },
+    {
+      "name": "Joint Backend",
+      "path": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_joint.txt"
+    }
+  ],
+  "overview": {
+    "pair_comparison": {
+      "baseline": {
+        "name": "Baseline",
+        "path": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_baseline.txt",
+        "rmse": 0.009927678503120716,
+        "mean_error": 0.009194433000468773,
+        "max_error": 0.016386915937341633,
+        "num_samples": 62
+      },
+      "primary": {
+        "name": "FAST-LIO+MCTrack",
+        "path": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory.txt",
+        "rmse": 0.009174276261121524,
+        "mean_error": 0.008406879251908547,
+        "max_error": 0.014928156167550607,
+        "num_samples": 62
+      },
+      "improvement_percent": 7.588906527969893
+    }
+  },
+  "ate_rpe": {
+    "trajectories": [
+      {
+        "name": "Baseline",
+        "path": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_baseline.txt",
+        "matched_frames": 62,
+        "ate": {
+          "ATE_RMSE": 0.009927678503120716,
+          "ATE_mean": 0.009194433000468773,
+          "ATE_max": 0.016386915937341633,
+          "ATE_std": 0.0037444895862074504
+        },
+        "rpe": {
+          "RPE_RMSE": 0.0023108243857749683,
+          "RPE_mean": 0.001961078771695834,
+          "RPE_max": 0.005956477047557502,
+          "RPE_std": 0.0012223254039314647
+        }
+      },
+      {
+        "name": "FAST-LIO+MCTrack",
+        "path": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory.txt",
+        "matched_frames": 62,
+        "ate": {
+          "ATE_RMSE": 0.009174276261121524,
+          "ATE_mean": 0.008406879251908547,
+          "ATE_max": 0.014928156167550607,
+          "ATE_std": 0.003673108514488445
+        },
+        "rpe": {
+          "RPE_RMSE": 0.0024774003496707457,
+          "RPE_mean": 0.001845424689066819,
+          "RPE_max": 0.007667805092719515,
+          "RPE_std": 0.001652852143880803
+        }
+      },
+      {
+        "name": "Joint Backend",
+        "path": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_joint.txt",
+        "matched_frames": 62,
+        "ate": {
+          "ATE_RMSE": 0.05993951251978115,
+          "ATE_mean": 0.051018297772799606,
+          "ATE_max": 0.10630691371262933,
+          "ATE_std": 0.03146233388474147
+        },
+        "rpe": {
+          "RPE_RMSE": 0.007587301231835732,
+          "RPE_mean": 0.006150545682169115,
+          "RPE_max": 0.017164439989797838,
+          "RPE_std": 0.004442738771767574
+        }
+      }
+    ],
+    "improvements_relative_to_first": [
+      {
+        "name": "FAST-LIO+MCTrack",
+        "ate_improvement_percent": 7.588906527969893
+      },
+      {
+        "name": "Joint Backend",
+        "ate_improvement_percent": -503.76161960663273
+      }
+    ]
+  },
+  "kitti_tr_rot": {
+    "oxts_path": "/home/xc/Projects/ME5400/Data_Tracking/training/oxts/0012.txt",
+    "calib_path": "/home/xc/Projects/ME5400/Data_Tracking/training/calib/0012.txt",
+    "requested_lengths_m": [
+      20,
+      40,
+      60,
+      80,
+      100,
+      150,
+      200
+    ],
+    "lengths_m": [],
+    "step_frames": 10,
+    "max_dt": 0.2,
+    "min_matched_span_m": 0.06535477827909207,
+    "matched_span_by_traj_m": {
+      "Baseline": 0.06535477827909207,
+      "FAST-LIO+MCTrack": 0.06535477827909207,
+      "Joint Backend": 0.06535477827909207
+    },
+    "rows": [
+      {
+        "name": "Baseline",
+        "traj": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_baseline.txt",
+        "matched_frames": 62,
+        "matched_span_m": 0.06535477827909207,
+        "Tr_percent": NaN,
+        "Rot_deg_per_100m": NaN,
+        "n_segments": 0,
+        "Tr_gain_percent": 0.0,
+        "Rot_gain_percent": 0.0
+      },
+      {
+        "name": "FAST-LIO+MCTrack",
+        "traj": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory.txt",
+        "matched_frames": 62,
+        "matched_span_m": 0.06535477827909207,
+        "Tr_percent": NaN,
+        "Rot_deg_per_100m": NaN,
+        "n_segments": 0,
+        "Tr_gain_percent": NaN,
+        "Rot_gain_percent": NaN
+      },
+      {
+        "name": "Joint Backend",
+        "traj": "/home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_joint.txt",
+        "matched_frames": 62,
+        "matched_span_m": 0.06535477827909207,
+        "Tr_percent": NaN,
+        "Rot_deg_per_100m": NaN,
+        "n_segments": 0,
+        "Tr_gain_percent": NaN,
+        "Rot_gain_percent": NaN
+      }
+    ],
+    "per_length": {
+      "Baseline": {},
+      "FAST-LIO+MCTrack": {},
+      "Joint Backend": {}
+    }
+  },
+  "artifacts": {
+    "report_txt": "/home/xc/Projects/ME5400/Results/0012_results/Online/metrics.txt",
+    "report_json": "/home/xc/Projects/ME5400/Results/0012_results/Online/metrics.json",
+    "pair_plot": "/home/xc/Projects/ME5400/Results/0012_results/Online/evaluation_result.png",
+    "overview_plot": "/home/xc/Projects/ME5400/Results/0012_results/Online/evaluation_joint_backend.png",
+    "bar_plot": "/home/xc/Projects/ME5400/Results/0012_results/Online/ablation_bar.png"
+  }
+}

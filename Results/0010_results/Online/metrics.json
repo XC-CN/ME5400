@@ -1,0 +1,290 @@
+{
+  "sequence": "0010",
+  "gt_path": "/home/xc/Projects/ME5400/Data_Tracking/training/oxts/0010.txt",
+  "calib_path": "/home/xc/Projects/ME5400/Data_Tracking/training/calib/0010.txt",
+  "trajectories": [
+    {
+      "name": "Baseline",
+      "path": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory_baseline.txt"
+    },
+    {
+      "name": "FAST-LIO+MCTrack",
+      "path": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory.txt"
+    },
+    {
+      "name": "Joint Backend",
+      "path": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory_joint.txt"
+    }
+  ],
+  "overview": {
+    "pair_comparison": {
+      "baseline": {
+        "name": "Baseline",
+        "path": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory_baseline.txt",
+        "rmse": 3.765149840559862,
+        "mean_error": 3.724572966365365,
+        "max_error": 5.568404766087371,
+        "num_samples": 279
+      },
+      "primary": {
+        "name": "FAST-LIO+MCTrack",
+        "path": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory.txt",
+        "rmse": 0.8644845378080688,
+        "mean_error": 0.8022150176992792,
+        "max_error": 1.9091763825172683,
+        "num_samples": 279
+      },
+      "improvement_percent": 77.03983707380092
+    }
+  },
+  "ate_rpe": {
+    "trajectories": [
+      {
+        "name": "Baseline",
+        "path": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory_baseline.txt",
+        "matched_frames": 279,
+        "ate": {
+          "ATE_RMSE": 3.765149840559862,
+          "ATE_mean": 3.724572966365365,
+          "ATE_max": 5.568404766087371,
+          "ATE_std": 0.5512799108331949
+        },
+        "rpe": {
+          "RPE_RMSE": 0.27742894224775055,
+          "RPE_mean": 0.15034668166607784,
+          "RPE_max": 1.4738034086282128,
+          "RPE_std": 0.23315808651793477
+        }
+      },
+      {
+        "name": "FAST-LIO+MCTrack",
+        "path": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory.txt",
+        "matched_frames": 279,
+        "ate": {
+          "ATE_RMSE": 0.8644845378080688,
+          "ATE_mean": 0.8022150176992792,
+          "ATE_max": 1.9091763825172683,
+          "ATE_std": 0.32215614457429753
+        },
+        "rpe": {
+          "RPE_RMSE": 0.22780677018102904,
+          "RPE_mean": 0.12931661104366718,
+          "RPE_max": 1.397112337768778,
+          "RPE_std": 0.18754503098854172
+        }
+      },
+      {
+        "name": "Joint Backend",
+        "path": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory_joint.txt",
+        "matched_frames": 279,
+        "ate": {
+          "ATE_RMSE": 0.9594699946511089,
+          "ATE_mean": 0.9031588493619807,
+          "ATE_max": 1.927020381518373,
+          "ATE_std": 0.3238622600040674
+        },
+        "rpe": {
+          "RPE_RMSE": 0.2324452817385204,
+          "RPE_mean": 0.1308015795587129,
+          "RPE_max": 1.498813579939661,
+          "RPE_std": 0.19215034683144813
+        }
+      }
+    ],
+    "improvements_relative_to_first": [
+      {
+        "name": "FAST-LIO+MCTrack",
+        "ate_improvement_percent": 77.03983707380092
+      },
+      {
+        "name": "Joint Backend",
+        "ate_improvement_percent": 74.51708337566613
+      }
+    ]
+  },
+  "kitti_tr_rot": {
+    "oxts_path": "/home/xc/Projects/ME5400/Data_Tracking/training/oxts/0010.txt",
+    "calib_path": "/home/xc/Projects/ME5400/Data_Tracking/training/calib/0010.txt",
+    "requested_lengths_m": [
+      20,
+      40,
+      60,
+      80,
+      100,
+      150,
+      200
+    ],
+    "lengths_m": [
+      20,
+      40,
+      60,
+      80,
+      100,
+      150,
+      200
+    ],
+    "step_frames": 10,
+    "max_dt": 0.2,
+    "min_matched_span_m": 399.6750361898118,
+    "matched_span_by_traj_m": {
+      "Baseline": 399.6750361898118,
+      "FAST-LIO+MCTrack": 399.6750361898118,
+      "Joint Backend": 399.6750361898118
+    },
+    "rows": [
+      {
+        "name": "Baseline",
+        "traj": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory_baseline.txt",
+        "matched_frames": 279,
+        "matched_span_m": 399.6750361898118,
+        "Tr_percent": 1.3883880405815412,
+        "Rot_deg_per_100m": 1.1274192739557432,
+        "n_segments": 153,
+        "Tr_gain_percent": 0.0,
+        "Rot_gain_percent": 0.0
+      },
+      {
+        "name": "FAST-LIO+MCTrack",
+        "traj": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory.txt",
+        "matched_frames": 279,
+        "matched_span_m": 399.6750361898118,
+        "Tr_percent": 0.9774396929829022,
+        "Rot_deg_per_100m": 1.1352723246136196,
+        "n_segments": 153,
+        "Tr_gain_percent": 29.598954729292316,
+        "Rot_gain_percent": -0.696551038224021
+      },
+      {
+        "name": "Joint Backend",
+        "traj": "/home/xc/Projects/ME5400/Results/0010_results/Online/trajectory_joint.txt",
+        "matched_frames": 279,
+        "matched_span_m": 399.6750361898118,
+        "Tr_percent": 1.1159664457436247,
+        "Rot_deg_per_100m": 1.5747900746849333,
+        "n_segments": 153,
+        "Tr_gain_percent": 19.621430527722623,
+        "Rot_gain_percent": -39.68096085137105
+      }
+    ],
+    "per_length": {
+      "Baseline": {
+        "20": {
+          "Tr_percent": 2.57979451847759,
+          "Rot_deg_per_100m": 1.8556784285389798,
+          "n_segments": 27.0
+        },
+        "40": {
+          "Tr_percent": 1.5189775638464122,
+          "Rot_deg_per_100m": 1.2915233955086443,
+          "n_segments": 26.0
+        },
+        "60": {
+          "Tr_percent": 1.183863273111471,
+          "Rot_deg_per_100m": 1.072376429214455,
+          "n_segments": 24.0
+        },
+        "80": {
+          "Tr_percent": 0.9453001007253476,
+          "Rot_deg_per_100m": 0.9041485186415794,
+          "n_segments": 23.0
+        },
+        "100": {
+          "Tr_percent": 0.9665523445978146,
+          "Rot_deg_per_100m": 0.8398903007724712,
+          "n_segments": 21.0
+        },
+        "150": {
+          "Tr_percent": 0.9908662025346386,
+          "Rot_deg_per_100m": 0.8030200916449173,
+          "n_segments": 18.0
+        },
+        "200": {
+          "Tr_percent": 1.070549271181304,
+          "Rot_deg_per_100m": 0.7276939189798453,
+          "n_segments": 14.0
+        }
+      },
+      "FAST-LIO+MCTrack": {
+        "20": {
+          "Tr_percent": 1.5528726906097623,
+          "Rot_deg_per_100m": 1.9056194292457465,
+          "n_segments": 27.0
+        },
+        "40": {
+          "Tr_percent": 1.0026766674298953,
+          "Rot_deg_per_100m": 1.2814022823532345,
+          "n_segments": 26.0
+        },
+        "60": {
+          "Tr_percent": 0.8785957818154659,
+          "Rot_deg_per_100m": 1.0701340594179716,
+          "n_segments": 24.0
+        },
+        "80": {
+          "Tr_percent": 0.7256327924865147,
+          "Rot_deg_per_100m": 0.9059302142626631,
+          "n_segments": 23.0
+        },
+        "100": {
+          "Tr_percent": 0.7495514768250283,
+          "Rot_deg_per_100m": 0.8378526209282552,
+          "n_segments": 21.0
+        },
+        "150": {
+          "Tr_percent": 0.8377822750635622,
+          "Rot_deg_per_100m": 0.8091142056491921,
+          "n_segments": 18.0
+        },
+        "200": {
+          "Tr_percent": 0.9253287193937475,
+          "Rot_deg_per_100m": 0.7321363314152277,
+          "n_segments": 14.0
+        }
+      },
+      "Joint Backend": {
+        "20": {
+          "Tr_percent": 1.7739205623716952,
+          "Rot_deg_per_100m": 2.8229302104689453,
+          "n_segments": 27.0
+        },
+        "40": {
+          "Tr_percent": 1.1244207252966456,
+          "Rot_deg_per_100m": 1.9070672541030735,
+          "n_segments": 26.0
+        },
+        "60": {
+          "Tr_percent": 0.9486351054214591,
+          "Rot_deg_per_100m": 1.5155043109569426,
+          "n_segments": 24.0
+        },
+        "80": {
+          "Tr_percent": 0.904553357993634,
+          "Rot_deg_per_100m": 1.2662426873271457,
+          "n_segments": 23.0
+        },
+        "100": {
+          "Tr_percent": 0.8931202164063204,
+          "Rot_deg_per_100m": 1.086556763398865,
+          "n_segments": 21.0
+        },
+        "150": {
+          "Tr_percent": 0.9449295425205833,
+          "Rot_deg_per_100m": 0.9032147578022328,
+          "n_segments": 18.0
+        },
+        "200": {
+          "Tr_percent": 1.019703291653871,
+          "Rot_deg_per_100m": 0.7549124424390034,
+          "n_segments": 14.0
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "report_txt": "/home/xc/Projects/ME5400/Results/0010_results/Online/metrics.txt",
+    "report_json": "/home/xc/Projects/ME5400/Results/0010_results/Online/metrics.json",
+    "pair_plot": "/home/xc/Projects/ME5400/Results/0010_results/Online/evaluation_result.png",
+    "overview_plot": "/home/xc/Projects/ME5400/Results/0010_results/Online/evaluation_joint_backend.png",
+    "bar_plot": "/home/xc/Projects/ME5400/Results/0010_results/Online/ablation_bar.png"
+  }
+}

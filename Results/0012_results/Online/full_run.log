@@ -1,0 +1,857 @@
+[INFO] 本次运行的所有输出将实时保存至: /home/xc/Projects/ME5400/Results/0012_results/Online/full_run.log
+=========================================================
+   [ALL] 开始完整验证连跑流: Baseline -> Optimized    
+=========================================================
+[INFO] FAST-LIO 地图保存: false
+[INFO] 检测到外部 roscore 已在运行，将直接复用。
+
+>>> [第 1 阶段] 正在运行纯净版基准测试 (run_baseline.sh) ...
+[INFO] 正在启动 ME5400 基准测试 (单独 FAST-LIO)...
+[INFO] 数据集序列号: 0012
+[INFO] FAST-LIO 地图保存: false
+[步骤 0] 正在清理残留环境...
+[cleanup_ros_runtime.sh] 正在清理残留 ROS 运行时进程...
+[cleanup_ros_runtime.sh] ROS master 中没有需要清理的失联节点。
+[步骤 1] 检测到 roscore 已在运行，将复用现有环境...
+[步骤 2] 正在构建/验证 catkin 工作空间...
+[  0%] Built target rosgraph_msgs_generate_messages_eus
+[  0%] Built target geometry_msgs_generate_messages_nodejs
+[  0%] Built target geometry_msgs_generate_messages_py
+[  0%] Built target std_msgs_generate_messages_cpp
+[  0%] Built target geometry_msgs_generate_messages_cpp
+[  0%] Built target roscpp_generate_messages_eus
+[  0%] Built target std_msgs_generate_messages_eus
+[  0%] Built target geometry_msgs_generate_messages_lisp
+[  0%] Built target sensor_msgs_generate_messages_py
+[  0%] Built target geometry_msgs_generate_messages_eus
+[  0%] Built target actionlib_generate_messages_cpp
+[  0%] Built target std_msgs_generate_messages_py
+[  0%] Built target roscpp_generate_messages_cpp
+[  0%] Built target roscpp_generate_messages_nodejs
+[  0%] Built target std_msgs_generate_messages_nodejs
+[  0%] Built target std_msgs_generate_messages_lisp
+[  0%] Built target sensor_msgs_generate_messages_cpp
+[  0%] Built target actionlib_msgs_generate_messages_eus
+[  0%] Built target rosgraph_msgs_generate_messages_lisp
+[  0%] Built target roscpp_generate_messages_py
+[  0%] Built target actionlib_msgs_generate_messages_py
+[  0%] Built target rosgraph_msgs_generate_messages_nodejs
+[  0%] Built target tf2_msgs_generate_messages_py
+[  0%] Built target actionlib_generate_messages_eus
+[  0%] Built target actionlib_msgs_generate_messages_cpp
+[  0%] Built target actionlib_generate_messages_py
+[  0%] Built target rosgraph_msgs_generate_messages_cpp
+[  0%] Built target tf2_msgs_generate_messages_eus
+[  0%] Built target actionlib_msgs_generate_messages_nodejs
+[  0%] Built target sensor_msgs_generate_messages_eus
+[  0%] Built target actionlib_generate_messages_nodejs
+[  0%] Built target tf2_msgs_generate_messages_nodejs
+[  0%] Built target rosgraph_msgs_generate_messages_py
+[  0%] Built target roscpp_generate_messages_lisp
+[  0%] Built target sensor_msgs_generate_messages_lisp
+[  0%] Built target tf2_msgs_generate_messages_lisp
+[  0%] Built target actionlib_msgs_generate_messages_lisp
+[  0%] Built target tf2_msgs_generate_messages_cpp
+[  0%] Built target actionlib_generate_messages_lisp
+[  0%] Built target _ME5400_generate_messages_check_deps_TrackedObject
+[  0%] Built target _ME5400_generate_messages_check_deps_Detection3DArray
+[  0%] Built target sensor_msgs_generate_messages_nodejs
+[  0%] Built target _ME5400_generate_messages_check_deps_TrackedObjectArray
+[  0%] Built target _tf_generate_messages_check_deps_FrameGraph
+[  0%] Built target _ME5400_generate_messages_check_deps_Detection3D
+[  0%] Built target _tf_generate_messages_check_deps_tfMessage
+[  2%] Built target kdl_conversions
+[  7%] Built target eigen_conversions
+[ 24%] Built target ME5400_generate_messages_cpp
+[ 24%] Built target ME5400_generate_messages_nodejs
+[ 26%] Built target ME5400_generate_messages_py
+[ 33%] Built target ME5400_generate_messages_eus
+[ 37%] Built target tf_generate_messages_cpp
+[ 42%] Built target tf_generate_messages_py
+[ 44%] Built target tf_generate_messages_lisp
+[ 55%] Built target tf_generate_messages_nodejs
+[ 55%] Built target ME5400_generate_messages_lisp
+[ 57%] Built target tf_generate_messages_eus
+[ 57%] Built target _fast_lio_generate_messages_check_deps_Pose6D
+[ 57%] Built target tf_generate_messages
+[ 60%] Built target fast_lio_generate_messages_py
+[ 62%] Built target fast_lio_generate_messages_nodejs
+[ 62%] Built target ME5400_generate_messages
+[ 63%] Built target fast_lio_generate_messages_cpp
+[ 66%] Built target fast_lio_generate_messages_eus
+[ 73%] Built target tf
+[ 75%] Built target fast_lio_generate_messages_lisp
+[ 75%] Built target fast_lio_generate_messages
+[ 79%] Built target static_transform_publisher
+[ 81%] Built target tf_empty_listener
+[ 86%] Built target tf_echo
+[ 86%] Built target tf_monitor
+[ 89%] Built target tf_change_notifier
+[ 94%] Built target tf_conversions
+[100%] Built target fastlio_mapping
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+Base path: /home/xc/Projects/ME5400/catkin_ws
+Source space: /home/xc/Projects/ME5400/catkin_ws/src
+Build space: /home/xc/Projects/ME5400/catkin_ws/build
+Devel space: /home/xc/Projects/ME5400/catkin_ws/devel
+Install space: /home/xc/Projects/ME5400/catkin_ws/install
+####
+#### Running command: "make cmake_check_build_system" in "/home/xc/Projects/ME5400/catkin_ws/build"
+####
+####
+#### Running command: "make -j28 -l28" in "/home/xc/Projects/ME5400/catkin_ws/build"
+####
+[步骤 3] Headless 模式：跳过 RViz 可视化与真实轨迹发布...
+=========================================================
+   运行基准测试 (单独 FAST-LIO)                          
+=========================================================
+[步骤 4] 正在启动 FAST-LIO (基准模式: 纯 mapping, use_dynamic_weights=false)...
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+Multi thread started 
+p_pre->lidar_type 2
+~~~~/home/xc/Projects/ME5400/catkin_ws/src/fast_lio/ file opened
+[FAST-LIO] Trajectory file opened at: /home/xc/Projects/ME5400/Results/trajectory.txt
+[步骤 5] 正在播放 Rosbag (基准)...
+Waiting for Baseline Run...
+[INFO] [1775841361.464896936]: Opening /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0012_nodet.bag
+
+Waiting 0.2 seconds after advertising topics... done.
+
+Hit space to toggle paused, or 's' to step.
+ [RUNNING]  Bag Time:      0.001000   Duration: 0.000000 / 7.700000                [RUNNING]  Bag Time:      0.092020   Duration: 0.091020 / 7.700000                [RUNNING]  Bag Time:      0.199512   Duration: 0.198512 / 7.700000                [RUNNING]  Bag Time:      0.300386   Duration: 0.299386 / 7.700000                [RUNNING]  Bag Time:      0.400982   Duration: 0.399982 / 7.700000               [WARN] [1775841362.082842302, 0.411036147]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      0.491801   Duration: 0.490801 / 7.700000               [WARN] [1775841362.195044794, 0.523639674]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      0.594133   Duration: 0.593133 / 7.700000               [WARN] [1775841362.283349170, 0.614265703]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      0.695087   Duration: 0.694087 / 7.700000               [WARN] [1775841362.386327945, 0.715356506]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      0.796200   Duration: 0.795200 / 7.700000               [WARN] [1775841362.492523188, 0.816320193]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      0.896858   Duration: 0.895858 / 7.700000               [WARN] [1775841362.592252410, 0.917074691]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      0.997989   Duration: 0.996989 / 7.700000               [WARN] [1775841362.691177913, 1.018261516]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      1.098867   Duration: 1.097867 / 7.700000               [WARN] [1775841362.792958181, 1.118988556]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      1.199610   Duration: 1.198610 / 7.700000               [WARN] [1775841362.894555815, 1.219877186]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      1.300885   Duration: 1.299885 / 7.700000               [WARN] [1775841362.987474067, 1.311018922]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      1.391532   Duration: 1.390532 / 7.700000                [RUNNING]  Bag Time:      1.493259   Duration: 1.492259 / 7.700000                [RUNNING]  Bag Time:      1.594071   Duration: 1.593071 / 7.700000                [RUNNING]  Bag Time:      1.699140   Duration: 1.698140 / 7.700000                [RUNNING]  Bag Time:      1.799782   Duration: 1.798782 / 7.700000                [RUNNING]  Bag Time:      1.900357   Duration: 1.899357 / 7.700000                [RUNNING]  Bag Time:      1.991021   Duration: 1.990021 / 7.700000                [RUNNING]  Bag Time:      2.094328   Duration: 2.093328 / 7.700000                [RUNNING]  Bag Time:      2.195054   Duration: 2.194054 / 7.700000                [RUNNING]  Bag Time:      2.295620   Duration: 2.294620 / 7.700000                [RUNNING]  Bag Time:      2.396176   Duration: 2.395176 / 7.700000                [RUNNING]  Bag Time:      2.497181   Duration: 2.496181 / 7.700000                [RUNNING]  Bag Time:      2.597763   Duration: 2.596763 / 7.700000                [RUNNING]  Bag Time:      2.698344   Duration: 2.697344 / 7.700000                [RUNNING]  Bag Time:      2.799092   Duration: 2.798092 / 7.700000                [RUNNING]  Bag Time:      2.899805   Duration: 2.898805 / 7.700000                [RUNNING]  Bag Time:      3.000810   Duration: 2.999810 / 7.700000                [RUNNING]  Bag Time:      3.091771   Duration: 3.090771 / 7.700000                [RUNNING]  Bag Time:      3.194754   Duration: 3.193754 / 7.700000                [RUNNING]  Bag Time:      3.297740   Duration: 3.296740 / 7.700000                [RUNNING]  Bag Time:      3.398298   Duration: 3.397298 / 7.700000                [RUNNING]  Bag Time:      3.498835   Duration: 3.497835 / 7.700000               [INFO] [1775841362.987339315, 1.311018922]: IMU Initial Done
+[ mapping ]: time: IMU + Map + Input Downsample: 0.014694 ave match: 0.009307 ave solve: 0.001417  ave ICP: 0.011415  map incre: 0.004232 ave total: 0.030341 icp: 0.010777 construct H: 0.000393 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.009464 ave match: 0.009362 ave solve: 0.001648  ave ICP: 0.011436  map incre: 0.004247 ave total: 0.027744 icp: 0.011069 construct H: 0.000454 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.010594 ave match: 0.009428 ave solve: 0.001741  ave ICP: 0.011642  map incre: 0.003452 ave total: 0.027059 icp: 0.011231 construct H: 0.000479 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.009454 ave match: 0.009400 ave solve: 0.001782  ave ICP: 0.011346  map incre: 0.003368 ave total: 0.026336 icp: 0.011245 construct H: 0.000492 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.013894 ave match: 0.009593 ave solve: 0.001810  ave ICP: 0.012479  map incre: 0.002876 ave total: 0.026918 icp: 0.011467 construct H: 0.000500 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.008561 ave match: 0.009562 ave solve: 0.001823  ave ICP: 0.011436  map incre: 0.002701 ave total: 0.026215 icp: 0.011449 construct H: 0.000505 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.009124 ave match: 0.009525 ave solve: 0.001841  ave ICP: 0.011389  map incre: 0.002177 ave total: 0.025711 icp: 0.011431 construct H: 0.000510 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.006621 ave match: 0.009368 ave solve: 0.001794  ave ICP: 0.009841  map incre: 0.002593 ave total: 0.024879 icp: 0.011225 construct H: 0.000496 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.008593 ave match: 0.009413 ave solve: 0.001808  ave ICP: 0.011827  map incre: 0.002319 ave total: 0.024642 icp: 0.011284 construct H: 0.000500 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.009020 ave match: 0.009423 ave solve: 0.001814  ave ICP: 0.011517  map incre: 0.001769 ave total: 0.024408 icp: 0.011301 construct H: 0.000502 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.006371 ave match: 0.009399 ave solve: 0.001822  ave ICP: 0.011169  map incre: 0.001737 ave total: 0.023942 icp: 0.011285 construct H: 0.000504 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011079 ave match: 0.009448 ave solve: 0.001824  ave ICP: 0.012000  map incre: 0.001820 ave total: 0.024021 icp: 0.011337 construct H: 0.000506 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.014378 ave match: 0.009735 ave solve: 0.001836  ave ICP: 0.015357  map incre: 0.001533 ave total: 0.024579 icp: 0.011636 construct H: 0.000510 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.007088 ave match: 0.009709 ave solve: 0.001841  ave ICP: 0.011426  map incre: 0.001848 ave total: 0.024278 icp: 0.011616 construct H: 0.000511 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011391 ave match: 0.009939 ave solve: 0.001880  ave ICP: 0.015736  map incre: 0.001707 ave total: 0.024581 icp: 0.011884 construct H: 0.000521 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.008564 ave match: 0.009907 ave solve: 0.001880  ave ICP: 0.011455  map incre: 0.001523 ave total: 0.024391 icp: 0.011853 construct H: 0.000521 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.006740 ave match: 0.009863 ave solve: 0.001878  ave ICP: 0.011134  map incre: 0.001321 ave total: 0.024086 icp: 0.011807 construct H: 0.000520 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.009688 ave match: 0.009851 ave solve: 0.001878  ave ICP: 0.011669  map incre: 0.001357 ave total: 0.024010 icp: 0.011795 construct H: 0.000520 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.009223 ave match: 0.009867 ave solve: 0.001879  ave ICP: 0.012203  map incre: 0.001441 ave total: 0.023949 icp: 0.011812 construct H: 0.000521 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.010653 ave match: 0.009892 ave solve: 0.001879  ave ICP: 0.012368  map incre: 0.001338 ave total: 0.023970 icp: 0.011837 construct H: 0.000521 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.012238 ave match: 0.009909 ave solve: 0.001883  ave ICP: 0.012367  map incre: 0.0014 [RUNNING]  Bag Time:      3.599416   Duration: 3.598416 / 7.700000                [RUNNING]  Bag Time:      3.700296   Duration: 3.699296 / 7.700000                [RUNNING]  Bag Time:      3.800976   Duration: 3.799976 / 7.700000                [RUNNING]  Bag Time:      3.891496   Duration: 3.890496 / 7.700000                [RUNNING]  Bag Time:      3.994390   Duration: 3.993390 / 7.700000                [RUNNING]  Bag Time:      4.095075   Duration: 4.094075 / 7.700000                [RUNNING]  Bag Time:      4.195674   Duration: 4.194674 / 7.700000                [RUNNING]  Bag Time:      4.296269   Duration: 4.295269 / 7.700000                [RUNNING]  Bag Time:      4.396927   Duration: 4.395927 / 7.700000                [RUNNING]  Bag Time:      4.497494   Duration: 4.496494 / 7.700000                [RUNNING]  Bag Time:      4.598085   Duration: 4.597085 / 7.700000                [RUNNING]  Bag Time:      4.698605   Duration: 4.697605 / 7.700000                [RUNNING]  Bag Time:      4.799188   Duration: 4.798188 / 7.700000                [RUNNING]  Bag Time:      4.899926   Duration: 4.898926 / 7.700000                [RUNNING]  Bag Time:      5.000638   Duration: 4.999638 / 7.700000                [RUNNING]  Bag Time:      5.091265   Duration: 5.090265 / 7.700000                [RUNNING]  Bag Time:      5.194116   Duration: 5.193116 / 7.700000                [RUNNING]  Bag Time:      5.294723   Duration: 5.293723 / 7.700000                [RUNNING]  Bag Time:      5.395363   Duration: 5.394363 / 7.700000                [RUNNING]  Bag Time:      5.496335   Duration: 5.495335 / 7.700000                [RUNNING]  Bag Time:      5.597560   Duration: 5.596560 / 7.700000               70 ave total: 0.024070 icp: 0.011858 construct H: 0.000521 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.007853 ave match: 0.009886 ave solve: 0.001882  ave ICP: 0.011403  map incre: 0.001531 ave total: 0.023921 icp: 0.011834 construct H: 0.000521 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003505 ave match: 0.009854 ave solve: 0.001884  ave ICP: 0.011207  map incre: 0.001370 ave total: 0.023580 icp: 0.011804 construct H: 0.000522 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.008227 ave match: 0.010003 ave solve: 0.001921  ave ICP: 0.016365  map incre: 0.001222 ave total: 0.023673 icp: 0.011991 construct H: 0.000532 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.008488 ave match: 0.009994 ave solve: 0.001918  ave ICP: 0.011768  map incre: 0.001270 ave total: 0.023587 icp: 0.011980 construct H: 0.000532 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.014284 ave match: 0.010035 ave solve: 0.001918  ave ICP: 0.013173  map incre: 0.001386 ave total: 0.023789 icp: 0.012021 construct H: 0.000532 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.009657 ave match: 0.010039 ave solve: 0.001919  ave ICP: 0.012220  map incre: 0.001387 ave total: 0.023770 icp: 0.012026 construct H: 0.000531 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.010031 ave match: 0.010037 ave solve: 0.001917  ave ICP: 0.011993  map incre: 0.001218 ave total: 0.023751 icp: 0.012021 construct H: 0.000531 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.010024 ave match: 0.010043 ave solve: 0.001921  ave ICP: 0.012429  map incre: 0.001430 ave total: 0.023756 icp: 0.012032 construct H: 0.000532 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.005858 ave match: 0.010169 ave solve: 0.001930  ave ICP: 0.016218  map incre: 0.001408 ave total: 0.023747 icp: 0.012168 construct H: 0.000535 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011916 ave match: 0.010160 ave solve: 0.001930  ave ICP: 0.011957  map incre: 0.001052 ave total: 0.023785 icp: 0.012158 construct H: 0.000534 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.010331 ave match: 0.010147 ave solve: 0.001927  ave ICP: 0.011747  map incre: 0.001130 ave total: 0.023767 icp: 0.012142 construct H: 0.000534 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011007 ave match: 0.010145 ave solve: 0.001925  ave ICP: 0.012074  map incre: 0.000954 ave total: 0.023775 icp: 0.012138 construct H: 0.000533 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011141 ave match: 0.010139 ave solve: 0.001924  ave ICP: 0.011975  map incre: 0.001077 ave total: 0.023787 icp: 0.012131 construct H: 0.000532 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011301 ave match: 0.010117 ave solve: 0.001909  ave ICP: 0.010900  map incre: 0.001088 ave total: 0.023773 icp: 0.012094 construct H: 0.000528 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011496 ave match: 0.010116 ave solve: 0.001908  ave ICP: 0.012075  map incre: 0.001192 ave total: 0.023800 icp: 0.012092 construct H: 0.000528 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011683 ave match: 0.010117 ave solve: 0.001906  ave ICP: 0.012112  map incre: 0.001029 ave total: 0.023828 icp: 0.012090 construct H: 0.000527 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011181 ave match: 0.010096 ave solve: 0.001893  ave ICP: 0.010873  map incre: 0.001182 ave total: 0.023812 icp: 0.012056 construct H: 0.000524 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011643 ave match: 0.010103 ave solve: 0.001892  ave ICP: 0.012365  map incre: 0.000977 ave total: 0.023842 icp: 0.012062 construct H: 0.000524 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011733 ave match: 0.010102 ave solve: 0.001891  ave ICP: 0.012063  map incre: 0.000933 ave total: 0.023865 icp: 0.012060 construct H: 0.000523 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.011407 ave match: 0.010102 ave solve: 0.001890  ave ICP: 0.012103  map incre: 0.001026 ave total: 0.023881 icp: 0.012059 construct H: 0.000523 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.010595 ave match: 0.010096 ave solve: 0.001889  ave ICP: 0.011839  map incre: 0.00093 [RUNNING]  Bag Time:      5.698482   Duration: 5.697482 / 7.700000                [RUNNING]  Bag Time:      5.799190   Duration: 5.798190 / 7.700000                [RUNNING]  Bag Time:      5.899767   Duration: 5.898767 / 7.700000                [RUNNING]  Bag Time:      6.000337   Duration: 5.999337 / 7.700000                [RUNNING]  Bag Time:      6.100870   Duration: 6.099870 / 7.700000                [RUNNING]  Bag Time:      6.191389   Duration: 6.190389 / 7.700000                [RUNNING]  Bag Time:      6.294036   Duration: 6.293036 / 7.700000                [RUNNING]  Bag Time:      6.394588   Duration: 6.393588 / 7.700000                [RUNNING]  Bag Time:      6.495147   Duration: 6.494147 / 7.700000                [RUNNING]  Bag Time:      6.595709   Duration: 6.594709 / 7.700000                [RUNNING]  Bag Time:      6.696281   Duration: 6.695281 / 7.700000                [RUNNING]  Bag Time:      6.796867   Duration: 6.795867 / 7.700000                [RUNNING]  Bag Time:      6.897728   Duration: 6.896728 / 7.700000                [RUNNING]  Bag Time:      6.998310   Duration: 6.997310 / 7.700000                [RUNNING]  Bag Time:      7.099456   Duration: 7.098456 / 7.700000                [RUNNING]  Bag Time:      7.200173   Duration: 7.199173 / 7.700000                [RUNNING]  Bag Time:      7.291068   Duration: 7.290068 / 7.700000                [RUNNING]  Bag Time:      7.395857   Duration: 7.394857 / 7.700000                [RUNNING]  Bag Time:      7.496627   Duration: 7.495627 / 7.700000                [RUNNING]  Bag Time:      7.597207   Duration: 7.596207 / 7.700000               
+Done.
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+[步骤 6] 基准测试结束，停止 FastLIO...
+[信息] 基准轨迹已保存为 Results/0012_results/Online/trajectory_baseline.txt
+[INFO] 基准测试完成！
+[INFO] 任务完成，正在停止部分后台进程...
+[INFO] 所有进程已停止，脚本正常退出
+
+[INFO] 基准测试执行完毕，准备启动优化验证流 (维持 roscore)...
+
+>>> [第 2 阶段] 正在运行深度学习优化管线测试 (run_optimized.sh) ...
+[INFO] 正在启动 ME5400 完整优化流水线（含 joint backend）...
+[INFO] 数据集序列号: 0012
+[INFO] FAST-LIO 地图保存: false
+[步骤 0] 正在清理残留环境...
+[cleanup_ros_runtime.sh] 正在清理残留 ROS 运行时进程...
+[cleanup_ros_runtime.sh] 发送 SIGTERM 给 FAST-LIO roslaunch: 70022
+[cleanup_ros_runtime.sh] 发送 SIGTERM 给 FAST-LIO mapping binary: 70036
+[WARN] [1775841373.824535127, 7.697802023]: catch sig 15
+[cleanup_ros_runtime.sh] 发送 SIGTERM 给 FAST-LIO laserMapping node: 70036
+[WARN] [1775841373.834749621, 7.697802023]: catch sig 15
+[WARN] [1775841373.913214571, 7.697802023]: catch sig 2
+[cleanup_ros_runtime.sh] 发送 SIGKILL 给 FAST-LIO roslaunch: 70022
+[cleanup_ros_runtime.sh] 发送 SIGKILL 给 FAST-LIO mapping binary: 70036
+[cleanup_ros_runtime.sh] 已清理 ROS master 中的失联节点注册。
+[步骤 1] 检测到 roscore 已在运行，将复用现有环境...
+[步骤 2] 正在构建/验证 catkin 工作空间...
+[  0%] Built target std_msgs_generate_messages_py
+[  0%] Built target geometry_msgs_generate_messages_py
+[  0%] Built target std_msgs_generate_messages_cpp
+[  0%] Built target geometry_msgs_generate_messages_eus
+[  0%] Built target geometry_msgs_generate_messages_nodejs
+[  0%] Built target geometry_msgs_generate_messages_cpp
+[  0%] Built target std_msgs_generate_messages_nodejs
+[  0%] Built target std_msgs_generate_messages_lisp
+[  0%] Built target geometry_msgs_generate_messages_lisp
+[  0%] Built target std_msgs_generate_messages_eus
+[  0%] Built target roscpp_generate_messages_nodejs
+[  0%] Built target roscpp_generate_messages_py
+[  0%] Built target sensor_msgs_generate_messages_py
+[  0%] Built target roscpp_generate_messages_cpp
+[  0%] Built target rosgraph_msgs_generate_messages_lisp
+[  0%] Built target rosgraph_msgs_generate_messages_nodejs
+[  0%] Built target sensor_msgs_generate_messages_cpp
+[  0%] Built target rosgraph_msgs_generate_messages_eus
+[  0%] Built target roscpp_generate_messages_eus
+[  0%] Built target actionlib_msgs_generate_messages_py
+[  0%] Built target actionlib_generate_messages_cpp
+[  0%] Built target actionlib_msgs_generate_messages_eus
+[  0%] Built target actionlib_generate_messages_py
+[  0%] Built target rosgraph_msgs_generate_messages_cpp
+[  0%] Built target roscpp_generate_messages_lisp
+[  0%] Built target actionlib_generate_messages_eus
+[  0%] Built target actionlib_msgs_generate_messages_cpp
+[  0%] Built target tf2_msgs_generate_messages_py
+[  0%] Built target tf2_msgs_generate_messages_eus
+[  0%] Built target actionlib_msgs_generate_messages_lisp
+[  0%] Built target _ME5400_generate_messages_check_deps_TrackedObject
+[  0%] Built target actionlib_msgs_generate_messages_nodejs
+[  0%] Built target sensor_msgs_generate_messages_lisp
+[  0%] Built target tf2_msgs_generate_messages_cpp
+[  0%] Built target actionlib_generate_messages_lisp
+[  0%] Built target tf2_msgs_generate_messages_nodejs
+[  0%] Built target tf2_msgs_generate_messages_lisp
+[  0%] Built target _ME5400_generate_messages_check_deps_Detection3D
+[  0%] Built target sensor_msgs_generate_messages_eus
+[  0%] Built target actionlib_generate_messages_nodejs
+[  0%] Built target _tf_generate_messages_check_deps_FrameGraph
+[  0%] Built target rosgraph_msgs_generate_messages_py
+[  0%] Built target _ME5400_generate_messages_check_deps_Detection3DArray
+[  0%] Built target _tf_generate_messages_check_deps_tfMessage
+[  0%] Built target sensor_msgs_generate_messages_nodejs
+[  0%] Built target _ME5400_generate_messages_check_deps_TrackedObjectArray
+[  2%] Built target kdl_conversions
+[  7%] Built target eigen_conversions
+[ 18%] Built target ME5400_generate_messages_cpp
+[ 18%] Built target ME5400_generate_messages_nodejs
+[ 26%] Built target ME5400_generate_messages_lisp
+[ 31%] Built target ME5400_generate_messages_py
+[ 37%] Built target tf_generate_messages_py
+[ 40%] Built target tf_generate_messages_nodejs
+[ 47%] Built target ME5400_generate_messages_eus
+[ 50%] Built target tf_generate_messages_cpp
+[ 53%] Built target tf_generate_messages_lisp
+[ 57%] Built target tf_generate_messages_eus
+[ 57%] Built target _fast_lio_generate_messages_check_deps_Pose6D
+[ 57%] Built target ME5400_generate_messages
+[ 60%] Built target fast_lio_generate_messages_py
+[ 62%] Built target fast_lio_generate_messages_nodejs
+[ 65%] Built target fast_lio_generate_messages_eus
+[ 66%] Built target fast_lio_generate_messages_lisp
+[ 68%] Built target fast_lio_generate_messages_cpp
+[ 68%] Built target tf_generate_messages
+[ 75%] Built target tf
+[ 75%] Built target fast_lio_generate_messages
+[ 81%] Built target tf_echo
+[ 81%] Built target static_transform_publisher
+[ 84%] Built target tf_monitor
+[ 89%] Built target tf_change_notifier
+[ 89%] Built target tf_empty_listener
+[ 94%] Built target tf_conversions
+[100%] Built target fastlio_mapping
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+Base path: /home/xc/Projects/ME5400/catkin_ws
+Source space: /home/xc/Projects/ME5400/catkin_ws/src
+Build space: /home/xc/Projects/ME5400/catkin_ws/build
+Devel space: /home/xc/Projects/ME5400/catkin_ws/devel
+Install space: /home/xc/Projects/ME5400/catkin_ws/install
+####
+#### Running command: "make cmake_check_build_system" in "/home/xc/Projects/ME5400/catkin_ws/build"
+####
+####
+#### Running command: "make -j28 -l28" in "/home/xc/Projects/ME5400/catkin_ws/build"
+####
+[步骤 3] Headless 模式：跳过 RViz 可视化与真实轨迹发布...
+[步骤 4] 正在启动 PointPillars 节点 (Sequence: 0012)...
+启动KITTI PointPillars Bag ROS节点...
+激活ME5400环境...
+启动KITTI PointPillars Bag节点...
+/home/xc/miniconda3/envs/ME5400/lib/python3.10/site-packages/mmdet3d/models/dense_heads/anchor3d_head.py:94: UserWarning: dir_offset and dir_limit_offset will be depressed and be incorporated into box coder in the future
+  warnings.warn(
+[INFO] [1775841380.053483, 0.000000]: 加载标定文件成功: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0012.txt
+[INFO] [1775841380.054136, 0.000000]: 正在初始化PointPillars推理器...
+Loads checkpoint by local backend from path: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+04/11 01:16:20 - mmengine - WARNING - Failed to search registry with scope "mmdet3d" in the "function" registry tree. As a workaround, the current "function" registry in "mmengine" is used to build instance. This may cause unexpected failure when running the built modules. Please check whether "mmdet3d" is a correct scope, or whether the registry is initialized.
+/home/xc/miniconda3/envs/ME5400/lib/python3.10/site-packages/mmengine/visualization/visualizer.py:196: UserWarning: Failed to add <class 'mmengine.visualization.vis_backend.LocalVisBackend'>, please provide the `save_dir` argument.
+  warnings.warn(f'Failed to add {vis_backend.__class__}, '
+[步骤 5] 正在启动 MCTrack 在线节点...
+[信息] 启动MCTrack在线跟踪节点
+[信息] 订阅话题: /detection/lidar_detections (Detection3DArray, 带时间戳)
+[信息]           /mctrack/lidar_pose (FAST-LIO 位姿)
+=========================================================
+   运行优化测试 (带 MCTrack 优化)                        
+=========================================================
+[步骤 6] 正在启动 FAST-LIO (优化模式: use_dynamic_weights=true)...
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+Multi thread started 
+p_pre->lidar_type 2
+~~~~/home/xc/Projects/ME5400/catkin_ws/src/fast_lio/ file opened
+[FAST-LIO] Trajectory file opened at: /home/xc/Projects/ME5400/Results/trajectory.txt
+[步骤 7] 正在启动联合后端...
+[信息] 加载参数: /home/xc/Projects/ME5400/catkin_ws/src/ME5400/config/joint_backend_ego.yaml
+[信息] 启动 joint_backend_ego_node
+[信息] 输入: /Odometry + /mctrack/tracked_objects
+[信息] 输出: /joint_backend/odom
+[步骤 8] 正在录制 /joint_backend/odom -> Results/0012_results/Online/trajectory_joint.txt ...
+[步骤 9] 正在播放 Rosbag (优化, 以 1.0 倍速运行，跳过 bag 内 /tf_static)...
+Waiting for Optimized Run...
+[INFO] [1775841405.215447873]: Opening /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0012_nodet.bag
+
+Waiting 0.2 seconds after advertising topics... done.
+
+Hit space to toggle paused, or 's' to step.
+ [RUNNING]  Bag Time:      0.001000   Duration: 0.000000 / 7.700000                [RUNNING]  Bag Time:      0.099549   Duration: 0.098549 / 7.700000                [RUNNING]  Bag Time:      0.200075   Duration: 0.199075 / 7.700000               /home/xc/miniconda3/envs/ME5400/lib/python3.10/site-packages/torch/functional.py:505: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /pytorch/aten/src/ATen/native/TensorShape.cpp:4333.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+ [RUNNING]  Bag Time:      0.300603   Duration: 0.299603 / 7.700000               [INFO] [1775841380.763795, 0.000000]: 推理器初始化成功
+[INFO] [1775841380.766654, 0.000000]: KITTI PointPillars Bag ROS节点初始化完成
+[INFO] [1775841380.766973, 0.000000]: 配置文件: /home/xc/Projects/ME5400/MMDET3D/configs/pointpillars/pointpillars_hv_secfpn_8xb6-160e_kitti-3d-3class.py
+[INFO] [1775841380.767257, 0.000000]: 检查点: /home/xc/Projects/ME5400/MMDET3D/checkpoints/pointpillars_hv_secfpn_6x8_160e_kitti-3d-3class.pth
+[INFO] [1775841380.767523, 0.000000]: Bag文件: /home/xc/Projects/ME5400/MMDET3D/data/kitti/seq_0019_with_det.bag
+[INFO] [1775841380.767770, 0.000000]: 数据集路径: /home/xc/Projects/ME5400/Data_Tracking/training / 序列: 0012
+[INFO] [1775841380.768008, 0.000000]: 订阅点云话题: /kitti/velo/pointcloud
+[INFO] [1775841380.768277, 0.000000]: 订阅IMU话题: /kitti/oxts/imu
+[INFO] [1775841380.768534, 0.000000]: 发布频率: 10.0 Hz
+[INFO] [1775841380.768780, 0.000000]: 模型类别: ['Pedestrian', 'Cyclist', 'Car']
+[INFO] [1775841380.769016, 0.000000]: 类别过滤: 未启用
+[INFO] [1775841380.769244, 0.000000]: 转发原始点云/IMU: False
+[INFO] [1775841380.769485, 0.000000]: 等待点云数据...
+[INFO] [1775841405.433149, 0.009087]: 转换得到 107909 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+[WARN] [1775841405.732250, 0.310656]: 尚未收到 FAST-LIO 位姿，暂时缓存检测结果
+[WARN] [1775841405.732619, 0.310656]: 慢帧 0: 纯计算耗时 300.2ms，分段=inferencer_call=296.2ms, pointcloud_to_numpy=1.4ms, camera_projection=0.7ms, write_temp_bin=0.6ms, publish_markers=0.2ms, remove_temp_bin=0.2ms, publish_lidar_detections=0.1ms, extract_detections=0.1ms, publish_kitti_tracking=0.1ms, publish_lidar_tracking=0.0ms
+[INFO] [1775841405.731982, 0.310656]: 帧 0: 检测到 10 个目标
+[INFO] [1775841405.736622, 0.310656]: 转换得到 107943 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+ [RUNNING]  Bag Time:      0.391075   Duration: 0.390075 / 7.700000               [WARN] [1775841405.835304435, 0.413349794]: No point, skip this scan!
+
+[INFO] [1775841405.770341, 0.350869]: 帧 1: 检测到 14 个目标
+[INFO] [1775841405.844388, 0.423413]: 转换得到 107976 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+ [RUNNING]  Bag Time:      0.493770   Duration: 0.492770 / 7.700000               [INFO] [1775841405.884593, 0.463612]: 帧 2: 检测到 13 个目标
+[INFO] [1775841405.888237, 0.463612]: 转换得到 107885 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+[WARN] [1775841405.927369503, 0.503822798]: No point, skip this scan!
+
+ [RUNNING]  Bag Time:      0.594334   Duration: 0.593334 / 7.700000               [WARN] [1775841406.025484055, 0.604385799]: No point, skip this scan!
+
+[INFO] [1775841405.922803, 0.493770]: 帧 3: 检测到 13 个目标
+[INFO] [1775841405.989094, 0.564164]: 转换得到 107921 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+[INFO] [1775841406.030830, 0.604386]: 帧 4: 检测到 15 个目标
+[INFO] [1775841406.033034, 0.604386]: 转换得到 108011 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+ [RUNNING]  Bag Time:      0.694878   Duration: 0.693878 / 7.700000               [WARN] [1775841406.137567164, 0.714997856]: No point, skip this scan!
+
+[INFO] [1775841406.065788, 0.644600]: 帧 5: 检测到 13 个目标
+[INFO] [1775841406.130260, 0.704939]: 转换得到 107976 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+[INFO] [1775841406.171907, 0.745165]: 帧 6: 检测到 18 个目标
+[INFO] [1775841406.174754, 0.755217]: 转换得到 108046 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+ [RUNNING]  Bag Time:      0.795427   Duration: 0.794427 / 7.700000               [WARN] [1775841406.229954586, 0.805479228]: No point, skip this scan!
+
+[INFO] [1775841406.208299, 0.785375]: 帧 7: 检测到 15 个目标
+[INFO] [1775841406.280498, 0.855780]: 转换得到 108027 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+ [RUNNING]  Bag Time:      0.896002   Duration: 0.895002 / 7.700000               [WARN] [1775841406.331565462, 0.906054634]: No point, skip this scan!
+
+[INFO] [1775841406.319682, 0.896002]: 帧 8: 检测到 13 个目标
+[INFO] [1775841406.323512, 0.896002]: 转换得到 108050 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+ [RUNNING]  Bag Time:      0.996557   Duration: 0.995557 / 7.700000               [WARN] [1775841406.435734365, 1.016746211]: No point, skip this scan!
+
+[INFO] [1775841406.358942, 0.936211]: 帧 9: 检测到 14 个目标
+[INFO] [1775841406.431005, 1.006617]: 转换得到 108036 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+ [RUNNING]  Bag Time:      1.097212   Duration: 1.096212 / 7.700000               [WARN] [1775841406.532993536, 1.107283983]: No point, skip this scan!
+
+[INFO] [1775841406.474433, 1.046915]: 帧 10: 检测到 13 个目标
+[INFO] [1775841406.529937, 1.107284]: 转换得到 108037 个点
+Inference ━━━━━          ━━━━━━━━━━          ━━━━━   
+ [RUNNING]  Bag Time:      1.197790   Duration: 1.196790 / 7.700000               [WARN] [1775841406.641662076, 1.217918715]: No point, skip this scan!
+
+[INFO] [1775841406.565243, 1.137443]: 帧 11: 检测到 14 个目标
+[INFO] [1775841406.630670, 1.207849]: 转换得到 108110 个点
+Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+ [RUNNING]  Bag Time:      1.298364   Duration: 1.297364 / 7.700000               [WARN] [1775841406.733101523, 1.308427674]: No point, skip this scan!
+
+[INFO] [1775841406.672156, 1.248082]: 帧 12: 检测到 16 个目标
+[INFO] [1775841406.730919, 1.308428]: 转换得到 108106 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+ [RUNNING]  Bag Time:      1.398930   Duration: 1.397930 / 7.700000               [INFO] [1775841406.768058, 1.338594]: 帧 13: 检测到 13 个目标
+[INFO] [1775841406.831302, 1.408995]: 转换得到 108017 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+ [RUNNING]  Bag Time:      1.499501   Duration: 1.498501 / 7.700000               [INFO] [1775841406.873960, 1.449218]: 帧 14: 检测到 15 个目标
+[INFO] [1775841406.932175, 1.509566]: 转换得到 107971 个点
+Inference  ━━━━━━━━━━          ━━━━━━━━━━            
+ [RUNNING]  Bag Time:      1.600048   Duration: 1.599048 / 7.700000               [INFO] [1775841406.968356, 1.539733]: 帧 15: 检测到 15 个目标
+[INFO] [1775841407.023188, 1.600048]: 转换得到 108050 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+ [RUNNING]  Bag Time:      1.700564   Duration: 1.699564 / 7.700000               [INFO] [1775841407.061404, 1.640274]: 帧 16: 检测到 16 个目标
+[INFO] [1775841407.122942, 1.700564]: 转换得到 108054 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+ [RUNNING]  Bag Time:      1.790998   Duration: 1.789998 / 7.700000               [INFO] [1775841407.156889, 1.730704]: 帧 17: 检测到 15 个目标
+[INFO] [1775841407.223122, 1.802196]: 转换得到 107993 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+ [RUNNING]  Bag Time:      1.892681   Duration: 1.891681 / 7.700000               [INFO] [1775841407.258273, 1.832350]: 帧 18: 检测到 12 个目标
+[INFO] [1775841407.322625, 1.902734]: 转换得到 107940 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+ [RUNNING]  Bag Time:      1.993234   Duration: 1.992234 / 7.700000               [INFO] [1775841407.357042, 1.932904]: 帧 19: 检测到 18 个目标
+[INFO] [1775841407.357749, 1.932904]: PointPillars计时汇总(20帧均值): 点云解析=3.1ms, 临时落盘=1.2ms, 模型推理=46.5ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.7ms, 发布Detection3DArray=0.1ms, 发布MarkerArray=0.3ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 纯计算总耗时=53.0ms, 限速休眠=15.0ms, 墙钟总耗时=68.0ms
+[INFO] [1775841407.422907, 2.003349]: 转换得到 107934 个点
+Inference         ━━━━━━━━━━          ━━━━━━━━━━     
+ [RUNNING]  Bag Time:      2.093825   Duration: 2.092825 / 7.700000               [INFO] [1775841407.458383, 2.033497]: 帧 20: 检测到 13 个目标
+[INFO] [1775841407.523711, 2.103878]: 转换得到 108043 个点
+Inference           ━━━━━━━━━━          ━━━━━━━━━━   
+ [RUNNING]  Bag Time:      2.194373   Duration: 2.193373 / 7.700000               [INFO] [1775841407.560622, 2.134043]: 帧 21: 检测到 13 个目标
+[INFO] [1775841407.623483, 2.204474]: 转换得到 107974 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+ [RUNNING]  Bag Time:      2.294957   Duration: 2.293957 / 7.700000               [INFO] [1775841407.658998, 2.234638]: 帧 22: 检测到 11 个目标
+[INFO] [1775841407.722517, 2.294957]: 转换得到 107919 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+ [RUNNING]  Bag Time:      2.395511   Duration: 2.394511 / 7.700000               [INFO] [1775841407.756659, 2.335177]: 帧 23: 检测到 14 个目标
+[INFO] [1775841407.822729, 2.395511]: 转换得到 107999 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+ [RUNNING]  Bag Time:      2.495990   Duration: 2.494990 / 7.700000               [INFO] [1775841407.859097, 2.435729]: 帧 24: 检测到 14 个目标
+[INFO] [1775841407.922663, 2.495990]: 转换得到 107937 个点
+Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+ [RUNNING]  Bag Time:      2.596896   Duration: 2.595896 / 7.700000               [INFO] [1775841407.957621, 2.536275]: 帧 25: 检测到 14 个目标
+[INFO] [1775841408.022480, 2.596896]: 转换得到 107910 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+ [RUNNING]  Bag Time:      2.697610   Duration: 2.696610 / 7.700000               [INFO] [1775841408.057365, 2.637120]: 帧 26: 检测到 15 个目标
+[INFO] [1775841408.123666, 2.697610]: 转换得到 107916 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+ [RUNNING]  Bag Time:      2.798455   Duration: 2.797455 / 7.700000               [INFO] [1775841408.158959, 2.737829]: 帧 27: 检测到 13 个目标
+[INFO] [1775841408.222486, 2.798455]: 转换得到 107865 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+ [RUNNING]  Bag Time:      2.899013   Duration: 2.898013 / 7.700000               [INFO] [1775841408.256694, 2.828625]: 帧 28: 检测到 14 个目标
+[INFO] [1775841408.323235, 2.899013]: 转换得到 107858 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+ [RUNNING]  Bag Time:      2.999613   Duration: 2.998613 / 7.700000               [INFO] [1775841408.356922, 2.929185]: 帧 29: 检测到 16 个目标
+[INFO] [1775841408.424186, 2.999613]: 转换得到 107896 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+ [RUNNING]  Bag Time:      3.100311   Duration: 3.099311 / 7.700000               [INFO] [1775841408.458778, 3.029783]: 帧 30: 检测到 13 个目标
+[INFO] [1775841408.522652, 3.100311]: 转换得到 107957 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+ [RUNNING]  Bag Time:      3.200829   Duration: 3.199829 / 7.700000               [INFO] [1775841408.558228, 3.130468]: 帧 31: 检测到 15 个目标
+[INFO] [1775841408.623118, 3.200829]: 转换得到 107785 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+ [RUNNING]  Bag Time:      3.291336   Duration: 3.290336 / 7.700000               [INFO] [1775841408.656332, 3.230995]: 帧 32: 检测到 17 个目标
+[INFO] [1775841408.724280, 3.302269]: 转换得到 107924 个点
+Inference         ━━━━━━━━━━          ━━━━━━━━━━     
+ [RUNNING]  Bag Time:      3.392774   Duration: 3.391774 / 7.700000               [INFO] [1775841408.762703, 3.342498]: 帧 33: 检测到 18 个目标
+[INFO] [1775841408.823044, 3.402873]: 转换得到 107876 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+ [RUNNING]  Bag Time:      3.493375   Duration: 3.492375 / 7.700000               [INFO] [1775841406.733036348, 1.308427674]: IMU Initial Done
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003722 ave match: 0.008130 ave solve: 0.001878  ave ICP: 0.010603  map incre: 0.004375 ave total: 0.018700 icp: 0.010075 construct H: 0.000512 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003589 ave match: 0.010171 ave solve: 0.001923  ave ICP: 0.020261  map incre: 0.006194 ave total: 0.024372 icp: 0.012164 construct H: 0.000533 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003534 ave match: 0.010424 ave solve: 0.001934  ave ICP: 0.013016  map incre: 0.003627 ave total: 0.022973 icp: 0.012426 construct H: 0.000535 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003547 ave match: 0.009996 ave solve: 0.001939  ave ICP: 0.010799  map incre: 0.003258 ave total: 0.021631 icp: 0.012003 construct H: 0.000535 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003866 ave match: 0.009742 ave solve: 0.001936  ave ICP: 0.010826  map incre: 0.002802 ave total: 0.020804 icp: 0.011746 construct H: 0.000533 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003929 ave match: 0.009602 ave solve: 0.001933  ave ICP: 0.010949  map incre: 0.002699 ave total: 0.020266 icp: 0.011603 construct H: 0.000534 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003905 ave match: 0.009504 ave solve: 0.001929  ave ICP: 0.010951  map incre: 0.002186 ave total: 0.019805 icp: 0.011500 construct H: 0.000534 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003589 ave match: 0.009419 ave solve: 0.001923  ave ICP: 0.010839  map incre: 0.002622 ave total: 0.019461 icp: 0.011410 construct H: 0.000534 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003625 ave match: 0.009375 ave solve: 0.001921  ave ICP: 0.011053  map incre: 0.002339 ave total: 0.019189 icp: 0.011363 construct H: 0.000534 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003614 ave match: 0.009267 ave solve: 0.001874  ave ICP: 0.009867  map incre: 0.001847 ave total: 0.018803 icp: 0.011207 construct H: 0.000521 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003544 ave match: 0.009173 ave solve: 0.001836  ave ICP: 0.009805  map incre: 0.001846 ave total: 0.018475 icp: 0.011073 construct H: 0.000510 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003613 ave match: 0.009178 ave solve: 0.001850  ave ICP: 0.011378  map incre: 0.002154 ave total: 0.018364 icp: 0.011093 construct H: 0.000513 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003576 ave match: 0.009173 ave solve: 0.001856  ave ICP: 0.011175  map incre: 0.001617 ave total: 0.018211 icp: 0.011094 construct H: 0.000514 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003593 ave match: 0.009120 ave solve: 0.001834  ave ICP: 0.010104  map incre: 0.001970 ave total: 0.018029 icp: 0.011019 construct H: 0.000506 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.005236 ave match: 0.009309 ave solve: 0.001852  ave ICP: 0.014231  map incre: 0.001547 ave total: 0.018228 icp: 0.011227 construct H: 0.000509 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003574 ave match: 0.009385 ave solve: 0.001856  ave ICP: 0.012598  map incre: 0.001486 ave total: 0.018192 icp: 0.011308 construct H: 0.000510 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003477 ave match: 0.009329 ave solve: 0.001831  ave ICP: 0.009975  map incre: 0.001369 ave total: 0.017994 icp: 0.011226 construct H: 0.000503 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003535 ave match: 0.009319 ave solve: 0.001834  ave ICP: 0.011148  map incre: 0.001536 ave total: 0.017895 icp: 0.011218 construct H: 0.000504 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.005322 ave match: 0.009500 ave solve: 0.001884  ave ICP: 0.015751  map incre: 0.002173 ave total: 0.018177 icp: 0.011452 construct H: 0.000515 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.004054 ave match: 0.009487 ave solve: 0.001889  ave ICP: 0.011374  map incre: 0.001429 ave total: 0.018111 icp: 0.011444 construct H: 0.000516 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003673 ave match: 0.009451 ave solve: 0.001872  ave ICP: 0.010370  map incre: 0.0015[INFO] [1775841408.859398, 3.433042]: 帧 34: 检测到 14 个目标
+[INFO] [1775841408.923087, 3.503430]: 转换得到 107849 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+ [RUNNING]  Bag Time:      3.593925   Duration: 3.592925 / 7.700000               [INFO] [1775841408.961786, 3.533597]: 帧 35: 检测到 16 个目标
+[INFO] [1775841409.022780, 3.603981]: 转换得到 107954 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+ [RUNNING]  Bag Time:      3.694485   Duration: 3.693485 / 7.700000               [INFO] [1775841409.064863, 3.644207]: 帧 36: 检测到 14 个目标
+[INFO] [1775841409.123057, 3.694485]: 转换得到 107859 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+ [RUNNING]  Bag Time:      3.795183   Duration: 3.794183 / 7.700000               [INFO] [1775841409.158068, 3.734713]: 帧 37: 检测到 13 个目标
+[INFO] [1775841409.223103, 3.795183]: 转换得到 107891 个点
+Inference ━━━━━          ━━━━━━━━━━          ━━━━━   
+ [RUNNING]  Bag Time:      3.895821   Duration: 3.894821 / 7.700000               [INFO] [1775841409.257365, 3.835407]: 帧 38: 检测到 16 个目标
+[INFO] [1775841409.323095, 3.895821]: 转换得到 107949 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+ [RUNNING]  Bag Time:      3.996379   Duration: 3.995379 / 7.700000               [INFO] [1775841409.358107, 3.936046]: 帧 39: 检测到 14 个目标
+[INFO] [1775841409.358731, 3.936046]: PointPillars计时汇总(20帧均值): 点云解析=1.5ms, 临时落盘=0.6ms, 模型推理=32.9ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.7ms, 发布Detection3DArray=0.1ms, 发布MarkerArray=0.3ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 纯计算总耗时=37.2ms, 限速休眠=0.4ms, 墙钟总耗时=37.6ms
+[INFO] [1775841409.422677, 3.996379]: 转换得到 107930 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+ [RUNNING]  Bag Time:      4.096931   Duration: 4.095931 / 7.700000               [INFO] [1775841409.457557, 4.036602]: 帧 40: 检测到 12 个目标
+[INFO] [1775841409.522532, 4.096931]: 转换得到 107988 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+ [RUNNING]  Bag Time:      4.197731   Duration: 4.196731 / 7.700000               [INFO] [1775841409.557816, 4.137153]: 帧 41: 检测到 10 个目标
+[INFO] [1775841409.622624, 4.197731]: 转换得到 107934 个点
+Inference  ━━━━━━━━━━          ━━━━━━━━━━            
+ [RUNNING]  Bag Time:      4.298648   Duration: 4.297648 / 7.700000               [INFO] [1775841409.655778, 4.227896]: 帧 42: 检测到 13 个目标
+[INFO] [1775841409.722618, 4.298648]: 转换得到 107947 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+ [RUNNING]  Bag Time:      4.399593   Duration: 4.398593 / 7.700000               [INFO] [1775841409.758205, 4.328811]: 帧 43: 检测到 11 个目标
+[INFO] [1775841409.822618, 4.399593]: 转换得到 107935 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+ [RUNNING]  Bag Time:      4.500346   Duration: 4.499346 / 7.700000               [INFO] [1775841409.858607, 4.429829]: 帧 44: 检测到 12 个目标
+[INFO] [1775841409.922559, 4.500346]: 转换得到 107916 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+ [RUNNING]  Bag Time:      4.600947   Duration: 4.599947 / 7.700000               [INFO] [1775841409.957948, 4.530511]: 帧 45: 检测到 12 个目标
+[INFO] [1775841410.022461, 4.600947]: 转换得到 107887 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+ [RUNNING]  Bag Time:      4.691497   Duration: 4.690497 / 7.700000               [INFO] [1775841410.057457, 4.631114]: 帧 46: 检测到 16 个目标
+[INFO] [1775841410.123024, 4.702192]: 转换得到 107897 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+ [RUNNING]  Bag Time:      4.792684   Duration: 4.791684 / 7.700000               [INFO] [1775841410.158877, 4.732361]: 帧 47: 检测到 10 个目标
+[INFO] [1775841410.223088, 4.802738]: 转换得到 107924 个点
+Inference           ━━━━━━━━━━          ━━━━━━━━━━   
+ [RUNNING]  Bag Time:      4.893241   Duration: 4.892241 / 7.700000               [INFO] [1775841410.257474, 4.832908]: 帧 48: 检测到 12 个目标
+[INFO] [1775841410.322858, 4.903294]: 转换得到 107893 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+ [RUNNING]  Bag Time:      4.993893   Duration: 4.992893 / 7.700000               [INFO] [1775841410.356715, 4.933561]: 帧 49: 检测到 11 个目标
+[INFO] [1775841410.422459, 4.993893]: 转换得到 107945 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+ [RUNNING]  Bag Time:      5.094449   Duration: 5.093449 / 7.700000               [INFO] [1775841410.457674, 5.034118]: 帧 50: 检测到 13 个目标
+[INFO] [1775841410.523005, 5.094449]: 转换得到 107943 个点
+Inference ━━━━━          ━━━━━━━━━━          ━━━━━   
+ [RUNNING]  Bag Time:      5.195065   Duration: 5.194065 / 7.700000               [INFO] [1775841410.557818, 5.134744]: 帧 51: 检测到 13 个目标
+[INFO] [1775841410.622738, 5.195065]: 转换得到 107946 个点
+Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+ [RUNNING]  Bag Time:      5.295856   Duration: 5.294856 / 7.700000               [INFO] [1775841410.656727, 5.235329]: 帧 52: 检测到 13 个目标
+[INFO] [1775841410.723694, 5.295856]: 转换得到 107870 个点
+Inference ━━━━━━━━          ━━━━━━━━━━          ━━   
+ [RUNNING]  Bag Time:      5.396741   Duration: 5.395741 / 7.700000               [INFO] [1775841410.758092, 5.336078]: 帧 53: 检测到 12 个目标
+[INFO] [1775841410.823568, 5.396741]: 转换得到 107909 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+ [RUNNING]  Bag Time:      5.497441   Duration: 5.496441 / 7.700000               [INFO] [1775841410.856575, 5.436989]: 帧 54: 检测到 12 个目标
+[INFO] [1775841410.923722, 5.497441]: 转换得到 107893 个点
+Inference  ━━━━━━━━━━          ━━━━━━━━━━            
+ [RUNNING]  Bag Time:      5.597986   Duration: 5.596986 / 7.700000               74 ave total: 0.017992 icp: 0.011390 construct H: 0.000511 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003908 ave match: 0.009410 ave solve: 0.001853  ave ICP: 0.010136  map incre: 0.001334 ave total: 0.017873 icp: 0.011330 construct H: 0.000506 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003687 ave match: 0.009410 ave solve: 0.001856  ave ICP: 0.011459  map incre: 0.001589 ave total: 0.017824 icp: 0.011333 construct H: 0.000507 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003615 ave match: 0.009519 ave solve: 0.001839  ave ICP: 0.013603  map incre: 0.001154 ave total: 0.017847 icp: 0.011425 construct H: 0.000502 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003590 ave match: 0.009556 ave solve: 0.001824  ave ICP: 0.011998  map incre: 0.001398 ave total: 0.017812 icp: 0.011445 construct H: 0.000498 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003601 ave match: 0.009515 ave solve: 0.001809  ave ICP: 0.010057  map incre: 0.001456 ave total: 0.017709 icp: 0.011389 construct H: 0.000494 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003496 ave match: 0.009645 ave solve: 0.001812  ave ICP: 0.015049  map incre: 0.001288 ave total: 0.017787 icp: 0.011522 construct H: 0.000495 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003620 ave match: 0.009706 ave solve: 0.001801  ave ICP: 0.012989  map incre: 0.001429 ave total: 0.017796 icp: 0.011572 construct H: 0.000492 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003590 ave match: 0.009794 ave solve: 0.001805  ave ICP: 0.014303  map incre: 0.001133 ave total: 0.017839 icp: 0.011664 construct H: 0.000493 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003488 ave match: 0.009783 ave solve: 0.001809  ave ICP: 0.011525  map incre: 0.001287 ave total: 0.017787 icp: 0.011657 construct H: 0.000494 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003529 ave match: 0.009738 ave solve: 0.001796  ave ICP: 0.009928  map incre: 0.001129 ave total: 0.017684 icp: 0.011599 construct H: 0.000491 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003559 ave match: 0.009842 ave solve: 0.001802  ave ICP: 0.015163  map incre: 0.001108 ave total: 0.017751 icp: 0.011708 construct H: 0.000493 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.005323 ave match: 0.009895 ave solve: 0.001810  ave ICP: 0.013843  map incre: 0.001613 ave total: 0.017843 icp: 0.011770 construct H: 0.000494 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003900 ave match: 0.009877 ave solve: 0.001812  ave ICP: 0.011301  map incre: 0.001273 ave total: 0.017803 icp: 0.011755 construct H: 0.000495 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003663 ave match: 0.009841 ave solve: 0.001803  ave ICP: 0.010196  map incre: 0.001131 ave total: 0.017722 icp: 0.011708 construct H: 0.000492 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003746 ave match: 0.009808 ave solve: 0.001792  ave ICP: 0.010226  map incre: 0.001237 ave total: 0.017652 icp: 0.011666 construct H: 0.000489 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003688 ave match: 0.009794 ave solve: 0.001795  ave ICP: 0.011301  map incre: 0.001387 ave total: 0.017618 icp: 0.011654 construct H: 0.000490 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003633 ave match: 0.009759 ave solve: 0.001786  ave ICP: 0.010033  map incre: 0.001061 ave total: 0.017542 icp: 0.011609 construct H: 0.000487 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003558 ave match: 0.009727 ave solve: 0.001777  ave ICP: 0.010067  map incre: 0.001060 ave total: 0.017469 icp: 0.011568 construct H: 0.000485 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003600 ave match: 0.009696 ave solve: 0.001768  ave ICP: 0.010054  map incre: 0.000948 ave total: 0.017397 icp: 0.011529 construct H: 0.000483 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003609 ave match: 0.009668 ave solve: 0.001761  ave ICP: 0.010109  map incre: 0.001129 ave total: 0.017335 icp: 0.011493 construct H: 0.000480 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003553 ave match: 0.009758 ave solve: 0.001753  ave ICP: 0.015027  map incre: 0.00102[INFO] [1775841410.959745, 5.537659]: 帧 55: 检测到 13 个目标
+[INFO] [1775841411.023032, 5.597986]: 转换得到 107870 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+ [RUNNING]  Bag Time:      5.698795   Duration: 5.697795 / 7.700000               [INFO] [1775841411.058791, 5.638216]: 帧 56: 检测到 13 个目标
+[INFO] [1775841411.123116, 5.698795]: 转换得到 107906 个点
+Inference     ━━━━━━━━━━          ━━━━━━━━━━         
+ [RUNNING]  Bag Time:      5.799412   Duration: 5.798412 / 7.700000               [INFO] [1775841411.155831, 5.728962]: 帧 57: 检测到 18 个目标
+[INFO] [1775841411.223054, 5.799412]: 转换得到 107862 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+ [RUNNING]  Bag Time:      5.900051   Duration: 5.899051 / 7.700000               [INFO] [1775841411.256847, 5.829582]: 帧 58: 检测到 13 个目标
+[INFO] [1775841411.323529, 5.900051]: 转换得到 107869 个点
+Inference        ━━━━━━━━━━          ━━━━━━━━━━      
+ [RUNNING]  Bag Time:      6.000654   Duration: 5.999654 / 7.700000               [INFO] [1775841411.357107, 5.930189]: 帧 59: 检测到 15 个目标
+[INFO] [1775841411.357846, 5.930189]: PointPillars计时汇总(20帧均值): 点云解析=1.5ms, 临时落盘=0.6ms, 模型推理=31.8ms, 结果提取=0.1ms, 清理临时文件=0.2ms, 相机坐标转换=0.7ms, 发布Detection3DArray=0.1ms, 发布MarkerArray=0.3ms, 发布KITTI串=0.1ms, 发布LiDAR串=0.0ms, 纯计算总耗时=36.1ms, 限速休眠=0.1ms, 墙钟总耗时=36.2ms
+[INFO] [1775841411.422691, 6.000654]: 转换得到 107745 个点
+Inference         ━━━━━━━━━━          ━━━━━━━━━━     
+ [RUNNING]  Bag Time:      6.091156   Duration: 6.090156 / 7.700000               [INFO] [1775841411.457049, 6.030823]: 帧 60: 检测到 14 个目标
+[INFO] [1775841411.522817, 6.101946]: 转换得到 107818 个点
+Inference           ━━━━━━━━━━          ━━━━━━━━━━   
+ [RUNNING]  Bag Time:      6.192490   Duration: 6.191490 / 7.700000               [INFO] [1775841411.558683, 6.132202]: 帧 61: 检测到 14 个目标
+[INFO] [1775841411.623200, 6.202544]: 转换得到 107860 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+ [RUNNING]  Bag Time:      6.293023   Duration: 6.292023 / 7.700000               [INFO] [1775841411.660272, 6.232714]: 帧 62: 检测到 13 个目标
+[INFO] [1775841411.722470, 6.303076]: 转换得到 107812 个点
+Inference ━━━          ━━━━━━━━━━          ━━━━━━━   
+ [RUNNING]  Bag Time:      6.393709   Duration: 6.392709 / 7.700000               [INFO] [1775841411.756611, 6.333245]: 帧 63: 检测到 14 个目标
+[INFO] [1775841411.822845, 6.403806]: 转换得到 107840 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+ [RUNNING]  Bag Time:      6.494439   Duration: 6.493439 / 7.700000               [INFO] [1775841411.862686, 6.434014]: 帧 64: 检测到 14 个目标
+[INFO] [1775841411.923625, 6.504491]: 转换得到 107913 个点
+Inference ━━━━━━          ━━━━━━━━━━          ━━━━   
+ [RUNNING]  Bag Time:      6.594995   Duration: 6.593995 / 7.700000               [INFO] [1775841411.958433, 6.534662]: 帧 65: 检测到 13 个目标
+[INFO] [1775841412.023099, 6.594995]: 转换得到 107831 个点
+Inference ━━━━━━━          ━━━━━━━━━━          ━━━   
+ [RUNNING]  Bag Time:      6.695555   Duration: 6.694555 / 7.700000               [INFO] [1775841412.061300, 6.635233]: 帧 66: 检测到 12 个目标
+[INFO] [1775841412.122661, 6.695555]: 转换得到 107813 个点
+Inference ━━━━━━━━━          ━━━━━━━━━━          ━   
+ [RUNNING]  Bag Time:      6.796118   Duration: 6.795118 / 7.700000               [INFO] [1775841412.162853, 6.735779]: 帧 67: 检测到 15 个目标
+[INFO] [1775841412.224081, 6.796118]: 转换得到 107831 个点
+Inference ━━━━━━━━━━          ━━━━━━━━━━             
+ [RUNNING]  Bag Time:      6.896682   Duration: 6.895682 / 7.700000               [INFO] [1775841412.258657, 6.836346]: 帧 68: 检测到 15 个目标
+[INFO] [1775841412.322632, 6.896682]: 转换得到 107875 个点
+Inference   ━━━━━━━━━━          ━━━━━━━━━━           
+ [RUNNING]  Bag Time:      6.997224   Duration: 6.996224 / 7.700000               [INFO] [1775841412.357977, 6.936908]: 帧 69: 检测到 12 个目标
+[INFO] [1775841412.422860, 6.997224]: 转换得到 107835 个点
+Inference    ━━━━━━━━━━          ━━━━━━━━━━          
+ [RUNNING]  Bag Time:      7.097776   Duration: 7.096776 / 7.700000               [INFO] [1775841412.456476, 7.027394]: 帧 70: 检测到 15 个目标
+[INFO] [1775841412.522764, 7.097776]: 转换得到 107821 个点
+Inference      ━━━━━━━━━━          ━━━━━━━━━━        
+ [RUNNING]  Bag Time:      7.198315   Duration: 7.197315 / 7.700000               [INFO] [1775841412.558543, 7.137993]: 帧 71: 检测到 12 个目标
+[INFO] [1775841412.623819, 7.198315]: 转换得到 107804 个点
+Inference       ━━━━━━━━━━          ━━━━━━━━━━       
+ [RUNNING]  Bag Time:      7.298870   Duration: 7.297870 / 7.700000               [INFO] [1775841412.660455, 7.238535]: 帧 72: 检测到 15 个目标
+[INFO] [1775841412.723035, 7.298870]: 转换得到 107813 个点
+Inference         ━━━━━━━━━━          ━━━━━━━━━━     
+ [RUNNING]  Bag Time:      7.399427   Duration: 7.398427 / 7.700000               [INFO] [1775841412.759939, 7.339095]: 帧 73: 检测到 13 个目标
+[INFO] [1775841412.824123, 7.399427]: 转换得到 107923 个点
+Inference          ━━━━━━━━━━          ━━━━━━━━━━    
+ [RUNNING]  Bag Time:      7.499979   Duration: 7.498979 / 7.700000               [INFO] [1775841412.857265, 7.429588]: 帧 74: 检测到 14 个目标
+[INFO] [1775841412.923613, 7.499979]: 转换得到 107804 个点
+Inference ━          ━━━━━━━━━━          ━━━━━━━━━   
+ [RUNNING]  Bag Time:      7.600713   Duration: 7.599713 / 7.700000               [INFO] [1775841412.958475, 7.530142]: 帧 75: 检测到 11 个目标
+[INFO] [1775841413.024009, 7.600713]: 转换得到 107779 个点
+Inference ━━          ━━━━━━━━━━          ━━━━━━━━   
+
+Done.
+[INFO] [1775841413.061234, 7.640942]: 帧 76: 检测到 15 个目标
+[INFO] [1775841413.122541, 7.691217]: 转换得到 105010 个点
+Inference ━━━━          ━━━━━━━━━━          ━━━━━━   
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+[步骤 10] 优化测试结束，停止 odom recorder / 联合后端 / FastLIO...
+[INFO] [1775841403.413525, 0.000000]: [odom_to_tum] recording topic=/joint_backend/odom -> /home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_joint.txt (min_dt=0.0000)
+[INFO] [1775841415.450969, 7.691217]: [odom_to_tum] saved 62 poses to /home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_joint.txt
+[信息] 正在停止 FAST-LIO 子进程...
+[信息] 正在停止 FAST-LIO mapping 节点 (PID=72446)...
+[WARN] [1775841416.183086582, 7.691216782]: Shutdown request received.
+[WARN] [1775841416.183110066, 7.691216782]: Reason given for shutdown: [user request]
+killing /laserMapping
+killed
+7 ave total: 0.017389 icp: 0.011575 construct H: 0.000479 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003499 ave match: 0.009761 ave solve: 0.001756  ave ICP: 0.011892  map incre: 0.000950 ave total: 0.017364 icp: 0.011581 construct H: 0.000479 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.005248 ave match: 0.009825 ave solve: 0.001779  ave ICP: 0.015541  map incre: 0.001520 ave total: 0.017477 icp: 0.011669 construct H: 0.000485 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.004454 ave match: 0.009811 ave solve: 0.001781  ave ICP: 0.011183  map incre: 0.000988 ave total: 0.017458 icp: 0.011656 construct H: 0.000485 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003474 ave match: 0.009858 ave solve: 0.001773  ave ICP: 0.013529  map incre: 0.000838 ave total: 0.017466 icp: 0.011696 construct H: 0.000483 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.005277 ave match: 0.009890 ave solve: 0.001776  ave ICP: 0.013429  map incre: 0.001024 ave total: 0.017514 icp: 0.011731 construct H: 0.000484 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003630 ave match: 0.009863 ave solve: 0.001768  ave ICP: 0.010102  map incre: 0.000924 ave total: 0.017455 icp: 0.011695 construct H: 0.000482 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003805 ave match: 0.009835 ave solve: 0.001761  ave ICP: 0.010087  map incre: 0.000957 ave total: 0.017402 icp: 0.011661 construct H: 0.000480 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.005221 ave match: 0.009853 ave solve: 0.001764  ave ICP: 0.012778  map incre: 0.001177 ave total: 0.017437 icp: 0.011682 construct H: 0.000480 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003890 ave match: 0.009820 ave solve: 0.001757  ave ICP: 0.009720  map incre: 0.000797 ave total: 0.017378 icp: 0.011642 construct H: 0.000478 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003793 ave match: 0.009790 ave solve: 0.001751  ave ICP: 0.009786  map incre: 0.000833 ave total: 0.017321 icp: 0.011605 construct H: 0.000477 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003685 ave match: 0.009760 ave solve: 0.001744  ave ICP: 0.009746  map incre: 0.000908 ave total: 0.017264 icp: 0.011568 construct H: 0.000475 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003640 ave match: 0.009731 ave solve: 0.001738  ave ICP: 0.009700  map incre: 0.000812 ave total: 0.017207 icp: 0.011533 construct H: 0.000473 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003613 ave match: 0.009706 ave solve: 0.001732  ave ICP: 0.009908  map incre: 0.000860 ave total: 0.017155 icp: 0.011502 construct H: 0.000472 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003605 ave match: 0.009682 ave solve: 0.001727  ave ICP: 0.009898  map incre: 0.000854 ave total: 0.017105 icp: 0.011472 construct H: 0.000470 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003564 ave match: 0.009658 ave solve: 0.001722  ave ICP: 0.009881  map incre: 0.000807 ave total: 0.017055 icp: 0.011443 construct H: 0.000469 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003618 ave match: 0.009635 ave solve: 0.001716  ave ICP: 0.009856  map incre: 0.000874 ave total: 0.017009 icp: 0.011414 construct H: 0.000467 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003586 ave match: 0.009614 ave solve: 0.001711  ave ICP: 0.009937  map incre: 0.000774 ave total: 0.016963 icp: 0.011388 construct H: 0.000466 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.005160 ave match: 0.009629 ave solve: 0.001718  ave ICP: 0.012737  map incre: 0.000865 ave total: 0.016993 icp: 0.011409 construct H: 0.000468 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003564 ave match: 0.009608 ave solve: 0.001712  ave ICP: 0.009869  map incre: 0.000899 ave total: 0.016949 icp: 0.011383 construct H: 0.000466 
+[ mapping ]: time: IMU + Map + Input Downsample: 0.003581 ave match: 0.009602 ave solve: 0.001716  ave ICP: 0.011310  map incre: 0.000846 ave total: 0.016930 icp: 0.011381 construct H: 0.000467 
+Rebuild thread terminated normally
+[信息] 已发送停止命令给 /laserMapping 节点
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+WARNING: Package name "ME5400" does not follow the naming conventions. It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
+... logging to /home/xc/.ros/log/015f66aa-34fd-11f1-a96c-5533933429e9/roslaunch-z790m-72446.log
+Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;/home/xc/Projects/ME5400/catkin_ws/src/fast_lio/launch/mapping_velodyne.launch
+[1mstarted roslaunch server http://z790m:33475/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /common/imu_topic: /kitti/oxts/imu
+ * /common/lid_topic: /kitti/velo/point...
+ * /common/time_offset_lidar_to_imu: 0.0
+ * /common/time_sync_en: False
+ * /cube_side_length: 1000.0
+ * /feature_extract_enable: False
+ * /filter_size_map: 0.5
+ * /filter_size_surf: 0.5
+ * /mapping/acc_cov: 0.1
+ * /mapping/b_acc_cov: 0.0001
+ * /mapping/b_gyr_cov: 0.0001
+ * /mapping/det_range: 100.0
+ * /mapping/extrinsic_R: [1, 0, 0, 0, 1, 0...
+ * /mapping/extrinsic_T: [0, 0, 0.28]
+ * /mapping/extrinsic_est_en: False
+ * /mapping/fov_degree: 180
+ * /mapping/gyr_cov: 0.1
+ * /max_iteration: 3
+ * /pcd_save/interval: -1
+ * /pcd_save/pcd_save_en: False
+ * /point_filter_num: 4
+ * /preprocess/blind: 2
+ * /preprocess/dynamic_acc_penalty: 0.3
+ * /preprocess/dynamic_acc_ref: 4.0
+ * /preprocess/dynamic_bbox_margin_xy: 0.6
+ * /preprocess/dynamic_bbox_margin_z: 0.5
+ * /preprocess/dynamic_min_track_length: 3
+ * /preprocess/dynamic_min_weight: 0.2
+ * /preprocess/dynamic_score_penalty: 0.2
+ * /preprocess/dynamic_speed_penalty: 0.5
+ * /preprocess/dynamic_speed_ref: 12.0
+ * /preprocess/dynamic_timeout: 0.7
+ * /preprocess/ignore_given_offset_time: True
+ * /preprocess/lidar_type: 2
+ * /preprocess/scan_line: 64
+ * /preprocess/scan_rate: 10
+ * /preprocess/timestamp_unit: 2
+ * /preprocess/tracked_topic: /mctrack/tracked_...
+ * /preprocess/use_dynamic_weights: True
+ * /publish/dense_publish_en: True
+ * /publish/path_en: True
+ * /publish/scan_bodyframe_pub_en: True
+ * /publish/scan_publish_en: True
+ * /rosdistro: noetic
+ * /rosversion: 1.17.4
+ * /runtime_pos_log_enable: True
+ * /use_sim_time: True
+
+NODES
+  /
+    laserMapping (fast_lio/fastlio_mapping)
+
+[1mROS_MASTER_URI=http://localhost:11311[0m
+]2;/home/xc/Projects/ME5400/catkin_ws/src/fast_lio/launch/mapping_velodyne.launch http://localhost:11311
+[1mprocess[laserMapping-1]: started with pid [72499][0m
+[1m[laserMapping-1] process has finished cleanly
+log file: /home/xc/.ros/log/015f66aa-34fd-11f1-a96c-5533933429e9/laserMapping-1*.log[0m
+all processes on machine have died, roslaunch will exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m
+[INFO] [1775841401.577120, 0.000000]: [joint_backend_ego] started: window=8 lambda=0.120 tracks=on robust=huber f_scale=0.500
+[INFO] [1775841395.501871, 0.000000]: fastlio_pose_bridge listening on /Odometry, publishing /mctrack/lidar_pose (child=velodyne, publish_tf=True)
+[信息] FAST-LIO mapping 进程已退出
+[信息] 正在停止 FAST-LIO 子进程...
+[信息] 优化轨迹已保存为 Results/0012_results/Online/trajectory.txt
+[信息] 联合后端轨迹已保存为 Results/0012_results/Online/trajectory_joint.txt
+[步骤 11] 正在运行统一轨迹评估（含联合后端 / Tr/Rot）...
+
+[真值] 加载：/home/xc/Projects/ME5400/Data_Tracking/training/oxts/0012.txt
+[警告] 未找到 times.txt，按 10Hz 假设时间戳
+[真值] 帧数：78，时间范围：0.00 ~ 7.70 s
+
+[轨迹] Baseline  ←  /home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_baseline.txt
+[轨迹] 帧数：62，时间范围：1.41 ~ 7.51 s
+[轨迹] 匹配帧数：62
+[轨迹] ATE RMSE = 0.0099 m，ATE 均值 = 0.0092 m，RPE RMSE = 0.0023 m
+
+[轨迹] FAST-LIO+MCTrack  ←  /home/xc/Projects/ME5400/Results/0012_results/Online/trajectory.txt
+[轨迹] 帧数：62，时间范围：1.41 ~ 7.51 s
+[轨迹] 匹配帧数：62
+[轨迹] ATE RMSE = 0.0092 m，ATE 均值 = 0.0084 m，RPE RMSE = 0.0025 m
+
+[轨迹] Joint Backend  ←  /home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_joint.txt
+[轨迹] 帧数：62，时间范围：1.41 ~ 7.51 s
+[轨迹] 匹配帧数：62
+[轨迹] ATE RMSE = 0.0599 m，ATE 均值 = 0.0510 m，RPE RMSE = 0.0076 m
+[图表] 已保存 → /home/xc/Projects/ME5400/Results/0012_results/Online/evaluation_result.png
+[图表] 已保存 → /home/xc/Projects/ME5400/Results/0012_results/Online/evaluation_joint_backend.png
+[图表] 已保存 → /home/xc/Projects/ME5400/Results/0012_results/Online/ablation_bar.png
+==============================================================================
+在线轨迹评估报告
+==============================================================================
+
+一、评估概览
+序列号: 0012
+真值路径: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0012.txt
+标定路径: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0012.txt
+参与评估轨迹数: 3
+
+轨迹列表：
+  1. Baseline: /home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_baseline.txt
+  2. FAST-LIO+MCTrack: /home/xc/Projects/ME5400/Results/0012_results/Online/trajectory.txt
+  3. Joint Backend: /home/xc/Projects/ME5400/Results/0012_results/Online/trajectory_joint.txt
+
+核心双轨结论：
+  基准轨迹: Baseline (ATE RMSE=0.0099 m)
+  对比轨迹: FAST-LIO+MCTrack (ATE RMSE=0.0092 m)
+  相对基准提升: 7.59%
+
+二、ATE / RPE 对比汇总
+
+轨迹配置                         匹配帧数   ATE_RMSE      ATE均值     ATE最大值   RPE_RMSE
+-----------------------------------------------------------------------------
+Baseline                       62     0.0099     0.0092     0.0164     0.0023
+FAST-LIO+MCTrack               62     0.0092     0.0084     0.0149     0.0025
+Joint Backend                  62     0.0599     0.0510     0.1063     0.0076
+
+相对第一条有效轨迹的提升幅度：
+  FAST-LIO+MCTrack         ATE 改善 +7.59%
+  Joint Backend            ATE 改善 -503.76%
+
+三、KITTI 相对里程计指标（Tr / Rot）
+真值 OXTS: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0012.txt
+标定文件 : /home/xc/Projects/ME5400/Data_Tracking/training/calib/0012.txt
+请求段长 : 20, 40, 60, 80, 100, 150, 200 m
+实际段长 : 无可用段长
+最短有效匹配里程: 0.065 m
+起点步长 : 10 帧
+时间戳容差: 0.200 s
+
+轨迹名称                         匹配帧数       段数     Tr.(%)   Rot.(deg/100m)      Tr 提升     Rot 提升
+--------------------------------------------------------------------------------------------
+Baseline                       62        0        N/A              N/A      0.00%      0.00%
+FAST-LIO+MCTrack               62        0        N/A              N/A        N/A        N/A
+Joint Backend                  62        0        N/A              N/A        N/A        N/A
+
+分段详情：
+  无可用段长：最短有效匹配里程 0.065 m，低于最短请求段长 20 m
+
+[指标] 已保存 → /home/xc/Projects/ME5400/Results/0012_results/Online/metrics.txt
+[指标] 已保存 → /home/xc/Projects/ME5400/Results/0012_results/Online/metrics.json
+
+[完成] 评估结果已保存至: /home/xc/Projects/ME5400/Results/0012_results/Online
+=========================================================
+   评估完成！结果保存在 Results/0012_results/Online/ 目录  
+=========================================================
+[INFO] 任务完成，正在停止部分后台进程...
+[INFO] [1775841413.158427, 7.691217]: 帧 77: 检测到 17 个目标
+[INFO] 所有进程已停止，脚本正常退出
+
+=========================================================
+   [ALL] 完整双轨测试流全部执行完成！
+   (定量对比评估结果已在 Results/0012_results/Online/ 目录下生成)
+=========================================================
+
+[INFO] 正在关闭全局 roscore...
+[INFO] [1775841393.472189, 0.000000]: MCTrackOnlineNode 初始化完成 (配置=/home/xc/Projects/ME5400/MCTrack/config/kitti_fastlio.yaml, 检测话题=/detection/lidar_detections, 旧版String=False)

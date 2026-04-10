@@ -1,0 +1,64 @@
+[2026-04-11 00:59:36] Resume batch started
+[2026-04-11 00:59:36] Summary log: /home/xc/Projects/ME5400/agent/logs/batch_resume_20260411_005936/summary.txt
+[2026-04-11 00:59:36] Detail log: /home/xc/Projects/ME5400/agent/logs/batch_resume_20260411_005936/batch_detail.log
+[2026-04-11 00:59:36] Target sequences: 0003 0004 0005 0006 0008 0010 0011 0012 0013 0014 0015 0016 0017 0018
+[2026-04-11 00:59:38] backed up incomplete result dir for 0003 -> /home/xc/Projects/ME5400/Results/0003_results/Online_interrupted_20260411_005936
+[2026-04-11 00:59:38] run_all 0003 attempt 1 preparing cleanup
+[2026-04-11 00:59:40] run_all 0003 attempt 1 START
+[2026-04-11 01:01:40] run_all 0003 attempt 1 EXIT rc=0
+[2026-04-11 01:01:40] run_all 0003 attempt 1 succeeded and outputs verified
+[2026-04-11 01:01:40] run_all 0004 attempt 1 preparing cleanup
+[2026-04-11 01:01:41] run_all 0004 attempt 1 START
+[2026-04-11 01:03:41] run_all 0004 attempt 1 EXIT rc=0
+[2026-04-11 01:03:41] run_all 0004 attempt 1 succeeded and outputs verified
+[2026-04-11 01:03:41] run_all 0005 attempt 1 preparing cleanup
+[2026-04-11 01:03:43] run_all 0005 attempt 1 START
+[2026-04-11 01:05:43] run_all 0005 attempt 1 EXIT rc=0
+[2026-04-11 01:05:43] run_all 0005 attempt 1 succeeded and outputs verified
+[2026-04-11 01:05:43] run_all 0006 attempt 1 preparing cleanup
+[2026-04-11 01:05:45] run_all 0006 attempt 1 START
+[2026-04-11 01:07:45] run_all 0006 attempt 1 EXIT rc=0
+[2026-04-11 01:07:45] run_all 0006 attempt 1 succeeded and outputs verified
+[2026-04-11 01:07:45] run_all 0008 attempt 1 preparing cleanup
+[2026-04-11 01:07:47] run_all 0008 attempt 1 START
+[2026-04-11 01:10:47] run_all 0008 attempt 1 EXIT rc=0
+[2026-04-11 01:10:47] run_all 0008 attempt 1 succeeded and outputs verified
+[2026-04-11 01:10:47] run_all 0010 attempt 1 preparing cleanup
+[2026-04-11 01:10:48] run_all 0010 attempt 1 START
+[2026-04-11 01:12:48] run_all 0010 attempt 1 EXIT rc=0
+[2026-04-11 01:12:48] run_all 0010 attempt 1 succeeded and outputs verified
+[2026-04-11 01:12:48] run_all 0011 attempt 1 preparing cleanup
+[2026-04-11 01:12:50] run_all 0011 attempt 1 START
+[2026-04-11 01:15:50] run_all 0011 attempt 1 EXIT rc=0
+[2026-04-11 01:15:50] run_all 0011 attempt 1 succeeded and outputs verified
+[2026-04-11 01:15:50] run_all 0012 attempt 1 preparing cleanup
+[2026-04-11 01:15:52] run_all 0012 attempt 1 START
+[2026-04-11 01:17:52] run_all 0012 attempt 1 EXIT rc=0
+[2026-04-11 01:17:52] run_all 0012 attempt 1 succeeded and outputs verified
+[2026-04-11 01:17:52] run_all 0013 attempt 1 preparing cleanup
+[2026-04-11 01:17:53] run_all 0013 attempt 1 START
+[2026-04-11 01:19:53] run_all 0013 attempt 1 EXIT rc=0
+[2026-04-11 01:19:53] run_all 0013 attempt 1 succeeded and outputs verified
+[2026-04-11 01:19:53] run_all 0014 attempt 1 preparing cleanup
+[2026-04-11 01:19:55] run_all 0014 attempt 1 START
+[2026-04-11 01:21:55] run_all 0014 attempt 1 EXIT rc=0
+[2026-04-11 01:21:55] run_all 0014 attempt 1 succeeded and outputs verified
+[2026-04-11 01:21:55] run_all 0015 attempt 1 preparing cleanup
+[2026-04-11 01:21:57] run_all 0015 attempt 1 START
+[2026-04-11 01:24:57] run_all 0015 attempt 1 EXIT rc=0
+[2026-04-11 01:24:57] run_all 0015 attempt 1 succeeded and outputs verified
+[2026-04-11 01:24:57] run_all 0016 attempt 1 preparing cleanup
+[2026-04-11 01:24:59] run_all 0016 attempt 1 START
+[2026-04-11 01:26:59] run_all 0016 attempt 1 EXIT rc=0
+[2026-04-11 01:26:59] run_all 0016 attempt 1 succeeded and outputs verified
+[2026-04-11 01:26:59] run_all 0017 attempt 1 preparing cleanup
+[2026-04-11 01:27:00] run_all 0017 attempt 1 START
+[2026-04-11 01:29:00] run_all 0017 attempt 1 EXIT rc=0
+[2026-04-11 01:29:00] run_all 0017 attempt 1 succeeded and outputs verified
+[2026-04-11 01:29:00] run_all 0018 attempt 1 preparing cleanup
+[2026-04-11 01:29:02] run_all 0018 attempt 1 START
+[2026-04-11 01:31:02] run_all 0018 attempt 1 EXIT rc=0
+[2026-04-11 01:31:02] run_all 0018 attempt 1 succeeded and outputs verified
+[2026-04-11 01:31:04] RESUME BATCH COMPLETE
+[2026-04-11 01:31:04] RUN_OK: 0003 0004 0005 0006 0008 0010 0011 0012 0013 0014 0015 0016 0017 0018
+[2026-04-11 01:31:04] RUN_FAIL: none

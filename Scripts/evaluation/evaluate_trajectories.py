@@ -248,6 +248,19 @@ def last_frame_from_length(dist: np.ndarray, first_idx: int, length_m: float) ->
     return idx
 
 
+def select_kitti_lengths(requested_lengths: list[float], matched_spans: list[float]) -> tuple[list[float], float]:
+    requested = sorted({float(length) for length in requested_lengths if float(length) > 0.0})
+    spans = [float(span) for span in matched_spans if np.isfinite(span) and float(span) > 0.0]
+    if not requested:
+        return [], 0.0
+    if not spans:
+        return [], 0.0
+
+    min_span = min(spans)
+    active = [length for length in requested if length <= min_span + 1e-9]
+    return active, min_span
+
+
 def rotation_error_rad(pose_err: np.ndarray) -> float:
     rot = pose_err[:3, :3]
     d_val = 0.5 * (float(np.trace(rot)) - 1.0)
@@ -610,18 +623,54 @@ def build_kitti_summary(
     gt_poses = load_gt_poses_lidar(Path(oxts_path).resolve(), Path(calib_path).resolve())
     gt_times = np.arange(len(gt_poses), dtype=np.float64) * 0.1
 
-    rows = []
-    per_len_blocks: dict[str, dict[str, dict[str, float]]] = {}
+    requested_lengths = sorted({float(length) for length in lengths if float(length) > 0.0})
+    prepared = []
+    matched_spans: list[float] = []
     for entry in traj_entries:
         tum = load_tum(entry["path"])
         matched_tum, matched_gt = associate_pose_rows(tum, gt_times, gt_poses, max_dt)
         est_poses = tum_to_pose_mats(matched_tum)
-        metrics = compute_kitti_rel_metrics(matched_gt, est_poses, lengths=lengths, step=step)
+        matched_span = float(trajectory_distances(matched_gt)[-1]) if len(matched_gt) >= 2 else 0.0
+        prepared.append(
+            {
+                "entry": entry,
+                "matched_tum": matched_tum,
+                "matched_gt": matched_gt,
+                "est_poses": est_poses,
+                "matched_span_m": matched_span,
+            }
+        )
+        matched_spans.append(matched_span)
+
+    active_lengths, min_matched_span = select_kitti_lengths(requested_lengths, matched_spans)
+
+    rows = []
+    per_len_blocks: dict[str, dict[str, dict[str, float]]] = {}
+    matched_span_by_traj: dict[str, float] = {}
+    for item in prepared:
+        entry = item["entry"]
+        matched_tum = item["matched_tum"]
+        matched_gt = item["matched_gt"]
+        est_poses = item["est_poses"]
+        matched_span = item["matched_span_m"]
+        matched_span_by_traj[entry["name"]] = matched_span
+
+        if active_lengths:
+            metrics = compute_kitti_rel_metrics(matched_gt, est_poses, lengths=active_lengths, step=step)
+        else:
+            metrics = {
+                "Tr_percent": float("nan"),
+                "Rot_deg_per_100m": float("nan"),
+                "n_segments": 0,
+                "per_length": {},
+            }
+
         rows.append(
             {
                 "name": entry["name"],
                 "traj": entry["path"],
                 "matched_frames": int(len(matched_tum)),
+                "matched_span_m": matched_span,
                 "Tr_percent": metrics["Tr_percent"],
                 "Rot_deg_per_100m": metrics["Rot_deg_per_100m"],
                 "n_segments": metrics["n_segments"],
@@ -644,7 +693,13 @@ def build_kitti_summary(
         "三、KITTI 相对里程计指标（Tr / Rot）",
         f"真值 OXTS: {Path(oxts_path).resolve()}",
         f"标定文件 : {Path(calib_path).resolve()}",
-        f"评估段长 : {', '.join(str(int(length)) for length in lengths)} m",
+        f"请求段长 : {', '.join(str(int(length)) for length in requested_lengths)} m",
+        (
+            f"实际段长 : {', '.join(str(int(length)) for length in active_lengths)} m"
+            if active_lengths
+            else "实际段长 : 无可用段长"
+        ),
+        f"最短有效匹配里程: {min_matched_span:.3f} m",
         f"起点步长 : {step} 帧",
         f"时间戳容差: {max_dt:.3f} s",
         "",
@@ -665,23 +720,33 @@ def build_kitti_summary(
 
     lines.append("")
     lines.append("分段详情：")
-    for row in rows:
-        name = row["name"]
-        lines.append(f"  [{name}]")
-        lines.append("    段长(m)      Tr.(%)   Rot.(deg/100m)     段数")
-        for length in lengths:
-            record = per_len_blocks[name][str(int(length))]
-            lines.append(
-                f"    {int(length):>7d}   {float_to_text(record['Tr_percent']):>10}   "
-                f"{float_to_text(record['Rot_deg_per_100m']):>16}   {int(record['n_segments']):>6d}"
-            )
+    if not active_lengths:
+        min_requested = requested_lengths[0] if requested_lengths else float("nan")
+        lines.append(
+            f"  无可用段长：最短有效匹配里程 {min_matched_span:.3f} m，"
+            f"低于最短请求段长 {float_to_text(min_requested, digits=0)} m"
+        )
+    else:
+        for row in rows:
+            name = row["name"]
+            lines.append(f"  [{name}]")
+            lines.append("    段长(m)      Tr.(%)   Rot.(deg/100m)     段数")
+            for length in active_lengths:
+                record = per_len_blocks[name][str(int(length))]
+                lines.append(
+                    f"    {int(length):>7d}   {float_to_text(record['Tr_percent']):>10}   "
+                    f"{float_to_text(record['Rot_deg_per_100m']):>16}   {int(record['n_segments']):>6d}"
+                )
 
     payload = {
         "oxts_path": str(Path(oxts_path).resolve()),
         "calib_path": str(Path(calib_path).resolve()),
-        "lengths_m": [int(length) for length in lengths],
+        "requested_lengths_m": [int(length) for length in requested_lengths],
+        "lengths_m": [int(length) for length in active_lengths],
         "step_frames": int(step),
         "max_dt": float(max_dt),
+        "min_matched_span_m": float(min_matched_span),
+        "matched_span_by_traj_m": matched_span_by_traj,
         "rows": rows,
         "per_length": per_len_blocks,
     }
@@ -926,7 +991,7 @@ def build_main_parser() -> argparse.ArgumentParser:
     parser.add_argument("--pair-plot-name", default="", help="双轨评估图文件名，例如 evaluation_result.png")
     parser.add_argument("--overview-plot-name", default="", help="多轨总览图文件名，例如 evaluation_joint_backend.png")
     parser.add_argument("--bar-plot-name", default="", help="柱状图文件名，例如 ablation_bar.png")
-    parser.add_argument("--lengths", default="100,200,300,400,500,600,700,800", help="KITTI Tr/Rot 段长列表")
+    parser.add_argument("--lengths", default="20,40,60,80,100,150,200", help="KITTI Tr/Rot 段长列表")
     parser.add_argument("--step", type=int, default=10, help="KITTI Tr/Rot 起点步长（帧）")
     return parser
 

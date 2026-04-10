@@ -1,0 +1,65 @@
+[2026-04-11 00:31:43] Batch started
+[2026-04-11 00:31:43] Summary log: /home/xc/Projects/ME5400/agent/logs/batch_20260411_003143/summary.txt
+[2026-04-11 00:31:43] Detail log: /home/xc/Projects/ME5400/agent/logs/batch_20260411_003143/batch_detail.log
+[2026-04-11 00:31:43] Target sequences: 0000 0002 0003 0004 0005 0006 0008 0010 0011 0012 0013 0014 0015 0016 0017 0018
+[2026-04-11 00:31:45] PHASE 1: generate missing rosbag files
+[2026-04-11 00:31:45] bag 0000 START
+[2026-04-11 00:32:45] bag 0000 EXIT rc=0
+[2026-04-11 00:32:45] bag 0000 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0000_nodet.bag
+[2026-04-11 00:32:45] bag 0002 START
+[2026-04-11 00:33:45] bag 0002 EXIT rc=0
+[2026-04-11 00:33:45] bag 0002 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0002_nodet.bag
+[2026-04-11 00:33:45] bag 0003 START
+[2026-04-11 00:34:45] bag 0003 EXIT rc=0
+[2026-04-11 00:34:45] bag 0003 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0003_nodet.bag
+[2026-04-11 00:34:45] bag 0004 START
+[2026-04-11 00:35:45] bag 0004 EXIT rc=0
+[2026-04-11 00:35:45] bag 0004 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0004_nodet.bag
+[2026-04-11 00:35:45] bag 0005 START
+[2026-04-11 00:36:45] bag 0005 EXIT rc=0
+[2026-04-11 00:36:45] bag 0005 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0005_nodet.bag
+[2026-04-11 00:36:45] bag 0006 START
+[2026-04-11 00:37:45] bag 0006 EXIT rc=0
+[2026-04-11 00:37:45] bag 0006 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0006_nodet.bag
+[2026-04-11 00:37:45] bag 0008 START
+[2026-04-11 00:38:45] bag 0008 EXIT rc=0
+[2026-04-11 00:38:45] bag 0008 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0008_nodet.bag
+[2026-04-11 00:38:45] bag 0010 START
+[2026-04-11 00:39:45] bag 0010 EXIT rc=0
+[2026-04-11 00:39:45] bag 0010 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0010_nodet.bag
+[2026-04-11 00:39:45] bag 0011 START
+[2026-04-11 00:40:45] bag 0011 EXIT rc=0
+[2026-04-11 00:40:45] bag 0011 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0011_nodet.bag
+[2026-04-11 00:40:45] bag 0012 START
+[2026-04-11 00:41:45] bag 0012 EXIT rc=0
+[2026-04-11 00:41:45] bag 0012 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0012_nodet.bag
+[2026-04-11 00:41:45] bag 0013 START
+[2026-04-11 00:42:45] bag 0013 EXIT rc=0
+[2026-04-11 00:42:45] bag 0013 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0013_nodet.bag
+[2026-04-11 00:42:45] bag 0014 START
+[2026-04-11 00:43:45] bag 0014 EXIT rc=0
+[2026-04-11 00:43:45] bag 0014 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0014_nodet.bag
+[2026-04-11 00:43:45] bag 0015 START
+[2026-04-11 00:44:45] bag 0015 EXIT rc=0
+[2026-04-11 00:44:45] bag 0015 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0015_nodet.bag
+[2026-04-11 00:44:45] bag 0016 START
+[2026-04-11 00:45:45] bag 0016 EXIT rc=0
+[2026-04-11 00:45:45] bag 0016 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0016_nodet.bag
+[2026-04-11 00:45:45] bag 0017 START
+[2026-04-11 00:46:45] bag 0017 EXIT rc=0
+[2026-04-11 00:46:45] bag 0017 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0017_nodet.bag
+[2026-04-11 00:46:45] bag 0018 START
+[2026-04-11 00:47:45] bag 0018 EXIT rc=0
+[2026-04-11 00:47:45] bag 0018 verified: /home/xc/Projects/ME5400/Data_Tracking/rosbags/seq_0018_nodet.bag
+[2026-04-11 00:47:45] PHASE 1 complete. ok=16 fail=0
+[2026-04-11 00:47:45] PHASE 2: run ./Scripts/run_all.sh sequentially with one retry on failure
+[2026-04-11 00:47:45] run_all 0000 attempt 1 preparing cleanup
+[2026-04-11 00:47:47] run_all 0000 attempt 1 START
+[2026-04-11 00:49:47] run_all 0000 attempt 1 EXIT rc=0
+[2026-04-11 00:49:47] run_all 0000 attempt 1 succeeded
+[2026-04-11 00:49:47] run_all 0002 attempt 1 preparing cleanup
+[2026-04-11 00:49:48] run_all 0002 attempt 1 START
+[2026-04-11 00:51:48] run_all 0002 attempt 1 EXIT rc=0
+[2026-04-11 00:51:48] run_all 0002 attempt 1 succeeded
+[2026-04-11 00:51:48] run_all 0003 attempt 1 preparing cleanup
+[2026-04-11 00:51:50] run_all 0003 attempt 1 START

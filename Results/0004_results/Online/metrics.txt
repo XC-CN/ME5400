@@ -1,0 +1,75 @@
+==============================================================================
+在线轨迹评估报告
+==============================================================================
+
+一、评估概览
+序列号: 0004
+真值路径: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0004.txt
+标定路径: /home/xc/Projects/ME5400/Data_Tracking/training/calib/0004.txt
+参与评估轨迹数: 3
+
+轨迹列表：
+  1. Baseline: /home/xc/Projects/ME5400/Results/0004_results/Online/trajectory_baseline.txt
+  2. FAST-LIO+MCTrack: /home/xc/Projects/ME5400/Results/0004_results/Online/trajectory.txt
+  3. Joint Backend: /home/xc/Projects/ME5400/Results/0004_results/Online/trajectory_joint.txt
+
+核心双轨结论：
+  基准轨迹: Baseline (ATE RMSE=3.6650 m)
+  对比轨迹: FAST-LIO+MCTrack (ATE RMSE=5.3702 m)
+  相对基准提升: -46.53%
+
+二、ATE / RPE 对比汇总
+
+轨迹配置                         匹配帧数   ATE_RMSE      ATE均值     ATE最大值   RPE_RMSE
+-----------------------------------------------------------------------------
+Baseline                      299     3.6650     3.4351     6.7406     0.2194
+FAST-LIO+MCTrack              297     5.3702     4.9942    10.5403     0.1945
+Joint Backend                 297     5.4612     5.0905    10.7005     0.2025
+
+相对第一条有效轨迹的提升幅度：
+  FAST-LIO+MCTrack         ATE 改善 -46.53%
+  Joint Backend            ATE 改善 -49.01%
+
+三、KITTI 相对里程计指标（Tr / Rot）
+真值 OXTS: /home/xc/Projects/ME5400/Data_Tracking/training/oxts/0004.txt
+标定文件 : /home/xc/Projects/ME5400/Data_Tracking/training/calib/0004.txt
+请求段长 : 20, 40, 60, 80, 100, 150, 200 m
+实际段长 : 20, 40, 60, 80, 100, 150, 200 m
+最短有效匹配里程: 389.604 m
+起点步长 : 10 帧
+时间戳容差: 0.200 s
+
+轨迹名称                         匹配帧数       段数     Tr.(%)   Rot.(deg/100m)      Tr 提升     Rot 提升
+--------------------------------------------------------------------------------------------
+Baseline                      299      170     2.4901           2.2741      0.00%      0.00%
+FAST-LIO+MCTrack              297      169     3.1675           3.6776    -27.20%    -61.71%
+Joint Backend                 297      169     3.0398           3.6577    -22.07%    -60.84%
+
+分段详情：
+  [Baseline]
+    段长(m)      Tr.(%)   Rot.(deg/100m)     段数
+         20       2.8309             4.7120       29
+         40       2.3002             2.5350       28
+         60       2.3504             1.9447       26
+         80       2.2722             1.6992       25
+        100       2.2810             1.5662       24
+        150       2.5672             1.3259       21
+        200       2.9558             1.2063       17
+  [FAST-LIO+MCTrack]
+    段长(m)      Tr.(%)   Rot.(deg/100m)     段数
+         20       2.5731             5.8260       29
+         40       2.4077             4.0113       28
+         60       2.4891             3.3545       26
+         80       2.8394             3.0562       25
+        100       3.2045             2.9413       24
+        150       4.3624             2.8783       20
+        200       5.4953             2.8504       17
+  [Joint Backend]
+    段长(m)      Tr.(%)   Rot.(deg/100m)     段数
+         20       2.7400             5.9475       29
+         40       2.3564             3.9841       28
+         60       2.3536             3.1827       26
+         80       2.5842             3.0490       25
+        100       2.9534             2.9099       24
+        150       4.1094             2.8610       20
+        200       5.2595             2.8290       17
