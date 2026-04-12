@@ -23,7 +23,7 @@
 \setlength{\parindent}{2em}
 \setlength{\parskip}{0.3em}
 \setstretch{1.25}
-\graphicspath{{../Results/0020_results/}}
+\graphicspath{{Figures/}{../Results/0020_results/}{../Results/0020_results/Online/}{../Results/0020_results/Offline/}}
 
 \title{ME5400 课程项目技术报告\\基于 FAST-LIO、PointPillars 与 MCTrack 的动态场景双向协同定位跟踪系统}
 \author{ME5400 Project}
@@ -69,6 +69,14 @@ ME5400 当前实现并未完全走到这一步，但它已经在工程上向这�
 本报告采用这样的定位来组织全文：不把系统包装成已经完成的终极研究方案，而是实事求是地说明当前系统做到了什么、没做到什么、为什么这些工程选择合理，以及后续如何在此基础上继续向更强的联合图优化和刚体约束利用方向推进。
 
 \section{系统总体架构与数据流}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{Overall architecture of the proposed dynamic-scene trajectory optimization framework.png}
+    \caption{系统总体架构图。展示了前端感知、中端双向融合与后端联合优化的完整协同管线。}
+    \label{fig:overall_architecture}
+\end{figure}
+
 从整体结构看，项目实现的是一个三层协同系统：前端感知层、中端双向融合层和后端联合优化层。其输入来自 KITTI Tracking 转换得到的 rosbag，核心原始话题为 LiDAR 点云 \texttt{/kitti/velo/pointcloud} 与 IMU 数据 \texttt{/kitti/oxts/imu}。前端感知层同时运行 PointPillars 检测器与 FAST-LIO。PointPillars 的职责是从每帧点云中估计 3D 检测框，并输出统一消息类型 \texttt{Detection3DArray}；FAST-LIO 的职责是完成激光惯性里程计推算，并输出经滤波优化后的 \texttt{/Odometry} 以及更高频、早于 LiDAR 更新发布的 \texttt{/Odometry\_imu\_predicted}。
 
 中端双向融合层是系统的关键枢纽。首先，通过 \texttt{fastlio\_pose\_bridge.py}，FAST-LIO 的里程计结果被转换为 MCTrack 可直接消费的 LiDAR 位姿 \texttt{/mctrack/lidar\_pose} 与 TF 变换。MCTrack 在线节点接收 \texttt{/detection/lidar\_detections} 和 \texttt{/mctrack/lidar\_pose}，在内部完成位姿插值、检测框坐标变换、目标关联和状态更新，然后向外发布 \texttt{/mctrack/tracked\_objects} 与可视化 Marker。其次，FAST-LIO 订阅 \texttt{/mctrack/tracked\_objects}，根据每个被跟踪目标的速度、加速度、置信度、尺寸和姿态信息，对落入动态框内的点云赋予更低权重。这样，目标跟踪结果不再只服务于感知显示，而是反向进入里程计优化。
@@ -97,6 +105,14 @@ ME5400 当前实现并未完全走到这一步，但它已经在工程上向这�
 从系统角度看，这样的设计有两个直接好处。其一，PointPillars 与 MCTrack 的接口不再依赖论文或第三方库中的原始格式，而是被标准化成带时间戳的 LiDAR 检测消息；其二，检测器与 FAST-LIO 使用同一份点云输入，因此时间对齐问题更容易追踪，不需要在多路异构感知流之间额外做复杂同步。
 
 \subsection{FAST-LIO 激光惯性里程计}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{FAST-LIO2 System Architecture.jpg}
+    \caption{FAST-LIO2 系统架构图。本系统在其点到面残差计算环节引入了动态目标的自适应降权。}
+    \label{fig:fastlio_architecture}
+\end{figure}
+
 定位前端采用 FAST-LIO，其核心是基于误差状态扩展卡尔曼滤波与点到面约束的 LiDAR-inertial 紧耦合里程计。与许多仅依赖点云配准的 SLAM 方法不同，FAST-LIO 在 IMU 高频积分与 LiDAR 更新之间建立了更紧密的状态传播关系，因此在高速运动、短时遮挡或几何退化场景下通常具有更强鲁棒性。本项目在 \texttt{catkin\_ws/src/fast\_lio/config/velodyne.yaml} 中配置其话题、外参、点云线数、扫描频率和建图参数；在 \texttt{mapping\_velodyne.launch} 中进一步控制是否启用动态权重机制。
 
 仓库当前配置中，FAST-LIO 订阅 \texttt{/kitti/velo/pointcloud} 和 \texttt{/kitti/oxts/imu}，默认采用 64 线 Velodyne、10Hz 扫描率，LiDAR 外参平移为 \([0,0,0.28]\)，并发布优化位姿 \texttt{/Odometry} 以及 IMU 预测位姿 \texttt{/Odometry\_imu\_predicted}。其中 \texttt{/Odometry} 可以视为完成当前帧激光更新后的更可信位姿，而 \texttt{/Odometry\_imu\_predicted} 则更高频地反映 LiDAR 更新前的运动传播结果。后者对纯定位系统未必关键，但对目标跟踪非常有价值，因为目标跟踪本质上需要在两帧检测之间持续获得自车运动估计，才能在急转弯或高速情况下保持预测稳定。
@@ -110,6 +126,14 @@ ME5400 当前实现并未完全走到这一步，但它已经在工程上向这�
 
 \section{中端双向融合方法}
 \subsection{MCTrack 在线多目标跟踪}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Overview of 3D MOT framework MCTrack.png}
+    \caption{MCTrack 多目标跟踪框架。在此基础上，本项目增加了带时间戳的位姿缓存与外推机制，以解决真实在线系统中的时滞问题。}
+    \label{fig:mctrack_architecture}
+\end{figure}
+
 项目中的 MCTrack 在线节点位于 \texttt{catkin\_ws/src/ME5400/scripts/mctrack\_online\_node.py}。该节点加载 MCTrack 原始配置文件，维护一个 \texttt{Base3DTracker} 实例，并通过 \texttt{/mctrack/lidar\_pose} 接收自车位姿，通过 \texttt{/detection/lidar\_detections} 接收 PointPillars 检测结果。与简单的“检测来一帧就立刻送入跟踪器”不同，该实现专门构造了位姿缓存与待处理检测队列，以解决真实 ROS 管线中的时序错位问题。
 
 具体而言，节点维护一个长度可配置的位姿缓冲区 \texttt{pose\_buffer}，每当收到新的 \texttt{PoseStamped}，就把时间戳与位姿矩阵存入缓存。检测回调收到 \texttt{Detection3DArray} 后不会盲目立即处理，而是先进入 \texttt{pending\_detections} 队列，然后尝试在缓存中寻找与检测时间戳最匹配的两帧位姿。如果检测时刻落在两帧位姿之间，则通过球面线性插值和位移线性插值得到中间位姿；如果短时间内仍匹配不到，则在超时后回退到最近位姿。这个设计直接提升了检测与位姿的时间一致性，是在线跟踪质量稳定的重要前提。
@@ -181,6 +205,13 @@ w_{ik}\,\rho\!\left(\|r^{\mathrm{obj}}_{ik}\|_2^2\right),
 本报告实验部分统一采用仓库 \texttt{Results/} 中当前可核对的结果。主对比任务为两轨实验：\texttt{Baseline(Offline,NoWeight)} 与 \texttt{JointOffline}。其中，前者表示关闭动态权重与联合后端的纯 FAST-LIO 基线；后者表示启用 PointPillars、MCTrack、动态点降权和 ego-only 联合后端的完整系统。需要强调的是，这里的 \texttt{JointOffline} 并不是“只多了一个后端优化器”，而是对应整个协同链路全部打开后的结果，因此它体现的是“检测 + 跟踪 + 前端反馈 + 后端修正”的综合收益。
 
 实验数据来自 KITTI Tracking 多个序列。仓库当前给出了 0001、0007、0009、0011、0020 五个序列的联合后端指标和 KITTI 相对误差指标，足以观察系统在不同场景中的稳定性差异。根据 README 对数据的说明，0020 是高速场景，0019、0009 等则更偏城市街道。不同工况下，动态目标密度、可用静态结构比例以及自车运动模式都不同，这会直接影响本项目这种“同时依赖静态结构与动态目标信息”的系统表现。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{The KITTI data collection vehicle.png}
+    \caption{KITTI 数据采集平台。}
+    \label{fig:kitti_vehicle}
+\end{figure}
 
 \subsection{主结果：序列 0020}
 图~\ref{fig:joint_eval} 展示了仓库中 \texttt{evaluation\_joint\_backend.png} 的结果，可看出完整系统在 0020 序列上显著贴近真值轨迹。根据 \texttt{metrics\_joint\_backend.txt}，基线 ATE RMSE 为 29.1782\,m，联合系统降至 11.5856\,m，改善 60.29\%；ATE 均值从 26.3322\,m 降至 10.0928\,m，ATE 最大值从 39.9080\,m 降至 17.4796\,m。根据 \texttt{metrics\_kitti\_tr\_rot\_ac.txt}，KITTI 相对平移误差由 6.0245\% 降至 2.9930\%，改善 50.32\%；旋转误差由 0.6357\,deg/100m 降至 0.5312\,deg/100m，改善 16.44\%。
