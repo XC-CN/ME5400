@@ -12,6 +12,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{hyperref}
+\usepackage{xurl}
 \usepackage{setspace}
 \usepackage{makecell}
 \usepackage{enumitem}
@@ -28,7 +29,10 @@
 \setstretch{1.25}
 \setlength{\emergencystretch}{2em}
 \renewcommand{\arraystretch}{1.15}
+\renewcommand{\UrlFont}{\ttfamily\small}
 \graphicspath{{Figures/}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 
 \newcommand{\onlineResultFigure}[1]{
 \begin{figure}[p]
@@ -104,7 +108,7 @@
 
 从更宽的研究背景看，近期动态场景 SLAM / SLAMMOT 工作普遍在向“定位与跟踪共享信息”演进，但大多数方法仍主要关注动态点过滤、目标状态估计或隐式数据关联，而较少真正把动态物体转化为帮助自车定位的几何参照。本项目当前版本依然是一个工程型、松耦合原型，而不是最终形态的紧耦合因子图系统；但它已经完成了完整的信息闭环、统一脚本管理、可视化验证和多序列结果归档，因此具有明确的课程项目价值，也具备继续向 object-centric 联合优化扩展的现实基础。
 
-\subsection{研究现状分析}
+\section{研究现状分析}
 为把本项目放到当前研究脉络中，本文进一步选取 \texttt{slammot\_comparison.md} 中整理的 5 篇近期代表性工作作为对照：Conf SLAMMOT（\emph{LiDAR SLAMMOT based on Confidence-guided Data Association}）、LIMOT（\emph{A Tightly-Coupled System for LiDAR-Inertial Odometry and Multi-Object Tracking}）、IMM-SLAMMOT（\emph{Visual SLAMMOT Considering Multiple Motion Models}）、Online Dynamic SLAM（\emph{Online Dynamic SLAM with Incremental Smoothing and Mapping}）以及 DL-SLOT（\emph{Tightly-Coupled Dynamic LiDAR SLAM and 3D Object Tracking Based on Collaborative Graph Optimization}）。这些工作覆盖了 LiDAR、LiDAR+IMU 和双目视觉三类传感器路线，也覆盖了滑窗图优化、Bundle Adjustment 和 iSAM2 增量优化等典型实现路径。
 
 \begin{table}[H]
@@ -165,7 +169,16 @@ FAST-LIO 是整个系统的定位主干，也是第二章数据流中的起点�
 为了把 FAST-LIO 输出送入跟踪模块，项目额外实现了 \texttt{fastlio\_pose\_bridge.py}。该桥接节点将 \texttt{/Odometry} 转换成 MCTrack 可直接消费的 \texttt{/mctrack/lidar\_pose}，从而把原本偏定位侧的里程计消息，转化为检测与跟踪链路中的统一位姿输入。因此，第二章中的 FAST-LIO 不应只被理解为一个独立里程计前端，而应被看作整个闭环系统的时空参考中心；第四章讨论的动态权重优化，本质上正是建立在这一前端之上的增强机制。
 
 \subsection{PointPillars 检测模块}
-PointPillars 通过 \texttt{MMDET3D/local/ros/nodes/kitti\_pointpillars\_bag\_node.py} 封装为 ROS 节点，能够直接消费 rosbag 中的 KITTI 点云。它的职责并不是单纯输出原始检测框，而是为整个系统提供统一、可追踪、带时间戳的 3D 检测消息。项目在 \texttt{catkin\_ws/src/ME5400/msg/Detection3D.msg} 和 \texttt{Detection3DArray.msg} 中定义了统一消息格式，包含帧号、类别、置信度、2D 框、3D 尺寸、LiDAR 坐标系位置和航向角等字段。这样一来，PointPillars 与 MCTrack 之间不需要依赖第三方框架的私有格式，而是通过项目统一定义的消息接口连接。
+PointPillars~\cite{pointpillars} 通过 \texttt{MMDET3D/local/ros/nodes/kitti\_pointpillars\_bag\_node.py} 封装为 ROS 节点，能够直接消费 rosbag 中的 KITTI 点云。它的职责并不是单纯输出原始检测框，而是为整个系统提供统一、可追踪、带时间戳的 3D 检测消息。项目在 \texttt{catkin\_ws/src/ME5400/msg/Detection3D.msg} 和 \texttt{Detection3DArray.msg} 中定义了统一消息格式，包含帧号、类别、置信度、2D 框、3D 尺寸、LiDAR 坐标系位置和航向角等字段。这样一来，PointPillars 与 MCTrack 之间不需要依赖第三方框架的私有格式，而是通过项目统一定义的消息接口连接。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{PointPillars Network Architecture.png}
+    \caption{PointPillars 原论文中的网络架构图。网络由 Pillar Feature Net、2D CNN Backbone 和 SSD Detection Head 三部分组成，图像摘自 Lang \textit{et al.} 的 CVPR 2019 论文~\cite{pointpillars}。}
+    \label{fig:pointpillars_architecture}
+\end{figure}
+
+从论文原始设计看，PointPillars 的核心不只是“做 BEV 检测”，而是先把稀疏点云划分为柱状 pillar，再通过 Pillar Feature Net 把每个柱中的点编码成学习型特征，随后将这些特征散射为 pseudo-image，并交给 2D CNN Backbone 与 SSD Head 完成目标框回归与分类。这种设计把原本代价较高的 3D 卷积问题转化为 2D 卷积问题，因此在 KITTI 上兼顾了速度与精度，也正因为这一点，它非常适合作为本项目在线系统中的实时 3D 检测前端。
 
 从工程角度看，这一设计有三点作用。第一，节点会读取 KITTI 标定信息，保证检测结果和坐标变换过程一致。第二，它保留了较低的检测置信度门限，让更多候选框交由后续跟踪器与门控机制处理，而不是在检测端过早裁剪。第三，统一消息结构使同一套检测输出既能送入 MCTrack，也能用于离线 feeder、可视化和结果回放。
 
@@ -185,21 +198,30 @@ MCTrack 输出的话题包括可视化用的 \texttt{/mctrack/markers} 和真正
 
 \section{代码设计：离线 / 在线系统}
 \subsection{整体代码组织}
-项目通过 \texttt{Scripts/}、\texttt{catkin\_ws/src/ME5400/scripts/} 和 \texttt{catkin\_ws/src/fast\_lio/} 三层目录组织代码：顶层脚本负责一键启动和实验调度，ME5400 包负责 ROS 侧桥接、跟踪、后端和 recorder，FAST-LIO 包负责定位前端及动态权重逻辑。表~\ref{tab:code_design} 给出当前最关键的入口文件。
+项目通过 \texttt{Scripts/}、\texttt{catkin\_ws/src/ME5400/scripts/} 和 \texttt{catkin\_ws/src/fast\_lio/} 三层目录组织代码：顶层脚本负责一键启动和实验调度，ME5400 包负责 ROS 侧桥接、跟踪、后端和 recorder，FAST-LIO 包负责定位前端及动态权重逻辑。鉴于报告更关注系统结构而非仓库细节，表~\ref{tab:code_design} 对代表性入口脚本及其功能进行概括，而不展开完整目录路径。
 
 \begin{table}[H]
     \centering
-    \caption{在线 / 离线系统的主要代码入口。}
+    \caption{在线 / 离线系统代表性入口脚本及功能概述。}
     \label{tab:code_design}
-    \begin{tabularx}{\textwidth}{p{2.3cm} p{4.2cm} X}
+    \footnotesize
+    \begin{tabularx}{\textwidth}{L{2.4cm} L{5.3cm} Y}
         \toprule
-        模块 & 主要文件 & 作用 \\
+        模块 & 代表入口脚本 & 功能摘要 \\
         \midrule
-        在线基线 & \texttt{Scripts/run\_baseline.sh}；\texttt{Scripts/fastlio/run\_fastlio.sh} & 启动纯 FAST-LIO 基线并输出 \texttt{trajectory\_baseline.txt}。 \\
-        在线优化 & \texttt{Scripts/run\_optimized.sh}；\texttt{run\_pointpillars\_node.sh}；\texttt{run\_mctrack\_online\_node.sh}；\texttt{run\_joint\_backend\_ego.sh} & 启动 PointPillars、MCTrack、动态权重 FAST-LIO 和联合后端，输出 \texttt{trajectory.txt} 与 \texttt{trajectory\_joint.txt}。 \\
-        一键在线对比 & \texttt{Scripts/run\_all.sh} & 先跑基线，再跑优化流程，并把日志归档到 \texttt{Results/<seq>\_results/Online/full\_run.log}。 \\
-        离线双轨实验 & \texttt{Scripts/run\_offline\_all.sh}；\texttt{offline\_bag\_feeder.py} & 通过半同步 feeder 运行离线基线与离线联合系统，输出 Offline 目录中的轨迹与日志。 \\
-        评估与归档 & \texttt{Scripts/evaluation/evaluate\_trajectories.py}；\texttt{odom\_to\_tum\_recorder.py} & 生成 \texttt{metrics.txt}、\texttt{metrics.json}、\texttt{evaluation\_result.png}、\texttt{evaluation\_joint\_backend.png} 和 \texttt{ablation\_bar.png}。 \\
+        在线基线 &
+        \makecell[tl]{\texttt{run\_baseline.sh}\\\texttt{run\_fastlio.sh}} &
+        执行纯 FAST-LIO 在线基线流程，并记录基线轨迹 \texttt{trajectory\_baseline.txt}。 \\
+        在线优化 &
+        \makecell[tl]{\texttt{run\_optimized.sh}\\\texttt{run\_pointpillars\_node.sh}\\\texttt{run\_mctrack\_online\_node.sh}\\\texttt{run\_joint\_backend\_ego.sh}} &
+        调度 PointPillars、MCTrack、动态权重 FAST-LIO 与联合后端，输出优化前端轨迹 \texttt{trajectory.txt} 及后端轨迹 \texttt{trajectory\_joint.txt}。 \\
+        一键在线对比 & \texttt{run\_all.sh} & 顺序执行在线基线与在线优化流程，并将完整运行日志归档到结果目录。 \\
+        离线双轨实验 &
+        \makecell[tl]{\texttt{run\_offline\_all.sh}\\\texttt{offline\_bag\_feeder.py}} &
+        通过半同步 feeder 组织离线基线与离线联合实验，输出 Offline 目录下的轨迹与日志。 \\
+        评估与归档 &
+        \makecell[tl]{\texttt{evaluate\_trajectories.py}\\\texttt{odom\_to\_tum\_recorder.py}} &
+        统一生成定量指标文件与可视化图像，包括 \texttt{metrics.json}、误差对比图和消融统计图。 \\
         \bottomrule
     \end{tabularx}
 \end{table}
