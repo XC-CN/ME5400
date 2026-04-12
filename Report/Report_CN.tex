@@ -104,8 +104,32 @@
 
 从更宽的研究背景看，近期动态场景 SLAM / SLAMMOT 工作普遍在向“定位与跟踪共享信息”演进，但大多数方法仍主要关注动态点过滤、目标状态估计或隐式数据关联，而较少真正把动态物体转化为帮助自车定位的几何参照。本项目当前版本依然是一个工程型、松耦合原型，而不是最终形态的紧耦合因子图系统；但它已经完成了完整的信息闭环、统一脚本管理、可视化验证和多序列结果归档，因此具有明确的课程项目价值，也具备继续向 object-centric 联合优化扩展的现实基础。
 
+\subsection{研究现状分析}
+为把本项目放到当前研究脉络中，本文进一步选取 \texttt{slammot\_comparison.md} 中整理的 5 篇近期代表性工作作为对照：Conf SLAMMOT（\emph{LiDAR SLAMMOT based on Confidence-guided Data Association}）、LIMOT（\emph{A Tightly-Coupled System for LiDAR-Inertial Odometry and Multi-Object Tracking}）、IMM-SLAMMOT（\emph{Visual SLAMMOT Considering Multiple Motion Models}）、Online Dynamic SLAM（\emph{Online Dynamic SLAM with Incremental Smoothing and Mapping}）以及 DL-SLOT（\emph{Tightly-Coupled Dynamic LiDAR SLAM and 3D Object Tracking Based on Collaborative Graph Optimization}）。这些工作覆盖了 LiDAR、LiDAR+IMU 和双目视觉三类传感器路线，也覆盖了滑窗图优化、Bundle Adjustment 和 iSAM2 增量优化等典型实现路径。
+
+\begin{table}[H]
+    \centering
+    \caption{近期动态场景 SLAMMOT 代表工作与本项目定位}
+    \label{tab:slammot_related_work}
+    \small
+    \begin{tabularx}{\textwidth}{p{2.2cm} p{2.8cm} p{2.8cm} X}
+        \toprule
+        工作 & 传感器与前端 & 耦合与优化方式 & 核心特征及对本项目的启发 \\
+        \midrule
+        Conf SLAMMOT & LiDAR；LiDAR 里程计前端 & 紧耦合；置信度引导的数据关联嵌入图优化 & 强调把检测/关联置信度直接写进联合优化过程，可为本项目后续对象因子加权提供思路。 \\
+        LIMOT & LiDAR+IMU；自研 LIO 前端 & 紧耦合；滑动窗口因子图 & 代表了 LiDAR-inertial 与 MOT 统一建模的主流方向，对本项目从 topic 级松耦合走向统一状态优化最具参考价值。 \\
+        IMM-SLAMMOT & 双目视觉；ORB-SLAM2 前端 & 紧耦合；BA 联合优化 + 多运动模型 & 突出复杂动态目标的多模型切换能力，说明仅靠单一恒速假设难以覆盖真实交通场景。 \\
+        Online Dynamic SLAM & 双目视觉；自研 VO 前端 & 紧耦合；iSAM2 增量平滑与建图 & 重点解决在线动态场景下的实时优化问题，说明增量式后端对实时系统可扩展性非常关键。 \\
+        DL-SLOT & LiDAR；LiDAR 里程计前端 & 紧耦合；协同图优化 / 滑窗优化 & 体现了 LiDAR 路线中“检测、跟踪、定位”共享窗口信息的趋势，对本项目联合后端的窗口管理和边缘化策略有直接借鉴意义。 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+从上述工作可以归纳出三点研究现状。第一，\textbf{系统结构正从级联式管线快速转向紧耦合图优化}。这 5 篇论文几乎都不再把 SLAM 和 MOT 当成完全独立的黑盒模块，而是尝试共享位姿、目标状态、关联置信度或运动模型，使前后端能够在同一优化窗口内互相修正。第二，\textbf{动态目标的利用方式仍以“过滤、关联、联合估计”为主}。现有方法虽然已经开始把目标速度、轨迹长度、检测置信度等信息纳入推理，但大多数仍停留在动态点剔除、动态目标状态估计或隐式关联加权层面，还没有真正把动态车辆的刚体几何特性显式转化为 LiDAR-inertial 定位约束。第三，\textbf{实时性与工程落地已成为评价系统价值的重要指标}。无论是 LIMOT、DL-SLOT 的滑窗方案，还是 Online Dynamic SLAM 的 iSAM2 增量式路线，都说明研究系统不能只强调精度，还必须考虑在线运行、窗口管理和可扩展部署。
+
+与这些工作相比，本项目当前版本的定位是“工程闭环已经跑通，但统一优化仍处于原型阶段”。它的优势在于：FAST-LIO 前端成熟稳定，PointPillars 与 MCTrack 已在 ROS 中完成完整接入，动态权重闭环已经在多序列上验证有效；它的不足在于：SLAM 与 MOT 仍主要通过 topic 交互而非共享状态图耦合，联合后端也还停留在 ego-only 形式。换言之，本项目已经具备了继续升级为紧耦合 SLAMMOT 系统的基础设施，而后续最有研究价值的推进方向，正是把 MCTrack 的目标置信度、速度与轨迹稳定性进一步写入统一因子图，并探索利用动态目标刚体约束把“干扰源”转化为“移动路标”。
+
 \section{整体系统框架图、PointPillars / MCTrack 与数据流}
-\subsection{整体系统框架}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.96\textwidth]{Overall architecture of the proposed dynamic-scene trajectory optimization framework.png}
@@ -125,6 +149,20 @@
     \item 跟踪结果反向馈入 FAST-LIO 做动态点降权；
     \item 跟踪结果同时进入联合后端，进一步修正自车轨迹。
 \end{enumerate}
+
+\subsection{FAST-LIO 前端}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{FAST-LIO2 System Architecture.jpg}
+    \caption{FAST-LIO2 前端架构。项目在点云预处理链路中接入来自 MCTrack 的目标信息，实现动态点自适应降权。}
+    \label{fig:fastlio_architecture}
+\end{figure}
+
+FAST-LIO 是整个系统的定位主干，也是第二章数据流中的起点。它直接消费 KITTI rosbag 中的 LiDAR 点云与 IMU 数据，内部采用 LiDAR-inertial 紧耦合估计思路输出稳定的自车位姿。在本项目中，FAST-LIO 不仅负责生成全局一致的 \texttt{/Odometry}，还同步输出 \texttt{/Odometry\_imu\_predicted} 作为高频预测位姿，从而为后续跟踪与后端优化提供统一参考。
+
+从模块职责看，FAST-LIO 在本系统中承担三项任务。第一，它为 MCTrack 提供可靠的 ego pose，使 3D 检测框能够在跨帧关联时先完成自车运动补偿。第二，它为联合后端提供原始里程计约束，保证后端优化不会偏离前端估计过远。第三，它通过 \texttt{preprocess.cpp} 接收 \texttt{/mctrack/tracked\_objects}，把目标速度、加速度、分数和包围盒信息转化为点级权重，实现“跟踪反哺定位”的前端闭环。
+
+为了把 FAST-LIO 输出送入跟踪模块，项目额外实现了 \texttt{fastlio\_pose\_bridge.py}。该桥接节点将 \texttt{/Odometry} 转换成 MCTrack 可直接消费的 \texttt{/mctrack/lidar\_pose}，从而把原本偏定位侧的里程计消息，转化为检测与跟踪链路中的统一位姿输入。因此，第二章中的 FAST-LIO 不应只被理解为一个独立里程计前端，而应被看作整个闭环系统的时空参考中心；第四章讨论的动态权重优化，本质上正是建立在这一前端之上的增强机制。
 
 \subsection{PointPillars 检测模块}
 PointPillars 通过 \texttt{MMDET3D/local/ros/nodes/kitti\_pointpillars\_bag\_node.py} 封装为 ROS 节点，能够直接消费 rosbag 中的 KITTI 点云。它的职责并不是单纯输出原始检测框，而是为整个系统提供统一、可追踪、带时间戳的 3D 检测消息。项目在 \texttt{catkin\_ws/src/ME5400/msg/Detection3D.msg} 和 \texttt{Detection3DArray.msg} 中定义了统一消息格式，包含帧号、类别、置信度、2D 框、3D 尺寸、LiDAR 坐标系位置和航向角等字段。这样一来，PointPillars 与 MCTrack 之间不需要依赖第三方框架的私有格式，而是通过项目统一定义的消息接口连接。
@@ -181,13 +219,6 @@ MCTrack 输出的话题包括可视化用的 \texttt{/mctrack/markers} 和真正
 
 \section{动态权重优化}
 \subsection{设计动机与代码位置}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.82\textwidth]{FAST-LIO2 System Architecture.jpg}
-    \caption{FAST-LIO2 系统总览。项目在点云预处理和后续残差更新链路中引入了动态目标自适应降权。}
-    \label{fig:fastlio_architecture}
-\end{figure}
-
 动态权重优化的核心思想是：不再把目标框内的点云简单二值删除，而是根据目标的运动状态和可信度连续降低这些点的贡献。这样既能减少动态目标对定位的污染，又不会像硬剔除那样一次性损失所有局部几何信息。当前实现主要位于 \texttt{catkin\_ws/src/fast\_lio/src/preprocess.cpp}，FAST-LIO 在接收到 \texttt{/mctrack/tracked\_objects} 后，会将每个目标转成内部的 \texttt{DynamicObject}，其中包含目标中心、包围盒半尺寸、局部航向角、时间戳和权重。
 
 与历史版本相比，当前代码中动态权重的默认参数已经明确固定为：
