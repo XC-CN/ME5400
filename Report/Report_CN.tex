@@ -186,8 +186,30 @@
 \author{ME5400 Project}
 \date{\today}
 
+\makeatletter
+\newcommand{\makecoverpage}{
+\begin{titlepage}
+    \centering
+    \vspace*{2.0cm}
+    \includegraphics[width=0.58\textwidth]{nus_logo_cover.jpg}\par
+
+    \vspace{2.6cm}
+    {\heiti\bfseries\fontsize{22}{30}\selectfont
+    \parbox{0.9\textwidth}{\centering \@title}\par}
+
+    \vfill
+    {\Large \@author \par}
+    \vspace{0.8cm}
+    {\large \@date \par}
+\end{titlepage}
+}
+\makeatother
+
 \begin{document}
-\maketitle
+\hypersetup{pageanchor=false}
+\makecoverpage
+\hypersetup{pageanchor=true}
+\setcounter{page}{1}
 
 \begin{abstract}
 本报告围绕 ME5400 课程项目，按照“引言背景、系统框架、代码设计、动态权重优化、联合后端优化、实验分析、结论与未来计划”的结构，对当前仓库中的完整系统实现进行系统整理。项目以 FAST-LIO 作为激光惯导定位前端，以 PointPillars 提供 3D 检测，以 MCTrack 提供多目标跟踪与速度估计，并将跟踪结果反向反馈给 FAST-LIO 进行动态点自适应降权，再进一步送入 ego-only 联合后端修正自车轨迹。报告正文既保留原有的系统背景和工程实现细节，也统一纳入当前 \texttt{Results/} 目录中的在线实验结果：覆盖 7 个序列（0003、0006、0007、0009、0010、0013、0020），并在附录中插入全部在线结果图。结果表明，当前最稳定的收益来自“FAST-LIO 位姿辅助 MCTrack + MCTrack 反哺动态权重”这一前端闭环：在线模式下 \texttt{FAST-LIO+MCTrack} 在 7/7 个序列上均优于基线，ATE RMSE 平均改善 18.00\%；而当前 ego-only 联合后端虽可在部分序列上继续抑制全局漂移，但稳定性仍弱于前端闭环本身。该系统已经形成了一条可运行、可重放、可视化、可量化评估的工程验证链路，也为后续 object-centric LiDAR-inertial 联合优化提供了可直接扩展的基础。
@@ -633,6 +655,18 @@ X. Tian, Z. Zhu, J. Zhao, G. Tian, and C. Ye, ``DL-SLOT: Tightly-Coupled Dynamic
 \end{thebibliography}
 
 \clearpage
+\section*{致谢}
+在完成这份 ME5400 课程项目报告之际，我想向所有在本项目过程中给予我帮助和支持的人表达诚挚的感谢。这份报告不仅是对本次课程项目工作的总结，也是我在学习、研究与工程实践过程中的一份阶段性记录。
+
+首先，我衷心感谢新加坡国立大学设计与工程学院在硕士阶段为我授课和提供指导的各位老师。过去一年的学习中，我从他们的教学、指导与学术支持中获益良多，也因此对研究工作和工程实践有了更深入的理解。
+
+我尤其感谢导师 Professor Marcelo H. Ang Jr. 在本项目期间给予的宝贵指导与支持。同时，我也诚挚感谢 Professor Teo Chee Leong 对本工作的审阅与评价。感谢 Han Yuhang 在研究过程中提供的帮助，也感谢课题组的每一位成员在讨论、合作与交流中给予我的陪伴和鼓励。
+
+最后，我想向我的家人和朋友致以最深的敬意和感谢。是他们的信任、关心与支持，始终在困难和不确定的时候给予我力量。
+
+未来无论是在工作还是生活中，我都会带着这份善意与支持继续前行，并以真诚、感恩和希望面对接下来的道路。
+
+\clearpage
 \appendix
 \section{在线实验全量图片}
 本节按序列插入全部在线结果图，每个序列均包含在线前端对比图、联合后端评估图和柱状对比图。
@@ -644,7 +678,6 @@ X. Tian, Z. Zhu, J. Zhao, G. Tian, and C. Ye, ``DL-SLOT: Tightly-Coupled Dynamic
 \onlineResultFigure{0010}
 \onlineResultFigure{0013}
 \onlineResultFigure{0020}
-
 
 
 \end{document}
