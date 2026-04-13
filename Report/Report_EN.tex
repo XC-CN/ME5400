@@ -33,8 +33,10 @@
 \setlength{\emergencystretch}{2em}
 \renewcommand{\arraystretch}{1.15}
 \renewcommand{\UrlFont}{\ttfamily\small}
+\Urlmuskip=0mu plus 1mu\relax
 \graphicspath{{Figures/}}
 \setmainfont{Times New Roman}
+\newcommand{\code}[1]{\nolinkurl{#1}}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 
@@ -81,80 +83,83 @@
     \node[seq participant] (jb) at (11.5,0) {joint\\backend\\ego};
     \node[seq participant] (out) at (13.8,0) {RViz /\\Recorder};
 
-    \foreach \p in {bag,fl,br,pp,mc,jb,out} {
-        \draw[seq lifeline] (\p.south) -- ++(0,-15.8);
+    \coordinate (seqtop) at (0,-0.95);
+    \foreach \p/\name in {bag/bagline,fl/flline,br/brline,pp/ppline,mc/mcline,jb/jbline,out/outline} {
+        \path (\p.center |- seqtop) coordinate (\name);
+        \draw[seq lifeline] (\name) -- ++(0,-17.0);
     }
 
     \draw[seq call]
-        ($(bag.south)+(0,-0.9)$) --
+        (bagline) --
         node[above,font=\scriptsize] {Publish IMU + raw LiDAR(t)}
-        ($(fl.south)+(0,-0.9)$);
+        (flline);
 
-    \node[seq note, anchor=west] at (2.85,-1.55) {preprocess() first freezes the previous\\\texttt{tracked\_objects} snapshot and\\down-weights points inside dynamic boxes.};
+    \node[seq note, anchor=north west] at (2.85,-1.18) {preprocess() first freezes the previous\\\texttt{tracked\_objects} snapshot and\\down-weights points inside dynamic boxes.};
 
     \draw[seq call]
-        ($(fl.south)+(0,-2.6)$) to[out=15,in=345,looseness=7]
-        node[right,font=\scriptsize,align=left] {IMU propagation, scan deskewing,\\map matching, and EKF update}
-        ($(fl.south)+(0,-3.2)$);
+        ($(flline)+(0,-2.2)$)
+        .. controls ($(flline)+(-1.1,-2.2)$) and ($(flline)+(-1.1,-2.85)$)
+        .. ($(flline)+(0,-2.85)$);
+    \node[font=\scriptsize,align=left,anchor=west] at (4.85,-3.58) {IMU propagation, scan deskewing,\\map matching, and EKF update};
 
-    \node[seq note, anchor=west] at (2.85,-4.0) {Also publishes \texttt{/Odometry\_imu\_predicted}\\as the predicted pose interface before\\the LiDAR update.};
+    \node[seq note, anchor=north west] at (2.85,-4.48) {Also publishes \texttt{/Odometry\_imu\_predicted}\\as the predicted pose interface before\\the LiDAR update.};
 
     \draw[seq reply]
-        ($(fl.south)+(0,-4.85)$) --
+        ($(flline)+(0,-6.3)$) --
         node[above,font=\scriptsize] {\texttt{/Odometry}(t)}
-        ($(br.south)+(0,-4.85)$);
+        ($(brline)+(0,-6.3)$);
 
     \draw[seq reply]
-        ($(br.south)+(0,-5.7)$) --
+        ($(brline)+(0,-7.15)$) --
         node[above,font=\scriptsize] {\texttt{/mctrack/lidar\_pose}(t)}
-        ($(mc.south)+(0,-5.7)$);
+        ($(mcline)+(0,-7.15)$);
 
     \draw[seq call]
-        ($(bag.south)+(0,-6.6)$) --
+        ($(bagline)+(0,-8.0)$) --
         node[above,font=\scriptsize] {Synchronously publish LiDAR(t)}
-        ($(pp.south)+(0,-6.6)$);
+        ($(ppline)+(0,-8.0)$);
 
     \draw[seq reply]
-        ($(pp.south)+(0,-7.45)$) --
+        ($(ppline)+(0,-8.85)$) --
         node[above,font=\scriptsize] {\texttt{/detection/lidar\_detections}(t)}
-        ($(mc.south)+(0,-7.45)$);
+        ($(mcline)+(0,-8.85)$);
 
     \draw[seq call]
-        ($(mc.south)+(0,-8.35)$) to[out=15,in=345,looseness=7]
-        node[right,font=\scriptsize,align=left] {Query \texttt{pose\_buffer} by detection\\timestamp; interpolate or briefly\\wait if necessary}
-        ($(mc.south)+(0,-8.95)$);
+        ($(mcline)+(0,-9.8)$) to[out=15,in=345,looseness=7]
+        ($(mcline)+(0,-10.4)$);
+    \node[font=\scriptsize,align=left,anchor=west] at (10.55,-10.07) {Query \texttt{pose\_buffer} by detection\\timestamp; interpolate or briefly\\wait if necessary};
 
     \draw[seq call]
-        ($(mc.south)+(0,-9.75)$) to[out=15,in=345,looseness=7]
-        node[right,font=\scriptsize,align=left] {Update tracker and output object\\states in the world / LiDAR frames}
-        ($(mc.south)+(0,-10.35)$);
+        ($(mcline)+(0,-11.3)$) to[out=15,in=345,looseness=7]
+        ($(mcline)+(0,-11.9)$);
+    \node[font=\scriptsize,align=left,anchor=west] at (10.55,-11.57) {Update tracker and output object\\states in the world / LiDAR frames};
 
     \draw[seq reply]
-        ($(mc.south)+(0,-11.15)$) --
+        ($(mcline)+(0,-12.75)$) --
         node[above,font=\scriptsize] {\texttt{/mctrack/tracked\_objects}(t)}
-        ($(fl.south)+(0,-11.15)$);
+        ($(flline)+(0,-12.75)$);
 
     \draw[seq reply]
-        ($(mc.south)+(0,-12.0)$) --
+        ($(mcline)+(0,-13.6)$) --
         node[above,font=\scriptsize] {\texttt{/mctrack/tracked\_objects}(t)}
-        ($(jb.south)+(0,-12.0)$);
+        ($(jbline)+(0,-13.6)$);
 
     \draw[seq reply]
-        ($(fl.south)+(0,-12.85)$) --
+        ($(flline)+(0,-14.45)$) --
         node[above,font=\scriptsize] {\texttt{/Odometry}(t)}
-        ($(jb.south)+(0,-12.85)$);
+        ($(jbline)+(0,-14.45)$);
 
     \draw[seq call]
-        ($(jb.south)+(0,-13.7)$) to[out=15,in=345,looseness=7]
-        node[right,font=\scriptsize,align=left] {Sliding-window optimization of\\the current ego pose}
-        ($(jb.south)+(0,-14.3)$);
+        ($(jbline)+(0,-15.4)$) to[out=15,in=345,looseness=7]
+        ($(jbline)+(0,-16.0)$);
+    \node[font=\scriptsize,align=left,anchor=west] at (12.75,-15.7) {Sliding-window optimization of\\the current ego pose};
 
     \draw[seq reply]
-        ($(jb.south)+(0,-15.1)$) --
+        ($(jbline)+(0,-16.85)$) --
         node[above,font=\scriptsize] {\texttt{/joint\_backend/odom}(t)}
-        ($(out.south)+(0,-15.1)$);
+        ($(outline)+(0,-16.85)$);
 
-    \node[seq note wide, anchor=west] at (4.1,-15.95) {\texttt{tracked\_objects}(t) does not retroactively modify the current scan $t$;\\instead, it becomes input to the FAST-LIO dynamic down-weighting chain for the next frame.};
+    \node[seq note wide, anchor=north west] at (4.1,-17.23) {\texttt{tracked\_objects}(t) does not retroactively modify the current scan $t$;\\instead, it becomes input to the FAST-LIO dynamic down-weighting chain for the next frame.};
 \end{tikzpicture}
 }
 
@@ -216,44 +221,90 @@
 \setcounter{page}{1}
 
 \begin{abstract}
-This report provides a systematic account of the ME5400 course project, organized into introduction and background, system architecture, code design, dynamic-weight optimization, joint backend optimization, experimental analysis, and conclusions with future work. The project uses FAST-LIO as the LiDAR-inertial localization front-end, PointPillars for 3D object detection, and MCTrack for multi-object tracking and velocity estimation. The tracking results are fed back to FAST-LIO for adaptive down-weighting of dynamic points and are then passed to an ego-only joint backend to refine the ego trajectory. In addition to retaining the original system background and implementation details, the report consolidates the current online experimental results under \texttt{Results/}, covering seven sequences (0003, 0006, 0007, 0009, 0010, 0013, and 0020), with all online result figures included in the appendix. The results show that the most stable gain comes from the front-end closed loop formed by ``FAST-LIO pose aiding MCTrack + MCTrack feeding back dynamic weights'': in online mode, \texttt{FAST-LIO+MCTrack} outperforms the baseline on all seven sequences, with an average ATE RMSE improvement of 18.00\%. Although the current ego-only joint backend can further suppress global drift on some sequences, its stability remains weaker than that of the front-end loop itself. Overall, the system has formed a runnable, replayable, visualizable, and quantitatively evaluable engineering validation pipeline, while also providing a directly extensible basis for future object-centric LiDAR-inertial joint optimization.
+This report presents a code-grounded account of the ME5400 course project on dynamic-scene LiDAR SLAM with multiple-object tracking. The system combines FAST-LIO for LiDAR-inertial ego-motion estimation, PointPillars for 3D object detection, and MCTrack for online trajectory association and motion-state estimation. The central idea is to form a bidirectional loop instead of a one-way cascade: FAST-LIO poses stabilize MCTrack association, while tracked-object states are converted into soft dynamic weights in FAST-LIO and into object-consistency factors in an ego-only sliding-window backend.
+
+All quantitative discussion is based on archived online results under \texttt{Results/} for seven KITTI Tracking sequences: 0003, 0006, 0007, 0009, 0010, 0013, and 0020. The report emphasizes both algorithmic intent and engineering realization, including ROS interfaces, time synchronization, pose buffering, standardized result archiving, and failure-mode analysis. Across the seven sequences, the front-end configuration \texttt{FAST-LIO+MCTrack} consistently outperforms the pure FAST-LIO baseline in ATE RMSE, showing that the most reliable gain comes from the front-end closed loop of pose-assisted tracking and tracking-informed dynamic-point down-weighting. The joint backend can help on some drift-dominated sequences, but it is less stable and can fail when velocity extrapolation, timestamp alignment, or object gating are unreliable; Sequence 0009 is the clearest example. The overall conclusion is intentionally modest: this project is not a state-of-the-art joint SLAMMOT system, but a reproducible engineering prototype that validates the feasibility of a localization-tracking feedback loop and clarifies the transition toward future object-centric joint optimization.
 \end{abstract}
 
-\noindent\textbf{Keywords:} FAST-LIO; PointPillars; MCTrack; dynamic-scene SLAM; multi-object tracking; joint optimization; ROS
+\noindent\textbf{Keywords:} FAST-LIO; PointPillars; MCTrack; dynamic-scene SLAM; multi-object tracking; object-centric perception; ROS reproducibility
 
 \section{Introduction and Background}
-Localization and perception in dynamic road scenes involve a fundamentally conflicting set of requirements. For LiDAR SLAM or LiDAR-inertial odometry, the system prefers most environmental geometry to be static, repeatedly observable, and reusable over time. For autonomous driving or mobile robotics perception, however, vehicles, pedestrians, and cyclists on the road are precisely the most important dynamic targets. These targets create time-varying geometric structures in the point cloud. If they are directly treated as static points and written into the map and registration residuals, the system suffers from ghosting, local mismatches, and accumulated drift. If they are removed indiscriminately, potentially useful geometric information is discarded as well, leading to insufficient constraints in scenes with sparse static structure, drastic viewpoint change, or high-speed motion.
+Localization and perception in dynamic road scenes impose a contradiction that is easy to state but difficult to resolve in a full system. LiDAR SLAM and LiDAR-inertial odometry are most reliable when the majority of observed geometry is static, repeatedly visible, and reusable over time. Their front-end scan matching, local-map maintenance, and backend consistency all depend on the idea that a point observed now corresponds to a surface that is still geometrically meaningful in later frames. By contrast, autonomous driving perception cares most about the exact objects that violate this assumption: surrounding vehicles, pedestrians, cyclists, and other traffic participants. In other words, the regions that are semantically most important for decision making are often the regions that are geometrically most dangerous for classical SLAM. This conflict has motivated a long line of work on dynamic-scene SLAM, from early visual systems that detect and filter moving regions to more recent SLAMMOT pipelines that jointly reason about ego motion and object trajectories~\cite{staticfusion,ds-slam,dynaslam,limot,dl-slot}.
 
-Multi-object tracking (MOT) faces the opposite but equally difficult problem. Cross-frame association of 3D bounding boxes depends heavily on stable ego-motion compensation. If the tracker cannot obtain sufficiently accurate and high-frequency ego poses, the geometric relationships between detections are corrupted by ego motion, leading to broken trajectories, unstable velocity estimates, and ID switches. As a result, localization and tracking are not merely cascaded modules; they are naturally bidirectionally dependent. The more accurate the localization, the more stable the tracking. The more stable the tracking, the better the system can identify which points come from moving targets, thereby feeding back into mapping and localization.
+The negative effect of dynamic objects on LiDAR SLAM is not limited to the simple statement that ``moving points are outliers.'' There are at least three coupled degradation channels. First, \textbf{map contamination} occurs when points from moving vehicles are inserted into a local or global map as if they were static surfaces. Once that happens, the system can accumulate ghost structures, duplicate facades, or smeared object trails that later scans mistakenly register against. Second, \textbf{registration degradation} arises even before those points are permanently fused into the map. If a large fraction of point-to-plane residuals is generated by moving objects, the local optimizer is forced to fit inconsistent geometry, which can bias the estimated pose in the current frame. Third, \textbf{drift accumulation} amplifies both problems over time: a slightly biased frame-to-frame correction distorts the local map, which then worsens later corrections, eventually producing a persistent trajectory offset. Dynamic scenes therefore do not merely add random noise; they alter the structure of the optimization problem itself.
 
-This project follows exactly this idea. Rather than mechanically concatenating FAST-LIO, PointPillars, and MCTrack, it builds a collaborative closed-loop pipeline around the principle that localization should assist tracking and tracking should in turn improve localization. The original KITTI Tracking rosbag provides LiDAR and IMU data. PointPillars outputs 3D detections. FAST-LIO produces optimized poses and IMU-predicted poses. MCTrack combines poses and detections to perform online tracking. The tracking outputs are then fed back to FAST-LIO for dynamic-point down-weighting and are also sent to a joint backend to refine the ego trajectory. In this way, dynamic targets are no longer treated only as noise to be filtered out; they begin to participate in front-end weight modulation and backend optimization.
+Existing dynamic-scene SLAM systems typically respond in one of three ways. A first group tries to reject dynamic points entirely through semantic segmentation, motion consistency tests, or robust loss functions. This strategy is often effective when dynamic objects occupy a modest portion of the field of view, but it can discard too much useful geometry in traffic scenes where large vehicles dominate the scan. A second group tries to separate static and dynamic layers more explicitly, such as weighted background fusion in dense RGB-D pipelines or semantic foreground filtering in visual SLAM~\cite{staticfusion,ds-slam,dynaslam}. A third and newer group treats object states as first-class variables and seeks some degree of joint optimization between ego motion and tracked targets~\cite{confslammot,limot,imm-slammot,online-dynamic-slam,dl-slot}. The practical question for this project is where a semester-scale engineering system should enter this design space.
 
-In a broader research context, recent work on dynamic-scene SLAM / SLAMMOT has generally moved toward sharing information between localization and tracking. However, most methods still focus on dynamic-point filtering, object-state estimation, or implicit data association, and only a few truly convert dynamic objects into geometric references that help ego localization. The current version of this project is still an engineering-oriented, loosely coupled prototype rather than a final tightly coupled factor-graph system. Even so, it has already completed a full information loop, unified script-based management, visual verification, and multi-sequence result archiving. It therefore has clear value as a course project and also provides a practical basis for further extension toward object-centric joint optimization.
+Multi-object tracking (MOT) faces an opposite but equally important dependency. A tracker is often described as operating on detections, but 3D detections alone are not enough to provide stable motion estimates across frames. When the ego platform itself moves, every detection must be interpreted through ego-motion compensation; otherwise, an object that is stationary in the world can appear to move, and an object that moves smoothly can appear to jump. This affects not only association but also derived quantities such as fused velocity, acceleration, and track confidence. If the pose stream is noisy, a tracker's world-frame motion estimate becomes noisy as well. In turn, if the tracker cannot maintain coherent IDs and velocity estimates, it cannot provide reliable feedback to the localization stack. The relationship is therefore fundamentally bidirectional: better localization improves tracking, and better tracking can improve localization by identifying which points should be trusted less or by supplying additional object-level constraints.
+
+This project is built around that bidirectional intuition. The system uses FAST-LIO~\cite{fastlio2} as the LiDAR-inertial localization backbone, PointPillars~\cite{pointpillars} as the 3D detector, and MCTrack as the online tracker that produces track IDs, fused velocities, accelerations, and trajectory lengths. FAST-LIO publishes both optimized odometry and IMU-predicted motion. A bridge node converts these outputs into the pose format required by MCTrack. PointPillars publishes time-stamped 3D detections in a project-defined ROS message. MCTrack consumes detections and poses, performs motion-compensated association, and publishes tracked objects. Those tracked objects are then used in two ways. First, they are transformed into soft dynamic weights that reduce the influence of points inside dynamic bounding boxes in the next FAST-LIO scan. Second, they are fed into an ego-only joint backend that tests whether stable object observations can provide additional sliding-window constraints on the ego trajectory. This design does not yet constitute a unified factor graph, but it already forms a complete information loop.
+
+Two design choices deserve brief justification. The first is the use of \textbf{soft down-weighting} rather than hard deletion of points inside tracked dynamic boxes, because hard removal is brittle under false positives, box jitter, occlusion, and temporary stops. The second is the choice to start from a \textbf{loosely coupled engineering loop} rather than a tightly coupled object-centric graph. A full joint graph would be theoretically cleaner, but it would also require substantially more factor design, confidence modeling, marginalization, and debugging effort than a course schedule can support.
+
+The project accordingly pursues four linked objectives. The \textbf{research objective} is to test whether localization and tracking can form a meaningful feedback loop in dynamic driving scenes without first building a full unified optimizer. The \textbf{engineering objective} is to construct a runnable ROS pipeline whose components, message contracts, startup order, result logging, and evaluation scripts are all explicit and reproducible. The \textbf{evaluation objective} is to determine which part of the loop delivers the most stable gain: the front-end weighting loop, the backend correction stage, or both. The \textbf{diagnostic objective} is to identify the specific failure modes that prevent the current system from behaving like a robust joint SLAMMOT solution.
+
+In more concrete terms, the contributions of the current report and implementation can be summarized as follows.
+\begin{itemize}[leftmargin=2em]
+    \item A complete ROS-based integration of FAST-LIO, PointPillars, MCTrack, and an ego-only backend, with project-defined detection and tracked-object messages rather than ad hoc private interfaces.
+    \item A front-end closed loop in which FAST-LIO poses stabilize MCTrack, while MCTrack outputs are converted into point-level soft weights inside FAST-LIO preprocessing.
+    \item A reproducible experiment framework with one-click baseline versus optimized runs, standardized archiving under \texttt{Results/}, TUM-format trajectory recording, and unified quantitative evaluation.
+    \item A failure-aware analysis showing that the front-end loop is the most stable source of improvement, whereas the current backend remains fragile under velocity extrapolation and timing uncertainty.
+\end{itemize}
+
+The choice of KITTI Tracking as the main validation dataset is deliberate. KITTI provides synchronized LiDAR, IMU, calibration, and ground-truth vehicle motion for real urban driving scenarios~\cite{kitti}, while the Tracking split contains the dynamic vehicles, trajectory variation, and background changes needed to test a localization-tracking loop. The seven online sequences used here, namely 0003, 0006, 0007, 0009, 0010, 0013, and 0020, were selected because they cover different drift levels, dynamic intensity, and relative-trajectory spans, and because the repository already contains complete archived online runs for them under \texttt{Results/}. This report therefore does not claim a full-dataset benchmark; it analyzes the implemented system on sequences whose logs, plots, and trajectory files can be directly reproduced and inspected.
+
+This positioning leads to an important scope statement. \textbf{This report is not written as a claim of state-of-the-art performance.} It documents an engineering prototype that validates the feasibility of a bidirectional localization-tracking loop, demonstrates a full experiment pipeline, and makes its failure cases visible rather than hiding them. That scope is appropriate for a course project because integration quality, repeatability, and diagnosis are themselves valuable outcomes. A system that runs end to end, can be replayed on multiple sequences, and exposes exactly where and why it fails provides a stronger foundation for future research than a superficially tighter formulation that was never debugged into a dependable pipeline.
 
 \section{Related Work Analysis}
-To position this project within the current research landscape, this report further selects five recent representative works summarized in \texttt{slammot\_comparison.md}: Conf SLAMMOT (\emph{LiDAR SLAMMOT based on Confidence-guided Data Association}), LIMOT (\emph{A Tightly-Coupled System for LiDAR-Inertial Odometry and Multi-Object Tracking}), IMM-SLAMMOT (\emph{Visual SLAMMOT Considering Multiple Motion Models}), Online Dynamic SLAM (\emph{Online Dynamic SLAM with Incremental Smoothing and Mapping}), and DL-SLOT (\emph{Tightly-Coupled Dynamic LiDAR SLAM and 3D Object Tracking Based on Collaborative Graph Optimization})~\cite{confslammot,limot,imm-slammot,online-dynamic-slam,dl-slot}. These works cover LiDAR-only, LiDAR+IMU, and stereo-vision sensing pipelines, as well as typical implementation routes such as sliding-window graph optimization, bundle adjustment, and iSAM2-based incremental optimization.
+To position the current project more carefully, related work must be discussed along two lines. The first is \textbf{dynamic-scene SLAM}, which focuses on detecting, filtering, or jointly modeling moving regions so that localization and mapping remain stable. The second is \textbf{3D MOT for autonomous driving}, which focuses on maintaining accurate object trajectories and motion states under ego motion. The present project lies between these traditions: it is not purely a dynamic-object filtering system, but neither is it yet a full object-centric joint optimizer. A useful comparison therefore needs to consider sensor configuration, front-end form, degree of coupling, dynamic-object handling strategy, real-time intention, and engineering complexity.
 
 \begin{table}[H]
     \centering
-    \caption{Representative recent SLAMMOT systems in dynamic scenes and the positioning of this project}
+    \caption{Representative dynamic-scene SLAM and 3D MOT works relative to this project}
     \label{tab:slammot_related_work}
-    \small
-    \begin{tabularx}{\textwidth}{p{2.2cm} p{2.8cm} p{2.8cm} X}
+    \footnotesize
+    \setlength{\tabcolsep}{5pt}
+    \begin{tabularx}{\textwidth}{p{1.9cm} p{2.5cm} p{2.2cm} p{2.5cm} X}
         \toprule
-        Work & Sensors and front-end & Coupling / optimization & Key characteristics and implications for this project \\
+        Work & Sensors / front-end & Coupling & Dynamic handling / real-time stance & Relevance to this project \\
         \midrule
-        Conf SLAMMOT & LiDAR; LiDAR odometry front-end & Tightly coupled; confidence-guided data association embedded in graph optimization & Emphasizes directly incorporating detection / association confidence into joint optimization, which is instructive for future weighting of object factors in this project. \\
-        LIMOT & LiDAR+IMU; custom LIO front-end & Tightly coupled; sliding-window factor graph & Represents the mainstream direction of unified modeling for LiDAR-inertial odometry and MOT, and is especially relevant for moving this project from topic-level loose coupling toward unified state optimization. \\
-        IMM-SLAMMOT & Stereo vision; ORB-SLAM2 front-end & Tightly coupled; joint BA + multiple motion models & Highlights the importance of model switching for complex dynamic targets, showing that a single constant-velocity assumption is insufficient for real traffic scenes. \\
-        Online Dynamic SLAM & Stereo vision; custom VO front-end & Tightly coupled; iSAM2 incremental smoothing and mapping & Focuses on real-time optimization in online dynamic scenes, indicating that incremental backends are critical for scalable real-time systems. \\
-        DL-SLOT & LiDAR; LiDAR odometry front-end & Tightly coupled; collaborative graph optimization / sliding-window optimization & Reflects the trend of sharing window-level information among detection, tracking, and localization in LiDAR pipelines, offering direct insights for window management and marginalization in this project. \\
+        StaticFusion & RGB-D; dense direct SLAM & Joint camera-motion and segmentation estimation & Weighted background fusion; real-time dense mapping~\cite{staticfusion} & Shows the value of soft weighting and background preservation rather than only hard rejection. \\
+        DS-SLAM & Visual; ORB-SLAM2 + semantic thread & Loosely coupled multi-thread design & Semantic filtering plus motion consistency; real-time oriented~\cite{ds-slam} & Demonstrates that a modular, multi-thread engineering structure can still improve robustness in dynamic scenes. \\
+        DynaSLAM & Visual; ORB-SLAM2 family & Filtering-oriented with static-map recovery & Dynamic detection plus background inpainting; slower but accurate~\cite{dynaslam} & Clarifies the strengths and limits of treating dynamics mainly as regions to remove. \\
+        Conf SLAMMOT & LiDAR; LiDAR odometry & Tight graph coupling & Confidence-guided association inside optimization~\cite{confslammot} & Motivates future confidence-aware object-factor weighting. \\
+        LIMOT & LiDAR+IMU; custom LIO & Tight sliding-window factor graph & Joint LiDAR-inertial odometry and MOT in real time~\cite{limot} & Closest high-level target architecture for upgrading this project beyond topic-level coupling. \\
+        IMM-SLAMMOT & Stereo vision; ORB-SLAM2 & Tight BA with multiple motion models & Explicit motion-model switching for targets~\cite{imm-slammot} & Highlights that one constant-velocity model is often insufficient in traffic scenes. \\
+        Online Dynamic SLAM & Stereo vision; custom VO & Tight incremental smoothing & iSAM2-based online dynamic optimization~\cite{online-dynamic-slam} & Indicates why incremental backends matter for scalability and stability. \\
+        DL-SLOT & LiDAR; LiDAR odometry & Tight collaborative graph optimization & Sliding-window collaboration among localization and tracking~\cite{dl-slot} & Relevant reference for LiDAR-side window management and object factor integration. \\
+        AB3DMOT & LiDAR detections; simple KF tracker & No SLAM coupling & 3D Kalman filter plus Hungarian matching at high speed~\cite{ab3dmot} & Represents the lightweight tracking philosophy behind many practical MOT pipelines. \\
+        CenterPoint & LiDAR; center-based detector/tracker & Detection-tracking integration, not SLAM coupling & Uses center velocity for simple but strong tracking~\cite{centerpoint} & Important MOT baseline for discussing detector-tracker design choices against MCTrack. \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Three observations can be drawn from these works. First, \textbf{system architectures are rapidly evolving from cascaded pipelines toward tightly coupled graph optimization}. These five papers almost never treat SLAM and MOT as fully independent black-box modules. Instead, they share poses, object states, association confidence, or motion models so that front-end and backend components can refine one another within the same optimization window. Second, \textbf{the use of dynamic targets still mainly centers on filtering, association, and joint estimation}. Existing methods have started to incorporate target velocity, trajectory length, and detection confidence, but most still operate at the level of dynamic-point removal, dynamic-state estimation, or implicit association weighting. They have not yet fully converted the rigid-body geometry of dynamic vehicles into explicit LiDAR-inertial localization constraints. Third, \textbf{real-time capability and engineering deployability have become important criteria for evaluating system value}. Whether through the sliding-window schemes in LIMOT and DL-SLOT or the iSAM2-based incremental pipeline in Online Dynamic SLAM, the message is consistent: research systems cannot focus on accuracy alone, but must also account for online execution, window management, and scalable deployment.
+\subsection{From Dynamic-Point Rejection to Dynamic-Aware Estimation}
+StaticFusion, DS-SLAM, and DynaSLAM together define the early evolution of dynamic-scene SLAM~\cite{staticfusion,ds-slam,dynaslam}. Although they use RGB-D or visual front ends rather than LiDAR-inertial estimation, they establish three ideas that remain relevant here: dynamic regions should be detected explicitly, background structure should be preserved conservatively rather than discarded blindly, and a modular system can still improve robustness without collapsing everything into one monolithic optimizer. Their shared limitation, relative to the present project, is that dynamic objects are treated mainly as regions to suppress or recover around, not as tracked entities whose motion attributes might later help localization. The current system differs by keeping that object-level information alive after filtering.
 
-Compared with these works, the current project can be positioned as follows: the engineering closed loop is already operational, but unified optimization is still at the prototype stage. Its strengths are clear. The FAST-LIO front-end is mature and stable. PointPillars and MCTrack have already been fully integrated into ROS. The dynamic-weight closed loop has been verified on multiple sequences. Its limitations are equally clear. SLAM and MOT still interact mainly through topics rather than a shared state graph, and the joint backend is still ego-only. In other words, the project already has the infrastructure needed to evolve into a tightly coupled SLAMMOT system. The most valuable next step is to write MCTrack confidence, velocity, and trajectory stability more directly into a unified factor graph and to explore how rigid-body constraints from dynamic targets can convert a ``source of disturbance'' into a ``moving landmark.''
+\subsection{Recent SLAMMOT Systems and the Move Toward Joint Optimization}
+Conf SLAMMOT, LIMOT, IMM-SLAMMOT, Online Dynamic SLAM, and DL-SLOT collectively show the current direction of the field~\cite{confslammot,limot,imm-slammot,online-dynamic-slam,dl-slot}. These works no longer treat SLAM and MOT as isolated black boxes. Instead, they share state, association confidence, motion priors, or optimization windows. The most important common trend is the shift from a pipeline that says ``localize first, track later'' toward a joint system in which object states, confidence, and ego motion refine one another inside the same estimation procedure.
+
+Conf SLAMMOT is particularly relevant because it emphasizes confidence-guided association inside the optimization process~\cite{confslammot}. This matters for the current project because the present backend still uses a comparatively simple object weight based mainly on detection score and track length. The underlying message from Conf SLAMMOT is that confidence should not merely be a threshold for keeping or dropping an object. It should influence the strength of the corresponding factor. That is exactly the direction in which the current backend would need to evolve if it were to become more robust on unstable sequences.
+
+LIMOT is probably the closest reference to the intended long-term target of this project~\cite{limot}. It integrates LiDAR-inertial odometry and multi-object tracking within a tightly coupled sliding-window framework, making it a direct counterexample to the present topic-level design. Compared with LIMOT, the current project is clearly less unified: FAST-LIO, PointPillars, MCTrack, and the backend still exchange messages rather than sharing one state graph. However, the comparison is not purely negative. Because the current project already publishes the necessary information across module boundaries, including time-stamped poses, LiDAR-frame object observations, world-frame track states, scores, and motion attributes, it has already assembled much of the data that a tighter formulation would require.
+
+IMM-SLAMMOT contributes a different lesson by stressing multiple motion models for dynamic targets~\cite{imm-slammot}. Traffic participants do not all follow one neat constant-velocity pattern. Cars stop, accelerate, and turn; pedestrians behave even less predictably. The present project inherits MCTrack's practical constant-velocity behavior in online mode, which is sufficient for a first engineering prototype but becomes a liability once those tracked velocities are used as backend constraints. The deterioration observed in some sequences, especially Sequence 0009, can be interpreted partly through this lens: the backend trusts motion extrapolations that were generated under a simplistic model.
+
+Online Dynamic SLAM is noteworthy because it focuses on incremental smoothing and mapping in dynamic scenes rather than only batch-like sliding windows~\cite{online-dynamic-slam}. Its main relevance here is not the exact front-end modality, which is visual rather than LiDAR-inertial, but the systems lesson: once dynamic information is admitted into the estimation problem, window management, incremental updates, and computational scalability become central design issues. The current ME5400 backend still uses a small ego-only window solved repeatedly with nonlinear least squares. That is a reasonable intermediate design, but it does not yet address the long-term scalability question that a real online joint SLAMMOT system must solve.
+
+DL-SLOT is especially instructive on the LiDAR side because it explores collaborative graph optimization between dynamic LiDAR SLAM and 3D object tracking~\cite{dl-slot}. Relative to the present project, DL-SLOT represents the more mature version of the same general ambition: instead of letting localization and tracking talk only through external interfaces, it shares information at the optimization level. This makes DL-SLOT a useful guide for future backend evolution, particularly in how object-related constraints should be scheduled, weighted, and marginalized over a window rather than merely applied as late corrections.
+
+\subsection{Pure 3D MOT Background and the Choice of Tracking Backbone}
+The MOT literature matters because the usefulness of object information depends on how that information is produced. AB3DMOT and CenterPoint capture two practical design philosophies~\cite{ab3dmot,centerpoint}: one emphasizes lightweight Kalman-style tracking on top of detections, while the other pushes more motion information into the detector-tracker itself. For this project, the key comparison is not which benchmark is strongest, but which interface is most useful downstream. MCTrack is attractive because it exposes track length, fused velocity, velocity change, acceleration, and stable IDs, all of which are directly reused for dynamic weighting and backend gating.
+
+\subsection{Comparison and Remaining Gap}
+Across these works, three broad observations emerge. First, \textbf{the field is moving toward tighter coupling}: the strongest recent systems no longer keep SLAM and MOT fully separated. Second, \textbf{dynamic-object handling still concentrates on filtering, association, and object-state estimation}; even joint systems do not always exploit dynamic objects as stable geometric support for ego localization. Third, \textbf{real-time feasibility and engineering complexity remain decisive}, because synchronization, confidence modeling, and stable optimization become harder as coupling grows tighter.
+
+Relative to that landscape, the current project occupies a deliberately intermediate position. It already implements a genuine bidirectional feedback loop, so it is beyond a one-way cascade, but it remains an engineering-oriented loose-coupling prototype rather than a complete object-centric joint optimizer. Its value lies in having already solved the interface and reproducibility problems that many conceptual designs leave implicit: time-stamped messages, synchronization, coordinate transforms, experiment orchestration, standardized logging, and multi-sequence failure analysis. The remaining gap is precise: the system already has the \textbf{information flow} required for a future joint optimizer, but not yet the \textbf{state representation} and \textbf{factor design} to exploit it fully.
 
 \section{Overall System Architecture, PointPillars / MCTrack, and Data Flow}
 \begin{figure}[H]
@@ -263,7 +314,9 @@ Compared with these works, the current project can be positioned as follows: the
     \label{fig:overall_architecture}
 \end{figure}
 
-In more intuitive terms, the system resembles a production line with clearly separated responsibilities. The first layer is responsible for perceiving the environment. FAST-LIO estimates how the ego vehicle moves from LiDAR and IMU measurements, while PointPillars identifies surrounding objects from the point cloud. The middle layer aligns and links these information streams. \texttt{fastlio\_pose\_bridge.py} converts FAST-LIO poses into \texttt{/mctrack/lidar\_pose}, which MCTrack can directly use. MCTrack then combines these poses with detections from \texttt{/detection/lidar\_detections} to determine which vehicle is which and where each one is moving, finally outputting \texttt{/mctrack/tracked\_objects}. The final layer performs integrated correction. \texttt{joint\_backend\_ego\_node.py} receives both \texttt{/Odometry} and \texttt{/mctrack/tracked\_objects}, refines the ego trajectory in a sliding window, and outputs the more stable \texttt{/joint\_backend/odom}.
+Figure~\ref{fig:overall_architecture} is easier to read as a data-dependency graph rather than a static block diagram. The first layer performs perception and ego-motion estimation: FAST-LIO publishes poses, while PointPillars publishes 3D detections from the same LiDAR input. The second layer performs temporal and geometric alignment: \code{fastlio_pose_bridge.py} converts FAST-LIO odometry into the LiDAR-pose interface expected by MCTrack, and MCTrack aligns poses with detections to form coherent object trajectories. The third layer performs feedback and correction: tracked objects are sent back to FAST-LIO for dynamic-point down-weighting and forward to the ego-only backend for windowed trajectory correction.
+
+This organization is necessary because the modules operate at different levels. FAST-LIO works on raw geometry and inertial propagation, PointPillars on learned object hypotheses, MCTrack on temporal association, and the backend on short-horizon ego correction. Keeping these stages explicit avoids blocking behavior and makes it easier to trace both gains and failures to a specific interface.
 
 If the system is understood from the data-flow perspective, the process can be summarized in seven steps:
 \begin{enumerate}[leftmargin=2.2em]
@@ -276,6 +329,8 @@ If the system is understood from the data-flow perspective, the process can be s
     \item The same tracking outputs are also sent to the joint backend to further refine the ego trajectory.
 \end{enumerate}
 
+This seven-step description already shows why the system must be organized as a directed but delayed loop. Tracks cannot exist before detections are associated, and dynamic-point weighting cannot be computed before a tracked-object message exists. The track state produced at time \(t\) therefore influences a later scan rather than the same scan. That one-frame delay is not a bug; it is what keeps the loop online without circular blocking.
+
 \subsection{FAST-LIO Front-End}
 \begin{figure}[H]
     \centering
@@ -284,9 +339,9 @@ If the system is understood from the data-flow perspective, the process can be s
     \label{fig:fastlio_architecture}
 \end{figure}
 
-FAST-LIO is the localization backbone of the entire system and the starting point of the data flow described above. It directly consumes LiDAR point clouds and IMU data from the KITTI rosbag and internally uses a tightly coupled LiDAR-inertial estimation pipeline to output stable ego poses. In this project, FAST-LIO not only generates globally consistent \texttt{/Odometry}, but also publishes \texttt{/Odometry\_imu\_predicted} as a high-frequency predicted pose, providing a unified reference for later tracking and backend optimization.
+FAST-LIO is the localization backbone of the entire system and the starting point of the data flow described above. It directly consumes LiDAR point clouds and IMU data from the KITTI rosbag and internally uses a tightly coupled LiDAR-inertial estimation pipeline to output stable ego poses. In this project, FAST-LIO not only generates globally consistent \code{/Odometry}, but also publishes \code{/Odometry_imu_predicted} as a high-frequency predicted pose, providing a unified reference for later tracking and backend optimization.
 
-From the perspective of module responsibilities, FAST-LIO plays three roles in the system. First, it provides MCTrack with reliable ego poses, allowing 3D detections to be compensated for ego motion before cross-frame association. Second, it supplies the joint backend with raw odometry constraints so that backend optimization does not drift too far from the front-end estimate. Third, through \texttt{preprocess.cpp}, it receives \texttt{/mctrack/tracked\_objects} and converts target velocity, acceleration, score, and bounding-box information into point-level weights, thereby realizing a front-end closed loop in which tracking feeds back into localization.
+From the perspective of module responsibilities, FAST-LIO plays three roles in the system. First, it provides MCTrack with reliable ego poses, allowing 3D detections to be compensated for ego motion before cross-frame association. Second, it supplies the joint backend with raw odometry constraints so that backend optimization does not drift too far from the front-end estimate. Third, through \code{preprocess.cpp} and the tracked-object callback path in \code{laserMapping.cpp}, it receives \code{/mctrack/tracked_objects}, converts them into internal \texttt{DynamicObject} structures, and maps target motion attributes into point-level weights. FAST-LIO therefore acts both as the source of ego-motion information and as the place where object feedback most directly changes scan-level geometry processing.
 
 From an algorithmic viewpoint, the FAST-LIO front-end can be understood as an iterative filter combining IMU propagation with LiDAR geometric correction. Let the system state be \(\mathbf{x}_k\) and the IMU input be \(\mathbf{u}_k\). The prediction step can be written as
 \begin{equation}
@@ -309,12 +364,12 @@ and minimizes through iterative updates
 \|\delta \mathbf{x}\|^2_{\mathbf{P}_{k+1|k}^{-1}}
 \right).
 \end{equation}
-These equations describe the core role of FAST-LIO in this project. The IMU provides high-frequency continuous prediction, while LiDAR point-cloud residuals pull the pose back toward a geometrically consistent solution. This is why FAST-LIO can not only stably output \texttt{/Odometry}, but also serve as the spatiotemporal reference for MCTrack.
+These equations describe the core role of FAST-LIO in this project. The IMU provides high-frequency continuous prediction, while LiDAR point-cloud residuals pull the pose back toward a geometrically consistent solution. This is why FAST-LIO can not only stably output \code{/Odometry}, but also serve as the spatiotemporal reference for MCTrack.
 
-To feed FAST-LIO outputs into the tracking module, the project additionally implements \texttt{fastlio\_pose\_bridge.py}. This bridge node converts \texttt{/Odometry} into \texttt{/mctrack/lidar\_pose}, which MCTrack can consume directly. It therefore transforms an odometry message originally used mainly for localization into a unified pose input for the detection-and-tracking chain. As a result, FAST-LIO in this system should not be viewed merely as an independent odometry front-end, but as the spatiotemporal reference center of the whole closed-loop system. The dynamic-weight optimization discussed later is, in essence, an enhancement built on top of this front-end.
+To feed FAST-LIO outputs into the tracking module, the project implements \code{fastlio_pose_bridge.py}, which converts \code{/Odometry} into \code{/mctrack/lidar_pose} using the configured body-to-LiDAR extrinsic transform and publishes the result as TF. This explicit bridge keeps localization, tracking, and visualization in the same frame convention. FAST-LIO then freezes the latest tracked objects into a scan-local snapshot before preprocessing each scan, so every point is weighted against a consistent object set rather than a mid-scan message buffer.
 
 \subsection{PointPillars Detection Module}
-PointPillars~\cite{pointpillars} is wrapped as a ROS node through \texttt{MMDET3D/local/ros/nodes/kitti\_pointpillars\_bag\_node.py}, allowing it to directly consume KITTI point clouds from rosbag. Its role is not simply to output raw detections, but to provide the entire system with unified, traceable, and time-stamped 3D detection messages. The project defines a unified message format in \texttt{catkin\_ws/src/ME5400/msg/Detection3D.msg} and \texttt{Detection3DArray.msg}, including frame ID, category, confidence, 2D box, 3D dimensions, LiDAR-frame position, and yaw angle. In this way, PointPillars and MCTrack do not depend on any private third-party message format; they communicate through project-defined message interfaces.
+PointPillars~\cite{pointpillars} is wrapped as a ROS node through \code{MMDET3D/local/ros/nodes/kitti_pointpillars_bag_node.py}, allowing it to directly consume KITTI point clouds from rosbag. Its role is not simply to output raw detections, but to provide the entire system with unified, traceable, and time-stamped 3D detection messages. The project defines a unified message format in \code{catkin_ws/src/ME5400/msg/Detection3D.msg} and \code{Detection3DArray.msg}, including frame ID, category, confidence, 2D box, 3D dimensions, LiDAR-frame position, and yaw angle. In this way, PointPillars and MCTrack do not depend on any private third-party message format; they communicate through project-defined message interfaces.
 
 \begin{figure}[H]
     \centering
@@ -323,7 +378,7 @@ PointPillars~\cite{pointpillars} is wrapped as a ROS node through \texttt{MMDET3
     \label{fig:pointpillars_architecture}
 \end{figure}
 
-From the original paper design, the essence of PointPillars is not merely BEV detection. It first partitions sparse point clouds into vertical pillars, then uses the Pillar Feature Net to encode the points in each pillar into learned features, scatters these features into a pseudo-image, and finally applies a 2D CNN backbone and SSD head for object-box regression and classification. This design transforms a costly 3D convolution problem into a 2D convolution problem, thereby balancing speed and accuracy on KITTI. For the same reason, it is highly suitable as the real-time 3D detection front-end in this project's online system.
+The essence of PointPillars is to convert sparse 3D point clouds into a BEV pseudo-image by encoding vertical pillars and then applying a 2D CNN detection head. This transforms a costly 3D convolution problem into a cheaper 2D one, which is exactly why PointPillars fits the real-time requirements of the current online system.
 
 Written in equations, if the \(l\)-th pillar contains the point set \(\mathcal{P}_l=\{\mathbf{p}_i\}\), PointPillars first constructs an augmented feature for each point:
 \begin{equation}
@@ -354,9 +409,9 @@ Finally, the detection head jointly optimizes classification, box regression, an
 +\beta_{\mathrm{loc}}\mathcal{L}_{\mathrm{loc}}
 +\beta_{\mathrm{dir}}\mathcal{L}_{\mathrm{dir}}.
 \end{equation}
-This also explains why PointPillars fits this project well: point clouds are first compressed into a regular BEV representation, after which efficient 2D convolutions are sufficient to produce 3D detections, satisfying the requirements of online inference and real-time ROS publishing.
+This also explains why PointPillars fits the project well: efficient 2D convolutions are sufficient to produce time-stamped 3D detections for online ROS publishing.
 
-From an engineering perspective, this design serves three purposes. First, the node reads KITTI calibration information to ensure consistency between detection outputs and coordinate transforms. Second, it keeps a relatively low detection-confidence threshold so that more candidate boxes are handled later by the tracker and gating strategy instead of being pruned too early at the detector stage. Third, the unified message structure allows the same detection outputs to support MCTrack, visualization, evaluation, and result replay.
+From an engineering perspective, this design serves three purposes. It preserves calibration consistency, keeps a relatively low detection threshold so that pruning happens later through tracking and gating, and exposes a project-defined message contract that can be reused by MCTrack, visualization, evaluation, and replay. PointPillars deliberately does \emph{not} solve tracking internally; its job is to publish geometrically meaningful 3D hypotheses with timestamps and confidence scores so that later failures can be attributed more cleanly.
 
 \subsection{MCTrack Module and Data-Flow Details}
 \begin{figure}[H]
@@ -366,9 +421,9 @@ From an engineering perspective, this design serves three purposes. First, the n
     \label{fig:mctrack_framework}
 \end{figure}
 
-The online MCTrack node is implemented in \texttt{catkin\_ws/src/ME5400/scripts/mctrack\_online\_node.py}. It subscribes by default to \texttt{/mctrack/lidar\_pose} and \texttt{/detection/lidar\_detections}, maintains an internal pose buffer and a queue of pending detections, and processes detections only after a pose with a suitable timestamp is available. This ``detections wait for pose, pose drives processing'' design avoids the temporal misalignment that arises when messages are processed strictly in order of arrival.
+The online MCTrack node is implemented in \code{catkin_ws/src/ME5400/scripts/mctrack_online_node.py}. It subscribes by default to \code{/mctrack/lidar_pose} and \code{/detection/lidar_detections}, maintains an internal pose buffer and a queue of pending detections, and processes detections only after a pose with a suitable timestamp is available. This ``detections wait for pose, pose drives processing'' design avoids the temporal misalignment that arises when messages are processed strictly in order of arrival.
 
-MCTrack publishes both \texttt{/mctrack/markers} for visualization and \texttt{/mctrack/tracked\_objects} for downstream optimization. In \texttt{TrackedObject.msg}, in addition to object pose and size, the message records \texttt{track\_length}, \texttt{velocity}, \texttt{velocity\_fusion}, \texttt{velocity\_diff}, \texttt{velocity\_curve}, and \texttt{acceleration}. These fields are crucial to this project because the subsequent dynamic-weight optimization and joint-backend gating depend on motion attributes rather than only on box position.
+MCTrack publishes both \code{/mctrack/markers} for visualization and \code{/mctrack/tracked_objects} for downstream optimization. In \code{TrackedObject.msg}, in addition to object pose and size, the message records \code{track_length}, \code{velocity}, \code{velocity_fusion}, \code{velocity_diff}, \code{velocity_curve}, and \code{acceleration}. These fields are crucial to this project because the subsequent dynamic-weight optimization and joint-backend gating depend on motion attributes rather than only on box position.
 
 Under the current \texttt{kitti\_fastlio.yaml} configuration, the main state estimate of MCTrack in online mode can be approximated as a 2D constant-velocity Kalman filter. If the trajectory state is
 \begin{equation}
@@ -410,11 +465,20 @@ C_{ij}=1-\mathrm{RO\mbox{-}GDIOU}_{3D}\!\left(\hat{B}_i,\; B_j\right),
 \end{equation}
 where \(\hat{B}_i\) is the predicted track box and \(B_j\) is the current detection box. In other words, FAST-LIO first stabilizes the cross-frame geometry through ego pose, after which MCTrack converts discrete detections into continuous trajectories through motion prediction and global optimal matching. This is the foundation on which later velocity estimation, dynamic weights, and the joint backend become possible.
 
-Therefore, one key point of this section is that PointPillars and MCTrack are not merely a detector and a tracker within this system. They are the core modules that generate object-level geometry and motion semantics throughout the full data flow. FAST-LIO provides a stable ego pose, PointPillars provides temporally ordered 3D detections, and MCTrack turns those detections into track states that can be propagated over time. Only then do dynamic weighting and the joint backend become practically realizable.
+The buffering and timestamp logic are particularly important. MCTrack stores a finite \texttt{pose\_buffer} and a queue of pending detections. For each detection message, it looks for poses immediately before and after the detection timestamp; if both exist, it interpolates, otherwise it waits briefly and then falls back to the nearest available pose. This is a practical compromise between strict synchronization and online liveness. MCTrack also preserves both world-frame \texttt{pose} and LiDAR-frame \texttt{lidar\_pose}, because FAST-LIO needs the LiDAR-frame version for point-box intersection while the backend compares propagated world-frame object motion against the ego state.
+
+Seen this way, PointPillars and MCTrack are not merely a detector and a tracker within the system. They are the modules that generate object-level geometry and motion semantics throughout the full data flow. FAST-LIO provides the stable ego reference, PointPillars provides time-stamped object hypotheses, and MCTrack turns those hypotheses into track states that can be propagated over time. Only after this transformation does it become possible to define dynamic weighting or object-consistency residuals in a meaningful way.
+
+\subsection{Temporal Alignment, Coordinate Frames, and Failure Modes}
+In the optimized online run, rosbag playback publishes only raw LiDAR and IMU topics, while PointPillars, FAST-LIO, MCTrack, and the backend run as separate ROS nodes with different callback timings. Time synchronization is therefore a runtime issue rather than a one-time calibration issue, which is why the pose buffer, pending-detection queue, and one-frame delayed weighting loop are structural parts of the architecture.
+
+The main runtime failure modes are straightforward: \textbf{detection latency} forces the tracker to use a nearby rather than truly synchronized pose; \textbf{missed detections} shorten tracks and destabilize motion estimates; \textbf{track fragmentation} destroys the continuity needed for weighting and backend reuse; and \textbf{timestamp or frame inconsistency} can magnify velocity-extrapolation error or even turn an interface bug into an apparent algorithmic failure. The architecture reduces these risks, but does not eliminate them.
 
 \section{Engineering Implementation and System Integration}
 \subsection{Overall Code Organization}
-The project organizes its code in three layers: \texttt{Scripts/}, \texttt{catkin\_ws/src/ME5400/scripts/}, and \texttt{catkin\_ws/src/fast\_lio/}. The top-level scripts handle one-click startup and experiment scheduling. The ME5400 package handles ROS-side bridging, tracking, the backend, and recording. The FAST-LIO package handles the localization front-end and the dynamic-weight logic. Since this report focuses more on system structure than on repository details, Table~\ref{tab:code_design} summarizes the representative entry scripts and their functions instead of enumerating the entire directory tree.
+The repository layout is intentionally organized around integration responsibility rather than around algorithm names alone. The top-level directories that matter most to this report are \texttt{catkin\_ws/}, \texttt{MCTrack/}, \texttt{MMDET3D/}, \texttt{Scripts/}, and \texttt{Results/}. \texttt{catkin\_ws/} contains the ROS-native part of the system: custom messages, launchable scripts, configuration files, and the modified FAST-LIO package. \texttt{MCTrack/} preserves the tracking framework and configuration in a relatively self-contained form so that the online node can import and wrap it rather than reimplementing tracking logic. \texttt{MMDET3D/} contains the detector-side code used to wrap PointPillars into the ROS pipeline. \texttt{Scripts/} contains orchestration logic, helper utilities, and one-click entry points. \texttt{Results/} is not a passive dump folder; it is the standardized experiment archive that the report depends on for every figure and metric.
+
+This partition is beneficial for two reasons. First, it separates heavy third-party or framework-dependent code from project-specific integration code. That makes it easier to upgrade one module without destabilizing all others. Second, it maps closely to the user's actual workflow. During experimentation, the user rarely edits a detector kernel or Kalman update directly; instead, the user launches scripts, checks logs, inspects ROS topics, records trajectories, and compares result folders. Organizing the repository to match that workflow reduces friction and shortens the feedback cycle during debugging and evaluation.
 
 \begin{table}[H]
     \centering
@@ -426,23 +490,41 @@ The project organizes its code in three layers: \texttt{Scripts/}, \texttt{catki
         Module & Representative entry scripts & Function summary \\
         \midrule
         Online baseline &
-        \makecell[tl]{\texttt{run\_baseline.sh}\\\texttt{run\_fastlio.sh}} &
-        Executes the pure FAST-LIO online baseline pipeline and records the baseline trajectory in \texttt{trajectory\_baseline.txt}. \\
+        \makecell[tl]{\code{run_baseline.sh}\\\code{run_fastlio.sh}} &
+        Executes the pure FAST-LIO online baseline pipeline and records the baseline trajectory in \code{trajectory_baseline.txt}. \\
         Online optimization &
-        \makecell[tl]{\texttt{run\_optimized.sh}\\\texttt{run\_pointpillars\_node.sh}\\\texttt{run\_mctrack\_online\_node.sh}\\\texttt{run\_joint\_backend\_ego.sh}} &
-        Orchestrates PointPillars, MCTrack, dynamic-weight FAST-LIO, and the joint backend, and outputs the optimized front-end trajectory \texttt{trajectory.txt} together with the backend trajectory \texttt{trajectory\_joint.txt}. \\
-        One-click online comparison & \texttt{run\_all.sh} & Sequentially runs the online baseline and online optimization pipelines and archives the complete runtime logs into the result directory. \\
+        \makecell[tl]{\code{run_optimized.sh}\\\code{run_pointpillars_node.sh}\\\code{run_mctrack_online_node.sh}\\\code{run_joint_backend_ego.sh}} &
+        Orchestrates PointPillars, MCTrack, dynamic-weight FAST-LIO, and the joint backend, and outputs the optimized front-end trajectory \code{trajectory.txt} together with the backend trajectory \code{trajectory_joint.txt}. \\
+        One-click online comparison & \code{run_all.sh} & Sequentially runs the online baseline and online optimization pipelines and archives the complete runtime logs into the result directory. \\
         Evaluation and archiving &
-        \makecell[tl]{\texttt{evaluate\_trajectories.py}\\\texttt{odom\_to\_tum\_recorder.py}} &
-        Uniformly generates quantitative metrics and visualization files, including \texttt{metrics.json}, trajectory-error comparison plots, and ablation summary figures. \\
+        \makecell[tl]{\code{evaluate_trajectories.py}\\\code{odom_to_tum_recorder.py}} &
+        Uniformly generates quantitative metrics and visualization files, including \code{metrics.json}, trajectory-error comparison plots, and ablation summary figures. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Main repository directories and their engineering roles}
+    \label{tab:repo_layout}
+    \footnotesize
+    \begin{tabularx}{\textwidth}{L{2.3cm} L{4.2cm} Y}
+        \toprule
+        Directory & Representative contents & Engineering role \\
+        \midrule
+        \code{catkin_ws/} & \makecell[tl]{\code{src/ME5400/msg/}\\\code{src/ME5400/scripts/}\\\code{src/fast_lio/}} & ROS-native workspace for custom interfaces, bridge nodes, MCTrack online wrapper, joint backend, trajectory recording, and the modified FAST-LIO front-end. \\
+        \code{MCTrack/} & \code{config/kitti_fastlio.yaml}, tracker modules & Encapsulates the tracking framework and motion/association configuration used by the online ROS node. \\
+        \code{MMDET3D/} & PointPillars ROS wrapper and detector utilities & Hosts the detector-side code needed to run PointPillars in the project's data and topic conventions. \\
+        \code{Scripts/} & \makecell[tl]{\code{run_all.sh}\\\code{run_baseline.sh}\\\code{run_optimized.sh}\\\code{evaluation/}} & Provides one-click execution, build/setup helpers, evaluation entry points, and the reproducible experiment workflow. \\
+        \code{Results/} & \code{metrics.json}, trajectories, plots, logs & Serves as the canonical archive for sequence-level outputs used in later analysis, report writing, and regression checking. \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
 \subsection{Online System Design}
-In online mode, \texttt{run\_all.sh} sequentially executes \texttt{run\_baseline.sh} and \texttt{run\_optimized.sh}. The former only launches \texttt{roscore}, FAST-LIO, and rosbag playback to produce a pure localization baseline. The latter additionally launches PointPillars, MCTrack, FAST-LIO in \texttt{both} mode, and the joint backend, while \texttt{odom\_to\_tum\_recorder.py} records both the optimized front-end trajectory and the backend trajectory. This dual-track design guarantees a fair comparison under the same bag, the same environment, and the same evaluation script.
+In online mode, \code{run_all.sh} sequentially executes \code{run_baseline.sh} and \code{run_optimized.sh}. This is not just a convenience wrapper. It encodes the fairness policy of the experiments. The baseline run launches only \code{roscore}, FAST-LIO, and rosbag playback so that a pure localization trajectory is recorded as \code{trajectory_baseline.txt}. The optimized run then launches PointPillars, MCTrack, FAST-LIO in \texttt{both} mode, and the joint backend, while \code{odom_to_tum_recorder.py} records \code{/joint_backend/odom} into \code{trajectory_joint.txt}. Because the scripts operate on the same sequence ID, use the same data source, and archive outputs into the same result folder, they provide a controlled comparison rather than a loose collection of independent runs.
 
-The control flow of the online optimization script is clear. PointPillars starts first. MCTrack starts next and waits until it is ready to receive poses and detections. FAST-LIO with dynamic weighting is then launched. Finally, the joint backend starts and records \texttt{/joint\_backend/odom}. Figure~\ref{fig:online_sequence_logic} shows the true execution-level temporal logic of this chain.
+The control flow of the online optimization script is also chosen to minimize race conditions. PointPillars starts first because its model initialization is typically the slowest. MCTrack starts next and waits until it is ready to receive poses and detections. FAST-LIO with dynamic weighting is then launched so that the tracker can immediately begin filling its pose buffer once odometry appears. Finally, the joint backend starts and trajectory recording begins. If this order were reversed, several predictable problems would appear: the recorder might start before any backend topic exists; the tracker might begin queuing detections without usable poses; or the detector might publish too late, causing a burst of stale detections. Figure~\ref{fig:online_sequence_logic} therefore documents more than a conceptual loop; it records the actual execution logic that keeps the optimized chain stable.
 
 \begin{figure}[htbp]
     \centering
@@ -451,16 +533,29 @@ The control flow of the online optimization script is clear. PointPillars starts
     \label{fig:online_sequence_logic}
 \end{figure}
 
-As Figure~\ref{fig:online_sequence_logic} shows, the online chain is not a synchronous loop in which the current-frame detections immediately modify the current-frame point cloud. Instead, it is an asynchronous loop with a one-frame delay. During \texttt{preprocess()}, FAST-LIO first freezes the previous \texttt{/mctrack/tracked\_objects} snapshot and softly down-weights points in the current scan that fall inside dynamic boxes. The current \texttt{/Odometry}(t) is then passed through the bridge to MCTrack, aligned with \texttt{/detection/lidar\_detections}(t) from PointPillars, and used to update object states. The newly produced \texttt{/mctrack/tracked\_objects}(t) is then sent to both FAST-LIO and the joint backend, but its effect on FAST-LIO appears only in the next frame. This design avoids intra-frame blocking and explains why the current system can form a front-end closed loop while remaining runnable online.
+As Figure~\ref{fig:online_sequence_logic} shows, the online chain is not a synchronous loop in which the current-frame detections immediately modify the current-frame point cloud. Instead, it is an asynchronous loop with a one-frame delay. During \code{preprocess()}, FAST-LIO first freezes the previous \code{/mctrack/tracked_objects} snapshot and softly down-weights points in the current scan that fall inside dynamic boxes. The current \code{/Odometry}(t) is then passed through the bridge to MCTrack, aligned with \code{/detection/lidar_detections}(t) from PointPillars, and used to update object states. The newly produced \code{/mctrack/tracked_objects}(t) is then sent to both FAST-LIO and the joint backend, but its effect on FAST-LIO appears only in the next frame. This design avoids intra-frame blocking, limits lock contention inside the preprocessor, and explains why the current system can form a front-end closed loop while remaining runnable online.
 
-After rosbag playback finishes, the script archives \texttt{trajectory.txt}, \texttt{trajectory\_joint.txt}, and all figures into \texttt{Results/<seq>\_results/Online/}. The advantage of this code design is that dependencies are explicit, startup order is fixed, and result directories are standardized. Its limitation is that the system is still loosely coupled at the topic level: modules share messages rather than a unified graph state.
+After rosbag playback finishes, the script archives \code{trajectory.txt}, \code{trajectory_joint.txt}, logs, and evaluation plots into \code{Results/<seq>_results/Online/}. The benefit of this design is not just cleanliness. It allows a later report or debugging pass to reconstruct exactly what happened for a given sequence: which scripts ran, which trajectories were compared, what the metrics were, and how the front-end and backend plots looked. The limitation, of course, is that the system is still loosely coupled at the topic level: modules share messages rather than a unified graph state. But from an engineering perspective, explicit message passing is precisely what makes the current prototype inspectable and reproducible.
 
 \subsection{Result Archiving and the Reproducible Experimental Pipeline}
-The project ultimately organizes key files under \texttt{Results/<seq>\_results/Online/}. The naming rules for trajectory files, log files, image files, and \texttt{metrics.json} are uniform, which makes report writing and later batch analysis straightforward. For a course project, being runnable and being reproducibly evaluable are equally important. At the code-design level, the project's strongest advantage is precisely that it has formed a complete online experimental loop.
+The result archive under \code{Results/<seq>_results/Online/} is best understood as a formal experiment contract. Every online sequence folder contains the baseline trajectory, the optimized front-end trajectory, the joint-backend trajectory when available, a plain-text report, a JSON report, comparison plots, and a full runtime log. This means that quantitative analysis in the report does not depend on manually copied numbers or ephemeral terminal output. It depends on versioned artifacts that can be regenerated by rerunning the scripts. In practice, this is what makes later section-level expansion possible: ATE, RPE, Tr, Rot, failure sequences, and plots all originate from the same archived source.
+
+The evaluation path reinforces this reproducibility goal. \code{evaluate_trajectories.py} loads the recorded TUM trajectories, associates them with KITTI ground truth, computes ATE and RPE, aligns trajectories for visualization, and computes KITTI-style relative translation and rotation metrics when enough matched path length exists. Because the same script is used for every baseline versus optimized comparison, the report avoids a common course-project weakness in which each sequence is evaluated slightly differently. Even when different sequences expose different available span lengths, as in short versus long trajectories, the evaluation rule is still consistent.
+
+This reproducibility is not a secondary convenience; it is part of the intellectual contribution of the project. A course project that claims a localization gain but cannot rerun its own sequences, recover its own metrics, or explain its own failures has limited value. By contrast, the present system can be launched with fixed scripts, can record trajectories in a standard format, can regenerate figures, and can tie every conclusion in the report back to a concrete archived artifact. That is why engineering reproducibility deserves to be treated as a first-class outcome rather than an appendix-level detail.
+
+\subsection{ROS Topics, Message Interfaces, and Integration Difficulties}
+The module boundaries in this repository are enforced primarily through ROS topics and project-defined messages. The raw inputs are \code{/kitti/velo/pointcloud} and \code{/kitti/oxts/imu}. FAST-LIO publishes \code{/Odometry} and \code{/Odometry_imu_predicted}. The bridge node republishes \code{/mctrack/lidar_pose}. PointPillars publishes \code{/detection/lidar_detections}. MCTrack publishes \code{/mctrack/tracked_objects} and \code{/mctrack/markers}. The backend publishes \code{/joint_backend/odom}. Each topic corresponds to a clear semantic responsibility, and the custom message definitions ensure that detector outputs, tracked-object states, and backend inputs remain interpretable throughout the pipeline.
+
+The custom messages are especially useful for avoiding hidden coupling. \code{Detection3D.msg} stores frame index, class, confidence, 2D box, 3D dimensions, LiDAR-frame location, and yaw. \code{TrackedObject.msg} extends that into an object state useful for feedback, including track length, world-frame pose, LiDAR-frame pose, fused velocity, velocity difference, curved velocity, and acceleration. This explicitness is what makes the dynamic-weight module and backend feasible. The weighting code can read LiDAR-frame pose, track length, score, and acceleration directly. The backend can compare local observations to world-frame predictions without trying to reconstruct state from an opaque tracker object. In short, the message layer is where the project translates algorithm-specific internals into stable cross-module contracts.
+
+The integration was still difficult in several ways. Dependency isolation is one challenge: MMDET3D, ROS, MCTrack, and FAST-LIO each bring their own runtime assumptions, environment variables, and build expectations. Startup order is another challenge, because the whole optimized pipeline is sensitive to whether detector, tracker, and backend are ready before rosbag playback begins. Logging is a third challenge, addressed by redirecting full script output to per-sequence logs. Result naming and archival are a fourth challenge: if trajectory files were not renamed and moved consistently, later evaluation would silently compare the wrong outputs. These are mundane issues individually, but together they determine whether an integrated robotics system behaves like a controlled experiment or like an unstable demo.
 
 \section{Dynamic Weight Optimization}
 \subsection{Design Motivation and Code Location}
-The core idea of dynamic-weight optimization is to stop treating points inside detected boxes as a binary keep-or-remove decision. Instead, their contribution is continuously reduced according to the object's motion state and confidence. This decreases the contamination caused by dynamic objects while avoiding the complete loss of local geometry that accompanies hard removal. The current implementation is mainly located in \texttt{catkin\_ws/src/fast\_lio/src/preprocess.cpp}. After FAST-LIO receives \texttt{/mctrack/tracked\_objects}, each object is converted into an internal \texttt{DynamicObject}, which stores the object center, bounding-box half-sizes, local yaw angle, timestamp, and weight.
+The central design question of this module is simple: when a tracked object overlaps a region of the point cloud, should the system keep those points, remove them, or reduce their influence continuously? The current project chooses the third option. Instead of turning dynamic-point handling into a binary segmentation problem, it treats tracked objects as evidence that the reliability of nearby geometry should be reduced by a degree that depends on motion state and confidence. This is motivated by both geometry and engineering. Geometrically, hard removal can erase too much useful structure in traffic scenes where large vehicles occupy a significant share of the scan and where roadside geometry may already be sparse. Engineering-wise, hard removal is brittle under false positives, unstable boxes, and partial occlusion; a slightly wrong box can delete a large amount of valid structure. Soft weighting is more conservative and therefore more appropriate for a first integrated prototype.
+
+The current implementation lives mainly in \code{catkin_ws/src/fast_lio/src/preprocess.cpp}, with tracked-object conversion in \code{catkin_ws/src/fast_lio/src/laserMapping.cpp}. After FAST-LIO receives \code{/mctrack/tracked_objects}, each object is converted into an internal \texttt{DynamicObject} that stores its LiDAR-frame center, bounding-box half-sizes, local yaw representation, timestamp, and a scalar weight. Importantly, the conversion uses the object's LiDAR-frame pose rather than its world-frame pose, because point-in-box tests must be carried out in the current LiDAR coordinate system. This makes the weighting stage tightly tied to actual preprocessing rather than to some abstract global map representation.
 
 Compared with earlier versions, the default parameters for dynamic weighting in the current code are explicitly fixed as follows:
 \begin{itemize}[leftmargin=2em]
@@ -473,6 +568,8 @@ Compared with earlier versions, the default parameters for dynamic weighting in 
     \item bounding-box margin \(xy=0.5\,\mathrm{m},\,z=0.5\,\mathrm{m}\);
     \item object timeout \(1.0\,\mathrm{s}\), with a minimum trajectory-length threshold of 3.
 \end{itemize}
+
+Each parameter reflects an engineering compromise. The reference velocity and acceleration define what should count as clearly dynamic, the minimum weight prevents the scheme from collapsing into hard deletion, the box margin compensates for imperfect boundaries, and the timeout plus minimum track length prevent stale or immature trajectories from influencing the scan.
 
 \subsection{Weight Computation}
 Suppose that a tracked target has velocity \(v\), acceleration \(a\), and detection score \(s\). The code first normalizes these quantities:
@@ -490,22 +587,41 @@ and computes the dynamic weight as
 w = \mathrm{clip}(1-p,\; w_{\min},\; 1).
 \end{equation}
 
-This means that the faster the target, the larger its acceleration, and the higher its detection score, the more the system believes it is a truly dynamic object, and the smaller the point weight it assigns. Conversely, if a trajectory is short, the speed is close to zero, or the detection score is not high, the system tends to preserve a larger point weight, thereby avoiding over-penalizing static or unreliable objects.
+The resulting interpretation is intuitive. Faster targets with larger acceleration and higher detection score receive smaller point weights. If a trajectory is short, nearly static, or weakly scored, the system preserves a larger weight. The trajectory-length guard is particularly important: if \texttt{track\_length} is below threshold, \texttt{weightFromAttributes()} returns \(1.0\), so the object cannot influence the point cloud yet.
 
-\subsection{How the Weight Is Injected into FAST-LIO}
-The weight becomes effective in point-cloud preprocessing. For each input point, the system calls \texttt{computePointWeight()} to determine whether the point falls inside any dynamic-object bounding box. If it does, the point's \texttt{intensity} is updated to the smaller of the original intensity and the dynamic weight. The benefit of this design is that it does not require rewriting the main FAST-LIO data structures; the existing point representation is reused to propagate weights through the later mapping and residual-computation chain.
+The choice of velocity, acceleration, and score reflects the information the tracker can already provide reliably. This is not a fully probabilistic uncertainty model, but it is a practical heuristic built from interpretable motion attributes already present in \texttt{TrackedObject.msg}.
 
-Compared with outright deleting dynamic points, this soft down-weighting strategy has two direct advantages. First, it is more robust to box-boundary error, detection jitter, and partially dynamic regions; a single biased detection does not cause all corresponding points to be discarded. Second, it allows the system to modulate the influence of points continuously according to object motion attributes, rather than reducing the problem to a black-or-white binary rule. The current experiments also indicate that the truly stable gain comes mainly from the combination of this module with MCTrack, rather than from the backend.
+\subsection{From Tracked Objects to Point-Level Weights}
+The transformation from object tracks to point weights happens in one scan-local pipeline. The tracked-object callback converts each object into an internal representation using \code{lidar_pose.position}, margin-expanded half sizes, a compact yaw representation, and a scalar weight computed from fused speed, acceleration, detection score, and track length. When a new scan enters \code{process()}, FAST-LIO freezes the latest tracked objects into an active snapshot. Each point then calls \code{computePointWeight()}, checks whether it lies inside any non-expired dynamic box, and takes the minimum weight among the boxes that cover it. This means \code{tracked_objects}(t) does not retroactively modify the scan at time \(t\); it becomes the consistent object set used when preprocessing a later scan.
+
+The weight becomes effective directly in point-cloud preprocessing. For each input point, if \texttt{computePointWeight()} finds dynamic-box overlap, the point's \texttt{intensity} is updated to the smaller of the original intensity and the dynamic weight:
+\begin{equation}
+I'_j = \min(I_j,\; w_j),
+\end{equation}
+where \(I_j\) is the original point intensity and \(w_j\) is the computed dynamic weight. This reuses the existing FAST-LIO point representation to carry reliability information downstream without rewriting the registration machinery.
+
+Compared with outright deleting dynamic points, this strategy is more robust to box-boundary error, detection jitter, and partially dynamic regions; it preserves some geometric support when static background is limited; and it differentiates between a clearly moving mature track and a barely confirmed object without a hard semantic switch. This graded behavior is one reason the front-end loop is more stable than the current backend.
+
+\subsection{Boundary Cases and Parameter Sensitivity}
+Several boundary cases clarify why soft weighting is preferable in the current system. \textbf{False positives} and \textbf{occlusion-driven box instability} can overlap static structure or jitter in extent; under hard deletion those errors would erase geometry completely, whereas soft weighting only reduces influence and only after track maturity and motion checks pass. \textbf{Temporally uncertain cases}, including temporarily stopped vehicles and stale trajectories, are handled more conservatively through the combination of score, acceleration, minimum track length, and timeout.
+
+Although the project does not include a formal parameter sweep, the archived sequences support a qualitative sensitivity discussion. If \(v_{\mathrm{ref}}\) is too low or \(w_{\min}\) too small, the module behaves too much like hard filtering; if \(v_{\mathrm{ref}}\) is too high or \(w_{\min}\) too large, dynamic weighting becomes too weak to matter. The current values appear to be a practical middle ground: strong enough to help on drift-prone sequences such as 0010 and 0020, but conservative enough to avoid systematic degradation across all seven online runs.
+
+The broader effect is improved scan matching and local-map consistency without demanding that object-derived information already be accurate enough to support strong backend corrections. This balance is why dynamic weighting is the most stable gain source in the current system.
 
 \section{Joint Backend Optimization}
 \subsection{The Ego-Only Sliding-Window Problem}
-The joint backend is implemented in \texttt{catkin\_ws/src/ME5400/scripts/joint\_backend\_ego\_node.py}, with configuration stored in \texttt{catkin\_ws/src/ME5400/config/joint\_backend\_ego.yaml}. Its design goal is to validate, at relatively low cost, whether object information can help ego localization. It optimizes only the ego state and does not optimize object states. The key configuration parameters in the current YAML file are: a window length of 8 frames, object-factor coefficient \(\lambda_{\mathrm{obj}}=0.12\), score threshold 0.6, track-length threshold 5, maximum allowed timestamp difference 0.1\,s, maximum allowed velocity jump 2.0\,m/s, minimum object weight 0.03, Huber as the robust kernel, and scale 0.5. If the \texttt{/Odometry} covariance is invalid, the system falls back to \([0.20, 0.20, 0.10]\).
+The joint backend is implemented in \code{catkin_ws/src/ME5400/scripts/joint_backend_ego_node.py}, with configuration stored in \code{catkin_ws/src/ME5400/config/joint_backend_ego.yaml}. Its purpose is intentionally transitional. Rather than solving a full object-centric SLAMMOT problem immediately, it tests a narrower hypothesis at manageable engineering cost: can stable tracked objects provide enough additional structure to refine the ego trajectory, even if object states are not jointly optimized? The answer matters because it determines whether the project should invest later effort in a richer backend at all. An ego-only backend is therefore not the final goal; it is a diagnostic stepping stone.
+
+The current configuration makes this compromise explicit. The default window length is 8 frames. The object-factor coefficient is \(\lambda_{\mathrm{obj}}=0.12\). The score threshold is 0.6, the track-length threshold is 5, the maximum allowed timestamp difference is 0.1\,s, and the maximum allowed velocity jump is 2.0\,m/s. The minimum object weight is 0.03. The backend uses a Huber robust loss with scale 0.5, optimizes at 10 Hz, and falls back to \([0.20, 0.20, 0.10]\) if the incoming FAST-LIO covariance is invalid. None of these choices is arbitrary. Together they define a backend that is intentionally conservative about when to trust object information and intentionally lightweight about how much state to optimize.
 
 The optimization variable for each frame in the window is written as
 \begin{equation}
 \mathbf{p}_i=[x_i, y_i, \psi_i]^\top,
 \end{equation}
-meaning that only planar position and yaw are retained per frame. This design does not merge object states into the unified variable set, so computation remains lightweight, the implementation stays simple, and online execution remains feasible. The trade-off is that object errors cannot be jointly estimated and can only be used as external observations.
+meaning that only planar position and yaw are retained per frame. This choice is restrictive, but it is reasonable for two engineering reasons. First, the tracked-object information used by the backend is already mostly 2D in its motion semantics: fused velocities and association stability are primarily meaningful in the ground plane. Second, retaining only the most critical ego variables keeps the optimization small enough that it can run repeatedly online without becoming the dominant compute bottleneck. The obvious trade-off is that object errors cannot be jointly estimated and can only be used as external observations; if a track is wrong, the backend has no internal variable representing that object's state to absorb the error.
+
+Choosing this ego-only formulation first was therefore a deliberate risk-control strategy. A full joint graph would have required object poses, velocities, data-association uncertainty, marginalization policy, and probably more careful motion-model design. By contrast, the current backend can be implemented, tested, and stress-analyzed using information already produced by MCTrack. This is why it is best described as a prototype of the backend direction rather than as the backend solution itself.
 
 \subsection{Residual Modeling and the Gating Strategy}
 The joint backend includes two major residual types. The first is odometry-consistency residuals: relative poses between adjacent FAST-LIO frames are treated as the primary constraints of the sliding window, ensuring that optimization does not deviate excessively from the original odometry. The second is object-observation consistency residuals: for each frame, the backend matches the nearest tracking snapshot in time and retains only objects that satisfy score, track-length, velocity-jump, and time-synchronization gates. For each retained object, the code first extrapolates its world-coordinate position to the current frame timestamp using its velocity and then projects it into the ego local frame used during optimization, yielding the predicted observation \(z^{\mathrm{pred}}_{ik}\). The measured observation \(z^{\mathrm{meas}}_{ik}\) comes from the LiDAR-local pose stored in \texttt{TrackedObject}. The object residual is therefore
@@ -532,16 +648,33 @@ w_{\min}^{\mathrm{obj}},
 \end{equation}
 that is, it is jointly determined by normalized score and normalized trajectory length.
 
-\subsection{Value and Limitations of the Joint Backend}
-The engineering value of this backend is that it validates a key proposition: even when object states are not treated as explicit optimization variables, stable tracked objects can still act as temporary moving anchors that impose additional constraints on the ego trajectory. In other words, the system has already moved beyond the view that dynamic targets are merely noise to be filtered out.
+This residual structure is intentionally asymmetric. The odometry residuals are treated as the stable backbone of the window. The object residuals act as optional corrections whose role is to nudge the solution when object evidence is mature and consistent. The backend therefore does not ask tracked objects to dominate the estimate. It asks them to provide a secondary source of agreement about how the ego platform should be situated relative to the observed scene. That asymmetry is sensible for a prototype, because it limits how much damage a bad track can do. At least in theory, the odometry chain should still anchor the window even when some object factors are imperfect.
 
-Its limitations, however, are equally clear. Because object states come from point estimates of the tracker and are extrapolated through velocity propagation, any noise in object velocity, detection boxes, or association results can be injected back into the ego pose. In the current experiments, the joint backend does reduce global drift on some sequences, but it also degrades performance noticeably on others. Therefore, the conclusion of this section is not that the joint backend is already mature, but rather that the direction is valid while the current ego-only implementation remains an engineering prototype that still needs substantial refinement.
+In practice, the gating strategy determines whether this theory holds. The backend first discards any track whose score is below threshold, whose track length is too short, whose velocity jump exceeds the allowed maximum, or whose timestamp differs too much from the current odometry state. These conditions correspond closely to the actual failure channels of tracked-object reuse. Low score suggests uncertain detection quality. Short track length suggests immature temporal evidence. Large velocity jumps often indicate a track update that is numerically unstable or semantically wrong. Excessive timestamp mismatch makes velocity extrapolation unreliable even if the track itself is good. The gating policy is therefore not arbitrary conservatism. It is the encoded belief about which tracked objects are mature enough to be treated as weak moving anchors for the ego state.
+
+\subsection{Window Update Logic and Practical Behavior}
+The backend is driven by a timer callback rather than by optimization on every message. It stores recent odometry states and track snapshots in ring buffers, builds the latest window when enough frames exist, and avoids re-optimizing the same window end stamp. The optimized result is applied as a correction to the latest raw odometry pose, preserving FAST-LIO roll and pitch while adjusting planar position and yaw. The backend therefore behaves more like an online corrector than a full smoothing engine.
+
+This explains the mixed experimental behavior observed later. When object information is clean and baseline drift is significant, the backend can provide useful low-frequency correction. When object information is noisy, a few bad residuals can remain visible because the window is small and object states are not jointly estimated.
+
+\subsection{Value and Limitations of the Joint Backend}
+The engineering value of this backend is that it validates a key proposition: even when object states are not treated as explicit optimization variables, stable tracked objects can still act as temporary moving anchors that impose additional constraints on the ego trajectory. In other words, the system has already moved beyond the view that dynamic targets are merely noise to be filtered out. The backend therefore serves as a proof-of-direction. It shows that tracked objects can enter the estimation problem as positive information, not only as sources of point down-weighting.
+
+Its limitations, however, are equally clear. Because object states come from point estimates of the tracker and are extrapolated through velocity propagation, any noise in object velocity, detection boxes, or association results can be injected back into the ego pose. The backend also lacks richer factor diversity: there are no explicit object-state variables, no stronger confidence model than score and track length, and no sophisticated data-association uncertainty representation. Moreover, the motion model implicit in the tracker is still relatively simple, so extrapolated object positions are not always trustworthy enough to constrain ego motion.
+
+Sequence 0009 is the clearest failure case. In online mode, the baseline ATE RMSE is 1.6831\,m and the front-end loop slightly improves it to 1.6675\,m, but the joint backend degrades the ATE RMSE to 3.3082\,m, while RPE RMSE rises from 0.1787 to 1.9514. The most plausible interpretation is not that object information is useless in principle, but that several weak links aligned negatively in this sequence. Velocity extrapolation likely accumulated error over short object horizons. Timestamp mismatch, even if within the nominal gate, likely reduced the physical meaning of propagated object states. Gating based on score, track length, and velocity jump was not sufficient to suppress all harmful factors. Once those residuals entered a small ego-only window, the optimizer had no object-state variables or stronger uncertainty model to absorb the inconsistency. This makes Sequence 0009 far more convincing as a diagnostic example than a generic statement that the backend is ``sometimes unstable.''
+
+The correct conclusion is therefore measured. The backend direction is valid, because some sequences do show useful drift correction and because the formulation already demonstrates how object information can enter ego optimization. But the present ego-only implementation remains an engineering prototype rather than a robust joint backend. A reasonable evolution path is clear: add better confidence modeling, incorporate object-state variables directly, enrich the factor set beyond simple object observations, and eventually move toward an object-centric backend in which ego motion and object motion are estimated together instead of one being used only as a correction source for the other.
 
 \section{Experimental Analysis}
 \subsection{Experimental Setup and Result Sources}
-The experiments in this report are uniformly based on the currently archived online results under \texttt{Results/}. The online experiments cover seven sequences: 0003, 0006, 0007, 0009, 0010, 0013, and 0020. All numerical values are taken from the corresponding \texttt{metrics.json} files, while the figures correspond to \texttt{evaluation\_result.png}, \texttt{evaluation\_joint\_backend.png}, and \texttt{ablation\_bar.png}.
+The experiments in this report are uniformly based on the archived online results already stored under \texttt{Results/}. The analyzed online sequences are 0003, 0006, 0007, 0009, 0010, 0013, and 0020. All numerical values are taken from the corresponding \texttt{metrics.json} files, and the discussed plots correspond to \texttt{evaluation\_result.png}, \texttt{evaluation\_joint\_backend.png}, and \texttt{ablation\_bar.png}. This section therefore does not present new experiments performed during report writing; it consolidates and interprets the experiment artifacts already generated by the reproducible pipeline.
 
-In online mode, three configurations are compared: \texttt{Baseline}, \texttt{FAST-LIO+MCTrack}, and \texttt{Joint Backend}. The evaluation metrics include ATE RMSE, RPE RMSE, KITTI relative translation error Tr, and relative rotation error Rot.
+In online mode, three configurations are compared: \texttt{Baseline}, \texttt{FAST-LIO+MCTrack}, and \texttt{Joint Backend}. The baseline is pure FAST-LIO. \texttt{FAST-LIO+MCTrack} adds pose-assisted tracking and tracking-informed dynamic weighting but evaluates the front-end optimized trajectory directly. \texttt{Joint Backend} further evaluates the ego-only backend output recorded from \texttt{/joint\_backend/odom}. This ordering is analytically useful because it isolates the effect of the front-end loop from the additional effect, positive or negative, of the backend stage.
+
+The main evaluation metrics serve different purposes and should not be conflated. \textbf{ATE RMSE} measures the root-mean-square global trajectory deviation after alignment to ground truth, so it is most informative about accumulated drift and overall path consistency. \textbf{RPE RMSE} measures short-horizon relative motion disagreement, so it is more sensitive to local frame-to-frame stability. \textbf{KITTI relative translation error} \(Tr\) summarizes percentage translation error over path segments of fixed length, while \textbf{KITTI relative rotation error} \(Rot\) summarizes angular drift per 100 m. A method can therefore improve ATE without improving RPE, or improve translation consistency without improving rotation consistency. This distinction is important for interpreting the current backend, which sometimes behaves like a coarse drift corrector but not a uniformly better local optimizer.
+
+The seven selected sequences cover a useful range of operating conditions. Sequence 0010 and Sequence 0020 are representative of high-dynamic or drift-prone settings in which front-end feedback has room to show a large gain. Sequences 0003 and 0006 are shorter or more moderate cases in which the front-end improves but the backend can over-correct. Sequences 0007 and 0013 represent relatively stable cases where improvements are limited but generally consistent. Sequence 0009 is the critical failure case in which the backend degrades severely. Organizing the analysis by these scene characteristics is more informative than discussing each sequence as an isolated number.
 
 \begin{figure}[H]
     \centering
@@ -551,7 +684,7 @@ In online mode, three configurations are compared: \texttt{Baseline}, \texttt{FA
 \end{figure}
 
 \subsection{Online Experiments: Aggregate Results}
-Table~\ref{tab:online_ate} summarizes ATE and RPE for all online sequences. It can be seen that \texttt{FAST-LIO+MCTrack} outperforms the \texttt{Baseline} on all seven sequences, indicating that the most stable gain in the current system comes from the front-end closed loop. In contrast, \texttt{Joint Backend} further reduces ATE on only four of the seven sequences, indicating clearly insufficient stability.
+Table~\ref{tab:online_ate} summarizes ATE and RPE for all online sequences. The most important aggregate observation is immediate: \texttt{FAST-LIO+MCTrack} improves ATE RMSE over the baseline on all seven online sequences. This 7/7 behavior is stronger evidence than any single large success case because it shows that the front-end loop is robust across varied conditions. By contrast, \texttt{Joint Backend} further reduces ATE on only four sequences, and two of those gains are effectively neutral in practice. The backend therefore does not exhibit the same cross-sequence stability as the front-end loop.
 
 \begin{table}[H]
     \centering
@@ -573,7 +706,9 @@ Table~\ref{tab:online_ate} summarizes ATE and RPE for all online sequences. It c
     \end{tabular}}
 \end{table}
 
-Table~\ref{tab:online_kitti} reports KITTI relative translation and rotation errors in online mode. Across the seven sequences with sufficient segment length, \texttt{FAST-LIO+MCTrack} outperforms the baseline on six sequences, whereas \texttt{Joint Backend} outperforms the baseline on only three. This indicates that the current backend behaves more like an occasional global-drift corrector than a consistently reliable local refinement module.
+The ATE table also shows why the backend should not be judged only by average improvement. Sequence 0010 is a major success for both front-end and backend, but Sequence 0009 is a catastrophic backend failure. The systems lesson is therefore that the front-end gain is stable while the backend gain is conditional. The RPE columns reinforce this distinction: the front-end often improves or preserves local stability, whereas the backend can introduce large local inconsistencies when object-derived corrections are unreliable.
+
+Table~\ref{tab:online_kitti} reports KITTI relative translation and rotation errors in online mode. Here again the front-end loop behaves more consistently than the backend. \texttt{FAST-LIO+MCTrack} improves relative translation error on six of the seven evaluable sequences and relative rotation error on four, while \texttt{Joint Backend} improves relative translation on only three and often worsens relative rotation. This is exactly the pattern expected from a backend that sometimes corrects long-horizon drift but does not yet guarantee smoother local geometry.
 
 \begin{table}[H]
     \centering
@@ -595,7 +730,7 @@ Table~\ref{tab:online_kitti} reports KITTI relative translation and rotation err
     \end{tabular}}
 \end{table}
 
-Among the online results, the two strongest success cases are Sequences 0010 and 0020. For Sequence 0010, ATE RMSE decreases dramatically from 3.7651\,m to 0.8680\,m, an improvement of 76.95\%. For Sequence 0020, ATE RMSE drops from 11.7323\,m to 6.7938\,m, an improvement of 42.09\%. Together, these two cases show that when baseline drift is substantial and dynamic objects are highly involved, dynamic-point down-weighting together with stable tracking can significantly improve localization. Figure~\ref{fig:online_0020} further presents the trajectory evaluation and dynamic-vehicle tracking visualization for Sequence 0020.
+Among the online results, the two strongest front-end success cases are Sequences 0010 and 0020. For Sequence 0010, ATE RMSE decreases dramatically from 3.7651\,m to 0.8680\,m, an improvement of 76.95\%. For Sequence 0020, ATE RMSE drops from 11.7323\,m to 6.7938\,m, an improvement of 42.09\%. These are not minor refinements. They show that when baseline drift is substantial and dynamic objects strongly affect the scan, the combination of reliable pose support for tracking and soft dynamic-point down-weighting can substantially improve localization. Figure~\ref{fig:online_0020} further illustrates this behavior for Sequence 0020, where the optimized trajectory is visibly closer to ground truth than the baseline.
 
 \begin{figure}[H]
     \centering
@@ -615,20 +750,36 @@ Among the online results, the two strongest success cases are Sequences 0010 and
 \end{figure}
 
 \subsection{Integrated Analysis and Failure Modes}
-Three relatively clear conclusions can be drawn from the full set of current results.
+\textbf{High dynamic scenes with large baseline drift: Sequences 0010 and 0020.} These two sequences are the clearest demonstrations of the current system's front-end value. In Sequence 0010, the baseline already suffers significant global deviation, and the front-end loop reduces ATE RMSE from 3.7651\,m to 0.8680\,m while also lowering RPE RMSE from 0.2774 to 0.2281. The joint backend remains good relative to baseline but is slightly worse than the front-end output, which suggests that most of the gain has already been captured before backend correction. Sequence 0020 shows a similar but longer-horizon pattern. The front-end loop cuts ATE RMSE from 11.7323\,m to 6.7938\,m and improves KITTI translation error from 3.2245\% to 2.3967\%. The backend preserves much of this global gain, but RPE changes only marginally. The most plausible explanation is that these sequences suffer from dynamic-scene contamination and global drift strongly enough that better front-end weighting yields a large benefit, while the backend has little clean additional information left to exploit.
 
-First, the truly stable gain comes from the front-end closed loop. Across the seven online sequences, \texttt{FAST-LIO+MCTrack} outperforms the baseline on 7/7 sequences. For KITTI relative translation error, improvements are observed on 6/7 evaluable sequences. This shows that the most mature and trustworthy module in the project is the closed loop of pose-assisted tracking and tracking-fed dynamic weighting.
+\textbf{Moderate dynamic scenes: Sequences 0003 and 0006.} These two sequences show a subtler but extremely important pattern. The front-end loop improves both ATE and RPE: Sequence 0003 improves ATE RMSE by 14.75\%, and Sequence 0006 improves it by 10.09\%, with especially clear RPE improvement in 0006 from 0.1324 to 0.0869. Yet in both sequences the backend degrades performance, pushing ATE above baseline and noticeably worsening RPE and KITTI relative errors. This indicates that the front-end improvement is not merely a by-product of easier sequences. The front-end helps even in moderate cases. The backend failure in these sequences likely reflects over-correction: the baseline and front-end are already reasonably good, so a small number of noisy object factors can do more harm than good. In other words, the backend currently lacks a sufficiently strong activation criterion for deciding when object-derived correction is worth the risk.
 
-Second, the joint backend is still fragile. Among the currently archived results, the representative failure cases are no longer the old Sequence 0011, but Sequences 0009 and 0012. In online mode for Sequence 0009, the ATE RMSE of \texttt{Joint Backend} degrades from 1.6831\,m to 3.3082\,m. For Sequence 0012, the corresponding degradation is from 0.0099\,m to 0.0606\,m. These cases show that once velocity propagation, temporal alignment, or gating conditions are even slightly biased, the ego-only backend can re-inject noise into the ego trajectory.
+\textbf{Low-dynamic or static-structure-rich scenes: Sequences 0007 and 0013.} These sequences are valuable because they test whether the proposed loop remains safe when the problem is not strongly dynamic. The answer is mostly yes for the front-end. Sequence 0007 shows a small ATE gain from 2.3128\,m to 2.2393\,m, and Sequence 0013 shows a modest but consistent ATE and RPE gain. The backend is nearly identical to the front-end in both cases, indicating that object-derived correction neither adds much nor causes serious damage. This is a useful outcome. It suggests that the front-end weighting loop does not require highly dramatic dynamic content in order to remain stable, while also showing that the backend has little positive leverage when the baseline is already comparatively well constrained by static structure.
 
-Third, the current backend behaves more like a long-horizon drift corrector than a general-purpose local refinement module. Using online Sequence 0020 as an example, the joint backend is more effective at maintaining or partially strengthening global-trajectory improvement than at consistently reducing frame-wise local RPE. In other words, the experimental conclusion here is not that the joint backend is finished, but that the direction is valid while the current implementation still requires stronger activation strategies and more robust object modeling.
+\textbf{Backend failure case: Sequence 0009.} Sequence 0009 deserves to stand alone because its failure is qualitatively different from the moderate degradations seen elsewhere. The front-end loop makes a small but real improvement, reducing ATE RMSE from 1.6831\,m to 1.6675\,m and RPE RMSE from 0.1787 to 0.1651. The backend then collapses: ATE RMSE rises to 3.3082\,m, ATE max error reaches 40.3063\,m, KITTI translation error worsens from 2.5630\% to 4.2200\%, and RPE RMSE jumps to 1.9514. This pattern points to a localized but severe inconsistency being injected into the ego estimate. The likely root causes are exactly those discussed in the backend chapter: velocity extrapolation error, insufficiently strict gating, and timing mismatch between odometry and tracked objects. Sequence 0009 therefore functions as the anchor case proving that the backend is not merely ``less good than the front-end'' but can actively destabilize the trajectory if object evidence is trusted too much under the current design.
+
+\subsection{From Observation to Explanation}
+Taken together, the scene-grouped results support a clear causal interpretation. When the baseline is mainly hurt by dynamic-object contamination in the front-end, the current system helps reliably because dynamic weighting attacks that mechanism before registration and mapping errors accumulate. This is why the front-end loop improves all seven sequences and delivers the largest gains in drift-prone dynamic cases. When the baseline is already relatively stable, the backend has less room to help and more chance to inject noise through imperfect tracked-object constraints.
+
+The difference between ATE and RPE trends is also instructive. On some sequences, the backend preserves a better global path shape while offering little or no RPE improvement, which is consistent with a low-frequency correction mechanism rather than a uniformly better local optimizer. The front-end remains stable because its use of object information is conservative and local, whereas the backend converts tracked-object information into stronger ego constraints and therefore demands much better synchronization, confidence modeling, and motion prediction quality.
+
+\subsection{Experimental Fairness and Reporting Discipline}
+Finally, the experimental conclusions are strengthened by the consistent comparison protocol across all reported sequences. The same archived data source, trajectory format, evaluation script, and result-directory convention are used for baseline, front-end, and backend comparisons. This matters when interpreting small gains versus large failures, because it reduces the chance that the trends come from post-processing differences rather than actual system behavior.
+
+The main experimental conclusion of the report is therefore unambiguous. The current project has already validated a useful and reproducible front-end closed loop between localization and tracking. That loop is the most stable source of gain in the entire system. The backend direction is promising but still immature, and its failures are informative rather than accidental. For a course project, this is a strong result: the system does not merely show that some improvement exists, but identifies where the improvement is robust, where it is fragile, and why the difference occurs.
 
 \section{Conclusion and Future Plan}
-This report reorganizes the entire project according to the requested seven-chapter structure, restoring the original background, system design, engineering implementation, dynamic-weight details, and joint-backend details into the main text, while also incorporating all current experimental results and figures from the repository into one unified document. At the system level, the central conclusion is clear: the project has successfully built a bidirectional collaborative closed loop around FAST-LIO, PointPillars, and MCTrack, and the most stable and reliable gain comes from the front-end dynamic-weight loop rather than from the current ego-only joint backend.
+This report expands the ME5400 project into a fuller technical narrative while keeping the conclusions aligned with the actual repository state. The project already achieves something meaningful: it builds a complete bidirectional loop among FAST-LIO, PointPillars, and MCTrack; it exposes that loop through explicit ROS topics and project-defined messages; it provides one-click reproducible experiments; and it evaluates the resulting trajectories quantitatively across seven KITTI Tracking sequences. In that sense, the work is already more than a simple component survey or a one-off demonstration. It is a functioning engineering validation platform for studying how localization and tracking can help one another in dynamic driving scenes.
 
-Future work should concentrate on three main directions. First, an adaptive activation mechanism should be added to the joint backend so that object constraints are enabled only when tracking is stable, enough targets are available, and the baseline clearly suffers from drift. Second, object states should be brought into the unified optimization variables instead of remaining outside an ego-only formulation. Third, the system should move from object-box-level constraints toward rigid-body surface constraints so that dynamic vehicles are genuinely transformed from disturbance sources into moving landmarks. If these directions continue to be developed, the project can evolve from a course-level engineering closed-loop system into an object-centric LiDAR-inertial joint optimization framework with stronger research contribution.
+The most important verified conclusion is also the simplest. The most stable and reliable gain in the current system comes from the front-end loop of ``FAST-LIO pose aiding MCTrack'' and ``MCTrack feeding dynamic weights back into FAST-LIO.'' This front-end configuration improves ATE RMSE on all seven reported online sequences and improves KITTI translation error on most of them. The dynamic-weight module is therefore not a secondary embellishment; it is currently the most mature technical contribution in the system. It improves scan matching and local-map consistency in a conservative, robust way that is compatible with online operation.
 
-\begin{thebibliography}{9}
+The report is equally clear about what has \emph{not} yet been solved. The current joint backend is not a robust object-centric optimizer. It is an ego-only sliding-window prototype that tests a valid idea under simplified assumptions. It can help on drift-dominated sequences, but it can also degrade badly when object velocity extrapolation, time alignment, or gating are imperfect. Sequence 0009 is the key reminder that reusing tracked objects as positive localization constraints is substantially harder than merely using them for soft front-end suppression. This is not a contradiction of the project hypothesis. It is the exact evidence needed to refine that hypothesis into a stronger next-stage design.
+
+The future work can therefore be prioritized rather clearly. \textbf{First}, the backend should evolve from an ego-only corrector into an \textbf{object-centric joint backend} in which object states are optimized together with ego pose instead of entering only as external observations. This is the most important upgrade because it directly addresses the current inability to absorb object-state error inside the optimization. \textbf{Second}, the system needs \textbf{stronger confidence modeling and association strategy}. Detection score and track length are useful first heuristics, but they are not sufficient for deciding when an object factor should influence ego motion strongly. Confidence-aware weighting, more explicit motion consistency checks, and richer data-association diagnostics are all needed. \textbf{Third}, the optimization should move toward \textbf{incremental or more efficient windowed updates}. If the object-centric formulation becomes richer, the current lightweight least-squares loop will not remain enough. \textbf{Fourth}, the project should be evaluated on \textbf{more datasets and more complete ablations}, not mainly to increase paper-style volume, but to test whether the same front-end versus backend pattern persists beyond the current KITTI subset.
+
+From the perspective of course value, this is a strong and honest outcome. The project has already integrated multiple complex modules into one coherent workflow, proved that a localization-tracking feedback loop can produce stable front-end gains, and exposed the real engineering gaps that block a stronger joint backend. That combination of working system, reproducible experiments, and transparent failure analysis is precisely what makes the current prototype useful for continued research. If the next iteration succeeds in promoting today's message-level feedback into a true object-centric estimation graph, the project can evolve naturally from a course-scale engineering validation into a more substantive research contribution on dynamic-scene LiDAR-inertial SLAMMOT.
+
+\begin{thebibliography}{99}
 \bibitem{fastlio2}
 W. Xu, Y. Cai, D. He, J. Lin, and F. Zhang, ``FAST-LIO2: Fast direct LiDAR-inertial odometry,'' \emph{IEEE Transactions on Robotics}, vol. 38, no. 4, pp. 2053--2073, 2022.
 
@@ -638,8 +789,20 @@ A. H. Lang, S. Vora, H. Caesar, L. Zhou, J. Yang, and O. Beijbom, ``PointPillars
 \bibitem{kitti}
 A. Geiger, P. Lenz, and R. Urtasun, ``Are we ready for autonomous driving? The KITTI vision benchmark suite,'' in \emph{Proc. CVPR}, 2012, pp. 3354--3361.
 
+\bibitem{staticfusion}
+R. Scona, M. Jaimez, Y. R. Petillot, M. Fallon, and D. Cremers, ``StaticFusion: Background reconstruction for dense RGB-D SLAM in dynamic environments,'' in \emph{Proc. ICRA}, 2018.
+
+\bibitem{ds-slam}
+C. Yu, Z. Liu, X. Liu, F. Xie, Y. Yang, Q. Wei, and Q. Fei, ``DS-SLAM: A semantic visual SLAM towards dynamic environments,'' in \emph{Proc. IROS}, 2018.
+
+\bibitem{dynaslam}
+B. Bescos, J. M. Facil, J. Civera, and J. Neira, ``DynaSLAM: Tracking, mapping and inpainting in dynamic scenes,'' \emph{IEEE Robotics and Automation Letters}, vol. 3, no. 4, 2018.
+
 \bibitem{ab3dmot}
 X. Weng, J. Wang, D. Held, and K. Kitani, ``3D multi-object tracking: A baseline and new evaluation metrics,'' in \emph{Proc. IROS}, 2020, pp. 10359--10366.
+
+\bibitem{centerpoint}
+T. Yin, X. Zhou, and P. Krahenbuhl, ``Center-based 3D object detection and tracking,'' in \emph{Proc. CVPR}, 2021, pp. 11784--11793.
 
 \bibitem{confslammot}
 S. Fang and H. Li, ``LiDAR SLAMMOT based on Confidence-guided Data Association,'' \emph{arXiv preprint arXiv:2412.01041}, 2024.
