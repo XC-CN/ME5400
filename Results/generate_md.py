@@ -15,7 +15,7 @@ seqs.sort()
 valid_seqs = []
 for seq in seqs:
     json_path = os.path.join(base_dir, f"{seq}_results", "Online", "metrics.json")
-    if os.path.exists(json_path):
+    if os.path.exists(json_path) and seq not in ["0012", "0017"]:
         valid_seqs.append(seq)
 
 def get_color_span(val_str, val_float):
@@ -131,7 +131,7 @@ for seq in valid_seqs:
 
 md_content += table2 + table3 + """
 ## 备注
-- `0012`、`0016`、`0017` 的有效匹配里程过短，`Tr / Rot` 无可用段长，因此表中显示为 `N/A`。
+- `0016` 的有效匹配里程过短，`Tr / Rot` 无可用段长，因此表中显示为 `N/A`。
 - 如果某序列没有对应的 `Online/metrics.json`，则未纳入三轨在线汇总。
 """
 

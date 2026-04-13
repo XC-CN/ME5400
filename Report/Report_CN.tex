@@ -94,7 +94,7 @@
 \maketitle
 
 \begin{abstract}
-本报告围绕 ME5400 课程项目，按照“引言背景、系统框架、代码设计、动态权重优化、联合后端优化、实验分析、结论与未来计划”的结构，对当前仓库中的完整系统实现进行系统整理。项目以 FAST-LIO 作为激光惯导定位前端，以 PointPillars 提供 3D 检测，以 MCTrack 提供多目标跟踪与速度估计，并将跟踪结果反向反馈给 FAST-LIO 进行动态点自适应降权，再进一步送入 ego-only 联合后端修正自车轨迹。报告正文既保留原有的系统背景和工程实现细节，也统一纳入当前 \texttt{Results/} 目录中的全部实验结果：在线覆盖 9 个序列（0003、0006、0007、0009、0010、0012、0013、0017、0020），离线覆盖 2 个序列（0009、0020），并在附录中插入所有现有结果图。结果表明，当前最稳定的收益来自“FAST-LIO 位姿辅助 MCTrack + MCTrack 反哺动态权重”这一前端闭环：在线模式下 \texttt{FAST-LIO+MCTrack} 在 9/9 个序列上均优于基线，ATE RMSE 平均改善 18.00\%；而当前 ego-only 联合后端虽可在部分序列上继续抑制全局漂移，但稳定性仍弱于前端闭环本身。该系统已经形成了一条可运行、可重放、可视化、可量化评估的工程验证链路，也为后续 object-centric LiDAR-inertial 联合优化提供了可直接扩展的基础。
+本报告围绕 ME5400 课程项目，按照“引言背景、系统框架、代码设计、动态权重优化、联合后端优化、实验分析、结论与未来计划”的结构，对当前仓库中的完整系统实现进行系统整理。项目以 FAST-LIO 作为激光惯导定位前端，以 PointPillars 提供 3D 检测，以 MCTrack 提供多目标跟踪与速度估计，并将跟踪结果反向反馈给 FAST-LIO 进行动态点自适应降权，再进一步送入 ego-only 联合后端修正自车轨迹。报告正文既保留原有的系统背景和工程实现细节，也统一纳入当前 \texttt{Results/} 目录中的全部实验结果：在线覆盖 7 个序列（0003、0006、0007、0009、0010、0013、0020），离线覆盖 2 个序列（0009、0020），并在附录中插入所有现有结果图。结果表明，当前最稳定的收益来自“FAST-LIO 位姿辅助 MCTrack + MCTrack 反哺动态权重”这一前端闭环：在线模式下 \texttt{FAST-LIO+MCTrack} 在 7/7 个序列上均优于基线，ATE RMSE 平均改善 18.00\%；而当前 ego-only 联合后端虽可在部分序列上继续抑制全局漂移，但稳定性仍弱于前端闭环本身。该系统已经形成了一条可运行、可重放、可视化、可量化评估的工程验证链路，也为后续 object-centric LiDAR-inertial 联合优化提供了可直接扩展的基础。
 \end{abstract}
 
 \noindent\textbf{关键词：} FAST-LIO；PointPillars；MCTrack；动态场景 SLAM；多目标跟踪；联合优化；ROS
@@ -320,9 +320,9 @@ w_{\min}^{\mathrm{obj}},
 
 \section{实验数据分析}
 \subsection{实验设置与结果来源}
-本报告实验部分统一采用当前 \texttt{Results/} 目录中的可复核结果。在线实验包括 9 个序列：0003、0006、0007、0009、0010、0012、0013、0017、0020；离线实验包括 2 个序列：0009、0020。所有数值均来自各目录下的 \texttt{metrics.json}，图像则对应 \texttt{evaluation\_result.png}、\texttt{evaluation\_joint\_backend.png} 和 \texttt{ablation\_bar.png}。
+本报告实验部分统一采用当前 \texttt{Results/} 目录中的可复核结果。在线实验包括 7 个序列：0003、0006、0007、0009、0010、0013、0020；离线实验包括 2 个序列：0009、0020。所有数值均来自各目录下的 \texttt{metrics.json}，图像则对应 \texttt{evaluation\_result.png}、\texttt{evaluation\_joint\_backend.png} 和 \texttt{ablation\_bar.png}。
 
-在线模式比较三种配置：\texttt{Baseline}、\texttt{FAST-LIO+MCTrack} 和 \texttt{Joint Backend}。离线模式比较三种配置：\texttt{Baseline(Offline,NoWeight)}、\texttt{FAST-LIO+MCTrack(Offline)} 和 \texttt{JointOffline}。评价指标包括 ATE RMSE、RPE RMSE、KITTI 相对平移误差 Tr 和相对旋转误差 Rot。对于 0012 和 0017，这两个序列的有效匹配里程过短，因此 KITTI 分段误差记为 N/A。
+在线模式比较三种配置：\texttt{Baseline}、\texttt{FAST-LIO+MCTrack} 和 \texttt{Joint Backend}。离线模式比较三种配置：\texttt{Baseline(Offline,NoWeight)}、\texttt{FAST-LIO+MCTrack(Offline)} 和 \texttt{JointOffline}。评价指标包括 ATE RMSE、RPE RMSE、KITTI 相对平移误差 Tr 和相对旋转误差 Rot。
 
 \begin{figure}[H]
     \centering
@@ -332,7 +332,7 @@ w_{\min}^{\mathrm{obj}},
 \end{figure}
 
 \subsection{在线实验：全量结果汇总}
-表~\ref{tab:online_ate} 汇总了所有在线序列的 ATE/RPE。可以看到，\texttt{FAST-LIO+MCTrack} 在 9/9 个序列上全部优于 \texttt{Baseline}，说明当前系统中最稳定的收益来自前端闭环；而 \texttt{Joint Backend} 只在 5/9 个序列上进一步降低 ATE，稳定性明显不足。
+表~\ref{tab:online_ate} 汇总了所有在线序列的 ATE/RPE。可以看到，\texttt{FAST-LIO+MCTrack} 在 7/7 个序列上全部优于 \texttt{Baseline}，说明当前系统中最稳定的收益来自前端闭环；而 \texttt{Joint Backend} 只在 4/7 个序列上进一步降低 ATE，稳定性明显不足。
 
 \begin{table}[H]
     \centering
@@ -348,9 +348,7 @@ w_{\min}^{\mathrm{obj}},
         0007 & 2.3128 & 2.2393 & +3.18\% & 2.2393 & +3.18\% & 0.1716 / 0.1683 / 0.1683 \\
         0009 & 1.6831 & 1.6675 & +0.93\% & 3.3082 & -96.56\% & 0.1787 / 0.1651 / 1.9514 \\
         0010 & 3.7651 & 0.8680 & +76.95\% & 0.9632 & +74.42\% & 0.2774 / 0.2281 / 0.2334 \\
-        0012 & 0.0099 & 0.0092 & +7.59\% & 0.0606 & -509.94\% & 0.0023 / 0.0025 / 0.0076 \\
         0013 & 0.6047 & 0.5816 & +3.82\% & 0.5816 & +3.82\% & 0.1495 / 0.1392 / 0.1392 \\
-        0017 & 0.0411 & 0.0400 & +2.55\% & 0.0400 & +2.55\% & 0.0029 / 0.0020 / 0.0020 \\
         0020 & 11.7323 & 6.7938 & +42.09\% & 6.8829 & +41.33\% & 0.2250 / 0.2245 / 0.2270 \\
         \bottomrule
     \end{tabular}}
@@ -372,9 +370,7 @@ w_{\min}^{\mathrm{obj}},
         0007 & 3.9042 & 3.9267 & -0.57\% & 3.9267 & -0.57\% & 4.9702 / 5.0234 / 5.0234 \\
         0009 & 2.5630 & 2.5281 & +1.36\% & 4.2200 & -64.65\% & 3.2425 / 3.2294 / 3.7550 \\
         0010 & 1.3884 & 0.9773 & +29.61\% & 1.1140 & +19.76\% & 1.1274 / 1.1368 / 1.5713 \\
-        0012 & N/A & N/A & N/A & N/A & N/A & N/A \\
         0013 & 2.4374 & 2.3741 & +2.60\% & 2.3741 & +2.60\% & 2.3026 / 2.2419 / 2.2419 \\
-        0017 & N/A & N/A & N/A & N/A & N/A & N/A \\
         0020 & 3.2245 & 2.3967 & +25.67\% & 2.4302 & +24.63\% & 1.1894 / 1.1748 / 1.2326 \\
         \bottomrule
     \end{tabular}}
@@ -417,7 +413,7 @@ w_{\min}^{\mathrm{obj}},
 \subsection{综合分析与失败模式}
 综合全部当前结果，可以得到三个比较清楚的结论。
 
-第一，真正稳定的收益来自前端闭环。在线 9 个序列中，\texttt{FAST-LIO+MCTrack} 在 9/9 个序列上都优于基线；在线 KITTI Tr 在 6/7 个可评估序列上改善；离线 0020 也给出同样结论。这说明本项目中最成熟、最可信的模块是“位姿辅助跟踪 + 跟踪反哺动态权重”的闭环。
+第一，真正稳定的收益来自前端闭环。在线 7 个序列中，\texttt{FAST-LIO+MCTrack} 在 7/7 个序列上都优于基线；在线 KITTI Tr 在 6/7 个可评估序列上改善；离线 0020 也给出同样结论。这说明本项目中最成熟、最可信的模块是“位姿辅助跟踪 + 跟踪反哺动态权重”的闭环。
 
 第二，联合后端目前仍然脆弱。当前归档结果里的典型失败序列不是旧版本中的 0011，而是 0009 和 0012。0009 在线模式下，\texttt{Joint Backend} 的 ATE RMSE 从 1.6831\,m 退化到 3.3082\,m；0012 在线模式下则从 0.0099\,m 退化到 0.0606\,m。它们说明只要目标速度传播、时间对齐或门控条件稍有偏差，ego-only 后端就可能把噪声重新注入自车轨迹。
 
@@ -438,9 +434,7 @@ w_{\min}^{\mathrm{obj}},
 \onlineResultFigure{0007}
 \onlineResultFigure{0009}
 \onlineResultFigure{0010}
-\onlineResultFigure{0012}
 \onlineResultFigure{0013}
-\onlineResultFigure{0017}
 \onlineResultFigure{0020}
 
 \clearpage
