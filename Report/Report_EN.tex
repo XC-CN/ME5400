@@ -159,7 +159,7 @@
 }
 
 \newcommand{\onlineResultFigure}[1]{
-\begin{figure}[p]
+\begin{figure}[!h]
     \centering
     \begin{subfigure}[t]{0.49\textwidth}
         \centering
@@ -211,6 +211,8 @@
 \hypersetup{pageanchor=false}
 \makecoverpage
 \hypersetup{pageanchor=true}
+\tableofcontents
+\newpage
 \setcounter{page}{1}
 
 \begin{abstract}
@@ -410,7 +412,7 @@ where \(\hat{B}_i\) is the predicted track box and \(B_j\) is the current detect
 
 Therefore, one key point of this section is that PointPillars and MCTrack are not merely a detector and a tracker within this system. They are the core modules that generate object-level geometry and motion semantics throughout the full data flow. FAST-LIO provides a stable ego pose, PointPillars provides temporally ordered 3D detections, and MCTrack turns those detections into track states that can be propagated over time. Only then do dynamic weighting and the joint backend become practically realizable.
 
-\section{Code Design: Online System}
+\section{Engineering Implementation and System Integration}
 \subsection{Overall Code Organization}
 The project organizes its code in three layers: \texttt{Scripts/}, \texttt{catkin\_ws/src/ME5400/scripts/}, and \texttt{catkin\_ws/src/fast\_lio/}. The top-level scripts handle one-click startup and experiment scheduling. The ME5400 package handles ROS-side bridging, tracking, the backend, and recording. The FAST-LIO package handles the localization front-end and the dynamic-weight logic. Since this report focuses more on system structure than on repository details, Table~\ref{tab:code_design} summarizes the representative entry scripts and their functions instead of enumerating the entire directory tree.
 
@@ -669,7 +671,8 @@ As I move forward into future work and life beyond school, I will carry this kin
 
 \clearpage
 \appendix
-\section{All Online Experimental Figures}
+\section*{Appendix: All Online Experimental Figures}
+\addcontentsline{toc}{section}{Appendix: All Online Experimental Figures}
 This appendix inserts all online result figures by sequence. Each sequence includes the online front-end comparison, the joint-backend evaluation, and the bar-chart comparison.
 
 \onlineResultFigure{0003}

@@ -157,7 +157,7 @@
 }
 
 \newcommand{\onlineResultFigure}[1]{
-\begin{figure}[p]
+\begin{figure}[!h]
     \centering
     \begin{subfigure}[t]{0.49\textwidth}
         \centering
@@ -209,6 +209,8 @@
 \hypersetup{pageanchor=false}
 \makecoverpage
 \hypersetup{pageanchor=true}
+\tableofcontents
+\newpage
 \setcounter{page}{1}
 
 \begin{abstract}
@@ -408,7 +410,7 @@ C_{ij}=1-\mathrm{RO\mbox{-}GDIOU}_{3D}\!\left(\hat{B}_i,\; B_j\right),
 
 因此，第二章要强调的一点是：PointPillars 和 MCTrack 在本系统中并不是单纯的“检测器”和“跟踪器”，而是整个数据流中负责生成对象级几何与运动语义的核心模块。FAST-LIO 提供稳定的 ego pose，PointPillars 提供时序化 3D 检测，MCTrack 进一步把这些检测转化为可持续传播的轨迹状态，最后才使动态权重与联合后端真正具备可实现基础。
 
-\section{代码设计：在线系统}
+\section{工程实现与系统集成}
 \subsection{整体代码组织}
 项目通过 \texttt{Scripts/}、\texttt{catkin\_ws/src/ME5400/scripts/} 和 \texttt{catkin\_ws/src/fast\_lio/} 三层目录组织代码：顶层脚本负责一键启动和实验调度，ME5400 包负责 ROS 侧桥接、跟踪、后端和 recorder，FAST-LIO 包负责定位前端及动态权重逻辑。鉴于报告更关注系统结构而非仓库细节，表~\ref{tab:code_design} 对代表性入口脚本及其功能进行概括，而不展开完整目录路径。
 
@@ -668,7 +670,8 @@ X. Tian, Z. Zhu, J. Zhao, G. Tian, and C. Ye, ``DL-SLOT: Tightly-Coupled Dynamic
 
 \clearpage
 \appendix
-\section{在线实验全量图片}
+\section*{附录：在线实验全量图片}
+\addcontentsline{toc}{section}{附录：在线实验全量图片}
 本节按序列插入全部在线结果图，每个序列均包含在线前端对比图、联合后端评估图和柱状对比图。
 
 \onlineResultFigure{0003}
