@@ -190,7 +190,7 @@
 }
 
 \title{LiDAR SLAM with Multiple Object Tracking(MOT) for Autonomous Driving}
-\author{ME5400 Project}
+\author{ME5400 Project\\Wu Zining (A0294373W)}
 \date{\today}
 
 \makeatletter
@@ -223,7 +223,7 @@
 \begin{abstract}
 This report presents a code-grounded account of the ME5400 course project on dynamic-scene LiDAR SLAM with multiple-object tracking. The system combines FAST-LIO for LiDAR-inertial ego-motion estimation, PointPillars for 3D object detection, and MCTrack for online trajectory association and motion-state estimation. The central idea is to form a bidirectional loop instead of a one-way cascade: FAST-LIO poses stabilize MCTrack association, while tracked-object states are converted into soft dynamic weights in FAST-LIO and into object-consistency factors in an ego-only sliding-window backend.
 
-All quantitative discussion is based on archived online results under \texttt{Results/} for seven KITTI Tracking sequences: 0003, 0006, 0007, 0009, 0010, 0013, and 0020. The report emphasizes both algorithmic intent and engineering realization, including ROS interfaces, time synchronization, pose buffering, standardized result archiving, and failure-mode analysis. Across the seven sequences, the front-end configuration \texttt{FAST-LIO+MCTrack} consistently outperforms the pure FAST-LIO baseline in ATE RMSE, showing that the most reliable gain comes from the front-end closed loop of pose-assisted tracking and tracking-informed dynamic-point down-weighting. The joint backend can help on some drift-dominated sequences, but it is less stable and can fail when velocity extrapolation, timestamp alignment, or object gating are unreliable; Sequence 0009 is the clearest example. The overall conclusion is intentionally modest: this project is not a state-of-the-art joint SLAMMOT system, but a reproducible engineering prototype that validates the feasibility of a localization-tracking feedback loop and clarifies the transition toward future object-centric joint optimization.
+All quantitative discussion is based on archived online results under \texttt{Results/} for seven KITTI Tracking sequences: 0003, 0006, 0007, 0009, 0010, 0013, and 0020. These sequences were prioritized because they contain sufficiently visible and persistent dynamic vehicles, making them well suited for exposing the benefit of localization-tracking feedback; by contrast, the other candidate datasets or sequences currently available to this project contain fewer dynamic objects and are therefore less informative for stress-testing a dynamic-scene loop. The report emphasizes both algorithmic intent and engineering realization, including ROS interfaces, time synchronization, pose buffering, standardized result archiving, and failure-mode analysis. Across the seven sequences, the front-end configuration \texttt{FAST-LIO+MCTrack} consistently outperforms the pure FAST-LIO baseline in ATE RMSE, showing that the most reliable gain comes from the front-end closed loop of pose-assisted tracking and tracking-informed dynamic-point down-weighting. The joint backend can help on some drift-dominated sequences, but it is less stable and can fail when velocity extrapolation, timestamp alignment, or object gating are unreliable; Sequence 0009 is the clearest example. The overall conclusion is intentionally modest: this project is not a state-of-the-art joint SLAMMOT system, but a reproducible engineering prototype that validates the feasibility of a localization-tracking feedback loop and clarifies the transition toward future object-centric joint optimization. The full code, scripts, and experiment structure are available at \url{https://github.com/XC-CN/ME5400}.
 \end{abstract}
 
 \noindent\textbf{Keywords:} FAST-LIO; PointPillars; MCTrack; dynamic-scene SLAM; multi-object tracking; object-centric perception; ROS reproducibility
@@ -251,7 +251,7 @@ In more concrete terms, the contributions of the current report and implementati
     \item A failure-aware analysis showing that the front-end loop is the most stable source of improvement, whereas the current backend remains fragile under velocity extrapolation and timing uncertainty.
 \end{itemize}
 
-The choice of KITTI Tracking as the main validation dataset is deliberate. KITTI provides synchronized LiDAR, IMU, calibration, and ground-truth vehicle motion for real urban driving scenarios~\cite{kitti}, while the Tracking split contains the dynamic vehicles, trajectory variation, and background changes needed to test a localization-tracking loop. The seven online sequences used here, namely 0003, 0006, 0007, 0009, 0010, 0013, and 0020, were selected because they cover different drift levels, dynamic intensity, and relative-trajectory spans, and because the repository already contains complete archived online runs for them under \texttt{Results/}. This report therefore does not claim a full-dataset benchmark; it analyzes the implemented system on sequences whose logs, plots, and trajectory files can be directly reproduced and inspected.
+The choice of KITTI Tracking as the main validation dataset is deliberate. KITTI provides synchronized LiDAR, IMU, calibration, and ground-truth vehicle motion for real urban driving scenarios~\cite{kitti}, while the Tracking split contains the dynamic vehicles, trajectory variation, and background changes needed to test a localization-tracking loop. The seven online sequences used here, namely 0003, 0006, 0007, 0009, 0010, 0013, and 0020, were selected because they cover different drift levels, dynamic intensity, and relative-trajectory spans, and, more importantly, because they all contain sufficiently strong dynamic-object activity for the effects of dynamic-point suppression, tracking feedback, and object-aware backend correction to become visible. By contrast, the other candidate datasets or sequences currently available in this project contain fewer dynamic objects, so they are less suitable for testing the bidirectional loop at the same intensity. This report therefore does not claim a full-dataset benchmark; it analyzes the implemented system on sequences whose logs, plots, and trajectory files can be directly reproduced and inspected.
 
 This positioning leads to an important scope statement. \textbf{This report is not written as a claim of state-of-the-art performance.} It documents an engineering prototype that validates the feasibility of a bidirectional localization-tracking loop, demonstrates a full experiment pipeline, and makes its failure cases visible rather than hiding them. That scope is appropriate for a course project because integration quality, repeatability, and diagnosis are themselves valuable outcomes. A system that runs end to end, can be replayed on multiple sequences, and exposes exactly where and why it fails provides a stronger foundation for future research than a superficially tighter formulation that was never debugged into a dependable pipeline.
 
@@ -478,7 +478,7 @@ The main runtime failure modes are straightforward: \textbf{detection latency} f
 \subsection{Overall Code Organization}
 The repository layout is intentionally organized around integration responsibility rather than around algorithm names alone. The top-level directories that matter most to this report are \texttt{catkin\_ws/}, \texttt{MCTrack/}, \texttt{MMDET3D/}, \texttt{Scripts/}, and \texttt{Results/}. \texttt{catkin\_ws/} contains the ROS-native part of the system: custom messages, launchable scripts, configuration files, and the modified FAST-LIO package. \texttt{MCTrack/} preserves the tracking framework and configuration in a relatively self-contained form so that the online node can import and wrap it rather than reimplementing tracking logic. \texttt{MMDET3D/} contains the detector-side code used to wrap PointPillars into the ROS pipeline. \texttt{Scripts/} contains orchestration logic, helper utilities, and one-click entry points. \texttt{Results/} is not a passive dump folder; it is the standardized experiment archive that the report depends on for every figure and metric.
 
-This partition is beneficial for two reasons. First, it separates heavy third-party or framework-dependent code from project-specific integration code. That makes it easier to upgrade one module without destabilizing all others. Second, it maps closely to the user's actual workflow. During experimentation, the user rarely edits a detector kernel or Kalman update directly; instead, the user launches scripts, checks logs, inspects ROS topics, records trajectories, and compares result folders. Organizing the repository to match that workflow reduces friction and shortens the feedback cycle during debugging and evaluation.
+This partition is beneficial for two reasons. First, it separates heavy third-party or framework-dependent code from project-specific integration code. That makes it easier to upgrade one module without destabilizing all others. Second, it maps closely to the user's actual workflow. During experimentation, the user rarely edits a detector kernel or Kalman update directly; instead, the user launches scripts, checks logs, inspects ROS topics, records trajectories, and compares result folders. Organizing the repository to match that workflow reduces friction and shortens the feedback cycle during debugging and evaluation. The public course-project repository is \url{https://github.com/XC-CN/ME5400}, and the report's script names, result paths, and engineering descriptions refer to that codebase.
 
 \begin{table}[H]
     \centering
@@ -730,23 +730,20 @@ Table~\ref{tab:online_kitti} reports KITTI relative translation and rotation err
     \end{tabular}}
 \end{table}
 
-Among the online results, the two strongest front-end success cases are Sequences 0010 and 0020. For Sequence 0010, ATE RMSE decreases dramatically from 3.7651\,m to 0.8680\,m, an improvement of 76.95\%. For Sequence 0020, ATE RMSE drops from 11.7323\,m to 6.7938\,m, an improvement of 42.09\%. These are not minor refinements. They show that when baseline drift is substantial and dynamic objects strongly affect the scan, the combination of reliable pose support for tracking and soft dynamic-point down-weighting can substantially improve localization. Figure~\ref{fig:online_0020} further illustrates this behavior for Sequence 0020, where the optimized trajectory is visibly closer to ground truth than the baseline.
+Among the online results, the two strongest front-end success cases are Sequences 0010 and 0020. For Sequence 0010, ATE RMSE decreases dramatically from 3.7651\,m to 0.8680\,m, an improvement of 76.95\%. For Sequence 0020, ATE RMSE drops from 11.7323\,m to 6.7938\,m, an improvement of 42.09\%. These are not minor refinements. They show that when baseline drift is substantial and dynamic objects strongly affect the scan, the combination of reliable pose support for tracking and soft dynamic-point down-weighting can substantially improve localization. Figures~\ref{fig:online_0020_traj} and \ref{fig:online_0020_tracking} further illustrate this behavior for Sequence 0020: the optimized trajectory is visibly closer to ground truth than the baseline, while the tracking visualization shows the dynamic-vehicle output on the same sequence.
 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[t]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{../Results/0020_results/Online/evaluation_result.png}
-        \caption{Trajectory evaluation}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{Visualization of tracked dynamic vehicles on Sequence 0020.png}
-        \caption{Dynamic-vehicle tracking visualization}
-    \end{subfigure}
-    \caption{Representative online results for Sequence 0020. The left panel shows that the red \texttt{FAST-LIO+MCTrack} trajectory is clearly closer to the ground truth than the blue baseline. The right panel visualizes dynamic-vehicle tracking on the same sequence.}
-    \label{fig:online_0020}
+    \includegraphics[width=0.72\textwidth]{../Results/0020_results/Online/evaluation_result.png}
+    \caption{Online trajectory evaluation for Sequence 0020. The red \texttt{FAST-LIO+MCTrack} trajectory is clearly closer to the ground truth than the blue baseline.}
+    \label{fig:online_0020_traj}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{Visualization of tracked dynamic vehicles on Sequence 0020.png}
+    \caption{Dynamic-vehicle tracking visualization for Sequence 0020.}
+    \label{fig:online_0020_tracking}
 \end{figure}
 
 \subsection{Integrated Analysis and Failure Modes}

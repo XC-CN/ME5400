@@ -4,6 +4,8 @@
 [![ROS Version](https://img.shields.io/badge/ROS-Noetic-blue.svg)](http://wiki.ros.org/noetic)
 [![Python Version](https://img.shields.io/badge/Python-3.8+-green.svg)](https://www.python.org/)
 
+语言 / Language: **中文** | [English](./README_EN.md)
+
 这是ME5400高级机器人与自主系统课程项目，聚焦于**FAST-LIO 里程计与 MCTrack 多目标跟踪的融合管线**，用于自动驾驶场景下将实时点云/IMU 位姿与三维目标检测数据统一处理并可视化。
 
 ## 目录
@@ -467,7 +469,7 @@ bash agent/check_smoke.sh --full --seq 0020
 - 评估脚本现在会**额外**生成 `Results/<序列号>_results/metrics.json`，供 agent 程序化读取和判断
 - quick smoke 默认只重算评估结果，不会重新跑完整 bag，适合作为每次改动前后的低成本基线
 
-### 🔧 配置说明
+## 🔧 配置说明
 
 主要配置文件：`catkin_ws/src/fast_lio/config/velodyne.yaml`
 
