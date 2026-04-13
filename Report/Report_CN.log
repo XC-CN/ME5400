@@ -754,11 +754,7 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 28.
 LaTeX Warning: Unused global option(s):
     [utf8].
 
-(Report_CN.aux
-
-LaTeX Warning: Label `mctrack' multiply defined.
-
-)
+(Report_CN.aux)
 \openout1 = `Report_CN.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 286.
@@ -1190,7 +1186,7 @@ File: Figures//Overview of 3D MOT framework MCTrack.png Graphic file (type bmp)
 
 <Figures//Overview of 3D MOT framework MCTrack.png>
 
-Overfull \hbox (47.23062pt too wide) in paragraph at lines 493--494
+Overfull \hbox (41.35063pt too wide) in paragraph at lines 493--494
 []\TU/FandolSong-Regular(0)/m/n/12 在 线 \TU/lmr/m/n/12 MCTrack [[]] \TU/FandolSo
 ng-Regular(0)/m/n/12 节 点 实 现 在 \TU/lmtt/m/n/12 catkin_ws/src/ME5400/scripts/mct
 rack_online_node.py
@@ -1332,10 +1328,7 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [31
 
 ] [32] [33] [34] [35] [36] [37] (Report_CN.aux)
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `Report_CN.out' has not changed.
 (rerunfilecheck)             Checksum: 48358CAFE447741A1CAF176A24BDA53B;4573.
  )
-Output written on Report_CN.xdv (40 pages, 604772 bytes).
+Output written on Report_CN.xdv (40 pages, 602468 bytes).
