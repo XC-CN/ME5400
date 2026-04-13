@@ -1,4 +1,3 @@
-% !TeX program = tectonic
 \documentclass[utf8, a4paper, 12pt]{ctexart}
 
 \usepackage{fontspec}
@@ -34,7 +33,9 @@
 \setlength{\emergencystretch}{2em}
 \renewcommand{\arraystretch}{1.15}
 \renewcommand{\UrlFont}{\ttfamily\small}
+\Urlmuskip=0mu plus 1mu\relax
 \graphicspath{{Figures/}}
+\newcommand{\code}[1]{\nolinkurl{#1}}
 
 \ctexset{
     section = {
@@ -79,7 +80,68 @@
         align=left,
         inner sep=3pt,
         font=\scriptsize
-    }
+    },
+    arch box/.style={
+        draw,
+        rounded corners=2pt,
+        fill=blue!7,
+        minimum width=3.5cm,
+        minimum height=1.0cm,
+        text width=3.2cm,
+        align=center,
+        font=\small
+    },
+    arch io/.style={
+        draw,
+        rounded corners=2pt,
+        fill=green!10,
+        minimum width=3.8cm,
+        minimum height=1.0cm,
+        text width=3.5cm,
+        align=center,
+        font=\small
+    },
+    arch accent/.style={
+        draw,
+        rounded corners=2pt,
+        fill=orange!12,
+        minimum width=3.5cm,
+        minimum height=1.0cm,
+        text width=3.2cm,
+        align=center,
+        font=\small
+    },
+    arch arrow/.style={-{Latex[length=2.2mm,width=1.4mm]}, semithick},
+    arch feedback/.style={-{Latex[length=2.2mm,width=1.4mm]}, semithick, dashed, color=orange!70!black}
+}
+
+\newcommand{\overallArchitectureFigure}{
+\begin{tikzpicture}[x=1cm,y=1cm]
+    \node[arch io] (input) at (0,0) {KITTI rosbag\\LiDAR + IMU};
+    \node[arch box] (fl) at (-3.6,-2.2) {FAST-LIO\\自车位姿 + IMU 预测};
+    \node[arch box] (pp) at (0,-2.2) {PointPillars\\带时间戳的 3D 检测};
+    \node[arch box] (bridge) at (3.6,-2.2) {位姿桥接\\\texttt{/mctrack/lidar\_pose}};
+    \node[arch box] (mc) at (1.8,-4.6) {MCTrack\\关联、速度与\\轨迹状态};
+    \node[arch accent] (weight) at (-2.4,-7.0) {动态权重\\FAST-LIO 内部的\\点级降权};
+    \node[arch accent] (backend) at (2.6,-7.0) {仅自车后端\\滑窗式轨迹修正};
+    \node[arch io] (out) at (0,-9.3) {归档轨迹、图表与日志};
+
+    \node[font=\small\bfseries, anchor=east, align=right] at (-5.55,-2.2) {第一层\\感知与自运动};
+    \node[font=\small\bfseries, anchor=east, align=right] at (-5.55,-4.6) {第二层\\时空对齐};
+    \node[font=\small\bfseries, anchor=east, align=right] at (-5.55,-7.0) {第三层\\反馈与修正};
+
+    \draw[arch arrow] (input) -- (fl);
+    \draw[arch arrow] (input) -- (pp);
+    \draw[arch arrow] (fl) -- (bridge);
+    \draw[arch arrow] (bridge) -- (mc);
+    \draw[arch arrow] (pp) -- (mc);
+    \draw[arch arrow] (mc) -- (weight);
+    \draw[arch arrow] (mc) -- (backend);
+    \draw[arch arrow] (fl) -- (backend);
+    \draw[arch arrow] (weight) -- (out);
+    \draw[arch arrow] (backend) -- (out);
+    \draw[arch feedback] (weight) to[bend left=18] node[midway,left,font=\scriptsize,align=right] {软动态\\反馈} (fl);
+\end{tikzpicture}
 }
 
 \newcommand{\onlineSequenceFigure}{
@@ -92,80 +154,83 @@
     \node[seq participant] (jb) at (11.5,0) {joint\\backend\\ego};
     \node[seq participant] (out) at (13.8,0) {RViz /\\Recorder};
 
-    \foreach \p in {bag,fl,br,pp,mc,jb,out} {
-        \draw[seq lifeline] (\p.south) -- ++(0,-15.8);
+    \coordinate (seqtop) at (0,-0.95);
+    \foreach \p/\name in {bag/bagline,fl/flline,br/brline,pp/ppline,mc/mcline,jb/jbline,out/outline} {
+        \path (\p.center |- seqtop) coordinate (\name);
+        \draw[seq lifeline] (\name) -- ++(0,-17.0);
     }
 
     \draw[seq call]
-        ($(bag.south)+(0,-0.9)$) --
+        (bagline) --
         node[above,font=\scriptsize] {发布 IMU + 原始 LiDAR(t)}
-        ($(fl.south)+(0,-0.9)$);
+        (flline);
 
-    \node[seq note, anchor=west] at (2.85,-1.55) {preprocess() 首先冻结前一个\\\texttt{tracked\_objects} 快照，并降低\\动态盒内点的权重。};
+    \node[seq note, anchor=north west] at (2.85,-1.18) {preprocess() 首先冻结前一个\\\texttt{tracked\_objects} 快照，并降低\\动态盒内点的权重。};
 
     \draw[seq call]
-        ($(fl.south)+(0,-2.6)$) to[out=15,in=345,looseness=7]
-        node[right,font=\scriptsize,align=left] {IMU 传播、扫描去畸变、\\地图匹配以及 EKF 更新}
-        ($(fl.south)+(0,-3.2)$);
+        ($(flline)+(0,-2.2)$)
+        .. controls ($(flline)+(-1.1,-2.2)$) and ($(flline)+(-1.1,-2.85)$)
+        .. ($(flline)+(0,-2.85)$);
+    \node[font=\scriptsize,align=left,anchor=west] at (4.85,-3.58) {IMU 传播、扫描去畸变、\\地图匹配以及 EKF 更新};
 
-    \node[seq note, anchor=west] at (2.85,-4.0) {同时发布 \texttt{/Odometry\_imu\_predicted}\\作为 LiDAR 更新前的预测位姿接口。};
+    \node[seq note, anchor=north west] at (2.85,-4.48) {同时发布 \texttt{/Odometry\_imu\_predicted}\\作为 LiDAR 更新前的预测位姿接口。};
 
     \draw[seq reply]
-        ($(fl.south)+(0,-4.85)$) --
+        ($(flline)+(0,-6.3)$) --
         node[above,font=\scriptsize] {\texttt{/Odometry}(t)}
-        ($(br.south)+(0,-4.85)$);
+        ($(brline)+(0,-6.3)$);
 
     \draw[seq reply]
-        ($(br.south)+(0,-5.7)$) --
+        ($(brline)+(0,-7.15)$) --
         node[above,font=\scriptsize] {\texttt{/mctrack/lidar\_pose}(t)}
-        ($(mc.south)+(0,-5.7)$);
+        ($(mcline)+(0,-7.15)$);
 
     \draw[seq call]
-        ($(bag.south)+(0,-6.6)$) --
+        ($(bagline)+(0,-8.0)$) --
         node[above,font=\scriptsize] {同步发布 LiDAR(t)}
-        ($(pp.south)+(0,-6.6)$);
+        ($(ppline)+(0,-8.0)$);
 
     \draw[seq reply]
-        ($(pp.south)+(0,-7.45)$) --
+        ($(ppline)+(0,-8.85)$) --
         node[above,font=\scriptsize] {\texttt{/detection/lidar\_detections}(t)}
-        ($(mc.south)+(0,-7.45)$);
+        ($(mcline)+(0,-8.85)$);
 
     \draw[seq call]
-        ($(mc.south)+(0,-8.35)$) to[out=15,in=345,looseness=7]
-        node[right,font=\scriptsize,align=left] {根据检测时间戳查询 \texttt{pose\_buffer}；\\必要时进行插值或短暂等待}
-        ($(mc.south)+(0,-8.95)$);
+        ($(mcline)+(0,-9.8)$) to[out=15,in=345,looseness=7]
+        ($(mcline)+(0,-10.4)$);
+    \node[font=\scriptsize,align=left,anchor=west] at (10.55,-10.07) {根据检测时间戳查询 \texttt{pose\_buffer}；\\必要时进行插值或短暂等待};
 
     \draw[seq call]
-        ($(mc.south)+(0,-9.75)$) to[out=15,in=345,looseness=7]
-        node[right,font=\scriptsize,align=left] {更新跟踪器并输出世界系/雷达系\\下的对象状态}
-        ($(mc.south)+(0,-10.35)$);
+        ($(mcline)+(0,-11.3)$) to[out=15,in=345,looseness=7]
+        ($(mcline)+(0,-11.9)$);
+    \node[font=\scriptsize,align=left,anchor=west] at (10.55,-11.57) {更新跟踪器并输出世界系/雷达系\\下的对象状态};
 
     \draw[seq reply]
-        ($(mc.south)+(0,-11.15)$) --
+        ($(mcline)+(0,-12.75)$) --
         node[above,font=\scriptsize] {\texttt{/mctrack/tracked\_objects}(t)}
-        ($(fl.south)+(0,-11.15)$);
+        ($(flline)+(0,-12.75)$);
 
     \draw[seq reply]
-        ($(mc.south)+(0,-12.0)$) --
+        ($(mcline)+(0,-13.6)$) --
         node[above,font=\scriptsize] {\texttt{/mctrack/tracked\_objects}(t)}
-        ($(jb.south)+(0,-12.0)$);
+        ($(jbline)+(0,-13.6)$);
 
     \draw[seq reply]
-        ($(fl.south)+(0,-12.85)$) --
+        ($(flline)+(0,-14.45)$) --
         node[above,font=\scriptsize] {\texttt{/Odometry}(t)}
-        ($(jb.south)+(0,-12.85)$);
+        ($(jbline)+(0,-14.45)$);
 
     \draw[seq call]
-        ($(jb.south)+(0,-13.7)$) to[out=15,in=345,looseness=7]
-        node[right,font=\scriptsize,align=left] {当前自位姿的滑窗优化}
-        ($(jb.south)+(0,-14.3)$);
+        ($(jbline)+(0,-15.4)$) to[out=15,in=345,looseness=7]
+        ($(jbline)+(0,-16.0)$);
+    \node[font=\scriptsize,align=left,anchor=west] at (12.75,-15.7) {当前自位姿的滑窗优化};
 
     \draw[seq reply]
-        ($(jb.south)+(0,-15.1)$) --
+        ($(jbline)+(0,-16.85)$) --
         node[above,font=\scriptsize] {\texttt{/joint\_backend/odom}(t)}
-        ($(out.south)+(0,-15.1)$);
+        ($(outline)+(0,-16.85)$);
 
-    \node[seq note wide, anchor=west] at (4.1,-15.95) {\texttt{tracked\_objects}(t) 不会追溯性修改当前扫描 $t$；\\相反，它成为下一帧 FAST-LIO 动态降权链的输入。};
+    \node[seq note wide, anchor=north west] at (4.1,-17.23) {\texttt{tracked\_objects}(t) 不会追溯性修改当前扫描 $t$；\\相反，它成为下一帧 FAST-LIO 动态降权链的输入。};
 \end{tikzpicture}
 }
 
@@ -196,7 +261,7 @@
 }
 
 \title{基于多目标跟踪（MOT）的自动驾驶激光 SLAM 系统}
-\author{ME5400 项目组\\Zhang Zhengyang (A0318487N)\\Wu Zining (A0294373W)}
+\author{ME5400 项目\\Wu Zining (A0294373W)}
 \date{\today}
 
 \makeatletter
@@ -229,7 +294,7 @@
 \begin{abstract}
 本报告详尽阐述了 ME5400 课程项目——面向动态场景下的激光 SLAM 与多目标跟踪（MOT）系统。该系统集成了用于激光惯性自运动估计的 FAST-LIO、用于 3D 目标检测的 PointPillars 以及用于在线轨迹关联和运动状态估计的 MCTrack。其核心思想是构建一个双向闭环而非单向串联：FAST-LIO 提供的位姿稳定了 MCTrack 的关联，而跟踪到的目标状态被转化为 FAST-LIO 中的软动态权重，并作为对象一致性因子引入仅包含自车位姿（ego-only）的滑窗后端中。
 
-所有定量讨论均基于 \texttt{Results/} 目录下 7 个 KITTI 跟踪序列（0003, 0006, 0007, 0009, 0010, 0013, 0020）的归档在线实验结果。之所以优先选用这些序列，是因为它们包含更明显、更持续的动态车辆目标，能够充分暴露定位与跟踪之间的反馈收益；相比之下，本项目当前可直接对比的其他候选数据集或序列中的动态物体较少，不足以同等强度地检验动态场景闭环。报告强调算法设计意图与工程实现细节，包括 ROS 接口、时间同步、位姿缓冲、标准结果归档以及失效模式分析。在所有 7 个序列中，前端配置 \texttt{FAST-LIO+MCTrack} 在 ATE RMSE 指标上均始终优于纯 FAST-LIO 基线，表明最可靠的增益源自“位姿辅助跟踪”与“跟踪反馈式动态降权”形成的前端闭环。联合后端虽在部分漂移严重的序列上有所帮助，但其稳定性较弱，在速度外推、时间戳对齐或目标门控不可靠时可能失效，序列 0009 便是最典型的例子。本报告的总体结论采用了审慎的态度：本项目并非追求 SOTA 的联合 SLAMMOT 系统，而是一个可复现的工程原型，它验证了定位-跟踪反馈闭环的可行性，并为未来向以对象为中心（object-centric）的联合优化转型奠定了基础。完整代码、脚本与结果归档入口公开于 \url{https://github.com/XC-CN/ME5400}。
+所有定量讨论均基于 \texttt{Results/} 目录下 7 个所选 KITTI 跟踪序列（0003, 0006, 0007, 0009, 0010, 0013, 0020）的归档在线实验结果。之所以优先选用这些序列，是因为它们包含更明显、更持续的动态车辆目标，能够充分暴露定位与跟踪之间的反馈收益；相比之下，本项目当前可直接对比的其他候选数据集或序列中的动态物体较少，不足以同等强度地检验动态场景闭环。报告强调算法设计意图与工程实现细节，包括 ROS 接口、时间同步、位姿缓冲、标准结果归档以及失效模式分析。在这 7 个所选在线序列上，前端配置 \texttt{FAST-LIO+MCTrack} 在 ATE RMSE 指标上均优于纯 FAST-LIO 基线，表明最可靠的增益源自“位姿辅助跟踪”与“跟踪反馈式动态降权”形成的前端闭环。联合后端虽在部分漂移严重的序列上有所帮助，但其稳定性较弱，在速度外推、时间戳对齐或目标门控不可靠时可能失效，序列 0009 便是最典型的例子。本报告的总体结论采用了审慎的态度：本项目并非追求 SOTA 的联合 SLAMMOT 系统，而是一个立足仓库现状的工程原型；在当前项目工作流内，其结果可以被重新运行、检查并追溯。它验证了定位-跟踪反馈闭环的可行性，并为未来向以对象为中心（object-centric）的联合优化转型奠定了基础。完整代码、脚本与结果归档入口公开于 \url{https://github.com/XC-CN/ME5400}。
 \end{abstract}
 
 \noindent\textbf{关键词：} FAST-LIO；PointPillars；MCTrack；动态场景 SLAM；多目标跟踪；面向对象的感知；ROS 重现性
@@ -243,23 +308,23 @@
 
 多目标跟踪（MOT）面临着与之相反但同样重要的依赖关系。跟踪器通常被描述为对“检测”进行操作，但仅靠 3D 检测不足以跨帧提供稳定的运动估计。当自车本身在移动时，每一个检测结果都必须经过自车运动补偿（ego-motion compensation）才能被正确解读；否则，一个在世界系下静止的目标会看起来在移动，而一个平稳移动的目标则可能出现跳变。这不仅影响关联，还影响融合速度、加速度及跟踪置信度等衍生指标。如果位姿流存在噪声，跟踪器在世界系下的运动估计也会随之不准。反之，如果跟踪器无法维持连贯的 ID 和速度轨迹，它也无法为定位堆栈提供可靠的反馈。因此，两者之间的关系本质上是双向的：更好的定位能改善跟踪，而更好的跟踪可以通过识别哪些点应被赋予较低权重，或通过提供额外的目标级约束来改善定位。
 
-本项目正是植根于这一双向直觉。系统采用 FAST-LIO~\cite{fastlio2} 作为激光惯性定位主干，PointPillars~\cite{pointpillars} 作为 3D 检测器，MCTrack 作为在线跟踪器以生成目标 ID、融合速度、加速度及轨迹长度。FAST-LIO 发布优化里程计与 IMU 预测运动。桥接节点将这些输出转换为 MCTrack 所需的位姿格式。PointPillars 按时间戳发布 3D 检测消息。MCTrack 消费检测与位姿，执行经运动补偿的关联，并发布跟踪目标。这些跟踪目标随后通过两种方式被利用：一是转化为软动态权重，在下一帧 FAST-LIO 扫描中降低动态包围盒内点的权重；二是送入仅含自车位姿（ego-only）的联合后端，测试稳定的目标观测能否为自车轨迹提供额外的滑窗约束。这一设计虽然尚未构成统一的因子图，但已形成了一个完整的信息闭环。
+本项目正是植根于这一双向直觉。系统采用 FAST-LIO~\cite{fastlio2} 作为激光惯性定位主干，PointPillars~\cite{pointpillars} 作为 3D 检测器，MCTrack~\cite{mctrack} 作为在线跟踪器以生成目标 ID、融合速度、加速度及轨迹长度。FAST-LIO 发布优化里程计与 IMU 预测运动。桥接节点将这些输出转换为 MCTrack 所需的位姿格式。PointPillars 按时间戳发布 3D 检测消息。MCTrack 消费检测与位姿，执行经运动补偿的关联，并发布跟踪目标。这些跟踪目标随后通过两种方式被利用：一是转化为软动态权重，在下一帧 FAST-LIO 扫描中降低动态包围盒内点的权重；二是送入仅含自车位姿（ego-only）的联合后端，测试稳定的目标观测能否为自车轨迹提供额外的滑窗约束。这一设计虽然尚未构成统一的因子图，但已形成了一个完整的信息闭环。
 
 在工程实践中，我们有两项设计选择需要简要说明。首先是采用\textbf{软降权（soft down-weighting）}而非硬剔除，因为硬删除在误报、框抖动、遮挡或暂时静止的情况下显得过于脆弱。其次是选择从一个\textbf{松耦合的工程闭环}起步，而非紧耦合的对象中心图。完整的联合图在理论上更优雅，但其所需的因子设计、置信度建模、边缘化处理及调试工作量远超本课程项目的周期。
 
-据此，本项目追求四个关联的目标。\textbf{研究目标}是测试定位与跟踪在不构建完整统一优化器的情况下，能否在动态驾驶场景中形成有意义的反馈闭环。\textbf{工程目标}是构建一个可运行的 ROS 管线，其组件、消息契约、启动顺序、结果日志及评估脚本均是显式且可复现的。\textbf{评估目标}是确定闭环中哪一部分提供了最稳定的收益：是前端权重环节、后端修正环节，还是两者兼有。\textbf{诊断目标}是识别阻碍当前系统表现得像一个鲁棒的联合 SLAMMOT 方案的具体失效模式。
+据此，本项目追求四个关联的目标。\textbf{研究目标}是测试定位与跟踪在不构建完整统一优化器的情况下，能否在动态驾驶场景中形成有意义的反馈闭环。\textbf{工程目标}是构建一个可运行的 ROS 管线，使其组件、消息契约、启动顺序、结果日志及评估脚本在当前项目工作流内都是显式且可重复运行的。\textbf{评估目标}是确定闭环中哪一部分提供了最稳定的收益：是前端权重环节、后端修正环节，还是两者兼有。\textbf{诊断目标}是识别阻碍当前系统表现得像一个鲁棒的联合 SLAMMOT 方案的具体失效模式。
 
 具体而言，本报告及实现的贡献可总结如下：
 \begin{itemize}[leftmargin=2em]
     \item 实现了 FAST-LIO、PointPillars、MCTrack 与 ego-only 后端的完整 ROS 集成，采用项目定义的标准消息接口而非临时私有接口。
     \item 构建了前端闭环：FAST-LIO 位姿稳定了 MCTrack，而 MCTrack 的输出在 FAST-LIO 预处理中转化为点级软权重。
-    \item 建立了可复现的实验框架，支持基线与优化运行的一键切换、\texttt{Results/} 下的标准归档、TUM 格式轨迹记录及统一的定量评估。
+    \item 建立了脚本驱动的实验框架，支持在当前项目工作流内进行基线与优化运行的一键切换、\texttt{Results/} 下的标准归档、TUM 格式轨迹记录及统一的定量评估。
     \item 通过失效感知分析表明，前端闭环是最稳定的改进源，而当前的后端在速度外推及时间不确定性面前仍显脆弱。
 \end{itemize}
 
 选择 KITTI Tracking 作为主要验证数据集是深思熟虑的结果。KITTI 为真实的城市驾驶场景提供了同步的激光雷达、IMU、标定信息及自车运动真值~\cite{kitti}。其 Tracking 切片包含测试定位-跟踪闭环所需的动态车辆、轨迹变化及背景演变。本文使用的 7 个在线序列（0003, 0006, 0007, 0009, 0010, 0013, 0020）涵盖了不同的漂移水平、动态强度及相对轨迹跨度，更重要的是，这些序列都存在足够明显的动态车辆参与者，能够让动态点抑制、跟踪反馈和后端对象因子的效果真正显现出来。相比之下，本项目当前其余可直接利用的候选数据集或序列中动态物体普遍较少，难以同等强度地检验“定位帮助跟踪、跟踪反哺定位”的双向闭环。本报告并非追求全数据集的榜单排名，而是分析该系统在那些日志、图表及轨迹文件均可直接复现和检查的序列上的表现。
 
-这一立场引出了一个重要的定位说明：\textbf{本报告并非旨在声称达到了 SOTA 性能}。它记录的是一个验证了双向定位-跟踪闭环可行性、展示了完整实验管线并使失效案例透明化的工程原型。对于课程项目而言，这种集成质量、可重复性及诊断能力本身就是极具价值的成果。一个端到端运行、可多序列回放并能准确暴露失效原因的系统，比一个未经充分调试、仅在表面上显得“紧耦合”的方案更能为后续研究打下坚实基础。
+这一立场引出了一个重要的定位说明：\textbf{本报告并非旨在声称达到了 SOTA 性能}。它记录的是一个验证了双向定位-跟踪闭环可行性、展示了完整实验管线并使失效案例透明化的工程原型。对于课程项目而言，这种集成质量、工作流内的可重复运行性及诊断能力本身就是极具价值的成果。一个端到端运行、可多序列回放并能准确暴露失效原因的系统，比一个未经充分调试、仅在表面上显得“紧耦合”的方案更能为后续研究打下坚实基础。
 
 \section{研究现状分析}
 为了更准确地定位本项目，必须从两个维度讨论相关工作。第一类是\textbf{动态场景 SLAM}，其重点在于检测、过滤或联合建模运动区域，以保持定位与建图的稳定性。第二类是\textbf{面向自动驾驶的 3D MOT}，其重点在于在自车运动下维持准确的目标轨迹和运动状态。本项目处于这两者的交汇点：它既不是单纯的动态物体过滤系统，也不是一个完整的以对象为中心的联合优化器。因此，一个有意义的对比需要考虑传感器配置、前端形式、耦合程度、动态物体处理策略、实时性倾向以及工程复杂度。
@@ -275,7 +340,7 @@
         \midrule
         StaticFusion & RGB-D; 稠密直接法 SLAM & 联合估计相机运动与分割 & 加权背景融合; 实时稠密建图~\cite{staticfusion} & 展示了采用软降权及保留背景结构而非单纯硬剔除的价值。 \\
         DS-SLAM & 视觉; ORB-SLAM2 + 语义线程 & 松耦合多线程设计 & 语义过滤加运动一致性; 面向实时运行~\cite{ds-slam} & 证明了模块化、多线程的工程结构仍能提高动态场景下的鲁棒性。 \\
-        DynaSLAM & 视觉; ORB-SLAM2 家族 & 侧重过滤, 恢复静态图 & 动态检测加背景修复; 较慢但精确~\cite{dynaslam} & 阐明了将动态目标主要视为待移除区域s的优势与局限。 \\
+        DynaSLAM & 视觉; ORB-SLAM2 家族 & 侧重过滤, 恢复静态图 & 动态检测加背景修复; 较慢但精确~\cite{dynaslam} & 阐明了将动态目标主要视为待移除区域的优势与局限。 \\
         Conf SLAMMOT & 激光; 激光里程计 & 紧耦合因子图 & 优化内部的置信度引导关联~\cite{confslammot} & 启发了后续基于置信度的对象因子权重设计。 \\
         LIMOT & 激光+惯性; 自研 LIO & 紧耦合滑窗因子图 & 实时联合激光惯性里程计与 MOT~\cite{limot} & 是本项目在超越话题级耦合后，最接近的高层目标架构。 \\
         IMM-SLAMMOT & 双目视觉; ORB-SLAM2 & 紧耦合 BA & 显式的目标运动模型切换~\cite{imm-slammot} & 强调了在交通场景中，单一的恒定速度模型往往是不够的。 \\
@@ -293,7 +358,7 @@ StaticFusion、DS-SLAM 和 DynaSLAM 共同定义了动态场景 SLAM 的早期�
 \subsection{近期 SLAMMOT 系统与向联合优化的推进}
 Conf SLAMMOT、LIMOT、IMM-SLAMMOT、Online Dynamic SLAM 和 DL-SLOT 集体展示了该领域当前的发展方向~\cite{confslammot,limot,imm-slammot,online-dynamic-slam,dl-slot}。这些工作不再将 SLAM 和 MOT 视为孤立的黑盒。相反，它们共享状态、关联置信度、运动先验或优化窗口。最重要的共同趋势是从“先定位、后跟踪”的流水线转向一种对象状态、置信度与自运动在同一估计过程中互相补全的联合系统。
 
-Conf SLAMMOT 特别值得关注，因为它强调了优化过程内部的置信度引导关联~\cite{confslammot}。这对本项目很有意义，因为目前的后端仍使用相对简单的权重（主要基于检测得分 and 轨迹长度）。Conf SLAMMOT 传达的底层信息是：置信度不应仅仅是保留或丢弃对象的阈值，它应该影响对应因子的强度。这正是本项目后端如果要提高在不稳定序列上的鲁棒性所需演进的方向。
+Conf SLAMMOT 特别值得关注，因为它强调了优化过程内部的置信度引导关联~\cite{confslammot}。这对本项目很有意义，因为目前的后端仍使用相对简单的权重（主要基于检测得分和轨迹长度）。Conf SLAMMOT 传达的底层信息是：置信度不应仅仅是保留或丢弃对象的阈值，它应该影响对应因子的强度。这正是本项目后端如果要提高在不稳定序列上的鲁棒性所需演进的方向。
 
 LIMOT 可能是本项目预想的长期目标最接近的参考~\cite{limot}。它在一个紧耦合的滑动窗口框架内集成了激光惯性里程计与多目标跟踪，是当前基于话题设计的直接对照。与 LIMOT 相比，本项目目前的统一性明显不足：FAST-LIO、PointPillars、MCTrack 和后端仍然通过消息交换而非共享单一状态图。然而，这种对比并非纯粹负面的。由于本项目已经在模块边界发布了必要的信息（包括带时间戳的位姿、雷达系对象观测、世界系跟踪状态、得分与运动属性），它实际上已经组装了紧耦合公式所需的大部分数据。
 
@@ -307,7 +372,7 @@ DL-SLOT 在激光雷达侧极具启发性，因为它探索了动态激光 SLAM 
 MOT 文献之所以重要，是因为对象信息的可用性取决于这些信息是如何产生的。AB3DMOT 和 CenterPoint 代表了两种实用的设计哲学~\cite{ab3dmot,centerpoint}：一种强调在检测之上进行轻量级的卡尔曼式跟踪，另一种则将更多运动信息推入射向器-跟踪器内部。对于本项目而言，关键的对比不在于哪种基准测试最强，而在于哪种接口对下游最有用。MCTrack 的吸引力在于它暴露了轨迹长度、融合速度、速度变化、加速度及稳定 ID，所有这些都能直接复用于动态降权及后端门控。
 
 \subsection{对比分析与存在的差距}
-从这些工作中可以归纳出三个宏观观察。首先，\textbf{该领域正朝着更紧密的耦合方向发展}：最强大的近期系统不再保持 SLAM 和 MOT 的完全分离。其次，\textbf{动态物体处理仍主要集中在过滤、关联 and 对象状态估计}；即使是联合系统也并不总是能将动态物体作为自车定位的几何支撑。第三，\textbf{实时性与工程复杂度依然是决定性因素}，因为随着耦合程度增加，同步、置信度建模与稳定优化变得更加困难。
+从这些工作中可以归纳出三个宏观观察。首先，\textbf{该领域正朝着更紧密的耦合方向发展}：最强大的近期系统不再保持 SLAM 和 MOT 的完全分离。其次，\textbf{动态物体处理仍主要集中在过滤、关联和对象状态估计}；即使是联合系统也并不总是能将动态物体作为自车定位的几何支撑。第三，\textbf{实时性与工程复杂度依然是决定性因素}，因为随着耦合程度增加，同步、置信度建模与稳定优化变得更加困难。
 
 相对于上述研究格局，本项目占据了一个有意为之的中间位置。它已经实现了一个真实的双向反馈闭环，因此超越了单向级联管线；但它仍然是一个侧重工程的松耦合原型，而非完整的以对象为中心的联合优化器。其价值在于解决了许多方案中隐晦提及的接口与复现性问题：带时间戳的消息、同步、坐标变换、实验编排、标准化日志以及多序列失效分析。存在的差距是明确的：系统已经具备了未来联合优化器所需的\textbf{信息流}，但尚未具备充分利用这些流的\textbf{状态表示}与\textbf{因子设计}。
 
@@ -340,7 +405,7 @@ MOT 文献之所以重要，是因为对象信息的可用性取决于这些信�
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.82\textwidth]{FAST-LIO2 System Architecture.jpg}
-    \caption{FAST-LIO2 前端架构。本项目中，来自 MCTrack 的对象信息被注入点云预处理管线，实现对动态点的自适应降权。}
+    \caption{FAST-LIO2 前端架构，转载自 Xu \textit{et al.}~\cite{fastlio2}。本项目中，来自 MCTrack 的对象信息被注入点云预处理管线，实现对动态点的自适应降权。}
     \label{fig:fastlio_architecture}
 \end{figure}
 
@@ -374,7 +439,7 @@ r_j=\mathbf{n}_j^\top\!\bigl(\mathbf{R}(\mathbf{x})\,\mathbf{p}_j+\mathbf{t}(\ma
 为了将 FAST-LIO 的输出接入跟踪模块，项目实现了 \texttt{fastlio\_pose\_bridge.py}，它利用配置的机体系到雷达系外参将 \texttt{/Odometry} 转换为 \texttt{/mctrack/lidar\_pose} 并以 TF 形式发布。这一显式桥接使得定位、跟踪与可视化保持一致的坐标系约定。FAST-LIO 在预处理每一帧扫描前会将最新的跟踪对象冻结为扫描局部快照，因此每个点都是针对一致的对象集合进行加权的，而不是针对中途变动的消息缓冲区。
 
 \subsection{PointPillars 检测模块}
-PointPillars~\cite{pointpillars} 通过 \texttt{MMDET3D/local/ros/nodes/kitti\_pointpillars\_bag\_node.py} 包装为 ROS 节点，能够直接消费来自 rosbag 的 KITTI 点云。其角色不仅仅是输出原始检测，而是为整个系统提供统一、可溯源且带时间戳的 3D 检测消息。项目在 \texttt{catkin\_ws/src/ME5400/msg/Detection3D.msg} 和 \texttt{Detection3DArray.msg} 中定义了统一消息格式，包含帧 ID、类别、置信度、2D 框、3D 尺寸、雷达系位置及偏航角。这样，PointPillars 与 MCTrack 不依赖任何私有第三方格式，而是通过项目定义的消息接口进行通信。
+项目将 PointPillars 检测器~\cite{pointpillars} 以 ROS 节点形式接入，具体实现位于 \path{MMDET3D/local/ros/nodes/kitti_pointpillars_bag_node.py}，因此能够直接消费 rosbag 中的 KITTI 点云。它的作用不只是输出原始检测，更是为整条管线提供统一、可溯源且带时间戳的 3D 检测消息。项目在 \path{catkin_ws/src/ME5400/msg/Detection3D.msg} 与 \path{catkin_ws/src/ME5400/msg/Detection3DArray.msg} 中定义了消息格式，包含帧 ID、类别、置信度、2D 框、3D 尺寸、雷达系位置和偏航角。因此，PointPillars 与 MCTrack 之间的通信不依赖任何私有第三方消息格式，而是建立在项目自定义的显式接口之上。
 
 \begin{figure}[H]
     \centering
@@ -421,11 +486,11 @@ x_i-x_l^c,\; y_i-y_l^c
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.92\textwidth]{Overview of 3D MOT framework MCTrack.png}
-    \caption{MCTrack 3D MOT 框架示意图。其输出不仅包含位置和尺寸，还包含速度、加速度、轨迹长度及相关运动属性。}
+    \caption{MCTrack 3D MOT 框架示意图，转载自 Wang \textit{et al.}~\cite{mctrack}。其输出不仅包含位置和尺寸，还包含速度、加速度、轨迹长度及相关运动属性。}
     \label{fig:mctrack_framework}
 \end{figure}
 
-在线 MCTrack 节点实现在 \texttt{catkin\_ws/src/ME5400/scripts/mctrack\_online\_node.py} 中。它默认订阅 \texttt{/mctrack/lidar\_pose} 和 \texttt{/detection/lidar\_detections}，内部维护位姿缓冲区和待处理检测队列，仅在合适时间戳的位姿可用后才处理检测。这种“检测等待位姿、位姿驱动处理”的设计避免了纯按到达顺序处理导致的跨帧关联的时间错位。
+在线 MCTrack~\cite{mctrack} 节点实现在 \texttt{catkin\_ws/src/ME5400/scripts/mctrack\_online\_node.py} 中。它默认订阅 \texttt{/mctrack/lidar\_pose} 和 \texttt{/detection/lidar\_detections}，内部维护位姿缓冲区和待处理检测队列，仅在合适时间戳的位姿可用后才处理检测。这种“检测等待位姿、位姿驱动处理”的设计避免了纯按到达顺序处理导致的跨帧关联的时间错位。
 
 MCTrack 同时发布可视化用的 \texttt{/mctrack/markers} 和下游优化用的 \texttt{/mctrack/tracked\_objects}。在 \texttt{TrackedObject.msg} 中，除了对象位姿和尺寸，还记录了 \texttt{track\_length}、\texttt{velocity}、\texttt{velocity\_fusion}、\texttt{velocity\_diff}、\texttt{velocity\_curve} 和 \texttt{acceleration}。这些字段非常关键，因为随后的动态权重优化和联合后端门控均依赖运动属性而非仅仅框位置。
 
@@ -452,7 +517,13 @@ MCTrack 同时发布可视化用的 \texttt{/mctrack/markers} 和下游优化用
 \qquad
 \mathbf{z}_k=\mathbf{H}\mathbf{x}_{k|k-1}+\mathbf{v}_k,
 \end{equation}
-随后执行标准卡尔曼更新。在数据关联层，当前在线配置主要采用基于预测框的 3D 代价矩阵及匈牙利匹配：
+随后执行标准卡尔曼更新：
+\begin{equation}
+\mathbf{K}_k=\mathbf{P}_{k|k-1}\mathbf{H}^\top(\mathbf{H}\mathbf{P}_{k|k-1}\mathbf{H}^\top+\mathbf{R})^{-1},
+\qquad
+\mathbf{x}_{k|k}=\mathbf{x}_{k|k-1}+\mathbf{K}_k(\mathbf{z}_k-\mathbf{H}\mathbf{x}_{k|k-1}).
+\end{equation}
+在数据关联层，当前在线配置主要采用基于预测框的 3D 代价矩阵及匈牙利匹配：
 \begin{equation}
 \mathcal{A}^{\star}
 =
@@ -496,7 +567,7 @@ C_{ij}=1-\mathrm{RO\mbox{-}GDIOU}_{3D}\!\left(\hat{B}_i,\; B_j\right),
         一键在线对比 & \texttt{run\_all.sh} & 顺序执行在线基线与在线优化管线，并将完整的运行时日志归档至结果目录。 \\
         评估与归档 & 
         \makecell[tl]{\texttt{evaluate\_trajectories.py}\\\texttt{odom\_to\_tum\_recorder.py}} & 
-        统一生成定量指标与可视化文件，包括 \texttt{metrics.json}、轨迹误差对比图及消融总结图。 \\
+        统一生成定量指标与可视化文件，包括 \texttt{metrics.json}、轨迹误差对比图及指标汇总图。 \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -513,7 +584,7 @@ C_{ij}=1-\mathrm{RO\mbox{-}GDIOU}_{3D}\!\left(\hat{B}_i,\; B_j\right),
         \texttt{catkin\_ws/} & \makecell[tl]{\texttt{src/ME5400/msg/}\\\texttt{src/ME5400/scripts/}\\\texttt{src/fast\_lio/}} & ROS 原生工作空间，用于存放自定义接口、桥接节点、MCTrack 在线包装、联合后端、轨迹记录及修改后的 FAST-LIO 前端。 \\
         \texttt{MCTrack/} & \texttt{config/kitti\_fastlio.yaml}, 跟踪器模块 & 封装了在线 ROS 节点所使用的跟踪框架以及运动/关联配置。 \\
         \texttt{MMDET3D/} & PointPillars ROS 包装及检测工具 & 存放使 PointPillars 能在项目数据和话题约定下运行的检测侧代码。 \\
-        \texttt{Scripts/} & \makecell[tl]{\texttt{run\_all.sh}\\\texttt{run\_baseline.sh}\\\texttt{run\_optimized.sh}\\\texttt{evaluation/}} & 提供一键执行、编译/设置辅助、评估入口以及可复现的实验流程。 \\
+        \texttt{Scripts/} & \makecell[tl]{\texttt{run\_all.sh}\\\texttt{run\_baseline.sh}\\\texttt{run\_optimized.sh}\\\texttt{evaluation/}} & 提供一键执行、编译/设置辅助、评估入口以及脚本化实验流程。 \\
         \texttt{Results/} & \texttt{metrics.json}, 轨迹, 图像, 日志 & 作为后续分析、报告撰写和回归检查中使用的序列级输出的标准归档。 \\
         \bottomrule
     \end{tabularx}
@@ -533,14 +604,14 @@ C_{ij}=1-\mathrm{RO\mbox{-}GDIOU}_{3D}\!\left(\hat{B}_i,\; B_j\right),
 
 如图~\ref{fig:online_sequence_logic} 所示，在线链路并不是“当前帧检测立即修改当前帧点云”的同步闭环，而是一个带有一帧延迟的异步闭环。在 \texttt{preprocess()} 中，FAST-LIO 会先冻结上一时刻的 \texttt{/mctrack/tracked\_objects} 快照，并对当前扫描中落入动态框的点进行软降权。之后，当前时刻的 \texttt{/Odometry}(t) 会经由桥接节点传入 MCTrack，与 PointPillars 发布的 \texttt{/detection/lidar\_detections}(t) 对齐并用于更新目标状态。新生成的 \texttt{/mctrack/tracked\_objects}(t) 随后会同时发往 FAST-LIO 和联合后端，但它对 FAST-LIO 的影响要到下一帧才会体现。这种设计避免了帧内阻塞，减少了预处理阶段的锁竞争，也解释了为什么当前系统能够在保持在线可运行性的同时形成前端反馈闭环。
 
-当 rosbag 播放结束后，脚本会将 \texttt{trajectory.txt}、\texttt{trajectory\_joint.txt}、日志以及评估图统一归档到 \texttt{Results/<seq>\_results/Online/}。这项设计的价值不只是“整理得更干净”，而是让后续的报告撰写或调试工作能够准确重建某个序列究竟发生了什么：运行了哪些脚本，对比了哪些轨迹，指标是多少，前端和后端的图像表现如何。当然，系统目前在话题层面仍然是松耦合的，各模块共享的是消息而不是统一图状态。但从工程角度看，显式消息传递正是当前原型可检查、可复现的前提。
+当 rosbag 播放结束后，脚本会将 \texttt{trajectory.txt}、\texttt{trajectory\_joint.txt}、日志以及评估图统一归档到 \texttt{Results/<seq>\_results/Online/}。这项设计的价值不只是“整理得更干净”，而是让后续的报告撰写或调试工作能够准确重建某个序列究竟发生了什么：运行了哪些脚本，对比了哪些轨迹，指标是多少，前端和后端的图像表现如何。当然，系统目前在话题层面仍然是松耦合的，各模块共享的是消息而不是统一图状态。但从工程角度看，显式消息传递正是当前原型可检查、且能在当前项目工作流内重跑的前提。
 
-\subsection{结果归档与可复现的实验管线}
-\texttt{Results/<seq>\_results/Online/} 下的结果归档，最好被理解为一份正式的实验契约。每个在线序列目录都包含基线轨迹、优化前端轨迹、联合后端轨迹（若有）、纯文本报告、JSON 报告、对比图以及完整运行日志。这意味着报告中的定量分析并不依赖人工抄录的数字，也不依赖瞬时终端输出，而是依赖可以通过重新运行脚本再次生成的版本化产物。在实践中，这正是后续章节能够展开讨论的基础：ATE、RPE、Tr、Rot、失效序列和各种图表，都来自同一个已归档的结果源。
+\subsection{结果归档与脚本化实验管线}
+\texttt{Results/<seq>\_results/Online/} 下的结果归档，最好被理解为一份正式的实验契约。每个在线序列目录都包含基线轨迹、优化前端轨迹、联合后端轨迹（若有）、纯文本报告、JSON 报告、对比图以及完整运行日志。这意味着报告中的定量分析并不依赖人工抄录的数字，也不依赖瞬时终端输出，而是依赖可以在同一仓库工作流内通过重新运行脚本再次生成的版本化产物。这里所说的“可重复运行”，指的是在当前项目设置下重新跑通同一套脚本化管线，并恢复同类别的指标、图表和日志，而不是声称环境无关、机器无关的字节级完全复现。在实践中，这正是后续章节能够展开讨论的基础：ATE、RPE、Tr、Rot、失效序列和各种图表，都来自同一个已归档的结果源。
 
-评估链路进一步强化了这种可复现性目标。\texttt{evaluate\_trajectories.py} 会读取记录好的 TUM 轨迹，将其与 KITTI 真值进行关联，计算 ATE 和 RPE，对轨迹进行可视化对齐，并在匹配路径长度足够时计算 KITTI 风格的相对平移和相对旋转指标。因为每个基线与优化的对比都使用同一套评估脚本，报告避免了课程项目中常见的问题，即不同序列被用略有差异的方法分别评估。即便不同序列可用的有效轨迹跨度不同，评估规则本身仍然保持一致。
+评估链路进一步强化了这种工作流内可重复运行性。\texttt{evaluate\_trajectories.py} 会读取记录好的 TUM 轨迹，将其与 KITTI 真值进行关联，计算 ATE 和 RPE，对轨迹进行可视化对齐，并在匹配路径长度足够时计算 KITTI 风格的相对平移和相对旋转指标。因为每个基线与优化的对比都使用同一套评估脚本，报告避免了课程项目中常见的问题，即不同序列被用略有差异的方法分别评估。即便不同序列可用的有效轨迹跨度不同，评估规则本身仍然保持一致。
 
-这种可复现性并不是附带便利，而是项目智力贡献的一部分。一个声称带来了定位增益，却不能重新运行自己的序列、恢复自己的指标、解释自己的失败的课程项目，其价值非常有限。相比之下，当前系统能够通过固定脚本启动，以标准格式记录轨迹，重建图表，并将报告中的每一条结论追溯到明确的归档产物。这也是为什么工程可复现性应该被视为一项一等成果，而不是附录级别的细节。
+这种工作流层面的可重复运行性并不是附带便利，而是项目智力贡献的一部分。一个声称带来了定位增益，却不能重新运行自己的序列、恢复自己的指标、解释自己的失败的课程项目，其价值非常有限。相比之下，当前系统能够通过固定脚本启动，以标准格式记录轨迹，重建图表，并将报告中的每一条结论追溯到明确的归档产物。这也是为什么仓库工作流内的工程可重复运行性应该被视为一项一等成果，而不是附录级别的细节。
 
 \subsection{ROS 话题、消息接口与集成困难}
 本仓库中的模块边界主要通过 ROS 话题和项目自定义消息来维持。原始输入为 \texttt{/kitti/velo/pointcloud} 和 \texttt{/kitti/oxts/imu}。FAST-LIO 发布 \texttt{/Odometry} 和 \texttt{/Odometry\_imu\_predicted}。桥接节点转发 \texttt{/mctrack/lidar\_pose}。PointPillars 发布 \texttt{/detection/lidar\_detections}。MCTrack 发布 \texttt{/mctrack/tracked\_objects} 和 \texttt{/mctrack/markers}。后端发布 \texttt{/joint\_backend/odom}。每个话题都对应清晰的语义职责，而自定义消息的存在保证了检测器输出、目标跟踪状态和后端输入在整条链路中都保持可解释。
@@ -666,7 +737,7 @@ Sequence 0009 是最清晰的失效案例。在在线模式下，基线 ATE RMSE
 
 \section{实验分析}
 \subsection{实验设置与结果来源}
-本报告中的实验统一建立在已经归档于 \texttt{Results/} 目录下的在线结果之上。分析的在线序列包括 0003、0006、0007、0009、0010、0013 和 0020。所有数值均直接取自各自的 \texttt{metrics.json} 文件，而文中讨论的图像则对应 \texttt{evaluation\_result.png}、\texttt{evaluation\_joint\_backend.png} 和 \texttt{ablation\_bar.png}。因此，本节并不引入在写报告期间新跑出来的额外实验，而是对已经通过可复现实验管线生成的结果进行归纳和解释。
+本报告中的实验统一建立在已经归档于 \texttt{Results/} 目录下的在线结果之上。分析的在线序列包括 0003、0006、0007、0009、0010、0013 和 0020。所有数值均直接取自各自的 \texttt{metrics.json} 文件，而文中讨论的图像则对应 \texttt{evaluation\_result.png}、\texttt{evaluation\_joint\_backend.png} 和 \texttt{ablation\_bar.png}（指标汇总柱状图）。因此，本节并不引入在写报告期间新跑出来的额外实验，而是对已经通过归档的脚本化实验管线生成的结果进行归纳和解释。
 
 在线模式下共比较三种配置：\texttt{Baseline}、\texttt{FAST-LIO+MCTrack} 和 \texttt{Joint Backend}。\texttt{Baseline} 指纯 FAST-LIO。\texttt{FAST-LIO+MCTrack} 在此基础上增加位姿辅助跟踪与跟踪驱动的动态降权，但直接评估前端优化后的轨迹。\texttt{Joint Backend} 则进一步评估记录自 \texttt{/joint\_backend/odom} 的仅自车后端输出。这样的排列顺序在分析上非常重要，因为它把“前端闭环带来的增益”和“后端额外带来的增益或损失”清晰分离开了。
 
@@ -677,12 +748,12 @@ Sequence 0009 是最清晰的失效案例。在在线模式下，基线 ATE RMSE
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.62\textwidth]{The KITTI data collection vehicle.png}
-    \caption{KITTI 数据采集平台。本报告中的所有实验都基于已归档的 KITTI Tracking 结果。}
+    \caption{KITTI 数据采集平台，转载自 Geiger \textit{et al.}~\cite{kitti} 相关的基准材料。本报告中的所有实验都基于已归档的 KITTI Tracking 结果。}
     \label{fig:kitti_vehicle}
 \end{figure}
 
 \subsection{在线实验：汇总结果}
-表~\ref{tab:online_ate} 汇总了全部在线序列的 ATE 和 RPE。最重要的整体观察非常直接：\texttt{FAST-LIO+MCTrack} 在全部 7 个在线序列上都改善了 ATE RMSE。这种 7/7 的表现，比任何单个“大成功案例”都更有说服力，因为它表明前端闭环具有跨场景稳定性。相比之下，\texttt{Joint Backend} 只在 4 个序列上进一步降低了 ATE，其中还有两个改善几乎可以视为持平。因此，后端并没有表现出与前端同等级别的跨序列稳定性。
+表~\ref{tab:online_ate} 汇总了全部在线序列的 ATE 和 RPE。最重要的整体观察非常直接：\texttt{FAST-LIO+MCTrack} 在全部 7 个所选在线序列上都改善了 ATE RMSE。这种 7/7 的表现，比任何单个“大成功案例”都更有说服力，因为它表明前端闭环在这一组选定的评估切片上持续带来正收益。相比之下，\texttt{Joint Backend} 只在 4 个序列上进一步降低了 ATE，其中还有两个改善几乎可以视为持平。因此，即便只看这 7 个序列，后端也没有表现出与前端同等级别的跨序列稳定性。
 
 \begin{table}[H]
     \centering
@@ -754,25 +825,25 @@ Sequence 0009 是最清晰的失效案例。在在线模式下，基线 ATE RMSE
 \textbf{后端失效案例：Sequence 0009。} 0009 值得单独拿出来讨论，因为它的失败在性质上与前面那些“中等退化”完全不同。前端闭环仍然带来了微弱但真实的改善：ATE RMSE 从 1.6831\,m 降到 1.6675\,m，RPE RMSE 从 0.1787 降到 0.1651。随后后端几乎崩溃：ATE RMSE 升到 3.3082\,m，ATE 最大误差达到 40.3063\,m，KITTI 平移误差从 2.5630\% 恶化到 4.2200\%，RPE RMSE 也跳升到 1.9514。这种模式说明局部但严重的不一致被直接注入了自车估计中。最可能的根因正如后端章节分析所述：速度外推误差、门控不够严格，以及里程计与跟踪对象之间的时间错位。0009 因而成为一个锚定性的反例，它证明当前后端不只是“没有前端好”，而是在某些条件下会主动破坏轨迹稳定性。
 
 \subsection{从现象到解释}
-将上述分组结果综合起来，可以得到一个清晰的因果解释。当基线主要受到动态目标污染前端匹配的影响时，当前系统会稳定获益，因为动态降权正是在配准和建图误差积累之前打断了这一机制。这就是为什么前端闭环改善了全部 7 个序列，并且在高漂移动态场景中收益最大。相反，当基线已经相对稳定时，后端的剩余改善空间变小，而通过被跟踪对象施加的额外约束却更容易把噪声重新注入自车位姿。
+将上述分组结果综合起来，可以得到一个清晰的因果解释。当基线主要受到动态目标污染前端匹配的影响时，当前系统会稳定获益，因为动态降权正是在配准和建图误差积累之前打断了这一机制。这就是为什么前端闭环改善了全部 7 个所选序列，并且在高漂移动态场景中收益最大。相反，当基线已经相对稳定时，后端的剩余改善空间变小，而通过被跟踪对象施加的额外约束却更容易把噪声重新注入自车位姿。
 
 ATE 和 RPE 趋势之间的差异也很有启发性。在某些序列上，后端能够保留更好的全局路径形状，却几乎不改善甚至恶化 RPE，这与“它更像低频修正器而非全面更优的局部优化器”这一解释是一致的。前端之所以稳定，是因为它对对象信息的使用方式是局部且保守的；后端之所以脆弱，则是因为它把跟踪对象信息转成了更强的自车约束，因此对同步质量、置信度建模和运动预测精度提出了更高要求。
 
 \subsection{实验公平性与报告纪律}
 最后，本报告的实验结论之所以具有说服力，还因为所有已报告序列都采用了统一的比较协议。基线、前端优化和后端优化使用的是同一归档数据源、同一轨迹格式、同一评估脚本和同一结果目录约定。尤其是在面对“小改善”和“大失败”同时出现的情况下，这一点非常关键，因为它显著降低了“趋势只是由后处理差异引起”的可能性。
 
-因此，本报告的核心实验结论是明确的。当前项目已经验证了一个有用而且可复现的前端定位-跟踪闭环，而这个闭环正是整个系统中最稳定的收益来源。后端方向是有前景的，但仍然不成熟；它的失败并非偶然噪声，而是对下一阶段设计有诊断价值的证据。对于课程项目而言，这已经是一个很强的结果：系统不仅展示了“确实存在改善”，还清楚地区分了改善在哪里是稳健的，在哪里是脆弱的，以及这种差异为什么会出现。
+因此，本报告的核心实验结论在当前实际测试范围内是明确的。在这 7 个所选在线序列和当前归档工作流下，项目已经验证了一个有用的前端定位-跟踪闭环，而且其收益可以被持续观察和追溯。这个闭环正是当前系统中最稳定的收益来源。后端方向是有前景的，但仍然不成熟；它的失败并非偶然噪声，而是对下一阶段设计有诊断价值的证据。对于课程项目而言，这已经是一个很强的结果：系统不仅展示了“确实存在改善”，还清楚地区分了改善在哪里是稳健的，在哪里是脆弱的，以及这种差异为什么会出现。
 
 \section{结论与未来计划}
-本报告在保持结论与仓库实际状态一致的前提下，把 ME5400 项目扩展成了一套更完整的技术叙述。这个项目已经完成了一件真正有意义的事：它建立了 FAST-LIO、PointPillars 和 MCTrack 之间的完整双向闭环；它通过明确的 ROS 话题和项目定义消息将这个闭环暴露出来；它提供了一键可复现的实验流程；并且对 7 个 KITTI Tracking 在线序列上的轨迹结果进行了定量评估。从这个意义上说，它已经不再只是一个组件综述或一次性演示，而是一个真正运作的工程验证平台，用于研究动态驾驶场景下定位与跟踪如何相互增益。
+本报告在保持结论与仓库实际状态一致的前提下，把 ME5400 项目扩展成了一套更完整的技术叙述。这个项目已经完成了一件真正有意义的事：它建立了 FAST-LIO、PointPillars 和 MCTrack 之间的完整双向闭环；它通过明确的 ROS 话题和项目定义消息将这个闭环暴露出来；它提供了在当前仓库工作流内可脚本化重跑的实验流程；并且对 7 个所选 KITTI Tracking 在线序列上的轨迹结果进行了定量评估。从这个意义上说，它已经不再只是一个组件综述或一次性演示，而是一个真正运作的工程验证平台，用于研究动态驾驶场景下定位与跟踪如何相互增益。
 
 当前最重要、也最明确验证过的结论其实很简单。系统中最稳定、最可靠的增益，来自“FAST-LIO 位姿辅助 MCTrack”与“MCTrack 将动态权重反馈给 FAST-LIO”构成的前端闭环。这个前端配置在全部 7 个已报告的在线序列上都改善了 ATE RMSE，并在大多数序列上改善了 KITTI 平移误差。因此，动态权重模块并不是某种附属点缀，而是当前系统中最成熟的技术贡献。它以保守、鲁棒且适合在线运行的方式，改善了扫描匹配和局部地图一致性。
 
 本报告同样清楚地说明了哪些问题\emph{还没有}被解决。当前联合后端并不是一个鲁棒的对象中心化优化器。它只是一个在简化假设下测试可行想法的仅自车滑窗原型。它在漂移主导的序列上有时能起作用，但当对象速度外推、时间对齐或门控条件不够可靠时，也可能出现严重退化。Sequence 0009 就是最关键的提醒：把被跟踪对象当作正向定位约束来复用，要比仅仅把它们用于前端软抑制困难得多。这并不否定项目假设，恰恰相反，它正是将该假设精炼为下一阶段更强设计所需的证据。
 
-因此，未来工作的优先级也很清晰。\textbf{第一}，后端应从仅自车修正器演化为一个\textbf{对象中心化联合后端}，在其中对象状态与自车位姿一起被优化，而不是只作为外部观测输入。这是最重要的升级，因为它直接回应了当前系统无法在优化内部吸收对象状态误差的问题。\textbf{第二}，系统需要\textbf{更强的置信度建模与关联策略}。检测得分和轨迹长度是有用的第一步启发，但不足以决定对象因子何时应当强烈影响自车运动。面向置信度的加权、更显式的运动一致性检查以及更丰富的数据关联诊断都仍然需要。\textbf{第三}，优化过程应朝着\textbf{增量式或更高效的滑窗更新}演化。如果对象中心化形式变得更丰富，当前这种轻量级最小二乘循环就不再足够。\textbf{第四}，项目需要在\textbf{更多数据集和更完整的消融实验}上继续验证，不是为了机械地增加篇幅，而是为了检验当前“前端稳定、后端脆弱”的模式是否会在 KITTI 之外依旧成立。
+因此，未来工作的优先级也很清晰。\textbf{第一}，后端应从仅自车修正器演化为一个\textbf{对象中心化联合后端}，在其中对象状态与自车位姿一起被优化，而不是只作为外部观测输入。这是最重要的升级，因为它直接回应了当前系统无法在优化内部吸收对象状态误差的问题。\textbf{第二}，系统需要\textbf{更强的置信度建模与关联策略}。检测得分和轨迹长度是有用的第一步启发，但不足以决定对象因子何时应当强烈影响自车运动。面向置信度的加权、更显式的运动一致性检查以及更丰富的数据关联诊断都仍然需要。\textbf{第三}，优化过程应朝着\textbf{增量式或更高效的滑窗更新}演化。如果对象中心化形式变得更丰富，当前这种轻量级最小二乘循环就不再足够。\textbf{第四}，项目需要在\textbf{更多数据集和更多样的场景}上继续验证，不是为了机械地增加篇幅，而是为了检验当前“前端稳定、后端脆弱”的模式是否会在 KITTI 之外依旧成立。
 
-从课程项目价值的角度看，这是一个强且诚实的结果。该项目已经把多个复杂模块集成进统一工作流，证明了定位-跟踪反馈能够稳定地产生前端收益，也明确暴露了通往更强联合后端所面临的真实工程缺口。一个能工作的系统、可复现的实验，以及透明的失败分析，正是让当前原型对后续研究依然有价值的原因。如果下一轮迭代能够把今天这种消息级反馈提升为真正的对象中心化估计图，那么这个项目就能自然地从课程规模的工程验证，继续演化为动态场景 LiDAR-惯导 SLAMMOT 方向上更实质性的研究贡献。
+从课程项目价值的角度看，这是一个强且诚实的结果。该项目已经把多个复杂模块集成进统一工作流，证明了定位-跟踪反馈能够稳定地产生前端收益，也明确暴露了通往更强联合后端所面临的真实工程缺口。一个能工作的系统、能在当前仓库工作流内重跑的实验，以及透明的失败分析，正是让当前原型对后续研究依然有价值的原因。如果下一轮迭代能够把今天这种消息级反馈提升为真正的对象中心化估计图，那么这个项目就能自然地从课程规模的工程验证，继续演化为动态场景 LiDAR-惯导 SLAMMOT 方向上更实质性的研究贡献。
 
 \begin{thebibliography}{99}
 \bibitem{fastlio2}
@@ -799,6 +870,9 @@ X. Weng, J. Wang, D. Held, and K. Kitani, ``3D multi-object tracking: A baseline
 \bibitem{centerpoint}
 T. Yin, X. Zhou, and P. Krahenbuhl, ``Center-based 3D object detection and tracking,'' in \emph{Proc. CVPR}, 2021, pp. 11784--11793.
 
+\bibitem{mctrack}
+X. Wang, S. Qi, J. Zhao, H. Zhou, S. Zhang, G. Wang, K. Tu, S. Guo, J. Zhao, J. Li, \emph{et al.}, ``MCTrack: A unified 3D multi-object tracking framework for autonomous driving,'' \emph{arXiv preprint arXiv:2409.16149}, 2024.
+
 \bibitem{confslammot}
 S. Fang and H. Li, ``LiDAR SLAMMOT based on Confidence-guided Data Association,'' \emph{arXiv preprint arXiv:2412.01041}, 2024.
 
@@ -813,6 +887,9 @@ J. Morris, Y. Wang, and V. Ila, ``Online Dynamic SLAM with Incremental Smoothing
 
 \bibitem{dl-slot}
 X. Tian, Z. Zhu, J. Zhao, G. Tian, and C. Ye, ``DL-SLOT: Tightly-Coupled Dynamic LiDAR SLAM and 3D Object Tracking Based on Collaborative Graph Optimization,'' \emph{IEEE Transactions on Intelligent Vehicles}, vol. 9, no. 1, pp. 1017--1027, 2024.
+
+\bibitem{mctrack}
+X. Wang, S. Qi, J. Zhao, H. Zhou, S. Zhang, G. Wang, K. Tu, S. Guo, J. Zhao, J. Li, and M. Yang, ``MCTrack: A Unified 3D Multi-Object Tracking Framework for Autonomous Driving,'' in \emph{Proc. IROS}, 2025.
 \end{thebibliography}
 
 \clearpage
