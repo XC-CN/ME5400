@@ -299,32 +299,22 @@
 
 \noindent\textbf{关键词：} FAST-LIO；PointPillars；MCTrack；动态场景 SLAM；多目标跟踪；面向对象的感知；ROS 重现性
 
-\section{引言与背景}
-在动态道路场景中进行定位与感知，往往面临着一对此消彼长且难以调和的矛盾。激光 SLAM 及激光惯性里程计的基础假设是所观测到的大部分几何特征是静态、可重复见且可长期复用的。其前端扫描匹配、局部地图维护及后端一致性保障，均高度依赖于“当前时刻观测到的点所对应的表面在后续帧中依然具有几何意义”这一前提。然而，自动驾驶感知系统最关注的对象（如周边车辆、行人、骑行者等）却恰恰违背了这一假设。换言之，在语义层层面对决策至关重要的区域，在几何层面往往对传统的 SLAM 系统构成了巨大威胁。这一冲突催生了大量关于动态场景 SLAM 的研究，从早期的通过检测并过滤运动区域的视觉系统，到近期能够联合推理自运动与目标轨迹的 SLAMMOT 管线~\cite{staticfusion,ds-slam,dynaslam,limot,dl-slot}。
+\section{引言}
+在动态道路场景中，激光 SLAM 高度依赖于“所观测到的几何特征是静态”这一假设；然而，自动驾驶感知系统最关注的动态对象（如车辆、行人等）恰恰违背了这一前提，导致传统的 SLAM 系统出现地图污染、配准退化以及漂移累积等问题。与此同时，多目标跟踪（MOT）也强烈依赖于 SLAM 提供的可靠自运动补偿（ego-motion compensation）以维持连贯的速度估计与轨迹。因此，两者存在本质上的双向依赖关系：更好的定位能改善跟踪，而更好的跟踪也能反向辅助定位。
 
-动态目标对激光 SLAM 的负面影响并非仅仅是“运动点是离群值”那么简单，而是通过至少三个耦合的退化通道起作用。首先是\textbf{地图污染（map contamination）}：运动车辆的点被当作静态表面插入局部或全局地图中，导致系统积累“鬼影”结构、双重墙体或拖尾，误导后续帧的配准。其次是\textbf{配准退化（registration degradation）}：即使这些点尚未永久融合进地图，如果当前帧配准残差中有很大比例由运动物体产生，局部优化器就会被迫去拟合不一致的几何结构，从而使当前帧的位姿估计产生偏差。最后是\textbf{漂移累积（drift accumulation）}：随着时间推移，上述两个问题会互相放大——微小的帧间修正偏差会扭曲局部地图，进而导致后续修正效果进一步恶化，最终产生持久的轨迹偏移。因此，动态场景不仅仅是增加了随机噪声，而是改变了优化问题本身的结构。
+本项目正是植根于这一双向直觉。系统采用 FAST-LIO~\cite{fastlio2} 作为定位主干，PointPillars~\cite{pointpillars} 提取 3D 检测，并利用 MCTrack~\cite{mctrack} 生成在线轨迹状态。这些跟踪目标随后通过两种方式被利用：一是转化为软动态权重（soft down-weighting），在 FAST-LIO 前端中削弱动态点带来的误导；二是送入仅含自车位姿（ego-only）的联合后端，测试稳定的目标观测能否提供额外的滑窗约束。为平衡项目周期与工程鲁棒性，系统采用了软降权和松耦合消息闭环方案，而非强依赖紧耦合的完整对象图优化。
 
-现有的动态场景 SLAM 系统通常采用以下三种策略之一。第一类尝试通过语义分割、运动一致性测试或鲁棒损失函数完全剔除动态点。当动态目标占视野比例较小时，该策略往往非常有效，但在大型车辆占主导的拥挤交通场景中，这可能会丢弃过多有用的几何结构。第二类尝试更显式地分离静态层与动态层，例如在稠密 RGB-D 管线中采用加权背景融合，或在视觉 SLAM 中进行语义前景过滤~\cite{staticfusion,ds-slam,dynaslam}。第三类也是更新的一类，将目标状态视为一等变量，追求自运动与被跟踪目标之间的某种程度的联合优化~\cite{confslammot,limot,imm-slammot,online-dynamic-slam,dl-slot}。对于本项目而言，实际的问题在于一个学期规模的工程系统应该如何切入这一设计空间。
-
-多目标跟踪（MOT）面临着与之相反但同样重要的依赖关系。跟踪器通常被描述为对“检测”进行操作，但仅靠 3D 检测不足以跨帧提供稳定的运动估计。当自车本身在移动时，每一个检测结果都必须经过自车运动补偿（ego-motion compensation）才能被正确解读；否则，一个在世界系下静止的目标会看起来在移动，而一个平稳移动的目标则可能出现跳变。这不仅影响关联，还影响融合速度、加速度及跟踪置信度等衍生指标。如果位姿流存在噪声，跟踪器在世界系下的运动估计也会随之不准。反之，如果跟踪器无法维持连贯的 ID 和速度轨迹，它也无法为定位堆栈提供可靠的反馈。因此，两者之间的关系本质上是双向的：更好的定位能改善跟踪，而更好的跟踪可以通过识别哪些点应被赋予较低权重，或通过提供额外的目标级约束来改善定位。
-
-本项目正是植根于这一双向直觉。系统采用 FAST-LIO~\cite{fastlio2} 作为激光惯性定位主干，PointPillars~\cite{pointpillars} 作为 3D 检测器，MCTrack~\cite{mctrack} 作为在线跟踪器以生成目标 ID、融合速度、加速度及轨迹长度。FAST-LIO 发布优化里程计与 IMU 预测运动。桥接节点将这些输出转换为 MCTrack 所需的位姿格式。PointPillars 按时间戳发布 3D 检测消息。MCTrack 消费检测与位姿，执行经运动补偿的关联，并发布跟踪目标。这些跟踪目标随后通过两种方式被利用：一是转化为软动态权重，在下一帧 FAST-LIO 扫描中降低动态包围盒内点的权重；二是送入仅含自车位姿（ego-only）的联合后端，测试稳定的目标观测能否为自车轨迹提供额外的滑窗约束。这一设计虽然尚未构成统一的因子图，但已形成了一个完整的信息闭环。
-
-在工程实践中，我们有两项设计选择需要简要说明。首先是采用\textbf{软降权（soft down-weighting）}而非硬剔除，因为硬删除在误报、框抖动、遮挡或暂时静止的情况下显得过于脆弱。其次是选择从一个\textbf{松耦合的工程闭环}起步，而非紧耦合的对象中心图。完整的联合图在理论上更优雅，但其所需的因子设计、置信度建模、边缘化处理及调试工作量远超本课程项目的周期。
-
-据此，本项目追求四个关联的目标。\textbf{研究目标}是测试定位与跟踪在不构建完整统一优化器的情况下，能否在动态驾驶场景中形成有意义的反馈闭环。\textbf{工程目标}是构建一个可运行的 ROS 管线，使其组件、消息契约、启动顺序、结果日志及评估脚本在当前项目工作流内都是显式且可重复运行的。\textbf{评估目标}是确定闭环中哪一部分提供了最稳定的收益：是前端权重环节、后端修正环节，还是两者兼有。\textbf{诊断目标}是识别阻碍当前系统表现得像一个鲁棒的联合 SLAMMOT 方案的具体失效模式。
+据此，本项目追求四个核心目标：\textbf{研究目标}为验证定位与跟踪之间的双向反馈可行性；\textbf{工程目标}为构建可重复运行且组件显式的标准 ROS 管线；\textbf{评估目标}为确定闭环中能够带来稳定增益的环节；\textbf{诊断目标}则为识别系统在联合优化方向上的失效模式。
 
 具体而言，本报告及实现的贡献可总结如下：
 \begin{itemize}[leftmargin=2em]
-    \item 实现了 FAST-LIO、PointPillars、MCTrack 与 ego-only 后端的完整 ROS 集成，采用项目定义的标准消息接口而非临时私有接口。
-    \item 构建了前端闭环：FAST-LIO 位姿稳定了 MCTrack，而 MCTrack 的输出在 FAST-LIO 预处理中转化为点级软权重。
-    \item 建立了脚本驱动的实验框架，支持在当前项目工作流内进行基线与优化运行的一键切换、\texttt{Results/} 下的标准归档、TUM 格式轨迹记录及统一的定量评估。
+    \item 实现了 FAST-LIO、PointPillars、MCTrack 与 ego-only 后端的完整 ROS 集成，采用项目定义的标准消息接口。
+    \item 构建了前端闭环：FAST-LIO 位姿稳定了 MCTrack，而 MCTrack 的输出在 FAST-LIO 预处理中转化为点级软降权。
+    \item 建立了脚本驱动的实验框架，支持基线与优化运行的一键切换、\texttt{Results/} 下的标准归档与统一的定量评估。
     \item 通过失效感知分析表明，前端闭环是最稳定的改进源，而当前的后端在速度外推及时间不确定性面前仍显脆弱。
 \end{itemize}
 
-选择 KITTI Tracking 作为主要验证数据集是深思熟虑的结果。KITTI 为真实的城市驾驶场景提供了同步的激光雷达、IMU、标定信息及自车运动真值~\cite{kitti}。其 Tracking 切片包含测试定位-跟踪闭环所需的动态车辆、轨迹变化及背景演变。本文使用的 7 个在线序列（0003, 0006, 0007, 0009, 0010, 0013, 0020）涵盖了不同的漂移水平、动态强度及相对轨迹跨度，更重要的是，这些序列都存在足够明显的动态车辆参与者，能够让动态点抑制、跟踪反馈和后端对象因子的效果真正显现出来。相比之下，本项目当前其余可直接利用的候选数据集或序列中动态物体普遍较少，难以同等强度地检验“定位帮助跟踪、跟踪反哺定位”的双向闭环。本报告并非追求全数据集的榜单排名，而是分析该系统在那些日志、图表及轨迹文件均可直接复现和检查的序列上的表现。
-
-这一立场引出了一个重要的定位说明：\textbf{本报告并非旨在声称达到了 SOTA 性能}。它记录的是一个验证了双向定位-跟踪闭环可行性、展示了完整实验管线并使失效案例透明化的工程原型。对于课程项目而言，这种集成质量、工作流内的可重复运行性及诊断能力本身就是极具价值的成果。一个端到端运行、可多序列回放并能准确暴露失效原因的系统，比一个未经充分调试、仅在表面上显得“紧耦合”的方案更能为后续研究打下坚实基础。
+选择 KITTI Tracking 作为验证数据集，正是为了利用其丰富的动态参与者（如使用的序列 0003, 0006, 0007, 0009, 0010, 0013, 0020），以充分显现动态点抑制与后端的真实效果~\cite{kitti}。\textbf{本报告并非旨在声称达到了 SOTA 性能}，而是记录了一个验证双向闭环可行性、展示完整实验管线并使失效案例透明化的工程原型，为后续研究打下坚实基础。
 
 \section{研究现状分析}
 为了更准确地定位本项目，必须从两个维度讨论相关工作。第一类是\textbf{动态场景 SLAM}，其重点在于检测、过滤或联合建模运动区域，以保持定位与建图的稳定性。第二类是\textbf{面向自动驾驶的 3D MOT}，其重点在于在自车运动下维持准确的目标轨迹和运动状态。本项目处于这两者的交汇点：它既不是单纯的动态物体过滤系统，也不是一个完整的以对象为中心的联合优化器。因此，一个有意义的对比需要考虑传感器配置、前端形式、耦合程度、动态物体处理策略、实时性倾向以及工程复杂度。
@@ -844,13 +834,17 @@ ATE 和 RPE 趋势之间的差异也很有启发性。在某些序列上，后�
 因此，未来工作的优先级也很清晰。\textbf{第一}，后端应从仅自车修正器演化为一个\textbf{对象中心化联合后端}，在其中对象状态与自车位姿一起被优化，而不是只作为外部观测输入。这是最重要的升级，因为它直接回应了当前系统无法在优化内部吸收对象状态误差的问题。\textbf{第二}，系统需要\textbf{更强的置信度建模与关联策略}。检测得分和轨迹长度是有用的第一步启发，但不足以决定对象因子何时应当强烈影响自车运动。面向置信度的加权、更显式的运动一致性检查以及更丰富的数据关联诊断都仍然需要。\textbf{第三}，优化过程应朝着\textbf{增量式或更高效的滑窗更新}演化。如果对象中心化形式变得更丰富，当前这种轻量级最小二乘循环就不再足够。\textbf{第四}，项目需要在\textbf{更多数据集和更多样的场景}上继续验证，不是为了机械地增加篇幅，而是为了检验当前“前端稳定、后端脆弱”的模式是否会在 KITTI 之外依旧成立。
 
 从课程项目价值的角度看，这是一个强且诚实的结果。该项目已经把多个复杂模块集成进统一工作流，证明了定位-跟踪反馈能够稳定地产生前端收益，也明确暴露了通往更强联合后端所面临的真实工程缺口。一个能工作的系统、能在当前仓库工作流内重跑的实验，以及透明的失败分析，正是让当前原型对后续研究依然有价值的原因。如果下一轮迭代能够把今天这种消息级反馈提升为真正的对象中心化估计图，那么这个项目就能自然地从课程规模的工程验证，继续演化为动态场景 LiDAR-惯导 SLAMMOT 方向上更实质性的研究贡献。
-
+\clearpage
+\addcontentsline{toc}{section}{参考文献}
 \begin{thebibliography}{99}
 \bibitem{fastlio2}
 W. Xu, Y. Cai, D. He, J. Lin, and F. Zhang, ``FAST-LIO2: Fast direct LiDAR-inertial odometry,'' \emph{IEEE Transactions on Robotics}, vol. 38, no. 4, pp. 2053--2073, 2022.
 
 \bibitem{pointpillars}
 A. H. Lang, S. Vora, H. Caesar, L. Zhou, J. Yang, and O. Beijbom, ``PointPillars: Fast encoders for object detection from point clouds,'' in \emph{Proc. CVPR}, 2019, pp. 12697--12705.
+
+\bibitem{mctrack}
+X. Wang, S. Qi, J. Zhao, H. Zhou, S. Zhang, G. Wang, K. Tu, S. Guo, J. Zhao, J. Li, and M. Yang, ``MCTrack: A Unified 3D Multi-Object Tracking Framework for Autonomous Driving,'' in \emph{Proc. IROS}, 2025.
 
 \bibitem{kitti}
 A. Geiger, P. Lenz, and R. Urtasun, ``Are we ready for autonomous driving? The KITTI vision benchmark suite,'' in \emph{Proc. CVPR}, 2012, pp. 3354--3361.
@@ -863,15 +857,6 @@ C. Yu, Z. Liu, X. Liu, F. Xie, Y. Yang, Q. Wei, and Q. Fei, ``DS-SLAM: A semanti
 
 \bibitem{dynaslam}
 B. Bescos, J. M. Facil, J. Civera, and J. Neira, ``DynaSLAM: Tracking, mapping and inpainting in dynamic scenes,'' \emph{IEEE Robotics and Automation Letters}, vol. 3, no. 4, 2018.
-
-\bibitem{ab3dmot}
-X. Weng, J. Wang, D. Held, and K. Kitani, ``3D multi-object tracking: A baseline and new evaluation metrics,'' in \emph{Proc. IROS}, 2020, pp. 10359--10366.
-
-\bibitem{centerpoint}
-T. Yin, X. Zhou, and P. Krahenbuhl, ``Center-based 3D object detection and tracking,'' in \emph{Proc. CVPR}, 2021, pp. 11784--11793.
-
-\bibitem{mctrack}
-X. Wang, S. Qi, J. Zhao, H. Zhou, S. Zhang, G. Wang, K. Tu, S. Guo, J. Zhao, J. Li, and M. Yang, ``MCTrack: A Unified 3D Multi-Object Tracking Framework for Autonomous Driving,'' in \emph{Proc. IROS}, 2025.
 
 \bibitem{confslammot}
 S. Fang and H. Li, ``LiDAR SLAMMOT based on Confidence-guided Data Association,'' \emph{arXiv preprint arXiv:2412.01041}, 2024.
@@ -887,10 +872,18 @@ J. Morris, Y. Wang, and V. Ila, ``Online Dynamic SLAM with Incremental Smoothing
 
 \bibitem{dl-slot}
 X. Tian, Z. Zhu, J. Zhao, G. Tian, and C. Ye, ``DL-SLOT: Tightly-Coupled Dynamic LiDAR SLAM and 3D Object Tracking Based on Collaborative Graph Optimization,'' \emph{IEEE Transactions on Intelligent Vehicles}, vol. 9, no. 1, pp. 1017--1027, 2024.
+
+\bibitem{ab3dmot}
+X. Weng, J. Wang, D. Held, and K. Kitani, ``3D multi-object tracking: A baseline and new evaluation metrics,'' in \emph{Proc. IROS}, 2020, pp. 10359--10366.
+
+\bibitem{centerpoint}
+T. Yin, X. Zhou, and P. Krahenbuhl, ``Center-based 3D object detection and tracking,'' in \emph{Proc. CVPR}, 2021, pp. 11784--11793.
+
 \end{thebibliography}
 
 \clearpage
 \section*{致谢}
+\addcontentsline{toc}{section}{致谢}
 当我完成这份 ME5400 项目报告时，我想向所有在这项工作过程中给予我支持的人表达诚挚的感谢。这份报告不仅是对项目本身的总结，也是我在学习期间进行学习、研究与工程实践的一份有意义记录。
 
 首先，我要感谢新加坡国立大学设计与工程学院的所有老师。在硕士学习期间，他们给予了我教学、指导和学术支持。他们的耐心与投入极大加深了我对研究与工程实践的理解。

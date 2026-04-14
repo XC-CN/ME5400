@@ -933,321 +933,324 @@ Package fontspec Info: Font family 'FandolFang-Regular(0)' created for font
 (fontspec)             <->"[FandolFang-Regular.otf]/OT:language=dflt;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 
-[1] [2] [3]
-Overfull \hbox (5.17943pt too wide) in paragraph at lines 352--352
+[1]
+Overfull \hbox (5.17943pt too wide) in paragraph at lines 342--342
 []|\TU/lmr/m/n/10.95 StaticFusion| 
  []
 
 
-Underfull \hbox (badness 2469) in paragraph at lines 352--352
+Underfull \hbox (badness 2469) in paragraph at lines 342--342
 []|\TU/lmr/m/n/10.95 RGB-D; \TU/FandolSong-Regular(0)/m/n/10.95 稠 密
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 联 合 估 计 相
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 机 运 动 与 分
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 实 时 稠 密 建
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 视 觉\TU/lmr/m/n/10.95 ; ORB-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 松 耦 合 多 线
  []
 
 
-Underfull \hbox (badness 2261) in paragraph at lines 352--352
+Underfull \hbox (badness 2261) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 语 义 过 滤 加 运
  []
 
 
-Underfull \hbox (badness 1546) in paragraph at lines 352--352
+Underfull \hbox (badness 1546) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 动 一 致 性\TU/lmr/m/n/10.95 ; \TU/FandolSong-R
 egular(0)/m/n/10.95 面
  []
 
 
-Overfull \hbox (2.83612pt too wide) in paragraph at lines 352--352
+Overfull \hbox (2.83612pt too wide) in paragraph at lines 342--342
 []|\TU/lmr/m/n/10.95 DynaSLAM| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 视 觉\TU/lmr/m/n/10.95 ; ORB-
  []
 
 
-Underfull \hbox (badness 2261) in paragraph at lines 352--352
+Underfull \hbox (badness 2261) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 动 态 检 测 加 背
  []
 
 
-Underfull \hbox (badness 1546) in paragraph at lines 352--352
+Underfull \hbox (badness 1546) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 景 修 复\TU/lmr/m/n/10.95 ; \TU/FandolSong-Reg
 ular(0)/m/n/10.95 较 慢
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/lmr/m/n/10.95 Conf
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 \TU/lmr/m/n/10.95 SLAM-
  []
 
 
-Underfull \hbox (badness 1546) in paragraph at lines 352--352
+Underfull \hbox (badness 1546) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 激 光\TU/lmr/m/n/10.95 ; \TU/FandolSong-Re
 gular(0)/m/n/10.95 激 光 里
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 紧 耦 合 因 子
  []
 
 
-Underfull \hbox (badness 2261) in paragraph at lines 352--352
+Underfull \hbox (badness 2261) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 优 化 内 部 的 置
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 信 度 引 导 关
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 紧 耦 合 滑 窗
  []
 
 
-Underfull \hbox (badness 2261) in paragraph at lines 352--352
+Underfull \hbox (badness 2261) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 实 时 联 合 激 光
  []
 
 
-Underfull \hbox (badness 2261) in paragraph at lines 352--352
+Underfull \hbox (badness 2261) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 惯 性 里 程 计 与
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/lmr/m/n/10.95 IMM-
  []
 
 
-Overfull \hbox (3.59167pt too wide) in paragraph at lines 352--352
+Overfull \hbox (3.59167pt too wide) in paragraph at lines 342--342
 \TU/lmr/m/n/10.95 SLAMMOT| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 双 目 视 觉\TU/lmr/m/n/10.95 ;
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 显 式 的 目 标
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 运 动 模 型 切
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/lmr/m/n/10.95 Online
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 \TU/lmr/m/n/10.95 Dynamic
  []
 
 
-Underfull \hbox (badness 1546) in paragraph at lines 352--352
+Underfull \hbox (badness 1546) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 双 目 视 觉\TU/lmr/m/n/10.95 ; \TU/FandolSon
 g-Regular(0)/m/n/10.95 自
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 紧 耦 合 增 量
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 基 于 \TU/lmr/m/n/10.95 iSAM2
  []
 
 
-Underfull \hbox (badness 2261) in paragraph at lines 352--352
+Underfull \hbox (badness 2261) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 的 在 线 动 态 优
  []
 
 
-Underfull \hbox (badness 1546) in paragraph at lines 352--352
+Underfull \hbox (badness 1546) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 激 光\TU/lmr/m/n/10.95 ; \TU/FandolSong-Re
 gular(0)/m/n/10.95 激 光 里
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 紧 耦 合 协 同
  []
 
 
-Underfull \hbox (badness 2261) in paragraph at lines 352--352
+Underfull \hbox (badness 2261) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 定 位 与 跟 踪 之
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 间 的 滑 窗 协
  []
 
 
-Overfull \hbox (2.21198pt too wide) in paragraph at lines 352--352
+Overfull \hbox (2.21198pt too wide) in paragraph at lines 342--342
 []|\TU/lmr/m/n/10.95 AB3DMOT| 
  []
 
 
-Underfull \hbox (badness 1546) in paragraph at lines 352--352
+Underfull \hbox (badness 1546) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 激 光 检 测\TU/lmr/m/n/10.95 ; \TU/FandolSon
 g-Regular(0)/m/n/10.95 简
  []
 
 
-Overfull \hbox (3.61357pt too wide) in paragraph at lines 352--352
+Overfull \hbox (3.61357pt too wide) in paragraph at lines 342--342
 []|\TU/lmr/m/n/10.95 CenterPoint| 
  []
 
 
-Underfull \hbox (badness 1546) in paragraph at lines 352--352
+Underfull \hbox (badness 1546) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 激 光\TU/lmr/m/n/10.95 ; \TU/FandolSong-Re
 gular(0)/m/n/10.95 基 于 中
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 352--352
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 心 的 检 测\TU/lmr/m/n/10.95 /\TU/FandolSong-Re
 gular(0)/m/n/10.95 跟
  []
 
 
-Underfull \hbox (badness 4846) in paragraph at lines 352--352
+Underfull \hbox (badness 4846) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 检 测\TU/lmr/m/n/10.95 -\TU/FandolSong-Reg
 ular(0)/m/n/10.95 跟 踪 集
  []
 
 
-Underfull \hbox (badness 2261) in paragraph at lines 352--352
+Underfull \hbox (badness 2261) in paragraph at lines 342--342
 []|\TU/FandolSong-Regular(0)/m/n/10.95 利 用 中 心 速 度
  []
 
 
-Underfull \hbox (badness 2261) in paragraph at lines 352--352
+Underfull \hbox (badness 2261) in paragraph at lines 342--342
 \TU/FandolSong-Regular(0)/m/n/10.95 实 现 简 单 且 强
  []
 
-[4] [5]
+[2] [3] [4]
 File: Figures//Overall architecture of the proposed dynamic-scene trajectory op
 timization framework.png Graphic file (type bmp)
 <Figures//Overall architecture of the proposed dynamic-scene trajectory optimiz
 ation framework.png>
- [6] [7]
+ [5]
 File: Figures//FAST-LIO2 System Architecture.jpg Graphic file (type bmp)
 <Figures//FAST-LIO2 System Architecture.jpg>
-
+ [6]
 Missing character: There is no ^^F (U+0006) in font [lmromandemi10-regular]:map
 ping=tex-text;!
-[8]
+[7]
 File: Figures//PointPillars Network Architecture.png Graphic file (type bmp)
 <Figures//PointPillars Network Architecture.png>
- [9]
+ [8]
 File: Figures//Overview of 3D MOT framework MCTrack.png Graphic file (type bmp)
 
 <Figures//Overview of 3D MOT framework MCTrack.png>
 
-Overfull \hbox (41.35063pt too wide) in paragraph at lines 493--494
+Overfull \hbox (41.35063pt too wide) in paragraph at lines 483--484
 []\TU/FandolSong-Regular(0)/m/n/12 在 线 \TU/lmr/m/n/12 MCTrack [[]] \TU/FandolSo
 ng-Regular(0)/m/n/12 节 点 实 现 在 \TU/lmtt/m/n/12 catkin_ws/src/ME5400/scripts/mct
 rack_online_node.py
  []
 
-[10]
-Overfull \hbox (73.23613pt too wide) in paragraph at lines 495--496
+
+Overfull \hbox (73.23613pt too wide) in paragraph at lines 485--486
 []\TU/lmr/m/n/12 MCTrack \TU/FandolSong-Regular(0)/m/n/12 同 时 发 布 可 视 化 用 的 \TU
 /lmtt/m/n/12 /mctrack/markers \TU/FandolSong-Regular(0)/m/n/12 和 下 游 优 化 用 的 \T
 U/lmtt/m/n/12 /mctrack/tracked_objects\TU/FandolSong-Regular(0)/m/n/12 。|
  []
 
-[11] [12]
-Overfull \hbox (14.5283pt too wide) in paragraph at lines 590--590
+[9] [10]
+Overfull \hbox (14.5283pt too wide) in paragraph at lines 580--580
 []|\TU/lmtt/m/n/10 config/kitti_fastlio.yaml\TU/lmr/m/n/10 , 
  []
 
-[13]
-Underfull \hbox (badness 6063) in paragraph at lines 600--600
+[11]
+Underfull \hbox (badness 6063) in paragraph at lines 590--590
 [][]\TU/FandolSong-Regular(0)/m/n/8 同 时 发 布 
  []
 
-[14]
-Underfull \hbox (badness 1184) in paragraph at lines 617--618
+[12] [13]
+Underfull \hbox (badness 1184) in paragraph at lines 607--608
 \TU/lmtt/m/n/12 /Odometry_imu_predicted\TU/FandolSong-Regular(0)/m/n/12 。|  桥 接
  节 点 转 发 \TU/lmtt/m/n/12 /mctrack/lidar_pose\TU/FandolSong-Regular(0)/m/n/12 。|
  \TU/lmr/m/n/12 PointPillars \TU/FandolSong-Regular(0)/m/n/12 发
  []
 
-[15] [16] [17]
-Overfull \hbox (9.23991pt too wide) in paragraph at lines 666--667
+[14] [15]
+Overfull \hbox (9.23991pt too wide) in paragraph at lines 656--657
 []\TU/FandolSong-Regular(0)/m/n/12 这 个 权 重 会 直 接 在 点 云 预 处 理 中 生 效。|  对 于 每 个 输
  入 点，|  如 果 \TU/lmtt/m/n/12 computePointWeight()
  []
 
-[18]
-Overfull \hbox (19.0561pt too wide) in paragraph at lines 683--684
+[16]
+Overfull \hbox (19.0561pt too wide) in paragraph at lines 673--674
 []\TU/FandolSong-Regular(0)/m/n/12 联 合 后 端 的 实 现 位 于 \TU/lmtt/m/n/12 catkin_ws/
 src/ME5400/scripts/joint_backend_ego_node.py\TU/FandolSong-Regular(0)/m/n/12 ，|
 
  []
 
-[19] [20] [21]
+[17] [18] [19] [20]
 File: Figures//The KITTI data collection vehicle.png Graphic file (type bmp)
 <Figures//The KITTI data collection vehicle.png>
 
-Underfull \hbox (badness 1253) in paragraph at lines 756--757
+Underfull \hbox (badness 1253) in paragraph at lines 746--747
 []\TU/FandolSong-Regular(0)/m/n/12 表 [][]\TU/lmr/m/n/12 4[][] \TU/FandolSong-Re
 gular(0)/m/n/12 汇 总 了 全 部 在 线 序 列 的 \TU/lmr/m/n/12 ATE \TU/FandolSong-Regular(0
 )/m/n/12 和 \TU/lmr/m/n/12 RPE\TU/FandolSong-Regular(0)/m/n/12 。|  最 重 要 的 整 体 观
  察 非 常 直 接：|
  []
 
-[22] [23]
+[21]
 File: ../Results/0020_results/Online/evaluation_result.png Graphic file (type b
 mp)
 <../Results/0020_results/Online/evaluation_result.png>
+ [22]
 File: Figures//Visualization of tracked dynamic vehicles on Sequence 0020.png G
 raphic file (type bmp)
 <Figures//Visualization of tracked dynamic vehicles on Sequence 0020.png>
- [24] [25] [26] [27] [28] [29] [30
+ [23] [24] [25] [26] [27
+
+] [28] [29
 
 ]
 File: ../Results/0003_results/Online/evaluation_result.png Graphic file (type b
@@ -1325,10 +1328,10 @@ File: ../Results/0020_results/Online/ablation_bar.png Graphic file (type bmp)
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[31
+[30
 
-] [32] [33] [34] [35] [36] [37] (Report_CN.aux)
+] [31] [32] [33] [34] [35] [36] (Report_CN.aux)
 Package rerunfilecheck Info: File `Report_CN.out' has not changed.
-(rerunfilecheck)             Checksum: 48358CAFE447741A1CAF176A24BDA53B;4573.
+(rerunfilecheck)             Checksum: AD15BE547176145D62DED0EEB6863A6F;4687.
  )
-Output written on Report_CN.xdv (40 pages, 602468 bytes).
+Output written on Report_CN.xdv (39 pages, 574296 bytes).
