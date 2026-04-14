@@ -324,18 +324,18 @@
     \caption{与本文定位精度主线相关的代表性动态场景 SLAM 与对象感知联合估计方法比较}
     \label{tab:slammot_related_work}
     \footnotesize
-    \begin{tabularx}{\textwidth}{p{1.9cm} p{2.3cm} p{2.3cm} p{1.7cm} p{2.0cm} X}
+    \begin{tabularx}{\textwidth}{p{2.0cm} p{2.5cm} p{2.8cm} p{2.0cm} X}
         \toprule
-        工作 & 传感器 / 前端 & 动态处理方式 & 是否直接作用于定位 & 实时性 / 复杂度 & 与本文关系 \\
+        工作 & 传感器 / 前端 & 动态处理方式 & 实时性 / 复杂度 & 与本文关系 \\
         \midrule
-        StaticFusion & RGB-D；稠密直接法 & 联合分割与背景融合 & 是 & 面向实时稠密建图~\cite{staticfusion} & 说明保守保留背景结构和加权处理可以直接改善定位。 \\
-        DS-SLAM & 视觉；ORB-SLAM2 + 语义线程 & 语义过滤 + 运动一致性 & 是 & 多线程实时，工程友好~\cite{ds-slam} & 说明松耦合工程系统也能提高动态场景定位鲁棒性。 \\
-        DynaSLAM & 视觉；ORB-SLAM2 家族 & 动态检测 + 背景恢复 & 是 & 较慢但精度高~\cite{dynaslam} & 代表把动态物体主要视为定位干扰源的强基线。 \\
-        Conf SLAMMOT & 激光；激光里程计 & 置信度引导关联与对象因子 & 是 & 紧耦合，高复杂度~\cite{confslammot} & 启发对象置信度不应只用于筛选，也应影响定位约束强度。 \\
-        LIMOT & 激光+惯性；LIO & 实时联合 LIO 与 MOT & 是 & 实时，但实现复杂~\cite{limot} & 是本文长期目标最接近的紧耦合参考。 \\
-        IMM-SLAMMOT & 双目视觉；ORB-SLAM2 & 多运动模型切换 & 是 & 建模更强，代价更高~\cite{imm-slammot} & 说明单一匀速模型不足以稳定支撑动态场景定位。 \\
-        Online Dynamic SLAM & 双目视觉；自研 VO & 基于 iSAM2 的动态增量平滑 & 是 & 更可扩展的在线后端~\cite{online-dynamic-slam} & 指出动态对象一旦进入估计问题，增量式后端就变得关键。 \\
-        DL-SLOT & 激光；激光里程计 & 定位-跟踪协同图优化 & 是 & 紧耦合，优化层共享信息~\cite{dl-slot} & 说明对象级约束可以在优化层直接服务定位。 \\
+        StaticFusion & RGB-D；稠密直接法 & 联合分割与背景融合 & 面向实时稠密建图~\cite{staticfusion} & 说明保守保留背景结构和加权处理可以直接改善定位。 \\
+        DS-SLAM & 视觉；ORB-SLAM2 + 语义线程 & 语义过滤 + 运动一致性 & 多线程实时，工程友好~\cite{ds-slam} & 说明松耦合工程系统也能提高动态场景定位鲁棒性。 \\
+        DynaSLAM & 视觉；ORB-SLAM2 家族 & 动态检测 + 背景恢复 & 较慢但精度高~\cite{dynaslam} & 代表把动态物体主要视为定位干扰源的强基线。 \\
+        Conf SLAMMOT & 激光；激光里程计 & 置信度引导关联与对象因子 & 紧耦合，高复杂度~\cite{confslammot} & 启发对象置信度不应只用于筛选，也应影响定位约束强度。 \\
+        LIMOT & 激光+惯性；LIO & 实时联合 LIO 与 MOT & 实时，但实现复杂~\cite{limot} & 是本文长期目标最接近的紧耦合参考。 \\
+        IMM-SLAMMOT & 双目视觉；ORB-SLAM2 & 多运动模型切换 & 建模更强，代价更高~\cite{imm-slammot} & 说明单一匀速模型不足以稳定支撑动态场景定位。 \\
+        Online Dynamic SLAM & 双目视觉；自研 VO & 基于 iSAM2 的动态增量平滑 & 更可扩展的在线后端~\cite{online-dynamic-slam} & 指出动态对象一旦进入估计问题，增量式后端就变得关键。 \\
+        DL-SLOT & 激光；激光里程计 & 定位-跟踪协同图优化 & 紧耦合，优化层共享信息~\cite{dl-slot} & 说明对象级约束可以在优化层直接服务定位。 \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -863,12 +863,6 @@ J. Morris, Y. Wang, and V. Ila, ``Online Dynamic SLAM with Incremental Smoothing
 
 \bibitem{dl-slot}
 X. Tian, Z. Zhu, J. Zhao, G. Tian, and C. Ye, ``DL-SLOT: Tightly-Coupled Dynamic LiDAR SLAM and 3D Object Tracking Based on Collaborative Graph Optimization,'' \emph{IEEE Transactions on Intelligent Vehicles}, vol. 9, no. 1, pp. 1017--1027, 2024.
-
-\bibitem{ab3dmot}
-X. Weng, J. Wang, D. Held, and K. Kitani, ``3D multi-object tracking: A baseline and new evaluation metrics,'' in \emph{Proc. IROS}, 2020, pp. 10359--10366.
-
-\bibitem{centerpoint}
-T. Yin, X. Zhou, and P. Krahenbuhl, ``Center-based 3D object detection and tracking,'' in \emph{Proc. CVPR}, 2021, pp. 11784--11793.
 
 \end{thebibliography}
 

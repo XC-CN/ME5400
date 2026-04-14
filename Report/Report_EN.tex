@@ -314,18 +314,18 @@ To position the project more carefully, related work is better organized around 
     \label{tab:slammot_related_work}
     \footnotesize
     \setlength{\tabcolsep}{5pt}
-    \begin{tabularx}{\textwidth}{p{1.9cm} p{2.3cm} p{2.3cm} p{1.7cm} p{2.0cm} X}
+    \begin{tabularx}{\textwidth}{p{2.0cm} p{2.5cm} p{2.8cm} p{2.0cm} X}
         \toprule
-        Work & Sensors / front-end & Dynamic handling & Acts directly on localization? & Real-time / complexity & Relevance to this report \\
+        Work & Sensors / front-end & Dynamic handling & Real-time / complexity & Relevance to this report \\
         \midrule
-        StaticFusion & RGB-D; dense direct method & Joint segmentation and background fusion & Yes & Real-time dense mapping~\cite{staticfusion} & Shows that conservative background preservation and weighted treatment can directly improve localization. \\
-        DS-SLAM & Vision; ORB-SLAM2 + semantic thread & Semantic filtering + motion consistency & Yes & Multi-threaded and engineering-friendly~\cite{ds-slam} & Shows that a loosely coupled system can still improve localization robustness in dynamic scenes. \\
-        DynaSLAM & Vision; ORB-SLAM2 family & Dynamic detection + background inpainting & Yes & Slower but accurate~\cite{dynaslam} & Represents a strong baseline that treats dynamic objects mainly as localization disturbances. \\
-        Conf SLAMMOT & LiDAR; LiDAR odometry & Confidence-guided association and object factors & Yes & Tightly coupled and high-complexity~\cite{confslammot} & Suggests that object confidence should scale localization constraints rather than only filter objects. \\
-        LIMOT & LiDAR+IMU; LIO & Joint real-time LIO and MOT & Yes & Real-time but implementation-heavy~\cite{limot} & Closest tightly coupled long-term reference for this project. \\
-        IMM-SLAMMOT & Stereo vision; ORB-SLAM2 & Multiple motion-model switching & Yes & Stronger modeling, higher cost~\cite{imm-slammot} & Shows why a single constant-velocity model is often insufficient in dynamic traffic scenes. \\
-        Online Dynamic SLAM & Stereo vision; custom VO & Dynamic incremental smoothing with iSAM2 & Yes & More scalable online backend~\cite{online-dynamic-slam} & Highlights that incremental backends become important once dynamic objects enter the estimation problem. \\
-        DL-SLOT & LiDAR; LiDAR odometry & Collaborative localization-tracking graph optimization & Yes & Tight optimization-layer sharing~\cite{dl-slot} & Shows that object-level constraints can act on localization directly at the optimization layer. \\
+        StaticFusion & RGB-D; dense direct method & Joint segmentation and background fusion & Real-time dense mapping~\cite{staticfusion} & Shows that conservative background preservation and weighted treatment can directly improve localization. \\
+        DS-SLAM & Vision; ORB-SLAM2 + semantic thread & Semantic filtering + motion consistency & Multi-threaded and engineering-friendly~\cite{ds-slam} & Shows that a loosely coupled system can still improve localization robustness in dynamic scenes. \\
+        DynaSLAM & Vision; ORB-SLAM2 family & Dynamic detection + background inpainting & Slower but accurate~\cite{dynaslam} & Represents a strong baseline that treats dynamic objects mainly as localization disturbances. \\
+        Conf SLAMMOT & LiDAR; LiDAR odometry & Confidence-guided association and object factors & Tightly coupled and high-complexity~\cite{confslammot} & Suggests that object confidence should scale localization constraints rather than only filter objects. \\
+        LIMOT & LiDAR+IMU; LIO & Joint real-time LIO and MOT & Real-time but implementation-heavy~\cite{limot} & Closest tightly coupled long-term reference for this project. \\
+        IMM-SLAMMOT & Stereo vision; ORB-SLAM2 & Multiple motion-model switching & Stronger modeling, higher cost~\cite{imm-slammot} & Shows why a single constant-velocity model is often insufficient in dynamic traffic scenes. \\
+        Online Dynamic SLAM & Stereo vision; custom VO & Dynamic incremental smoothing with iSAM2 & More scalable online backend~\cite{online-dynamic-slam} & Highlights that incremental backends become important once dynamic objects enter the estimation problem. \\
+        DL-SLOT & LiDAR; LiDAR odometry & Collaborative localization-tracking graph optimization & Tight optimization-layer sharing~\cite{dl-slot} & Shows that object-level constraints can act on localization directly at the optimization layer. \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -853,12 +853,6 @@ J. Morris, Y. Wang, and V. Ila, ``Online Dynamic SLAM with Incremental Smoothing
 
 \bibitem{dl-slot}
 X. Tian, Z. Zhu, J. Zhao, G. Tian, and C. Ye, ``DL-SLOT: Tightly-Coupled Dynamic LiDAR SLAM and 3D Object Tracking Based on Collaborative Graph Optimization,'' \emph{IEEE Transactions on Intelligent Vehicles}, vol. 9, no. 1, pp. 1017--1027, 2024.
-
-\bibitem{ab3dmot}
-X. Weng, J. Wang, D. Held, and K. Kitani, ``3D multi-object tracking: A baseline and new evaluation metrics,'' in \emph{Proc. IROS}, 2020, pp. 10359--10366.
-
-\bibitem{centerpoint}
-T. Yin, X. Zhou, and P. Krahenbuhl, ``Center-based 3D object detection and tracking,'' in \emph{Proc. CVPR}, 2021, pp. 11784--11793.
 
 \end{thebibliography}
 
