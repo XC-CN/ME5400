@@ -449,33 +449,33 @@ def save_pair_plot(gt_centered: np.ndarray, pair_results: list[dict[str, Any]], 
     primary = pair_results[1]
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12))
-    ax1.plot(gt_centered[:, 0], gt_centered[:, 1], "k-", linewidth=2.0, label="真值轨迹")
+    ax1.plot(gt_centered[:, 0], gt_centered[:, 1], "k-", linewidth=2.0, label="Ground Truth")
     ax1.plot(
         baseline["pred_aligned"][:, 0],
         baseline["pred_aligned"][:, 1],
         "b--",
         linewidth=1.5,
-        label=f"{baseline['name']}（RMSE={baseline['ate_metrics']['ATE_RMSE']:.3f}m）",
+        label=f"{baseline['name']} (RMSE={baseline['ate_metrics']['ATE_RMSE']:.3f}m)",
     )
     ax1.plot(
         primary["pred_aligned"][:, 0],
         primary["pred_aligned"][:, 1],
         "r-",
         linewidth=1.5,
-        label=f"{primary['name']}（RMSE={primary['ate_metrics']['ATE_RMSE']:.3f}m）",
+        label=f"{primary['name']} (RMSE={primary['ate_metrics']['ATE_RMSE']:.3f}m)",
     )
-    ax1.set_title("双轨迹对比（对齐后）")
+    ax1.set_title("Two-Trajectory Comparison (Aligned)")
     ax1.set_xlabel("X (m)")
     ax1.set_ylabel("Y (m)")
     ax1.legend()
     ax1.grid(True, alpha=0.3)
     ax1.set_aspect("equal", adjustable="datalim")
 
-    ax2.plot(baseline["ate_err"], "b--", alpha=0.8, label=f"{baseline['name']} 绝对误差")
-    ax2.plot(primary["ate_err"], "r-", alpha=0.8, label=f"{primary['name']} 绝对误差")
-    ax2.set_title("绝对位置误差随时间变化")
-    ax2.set_xlabel("匹配帧序号")
-    ax2.set_ylabel("误差 (m)")
+    ax2.plot(baseline["ate_err"], "b--", alpha=0.8, label=f"{baseline['name']} Absolute Error")
+    ax2.plot(primary["ate_err"], "r-", alpha=0.8, label=f"{primary['name']} Absolute Error")
+    ax2.set_title("Absolute Position Error Over Time")
+    ax2.set_xlabel("Matched Frame Index")
+    ax2.set_ylabel("Error (m)")
     ax2.legend()
     ax2.grid(True, alpha=0.3)
 
@@ -491,18 +491,18 @@ def save_overview_plot(gt_centered: np.ndarray, results: list[dict[str, Any]], o
         return
 
     fig, axes = plt.subplots(3, 1, figsize=(12, 14))
-    fig.suptitle(title or "多轨迹联合评估", fontsize=15, fontweight="bold", y=0.98)
+    fig.suptitle(title or "Multi-Trajectory Joint Evaluation", fontsize=15, fontweight="bold", y=0.98)
 
     ax1 = axes[0]
-    ax1.plot(gt_centered[:, 0], gt_centered[:, 1], "k-", linewidth=2.0, label="真值轨迹", zorder=10)
+    ax1.plot(gt_centered[:, 0], gt_centered[:, 1], "k-", linewidth=2.0, label="Ground Truth", zorder=10)
     for idx, result in enumerate(results):
         if result["pred_aligned"] is None:
             continue
         color = _PALETTE[idx % len(_PALETTE)]
         line_style = _LINESTYLES[idx % len(_LINESTYLES)]
-        label = f"{result['name']}（ATE={result['ate_metrics']['ATE_RMSE']:.3f} m）"
+        label = f"{result['name']} (ATE={result['ate_metrics']['ATE_RMSE']:.3f} m)"
         ax1.plot(result["pred_aligned"][:, 0], result["pred_aligned"][:, 1], color=color, linestyle=line_style, linewidth=1.6, label=label)
-    ax1.set_title("轨迹对比（Umeyama 对齐）")
+    ax1.set_title("Trajectory Comparison (Umeyama Aligned)")
     ax1.set_xlabel("X (m)")
     ax1.set_ylabel("Y (m)")
     ax1.legend(fontsize=9)
@@ -516,9 +516,9 @@ def save_overview_plot(gt_centered: np.ndarray, results: list[dict[str, Any]], o
         color = _PALETTE[idx % len(_PALETTE)]
         line_style = _LINESTYLES[idx % len(_LINESTYLES)]
         ax2.plot(result["ate_err"], color=color, linestyle=line_style, linewidth=1.2, alpha=0.8, label=result["name"])
-    ax2.set_title("ATE 时序误差")
-    ax2.set_xlabel("匹配帧序号")
-    ax2.set_ylabel("误差 (m)")
+    ax2.set_title("ATE Temporal Error")
+    ax2.set_xlabel("Matched Frame Index")
+    ax2.set_ylabel("Error (m)")
     ax2.legend(fontsize=9)
     ax2.grid(True, alpha=0.3)
     ax2.yaxis.set_minor_locator(ticker.AutoMinorLocator())
@@ -530,9 +530,9 @@ def save_overview_plot(gt_centered: np.ndarray, results: list[dict[str, Any]], o
         color = _PALETTE[idx % len(_PALETTE)]
         line_style = _LINESTYLES[idx % len(_LINESTYLES)]
         ax3.plot(result["rpe_err"], color=color, linestyle=line_style, linewidth=1.2, alpha=0.8, label=result["name"])
-    ax3.set_title("RPE 时序误差")
-    ax3.set_xlabel("帧序号")
-    ax3.set_ylabel("相对误差 (m)")
+    ax3.set_title("RPE Temporal Error")
+    ax3.set_xlabel("Frame Index")
+    ax3.set_ylabel("Relative Error (m)")
     ax3.legend(fontsize=9)
     ax3.grid(True, alpha=0.3)
 
@@ -599,8 +599,8 @@ def save_bar_plot(results: list[dict[str, Any]], output_path: Path) -> None:
 
     ax.set_xticks(x_axis)
     ax.set_xticklabels(names, fontsize=10)
-    ax.set_ylabel("误差 (m)", fontsize=11)
-    ax.set_title("ATE / RPE 对比", fontsize=13, fontweight="bold")
+    ax.set_ylabel("Error (m)", fontsize=11)
+    ax.set_title("ATE / RPE Comparison", fontsize=13, fontweight="bold")
     ax.legend(fontsize=10)
     ax.grid(True, axis="y", alpha=0.3)
     ax.set_ylim(0, max(max(ate_vals), max(rpe_vals)) * 1.25)

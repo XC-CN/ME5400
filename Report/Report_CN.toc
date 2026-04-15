@@ -1,0 +1,35 @@
+\contentsline {section}{\numberline {1}引言}{1}{section.1}%
+\contentsline {section}{\numberline {2}研究现状分析}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}动态场景 SLAM：从动态点剔除到保守降权}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}对象感知联合估计：让动态信息更深地进入定位}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}对比分析与存在的差距}{4}{subsection.2.3}%
+\contentsline {section}{\numberline {3}整体系统架构与定位增强数据流}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}FAST-LIO 前端}{6}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}PointPillars 对象观测模块}{7}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}MCTrack 对象状态估计模块与数据流细节}{8}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}时间对齐、坐标系与失效模式}{10}{subsection.3.4}%
+\contentsline {section}{\numberline {4}工程实现与系统集成}{10}{section.4}%
+\contentsline {subsection}{\numberline {4.1}整体代码组织}{10}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}在线系统设计}{11}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}结果归档与脚本化实验管线}{13}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}ROS 话题、消息接口与集成困难}{14}{subsection.4.4}%
+\contentsline {section}{\numberline {5}动态权重优化}{14}{section.5}%
+\contentsline {subsection}{\numberline {5.1}设计动机与代码位置}{14}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}权重计算}{15}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}从跟踪对象到点级权重}{16}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}边界情况与参数敏感性}{16}{subsection.5.4}%
+\contentsline {section}{\numberline {6}联合后端优化}{17}{section.6}%
+\contentsline {subsection}{\numberline {6.1}仅自车滑窗问题的提出}{17}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}残差建模与门控策略}{18}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}滑窗更新逻辑与实际行为}{19}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}联合后端的价值与局限}{19}{subsection.6.4}%
+\contentsline {section}{\numberline {7}实验分析}{20}{section.7}%
+\contentsline {subsection}{\numberline {7.1}实验设置与结果来源}{20}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}在线实验：汇总结果}{21}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}综合分析与失效模式}{24}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}从现象到解释}{25}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}实验公平性与报告纪律}{25}{subsection.7.5}%
+\contentsline {section}{\numberline {8}结论与未来计划}{25}{section.8}%
+\contentsline {section}{参考文献}{27}{section.8}%
+\contentsline {section}{致谢}{28}{section*.16}%
+\contentsline {section}{附录：在线实验全量图片}{29}{section*.17}%

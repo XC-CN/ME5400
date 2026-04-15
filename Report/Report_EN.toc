@@ -1,0 +1,35 @@
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
+\contentsline {section}{\numberline {2}Related Work Analysis}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Dynamic-Scene SLAM: From Dynamic-Point Removal to Conservative Down-Weighting}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Object-Aware Joint Estimation: Bringing Dynamic Information Deeper into Localization}{5}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Comparison and Remaining Gap}{5}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Overall System Architecture and Localization-Enhancement Data Flow}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}FAST-LIO Front-End}{7}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}PointPillars Object-Observation Module}{9}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}MCTrack Object-State Estimation Module and Data-Flow Details}{10}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Temporal Alignment, Coordinate Frames, and Failure Modes}{12}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Engineering Implementation and System Integration}{12}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Overall Code Organization}{12}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Online System Design}{14}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Result Archiving and the Scripted Experimental Pipeline}{16}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}ROS Topics, Message Interfaces, and Integration Difficulties}{17}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Dynamic Weight Optimization}{18}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Design Motivation and Code Location}{18}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Weight Computation}{19}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}From Tracked Objects to Point-Level Weights}{19}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Boundary Cases and Parameter Sensitivity}{20}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Joint Backend Optimization}{21}{section.6}%
+\contentsline {subsection}{\numberline {6.1}The Ego-Only Sliding-Window Problem}{21}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Residual Modeling and the Gating Strategy}{22}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Window Update Logic and Practical Behavior}{23}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Value and Limitations of the Joint Backend}{23}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Experimental Analysis}{24}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Experimental Setup and Result Sources}{24}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Online Experiments: Aggregate Results}{25}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Integrated Analysis and Failure Modes}{28}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}From Observation to Explanation}{29}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Experimental Fairness and Reporting Discipline}{29}{subsection.7.5}%
+\contentsline {section}{\numberline {8}Conclusion and Future Plan}{30}{section.8}%
+\contentsline {section}{References}{32}{section.8}%
+\contentsline {section}{Acknowledgment}{33}{section*.16}%
+\contentsline {section}{Appendix: All Online Experimental Figures}{34}{section*.17}%

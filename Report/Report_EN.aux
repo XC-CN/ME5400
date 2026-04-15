@@ -1,0 +1,137 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand*\HyPL@Entry[1]{}
+\HyPL@Entry{0<</S/D>>}
+\HyPL@Entry{1<</S/D>>}
+\HyPL@Entry{3<</S/D>>}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\citation{fastlio2}
+\citation{pointpillars}
+\citation{mctrack}
+\citation{kitti}
+\citation{staticfusion}
+\citation{ds-slam}
+\citation{dynaslam}
+\citation{confslammot}
+\citation{limot}
+\citation{imm-slammot}
+\citation{online-dynamic-slam}
+\citation{dl-slot}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work Analysis}{3}{section.2}\protected@file@percent }
+\citation{staticfusion}
+\citation{ds-slam}
+\citation{dynaslam}
+\citation{confslammot}
+\citation{limot}
+\citation{imm-slammot}
+\citation{online-dynamic-slam}
+\citation{dl-slot}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Representative dynamic-scene SLAM and object-aware joint-estimation methods relevant to the localization-accuracy focus of this report\relax }}{4}{table.caption.2}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:slammot_related_work}{{1}{4}{Representative dynamic-scene SLAM and object-aware joint-estimation methods relevant to the localization-accuracy focus of this report\relax }{table.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Dynamic-Scene SLAM: From Dynamic-Point Removal to Conservative Down-Weighting}{4}{subsection.2.1}\protected@file@percent }
+\citation{confslammot}
+\citation{limot}
+\citation{imm-slammot}
+\citation{online-dynamic-slam}
+\citation{dl-slot}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Object-Aware Joint Estimation: Bringing Dynamic Information Deeper into Localization}{5}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Comparison and Remaining Gap}{5}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Overall System Architecture and Localization-Enhancement Data Flow}{6}{section.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overall system architecture. It can be read as a three-layer data flow of localization backbone, object-observation module, and exploratory backend.\relax }}{6}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:overall_architecture}{{1}{6}{Overall system architecture. It can be read as a three-layer data flow of localization backbone, object-observation module, and exploratory backend.\relax }{figure.caption.3}{}}
+\citation{fastlio2}
+\citation{fastlio2}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}FAST-LIO Front-End}{7}{subsection.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces FAST-LIO2 front-end architecture, reprinted from Xu \textit  {et al.}\nobreakspace  {}\cite  {fastlio2}. In this project, object information from MCTrack is injected into the point-cloud preprocessing pipeline to realize adaptive down-weighting of dynamic points.\relax }}{7}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:fastlio_architecture}{{2}{7}{FAST-LIO2 front-end architecture, reprinted from Xu \textit {et al.}~\cite {fastlio2}. In this project, object information from MCTrack is injected into the point-cloud preprocessing pipeline to realize adaptive down-weighting of dynamic points.\relax }{figure.caption.4}{}}
+\citation{pointpillars}
+\citation{pointpillars}
+\citation{pointpillars}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}PointPillars Object-Observation Module}{9}{subsection.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Network architecture from the original PointPillars paper. The network consists of a Pillar Feature Net, a 2D CNN backbone, and an SSD detection head. The image is reproduced from the CVPR 2019 paper by Lang \textit  {et al.}\nobreakspace  {}\cite  {pointpillars}.\relax }}{9}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:pointpillars_architecture}{{3}{9}{Network architecture from the original PointPillars paper. The network consists of a Pillar Feature Net, a 2D CNN backbone, and an SSD detection head. The image is reproduced from the CVPR 2019 paper by Lang \textit {et al.}~\cite {pointpillars}.\relax }{figure.caption.5}{}}
+\citation{mctrack}
+\citation{mctrack}
+\citation{mctrack}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}MCTrack Object-State Estimation Module and Data-Flow Details}{10}{subsection.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Schematic of the MCTrack 3D MOT framework, reprinted from Wang \textit  {et al.}\nobreakspace  {}\cite  {mctrack}. Its outputs contain not only position and size, but also velocity, acceleration, trajectory length, and related motion attributes.\relax }}{10}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:mctrack_framework}{{4}{10}{Schematic of the MCTrack 3D MOT framework, reprinted from Wang \textit {et al.}~\cite {mctrack}. Its outputs contain not only position and size, but also velocity, acceleration, trajectory length, and related motion attributes.\relax }{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Temporal Alignment, Coordinate Frames, and Failure Modes}{12}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Engineering Implementation and System Integration}{12}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Overall Code Organization}{12}{subsection.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Representative entry scripts of the online system and their functions\relax }}{13}{table.caption.7}\protected@file@percent }
+\newlabel{tab:code_design}{{2}{13}{Representative entry scripts of the online system and their functions\relax }{table.caption.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Main repository directories and their engineering roles\relax }}{14}{table.caption.8}\protected@file@percent }
+\newlabel{tab:repo_layout}{{3}{14}{Main repository directories and their engineering roles\relax }{table.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Online System Design}{14}{subsection.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Execution-level temporal logic of the online optimization chain. When FAST-LIO processes the current LiDAR frame, it uses the frozen \texttt  {tracked\_objects} snapshot from the previous frame. The tracking result produced by MCTrack at the current frame mainly enters the dynamic down-weighting chain in the next frame.\relax }}{15}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:online_sequence_logic}{{5}{15}{Execution-level temporal logic of the online optimization chain. When FAST-LIO processes the current LiDAR frame, it uses the frozen \texttt {tracked\_objects} snapshot from the previous frame. The tracking result produced by MCTrack at the current frame mainly enters the dynamic down-weighting chain in the next frame.\relax }{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Result Archiving and the Scripted Experimental Pipeline}{16}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}ROS Topics, Message Interfaces, and Integration Difficulties}{17}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Dynamic Weight Optimization}{18}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Design Motivation and Code Location}{18}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Weight Computation}{19}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}From Tracked Objects to Point-Level Weights}{19}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Boundary Cases and Parameter Sensitivity}{20}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Joint Backend Optimization}{21}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}The Ego-Only Sliding-Window Problem}{21}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Residual Modeling and the Gating Strategy}{22}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Window Update Logic and Practical Behavior}{23}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Value and Limitations of the Joint Backend}{23}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Experimental Analysis}{24}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Experimental Setup and Result Sources}{24}{subsection.7.1}\protected@file@percent }
+\citation{kitti}
+\citation{kitti}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces KITTI data-collection platform, reprinted from benchmark materials associated with Geiger \textit  {et al.}\nobreakspace  {}\cite  {kitti}. All experiments in this report are based on archived KITTI Tracking results.\relax }}{25}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:kitti_vehicle}{{6}{25}{KITTI data-collection platform, reprinted from benchmark materials associated with Geiger \textit {et al.}~\cite {kitti}. All experiments in this report are based on archived KITTI Tracking results.\relax }{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Online Experiments: Aggregate Results}{25}{subsection.7.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Summary of online ATE/RPE results. Improvement percentages are computed relative to \texttt  {Baseline}; positive values indicate lower error.\relax }}{26}{table.caption.11}\protected@file@percent }
+\newlabel{tab:online_ate}{{4}{26}{Summary of online ATE/RPE results. Improvement percentages are computed relative to \texttt {Baseline}; positive values indicate lower error.\relax }{table.caption.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Summary of online KITTI relative errors. Rot is given in deg/100m, with the order Baseline / F+M / Joint.\relax }}{26}{table.caption.12}\protected@file@percent }
+\newlabel{tab:online_kitti}{{5}{26}{Summary of online KITTI relative errors. Rot is given in deg/100m, with the order Baseline / F+M / Joint.\relax }{table.caption.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Online trajectory evaluation for Sequence 0020. The red \texttt  {FAST-LIO+MCTrack} trajectory is clearly closer to the ground truth than the blue baseline.\relax }}{27}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:online_0020_traj}{{7}{27}{Online trajectory evaluation for Sequence 0020. The red \texttt {FAST-LIO+MCTrack} trajectory is clearly closer to the ground truth than the blue baseline.\relax }{figure.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Dynamic-vehicle tracking visualization for Sequence 0020.\relax }}{27}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:online_0020_tracking}{{8}{27}{Dynamic-vehicle tracking visualization for Sequence 0020.\relax }{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Integrated Analysis and Failure Modes}{28}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}From Observation to Explanation}{29}{subsection.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Experimental Fairness and Reporting Discipline}{29}{subsection.7.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion and Future Plan}{30}{section.8}\protected@file@percent }
+\bibcite{fastlio2}{1}
+\bibcite{pointpillars}{2}
+\bibcite{mctrack}{3}
+\bibcite{kitti}{4}
+\bibcite{staticfusion}{5}
+\bibcite{ds-slam}{6}
+\bibcite{dynaslam}{7}
+\bibcite{confslammot}{8}
+\bibcite{limot}{9}
+\bibcite{imm-slammot}{10}
+\bibcite{online-dynamic-slam}{11}
+\bibcite{dl-slot}{12}
+\@writefile{toc}{\contentsline {section}{References}{32}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Acknowledgment}{33}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Appendix: All Online Experimental Figures}{34}{section*.17}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Complete online experimental results for Sequence 0003.\relax }}{34}{figure.caption.18}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Complete online experimental results for Sequence 0006.\relax }}{35}{figure.caption.19}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Complete online experimental results for Sequence 0007.\relax }}{36}{figure.caption.20}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Complete online experimental results for Sequence 0009.\relax }}{37}{figure.caption.21}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Complete online experimental results for Sequence 0010.\relax }}{38}{figure.caption.22}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Complete online experimental results for Sequence 0013.\relax }}{39}{figure.caption.23}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Complete online experimental results for Sequence 0020.\relax }}{40}{figure.caption.24}\protected@file@percent }
+\gdef \@abspage@last{43}

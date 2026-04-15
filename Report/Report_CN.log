@@ -935,22 +935,7 @@ Package fontspec Info: Font family 'FandolFang-Regular(0)' created for font
 
 [1]
 Underfull \hbox (badness 10000) in paragraph at lines 340--340
-[]|\TU/FandolSong-Regular(0)/m/n/10 是 否 直 接
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 340--340
-\TU/FandolSong-Regular(0)/m/n/10 作 用 于 定
- []
-
-
-Underfull \hbox (badness 6792) in paragraph at lines 340--340
-[]|\TU/lmr/m/n/10 RGB-D\TU/FandolSong-Regular(0)/m/n/10 ；|  稠 密
- []
-
-
-Underfull \hbox (badness 4686) in paragraph at lines 340--340
-[]|\TU/FandolSong-Regular(0)/m/n/10 联 合 分 割 与 背
+[]|\TU/FandolSong-Regular(0)/m/n/10 联 合 分 割 与 背 景
  []
 
 
@@ -959,18 +944,23 @@ Underfull \hbox (badness 10000) in paragraph at lines 340--340
  []
 
 
+Underfull \hbox (badness 1596) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 说 明 保 守 保 留 背 景 结 构 和 加
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 340--340
 []|\TU/FandolSong-Regular(0)/m/n/10 视 觉；| \TU/lmr/m/n/10 ORB-
  []
 
 
-Underfull \hbox (badness 1147) in paragraph at lines 340--340
-\TU/lmr/m/n/10 SLAM2 + \TU/FandolSong-Regular(0)/m/n/10 语
+Underfull \hbox (badness 3179) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 多 线 程 实 时，|
  []
 
 
-Underfull \hbox (badness 3179) in paragraph at lines 340--340
-[]|\TU/FandolSong-Regular(0)/m/n/10 多 线 程 实 时，|
+Underfull \hbox (badness 1596) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 说 明 松 耦 合 工 程 系 统 也 能 提
  []
 
 
@@ -984,18 +974,34 @@ Underfull \hbox (badness 10000) in paragraph at lines 340--340
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 340--340
-[]|\TU/lmr/m/n/10 Conf
+Underfull \hbox (badness 1596) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 代 表 把 动 态 物 体 主 要 视 为 定
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 340--340
-\TU/lmr/m/n/10 SLAM-
+[]|\TU/FandolSong-Regular(0)/m/n/10 置 信 度 引 导 关 联
  []
 
 
-Underfull \hbox (badness 4686) in paragraph at lines 340--340
-[]|\TU/FandolSong-Regular(0)/m/n/10 置 信 度 引 导 关
+Underfull \hbox (badness 1596) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 启 发 对 象 置 信 度 不 应 只 用 于
+ []
+
+
+Underfull \hbox (badness 2126) in paragraph at lines 340--340
+\TU/FandolSong-Regular(0)/m/n/10 筛 选，|  也 应 影 响 定 位 约 束 强
+ []
+
+
+Underfull \hbox (badness 4132) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 激 光 \TU/lmr/m/n/10 + \TU/FandolSong-Regular
+(0)/m/n/10 惯 性；|
+ []
+
+
+Underfull \hbox (badness 1596) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 是 本 文 长 期 目 标 最 接 近 的 紧
  []
 
 
@@ -1004,13 +1010,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 340--340
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 340--340
-[]|\TU/FandolSong-Regular(0)/m/n/10 双 目 视 觉；|
- []
-
-
-Underfull \hbox (badness 4686) in paragraph at lines 340--340
-[]|\TU/FandolSong-Regular(0)/m/n/10 多 运 动 模 型 切
+Underfull \hbox (badness 1596) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 说 明 单 一 匀 速 模 型 不 足 以 稳
  []
 
 
@@ -1034,6 +1035,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 340--340
  []
 
 
+Underfull \hbox (badness 1596) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 指 出 动 态 对 象 一 旦 进 入 估 计
+ []
+
+
+Underfull \hbox (badness 2126) in paragraph at lines 340--340
+\TU/FandolSong-Regular(0)/m/n/10 问 题，|  增 量 式 后 端 就 变 得 关
+ []
+
+
+Underfull \hbox (badness 7415) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 定 位\TU/lmr/m/n/10 -\TU/FandolSong-Regular(0
+)/m/n/10 跟 踪 协 同 图
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 340--340
 []|\TU/FandolSong-Regular(0)/m/n/10 紧 耦 合，|  优
  []
@@ -1041,6 +1058,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 340--340
 
 Underfull \hbox (badness 10000) in paragraph at lines 340--340
 \TU/FandolSong-Regular(0)/m/n/10 化 层 共 享 信
+ []
+
+
+Underfull \hbox (badness 1596) in paragraph at lines 340--340
+[]|\TU/FandolSong-Regular(0)/m/n/10 说 明 对 象 级 约 束 可 以 在 优 化
  []
 
 [2] [3]
@@ -1210,4 +1232,4 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 Package rerunfilecheck Info: File `Report_CN.out' has not changed.
 (rerunfilecheck)             Checksum: 94FBC5942B53AECB52EFB063C7E17F54;4521.
  )
-Output written on Report_CN.xdv (38 pages, 561000 bytes).
+Output written on Report_CN.xdv (38 pages, 560520 bytes).

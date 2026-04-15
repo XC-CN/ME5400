@@ -21,20 +21,20 @@
       "baseline": {
         "name": "Baseline",
         "path": "/home/xc/Projects/ME5400/Results/0013_results/Online/trajectory_baseline.txt",
-        "rmse": 0.6047410245789165,
-        "mean_error": 0.5682583862384574,
-        "max_error": 1.448904317671066,
+        "rmse": 0.604741024578941,
+        "mean_error": 0.5682583862384829,
+        "max_error": 1.4489043176710774,
         "num_samples": 324
       },
       "primary": {
         "name": "FAST-LIO+MCTrack",
         "path": "/home/xc/Projects/ME5400/Results/0013_results/Online/trajectory.txt",
-        "rmse": 0.5816170344813605,
-        "mean_error": 0.5391050810342473,
+        "rmse": 0.5816170344813617,
+        "mean_error": 0.5391050810342488,
         "max_error": 1.5360576831732995,
         "num_samples": 324
       },
-      "improvement_percent": 3.823783926955738
+      "improvement_percent": 3.8237839269594205
     }
   },
   "ate_rpe": {
@@ -44,10 +44,10 @@
         "path": "/home/xc/Projects/ME5400/Results/0013_results/Online/trajectory_baseline.txt",
         "matched_frames": 324,
         "ate": {
-          "ATE_RMSE": 0.6047410245789165,
-          "ATE_mean": 0.5682583862384574,
-          "ATE_max": 1.448904317671066,
-          "ATE_std": 0.2068673808951571
+          "ATE_RMSE": 0.604741024578941,
+          "ATE_mean": 0.5682583862384829,
+          "ATE_max": 1.4489043176710774,
+          "ATE_std": 0.20686738089515838
         },
         "rpe": {
           "RPE_RMSE": 0.14946576612448537,
@@ -61,10 +61,10 @@
         "path": "/home/xc/Projects/ME5400/Results/0013_results/Online/trajectory.txt",
         "matched_frames": 324,
         "ate": {
-          "ATE_RMSE": 0.5816170344813605,
-          "ATE_mean": 0.5391050810342473,
+          "ATE_RMSE": 0.5816170344813617,
+          "ATE_mean": 0.5391050810342488,
           "ATE_max": 1.5360576831732995,
-          "ATE_std": 0.21827525375532078
+          "ATE_std": 0.21827525375532014
         },
         "rpe": {
           "RPE_RMSE": 0.1392098394586841,
@@ -78,10 +78,10 @@
         "path": "/home/xc/Projects/ME5400/Results/0013_results/Online/trajectory_joint.txt",
         "matched_frames": 324,
         "ate": {
-          "ATE_RMSE": 0.581616912790295,
-          "ATE_mean": 0.5391049593412587,
-          "ATE_max": 1.5360571145328992,
-          "ATE_std": 0.21827523005914687
+          "ATE_RMSE": 0.5816169127902618,
+          "ATE_mean": 0.5391049593412215,
+          "ATE_max": 1.536057114532885,
+          "ATE_std": 0.21827523005914992
         },
         "rpe": {
           "RPE_RMSE": 0.1392098391283151,
@@ -94,11 +94,11 @@
     "improvements_relative_to_first": [
       {
         "name": "FAST-LIO+MCTrack",
-        "ate_improvement_percent": 3.823783926955738
+        "ate_improvement_percent": 3.8237839269594205
       },
       {
         "name": "Joint Backend",
-        "ate_improvement_percent": 3.823804049795185
+        "ate_improvement_percent": 3.8238040498045587
       }
     ]
   },
@@ -136,8 +136,8 @@
         "traj": "/home/xc/Projects/ME5400/Results/0013_results/Online/trajectory_baseline.txt",
         "matched_frames": 324,
         "matched_span_m": 186.82008570114758,
-        "Tr_percent": 2.437402931702051,
-        "Rot_deg_per_100m": 2.302628575800543,
+        "Tr_percent": 2.437402931702052,
+        "Rot_deg_per_100m": 2.3026285758005534,
         "n_segments": 121,
         "Tr_gain_percent": 0.0,
         "Rot_gain_percent": 0.0
@@ -147,118 +147,118 @@
         "traj": "/home/xc/Projects/ME5400/Results/0013_results/Online/trajectory.txt",
         "matched_frames": 324,
         "matched_span_m": 186.82008570114758,
-        "Tr_percent": 2.3740938798171176,
-        "Rot_deg_per_100m": 2.241929609085429,
+        "Tr_percent": 2.3740938798171167,
+        "Rot_deg_per_100m": 2.2419296090851013,
         "n_segments": 121,
-        "Tr_gain_percent": 2.597397872198524,
-        "Rot_gain_percent": 2.6360728496566668
+        "Tr_gain_percent": 2.597397872198596,
+        "Rot_gain_percent": 2.636072849671332
       },
       {
         "name": "Joint Backend",
         "traj": "/home/xc/Projects/ME5400/Results/0013_results/Online/trajectory_joint.txt",
         "matched_frames": 324,
         "matched_span_m": 186.82008570114758,
-        "Tr_percent": 2.37409292164628,
-        "Rot_deg_per_100m": 2.2419359203161124,
+        "Tr_percent": 2.3740929216462807,
+        "Rot_deg_per_100m": 2.2419359203158913,
         "n_segments": 121,
-        "Tr_gain_percent": 2.5974371833368393,
-        "Rot_gain_percent": 2.6357987615666585
+        "Tr_gain_percent": 2.5974371833368384,
+        "Rot_gain_percent": 2.635798761576695
       }
     ],
     "per_length": {
       "Baseline": {
         "20": {
-          "Tr_percent": 2.683314413516386,
-          "Rot_deg_per_100m": 3.7487048134383025,
+          "Tr_percent": 2.6833144135163907,
+          "Rot_deg_per_100m": 3.7487048134382945,
           "n_segments": 30.0
         },
         "40": {
           "Tr_percent": 2.214892180667992,
-          "Rot_deg_per_100m": 2.270383825784773,
+          "Rot_deg_per_100m": 2.270383825784706,
           "n_segments": 27.0
         },
         "60": {
-          "Tr_percent": 2.185024733798021,
-          "Rot_deg_per_100m": 1.7922869291506835,
+          "Tr_percent": 2.1850247337980213,
+          "Rot_deg_per_100m": 1.7922869291507417,
           "n_segments": 24.0
         },
         "80": {
-          "Tr_percent": 2.3686744776312443,
-          "Rot_deg_per_100m": 1.6594343512604266,
+          "Tr_percent": 2.368674477631246,
+          "Rot_deg_per_100m": 1.6594343512604737,
           "n_segments": 20.0
         },
         "100": {
-          "Tr_percent": 2.708899196801183,
-          "Rot_deg_per_100m": 1.5706756885672633,
+          "Tr_percent": 2.7088991968011844,
+          "Rot_deg_per_100m": 1.5706756885673332,
           "n_segments": 14.0
         },
         "150": {
-          "Tr_percent": 2.8142602555711433,
-          "Rot_deg_per_100m": 1.110586167960193,
+          "Tr_percent": 2.814260255571144,
+          "Rot_deg_per_100m": 1.1105861679601832,
           "n_segments": 6.0
         }
       },
       "FAST-LIO+MCTrack": {
         "20": {
-          "Tr_percent": 2.6278572171903978,
-          "Rot_deg_per_100m": 3.734093506276843,
+          "Tr_percent": 2.6278572171903964,
+          "Rot_deg_per_100m": 3.734093506275864,
           "n_segments": 30.0
         },
         "40": {
-          "Tr_percent": 2.1717532572441907,
-          "Rot_deg_per_100m": 2.2426438598287572,
+          "Tr_percent": 2.1717532572441915,
+          "Rot_deg_per_100m": 2.242643859828655,
           "n_segments": 27.0
         },
         "60": {
-          "Tr_percent": 2.134050947887568,
-          "Rot_deg_per_100m": 1.6995288095414944,
+          "Tr_percent": 2.1340509478875687,
+          "Rot_deg_per_100m": 1.6995288095412515,
           "n_segments": 24.0
         },
         "80": {
-          "Tr_percent": 2.2831894740042102,
-          "Rot_deg_per_100m": 1.575740129489476,
+          "Tr_percent": 2.2831894740042094,
+          "Rot_deg_per_100m": 1.5757401294893962,
           "n_segments": 20.0
         },
         "100": {
           "Tr_percent": 2.606128181613451,
-          "Rot_deg_per_100m": 1.4557685296951182,
+          "Rot_deg_per_100m": 1.4557685296950729,
           "n_segments": 14.0
         },
         "150": {
-          "Tr_percent": 2.7375830374319854,
-          "Rot_deg_per_100m": 1.0025066435230257,
+          "Tr_percent": 2.737583037431984,
+          "Rot_deg_per_100m": 1.002506643523103,
           "n_segments": 6.0
         }
       },
       "Joint Backend": {
         "20": {
-          "Tr_percent": 2.6278643834595194,
-          "Rot_deg_per_100m": 3.7341564095430404,
+          "Tr_percent": 2.6278643834595217,
+          "Rot_deg_per_100m": 3.7341564095420097,
           "n_segments": 30.0
         },
         "40": {
-          "Tr_percent": 2.1717596750497283,
-          "Rot_deg_per_100m": 2.242630076813683,
+          "Tr_percent": 2.1717596750497297,
+          "Rot_deg_per_100m": 2.242630076813785,
           "n_segments": 27.0
         },
         "60": {
           "Tr_percent": 2.134047313000805,
-          "Rot_deg_per_100m": 1.6995232007920986,
+          "Rot_deg_per_100m": 1.6995232007921832,
           "n_segments": 24.0
         },
         "80": {
           "Tr_percent": 2.2831790791426996,
-          "Rot_deg_per_100m": 1.5757322677296046,
+          "Rot_deg_per_100m": 1.5757322677295842,
           "n_segments": 20.0
         },
         "100": {
-          "Tr_percent": 2.6061216773798215,
-          "Rot_deg_per_100m": 1.4557446823200129,
+          "Tr_percent": 2.606121677379821,
+          "Rot_deg_per_100m": 1.4557446823199987,
           "n_segments": 14.0
         },
         "150": {
-          "Tr_percent": 2.737563368480132,
-          "Rot_deg_per_100m": 1.0024857119843835,
+          "Tr_percent": 2.737563368480133,
+          "Rot_deg_per_100m": 1.0024857119843877,
           "n_segments": 6.0
         }
       }
