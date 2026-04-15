@@ -1,5 +1,5 @@
 **
-(Report_EN.tex
+(Wu Zining A0294373W ME5400 Report.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-02-24> (article.cls
 Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
@@ -730,8 +730,9 @@ LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
 Requested font "[TeXGyreTermesX-Regular.otf]/OT:script=latn;language=dflt;-ss05
 ;+tnum;+lnum;mapping=tex-text;" at 12.0pt
  -> TeXGyreTermesX-Regular.otf
- (Report_EN.aux)
-\openout1 = `Report_EN.aux'.
+
+(Wu Zining A0294373W ME5400 Report.aux)
+\openout1 = `"Wu Zining A0294373W ME5400 Report.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 275.
 LaTeX Font Info:    ... okay on input line 275.
@@ -744,8 +745,7 @@ LaTeX Font Info:    ... okay on input line 275.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 275.
 LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 2
 75.
-
-(ts1cmr.fd
+ (ts1cmr.fd
 File: ts1cmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 275.
@@ -874,10 +874,10 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 275.
 LaTeX Info: Redefining \pageref on input line 275.
 LaTeX Info: Redefining \nameref on input line 275.
- (Report_EN.out)
-(Report_EN.out)
+
+(Wu Zining A0294373W ME5400 Report.out) (Wu Zining A0294373W ME5400 Report.out)
 \@outlinefile=\write4
-\openout4 = `Report_EN.out'.
+\openout4 = `"Wu Zining A0294373W ME5400 Report.out"'.
 
 Package hyperref Info: Option `pageanchor' set `false' on input line 276.
 File: Figures//nus_logo_cover.jpg Graphic file (type bmp)
@@ -908,7 +908,6 @@ LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
 Requested font "[TeXGyreTermesX-Regular.otf]/OT:script=latn;language=dflt;-ss05
 ;+tnum;+lnum;mapping=tex-text;" at 11.0pt
  -> TeXGyreTermesX-Regular.otf
-
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <22> not available
 (Font)              size <20.74> substituted on input line 277.
@@ -999,7 +998,7 @@ LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
 Requested font "[TeXGyreTermesX-Bold.otf]/OT:script=latn;language=dflt;-ss05;+t
 num;+lnum;mapping=tex-text;" at 17.28pt
  -> TeXGyreTermesX-Bold.otf
- (Report_EN.toc
+ (Wu Zining A0294373W ME5400 Report.toc
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
 (Font)              scaled to size 8.0pt on input line 3.
 Requested font "[TeXGyreTermesX-Regular.otf]/OT:script=latn;language=dflt;-ss05
@@ -1048,7 +1047,7 @@ Requested font "cmr6" at 6.0pt
  -> cmr6
  [1])
 \tf@toc=\write5
-\openout5 = `Report_EN.toc'.
+\openout5 = `"Wu Zining A0294373W ME5400 Report.toc"'.
 
  [2]
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
@@ -1475,12 +1474,14 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [34
 
-] [35] [36] [37] [38] [39] [40] (Report_EN.aux)
+] [35] [36] [37] [38] [39] [40] (Wu Zining A0294373W ME5400 Report.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.26pt have occurred.
 
-Package rerunfilecheck Info: File `Report_EN.out' has not changed.
-(rerunfilecheck)             Checksum: C1FF25E611279AF929E3D06A2CD1E2F7;8833.
+Package rerunfilecheck Info: File `"Wu Zining A0294373W ME5400 Report".out' has
+ not changed.
+(rerunfilecheck)             Checksum: <no file>.
  )
-Output written on Report_EN.xdv (43 pages, 914824 bytes).
+Output written on Wu Zining A0294373W ME5400 Report.xdv (43 pages, 914860 bytes
+).
